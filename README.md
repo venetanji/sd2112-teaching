@@ -54,6 +54,8 @@ Site URL once live: `https://venetanji.github.io/sd2112-teaching/` (deck at `/we
 
 Slides and site follow the ait4x design system (PolyU Design brand): Pantone Black 6 ink `#000B1C`, white, cool gray, teal `#64C2C3`, the 70-tile secondary matrix for bands, orange `#ED6D24` for the X and for numbers; Inter (display 800–900, tight tracking) and JetBrains Mono (eyebrows, caps, tracked). Tokens are in `docs/vendor/ait4x-colors_and_type.css`; the full system was supplied as `ait4x_Design_System.zip`. PowerPoint font names follow `tools/PPTX-EXPORT.md`: *Inter Black* / *Inter ExtraBold* / *Inter* + bold / *JetBrains Mono*.
 
+Scale: the design canvas is 1920 × 1080 px on a 13.333 × 7.5 in slide, so **one design pixel is 0.5 pt** in PowerPoint (a 72 px title is 36 pt, 36 px body is 18 pt, 24 px eyebrows are 12 pt). `deckgen.PT` holds that factor; the kit's master and layouts use the same scale.
+
 ## Adding a week
 
 Copy `deck/week01.py` to `deck/week02.py`, change `FOOTER`, write slides with the layout functions in `tools/layouts.py` (`title`, `agenda`, `section`, `statement`, `quote`, `content`, `cards`, `question`, `image_full`, `timeline`, `journey`, `activity`, `video`, `assessment`, `team`, `two_col`, `figure_slide`), and run it. ClassPoint activities come from `question(...)` (word cloud, multiple choice, short answer) or an explicit `cp={...}`. Add the deck to `docs/index.html`.

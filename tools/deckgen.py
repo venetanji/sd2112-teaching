@@ -30,6 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 FONT_DIR = ROOT / 'tools' / 'fonts'
 W, H = 1920, 1080
 PX = 6350  # EMU per px on a 1920x1080 (13.333 x 7.5 in) slide
+PT = 0.5   # points per design px on that slide (1920 px = 13.333 in = 960 pt)
 
 # ───────────────────────── tokens (ait4x / PolyU Design) ─────────────────────────
 INK, WHITE, PAPER, GRAY, TEAL = '#000B1C', '#FFFFFF', '#F4F4F2', '#BBBCB9', '#64C2C3'
@@ -444,7 +445,7 @@ def build_pptx(deck, out_path: Path, footer: str):
             # css line-height is a multiple of font size; PowerPoint's is a multiple of the font's natural height
             para.line_spacing = round(p.lh * size / natural_lh(key, size), 3)
             if p.before:
-                para.space_before = Pt(p.before * 0.75)
+                para.space_before = Pt(p.before * PT)
             if p.bullet:
                 pPr = para._p.get_or_add_pPr()
                 pPr.set('marL', str(48 * PX)); pPr.set('indent', str(-48 * PX))
@@ -459,13 +460,13 @@ def build_pptx(deck, out_path: Path, footer: str):
                 fam, bold, _w, _v, _c, _m = FONTS[r.font]
                 f = run.font
                 f.name = fam
-                f.size = Pt(r.size * 0.75)
+                f.size = Pt(r.size * PT)
                 f.bold = bold
                 f.italic = r.italic or None
                 f.color.rgb = rgb(r.color)
                 rPr = run._r.get_or_add_rPr()
                 if r.spc:
-                    rPr.set('spc', str(int(round(r.spc * r.size * 0.75 * 100))))
+                    rPr.set('spc', str(int(round(r.spc * r.size * PT * 100))))
                 if r.url:
                     run.hyperlink.address = r.url
         return tb

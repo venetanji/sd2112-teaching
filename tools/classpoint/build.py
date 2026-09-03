@@ -26,7 +26,7 @@ RT = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/'
 NS = ('xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
       'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" '
       'xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"')
-PX = 6350  # EMU per px at 1920x1080
+PX = 6350  # EMU per px at 1920x1080 (13.333 in wide slide: 1 px = 0.5 pt, so sz = px * 50)
 
 # ───────────────────────── theme / master / layouts ─────────────────────────
 THEME = f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -57,7 +57,7 @@ def ph(i, name, typ, idx, geo, size, font, color, bold=False, spc=0, caps=False,
             f'<p:nvPr><p:ph{t}{x}/></p:nvPr></p:nvSpPr><p:spPr>{geo}<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr>'
             f'<p:txBody><a:bodyPr wrap="square" lIns="0" tIns="0" rIns="0" bIns="0" anchor="{anchor}"><a:normAutofit/></a:bodyPr>'
             f'<a:lstStyle><a:lvl1pPr marL="0" indent="0" algn="{algn}"><a:lnSpc><a:spcPct val="{lh * 1000}"/></a:lnSpc><a:buNone/>'
-            f'<a:defRPr sz="{round(size * 75)}" b="{1 if bold else 0}" spc="{spc}" cap="{"all" if caps else "none"}">'
+            f'<a:defRPr sz="{round(size * 50)}" b="{1 if bold else 0}" spc="{spc}" cap="{"all" if caps else "none"}">'
             f'<a:solidFill><a:srgbClr val="{color}"/></a:solidFill><a:latin typeface="{font}"/></a:defRPr></a:lvl1pPr></a:lstStyle>'
             f'{body or "<a:p><a:endParaRPr/></a:p>"}</p:txBody></p:sp>')
 
@@ -82,7 +82,7 @@ def chrome(muted, logo=False):
 
 def wordmark(color, y=1000):
     """a·t4x — typographic wordmark, X in orange. Plain shape, not a placeholder."""
-    run = lambda t, c: f'<a:r><a:rPr lang="en-US" sz="2400" b="1" spc="-100"><a:solidFill><a:srgbClr val="{c}"/></a:solidFill><a:latin typeface="{BLACK}"/></a:rPr><a:t>{t}</a:t></a:r>'
+    run = lambda t, c: f'<a:r><a:rPr lang="en-US" sz="1600" b="1" spc="-100"><a:solidFill><a:srgbClr val="{c}"/></a:solidFill><a:latin typeface="{BLACK}"/></a:rPr><a:t>{t}</a:t></a:r>'
     return (f'<p:sp><p:nvSpPr><p:cNvPr id="23" name="ait4x"/><p:cNvSpPr txBox="1"/><p:nvPr userDrawn="1"/></p:nvSpPr>'
             f'<p:spPr>{box(1600, y, 200, 32)}<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr>'
             f'<p:txBody><a:bodyPr wrap="none" lIns="0" tIns="0" rIns="0" bIns="0" anchor="b"/><a:lstStyle/><a:p><a:pPr algn="r"/>{run("a·t4", color)}{run("x", "ED6D24")}</a:p></p:txBody></p:sp>')
@@ -137,12 +137,12 @@ def master(layout_rids, theme_rid):
     ids = ''.join(f'<p:sldLayoutId id="{2147483649 + i}" r:id="{r}"/>' for i, r in enumerate(layout_rids))
     def rpr(sz, font, color, extra=''):
         return f'<a:defRPr sz="{sz}"{extra}><a:solidFill><a:srgbClr val="{color}"/></a:solidFill><a:latin typeface="{font}"/></a:defRPr>'
-    title = f'<a:lvl1pPr marL="0" indent="0" algn="l"><a:lnSpc><a:spcPct val="95000"/></a:lnSpc><a:buNone/>{rpr(5400, XBOLD, INK, BOLD_ATTR)}</a:lvl1pPr>'
+    title = f'<a:lvl1pPr marL="0" indent="0" algn="l"><a:lnSpc><a:spcPct val="95000"/></a:lnSpc><a:buNone/>{rpr(3600, XBOLD, INK, BOLD_ATTR)}</a:lvl1pPr>'
     # body: level 1 plain, levels 2-3 use the dot (the wordmark's invisible i) in orange as bullet
-    body = (f'<a:lvl1pPr marL="0" indent="0" algn="l"><a:lnSpc><a:spcPct val="140000"/></a:lnSpc><a:spcBef><a:spcPts val="600"/></a:spcBef><a:buNone/>{rpr(2700, TEXT, TXT)}</a:lvl1pPr>'
-            f'<a:lvl2pPr marL="{48 * PX}" indent="{-48 * PX}" algn="l"><a:lnSpc><a:spcPct val="140000"/></a:lnSpc><a:buClr><a:srgbClr val="ED6D24"/></a:buClr><a:buFont typeface="{BLACK}"/><a:buChar char="·"/>{rpr(2700, TEXT, TXT)}</a:lvl2pPr>'
-            f'<a:lvl3pPr marL="{96 * PX}" indent="{-48 * PX}" algn="l"><a:lnSpc><a:spcPct val="140000"/></a:lnSpc><a:buClr><a:srgbClr val="ED6D24"/></a:buClr><a:buFont typeface="{BLACK}"/><a:buChar char="·"/>{rpr(2100, TEXT, MUTED_D)}</a:lvl3pPr>')
-    other = f'<a:lvl1pPr marL="0" indent="0" algn="l"><a:buNone/>{rpr(2700, TEXT, INK)}</a:lvl1pPr>'
+    body = (f'<a:lvl1pPr marL="0" indent="0" algn="l"><a:lnSpc><a:spcPct val="140000"/></a:lnSpc><a:spcBef><a:spcPts val="600"/></a:spcBef><a:buNone/>{rpr(1800, TEXT, TXT)}</a:lvl1pPr>'
+            f'<a:lvl2pPr marL="{48 * PX}" indent="{-48 * PX}" algn="l"><a:lnSpc><a:spcPct val="140000"/></a:lnSpc><a:buClr><a:srgbClr val="ED6D24"/></a:buClr><a:buFont typeface="{BLACK}"/><a:buChar char="·"/>{rpr(1800, TEXT, TXT)}</a:lvl2pPr>'
+            f'<a:lvl3pPr marL="{96 * PX}" indent="{-48 * PX}" algn="l"><a:lnSpc><a:spcPct val="140000"/></a:lnSpc><a:buClr><a:srgbClr val="ED6D24"/></a:buClr><a:buFont typeface="{BLACK}"/><a:buChar char="·"/>{rpr(1400, TEXT, MUTED_D)}</a:lvl3pPr>')
+    other = f'<a:lvl1pPr marL="0" indent="0" algn="l"><a:buNone/>{rpr(1800, TEXT, INK)}</a:lvl1pPr>'
     return (f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<p:sldMaster {NS}><p:cSld><p:bg><p:bgPr><a:solidFill><a:srgbClr val="{WHITE}"/></a:solidFill><a:effectLst/></p:bgPr></p:bg>'
             '<p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>'
             + ph(2, 'Title', 'title', None, box(120, 184, 1680, 140), 72, XBOLD, INK, True, lh=95)
@@ -186,7 +186,7 @@ def fix_fonts(xml):
         if 'b="1"' not in attrs or 'typeface="Inter"' not in inner:
             return m.group(0)
         sz = int((re.search(r' sz="(\d+)"', attrs) or [0, 0])[1])
-        fam = BLACK if sz >= 6600 else XBOLD if sz >= 3300 else None
+        fam = BLACK if sz >= 4400 else XBOLD if sz >= 2200 else None
         if not fam:
             return m.group(0)
         inner2 = inner.replace('typeface="Inter"', f'typeface="{fam}"')
