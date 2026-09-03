@@ -109,7 +109,7 @@ a{{text-decoration:underline;text-underline-offset:.12em}} a:hover{{color:var(--
 nav{{display:flex;gap:24px;align-items:baseline;margin-bottom:48px}} nav a{{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--fg-3)}}
 nav a.wordmark{{font-family:var(--font-display);font-size:28px;font-weight:900;letter-spacing:-.04em;text-transform:none;color:var(--fg-1)}}
 </style></head><body>
-<nav><a href="index.html" class="wordmark" style="text-decoration:none;color:var(--fg-1)">a<span class="dot"></span>t4<span class="x">x</span></a><a href="index.html">SD2112</a><a href="week01/">Week 1 slides</a><a href="syllabus.html">Syllabus</a><a href="week01-lesson-plan.html">Lesson plan</a></nav>
+<nav><a href="index.html" class="wordmark" style="text-decoration:none;color:var(--fg-1)">a<span class="dot"></span>t4<span class="x">x</span></a><a href="index.html">SD2112</a><a href="week01/">Week 1 slides</a><a href="syllabus.html">Syllabus</a></nav>
 <div class="eyebrow">POLYU SCHOOL OF DESIGN · SD2112 · 2026/27</div>
 {body}
 </body></html>
@@ -122,13 +122,28 @@ def md_to_html(md: str, out: Path, title: str):
     out.write_text(HTML.format(title=title, body=body), encoding='utf-8')
 
 
-if __name__ == '__main__':
-    names = {'SD2112-syllabus-2026.md': ('syllabus.html', 'SD2112 · Syllabus 2026/27'),
-             'week01-lesson-plan.md': ('week01-lesson-plan.html', 'SD2112 · Week 1 lesson plan')}
+# Which documents are published on the site. Everything else (lesson plans) is for the
+# teaching team and only lands in export/docs as .docx and .html.
+PUBLISH = {'SD2112-syllabus-2026.md': ('syllabus.html', 'SD2112 · Syllabus 2026/27')}
+
+
+def main():
+    site = ROOT / '_site'
+    out = ROOT / 'export' / 'docs'
+    out.mkdir(parents=True, exist_ok=True)
+    site.mkdir(parents=True, exist_ok=True)
     for src in SOURCES:
         md = src.read_text(encoding='utf-8')
-        docx_out = src.with_suffix('.docx')
+        docx_out = out / (src.stem + '.docx')
         md_to_docx(md, docx_out)
-        html_name, title = names.get(src.name, (src.stem + '.html', src.stem))
-        md_to_html(md, ROOT / 'docs' / html_name, title)
-        print(f'{src.name} -> {docx_out.name}, docs/{html_name}')
+        if src.name in PUBLISH:
+            html_name, title = PUBLISH[src.name]
+            md_to_html(md, site / html_name, title)
+            print(f'{src.name} -> export/docs/{docx_out.name}, _site/{html_name}')
+        else:
+            md_to_html(md, out / (src.stem + '.html'), src.stem)
+            print(f'{src.name} -> export/docs/{docx_out.name}, export/docs/{src.stem}.html (not published)')
+
+
+if __name__ == '__main__':
+    main()

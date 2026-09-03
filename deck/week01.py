@@ -1,8 +1,9 @@
 """
 SD2112 · Artificial Intelligence in Design · Week 01 — the slide spec.
 
-    python deck/week01.py            # builds docs/week01/, export/week01*.pptx, export/preview/
+    python deck/week01.py            # builds _site/week01/, export/week01*.pptx, export/preview/
     python deck/week01.py --html     # only the html deck
+    python tools/build_all.py        # everything, as the GitHub Actions workflow runs it
 
 One spec, three outputs (see tools/deckgen.py). Edit text here, rebuild, done.
 """
@@ -21,9 +22,7 @@ COURSE = 'SD2112'
 FOOTER = 'SD2112 · AI IN DESIGN · WEEK 01'
 SITE = 'venetanji.github.io/sd2112-teaching'
 PLAYLIST = 'https://www.youtube.com/playlist?list=PLU58DFEI5YDQ'
-A = ROOT / 'deck' / 'assets'
-CHAIRS = [f'ai-chair-{i}.jpg' for i in range(1, 5) if (A / f'ai-chair-{i}.jpg').exists()] or [f'two-circles-{i}.png' for i in (36, 37, 38, 39)]
-CIRCLES = [f'two-circles-{i}.png' for i in range(36, 48)]
+CHAIRS = [f'ai-chair-{i}.jpg' for i in range(1, 5)]   # same prompt, four seeds (deck/assets)
 
 S = []  # the slides, in order
 
@@ -64,7 +63,7 @@ S.append(content('02 · WHO IS TEACHING YOU', 'I study how machines form concept
                   '- Two years operating Sophia at Hanson Robotics. It rebooted minutes before a show. It came back.',
                   '- Musical Fruitstand: fruit you can play. A-Eye: the audience repainted live at M+. Featherman: a game with WWF Mai Po.',
                   '- One photo of me, three models, three styles.'],
-                 images=['gio-avatar-1.jpg', 'gio-avatar-2.jpg', 'gio-avatar-3.jpg', 'ada-lovelace-generated.png'],
+                 images=['gio-avatar-1.jpg', 'gio-avatar-2.jpg', 'gio-avatar-3.jpg', 'ada-lovelace-generated.jpg'],
                  caption='Top: one photo of me through three image models. Bottom right: "Ada Lovelace at her machine", a diffusion model, 2025.',
                  body_size=30,
                  notes='Economics, then robotics, then a PhD on concept formation in computational creativity. The point of the avatars: the same photo through three models gives three different styles — the model, not the photo, decides the look. Ada at the bottom right is also generated; she is on the next slide as a real quote.'))
@@ -128,7 +127,7 @@ S.append(content('04 · INTELLIGENT, OR CREATIVE?', 'Intelligent is not the same
                   '- Intelligent: solves the problem you set.',
                   '- Creative: makes something you did not order, and you still want it.',
                   'Lovelace said the second is impossible. Hold that until Move 37.'],
-                 image='alan-turing.png', fit='cover', body_size=30,
+                 image='alan-turing.jpg', fit='cover', body_size=30,
                  caption='Alan Turing. 1936: every computer is a Turing machine. 1950: "Can machines think?" becomes the imitation game.',
                  notes='Wiggins\' definition is agent-agnostic: creativity is in the eye of the audience. That is why this is a design question and not only an engineering one. Turing 1936 gives us the machine; 1950 replaces "can machines think" with the imitation game — judge the behaviour.'))
 
@@ -405,7 +404,7 @@ S.append(end('See you next week. Rules that make things.',
              f'{SITE} · {PLAYLIST.replace("https://", "")}',
              notes='Next week: rules that make things — Nake, Nees, LeWitt, Cage, and your first p5.js sketch. Nicolò and Amber stay for 30 minutes.'))
 
-DECK = dict(title='SD2112 · AI in Design · Week 01', slides=finalize(S, FOOTER))
+DECK = dict(title='SD2112 · AI in Design · Week 01', slides=finalize(S, FOOTER), download='SD2112-week01-classpoint.pptx')
 
 if __name__ == '__main__':
     only_html = '--html' in sys.argv

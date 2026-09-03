@@ -1,6 +1,13 @@
 __pycache__/
 *.pyc
 .DS_Store
-# per-slide preview PNGs are rebuilt by deck/week01.py; the contact sheets are kept
-export/preview/week01/
-export/preview/html-week01/
+
+# build outputs: rebuilt by `python tools/build_all.py`, published by the workflow
+_site/
+export/
+deck/assets/generated/
+*.docx
+
+# student data never goes in the repository
+classpoint/*.csv
+ids.csv

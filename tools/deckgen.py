@@ -28,6 +28,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 FONT_DIR = ROOT / 'tools' / 'fonts'
+SITE = ROOT / '_site'          # the published site (built by tools/build_all.py, never committed)
+EXPORT = ROOT / 'export'       # pptx, manifests, previews (never committed)
 W, H = 1920, 1080
 PX = 6350  # EMU per px on a 1920x1080 (13.333 x 7.5 in) slide
 PT = 0.5   # points per design px on that slide (1920 px = 13.333 in = 960 pt)
@@ -680,16 +682,20 @@ def contact_sheet(files, out, cols=4, scale=0.5):
 def build_all(deck, name: str, footer: str, do_pptx=True, do_html=True, do_png=True):
     outputs = {}
     if do_html:
-        outputs['html'] = build_html(deck, ROOT / 'docs' / name)
+        outputs['html'] = build_html(deck, SITE / name)
     if do_pptx:
-        pptx_path, manifest = build_pptx(deck, ROOT / 'export' / f'{name}.pptx', footer)
+        pptx_path, manifest = build_pptx(deck, EXPORT / f'{name}.pptx', footer)
         outputs['pptx'] = pptx_path
         outputs['manifest'] = manifest
         outputs['classpoint'] = run_classpoint_build(pptx_path, manifest, footer)
+        if do_html:  # the classroom file is downloadable next to the html deck
+            download = SITE / name / deck.get('download', f'{name}-classpoint.pptx')
+            shutil.copy(outputs['classpoint'], download)
+            outputs['download'] = download
     if do_png:
-        files, warnings = build_png(deck, ROOT / 'export' / 'preview' / name)
+        files, warnings = build_png(deck, EXPORT / 'preview' / name)
         outputs['png'] = files
         outputs['warnings'] = warnings
         for k in range(0, len(files), 16):
-            contact_sheet(files[k:k + 16], ROOT / 'export' / 'preview' / f'{name}-sheet-{k // 16 + 1}.jpg')
+            contact_sheet(files[k:k + 16], EXPORT / 'preview' / f'{name}-sheet-{k // 16 + 1}.jpg')
     return outputs

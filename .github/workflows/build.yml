@@ -1,0 +1,57 @@
+name: Build decks and publish site
+
+# On every push to main: build the html decks, the ClassPoint PowerPoints, the
+# documents and the site from source; publish _site/ to GitHub Pages; keep the
+# PowerPoints and documents as a downloadable workflow artifact.
+# Pages source must be "GitHub Actions" (Settings → Pages).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/requirements.txt
+      - run: pip install -r tools/requirements.txt
+      - name: Build decks, documents and site
+        run: python tools/build_all.py
+      - name: Keep the PowerPoints, documents and previews
+        uses: actions/upload-artifact@v4
+        with:
+          name: sd2112-decks
+          path: |
+            export/*.pptx
+            export/*.json
+            export/docs/
+            export/preview/*.jpg
+          retention-days: 90
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
