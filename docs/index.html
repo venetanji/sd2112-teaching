@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SD2112 · AI in Design</title>
+<link rel="stylesheet" href="vendor/ait4x-colors_and_type.css">
+<style>
+@font-face{font-family:'Inter';src:url('vendor/fonts/Inter-Variable.ttf') format('truetype');font-weight:100 900}
+@font-face{font-family:'JetBrains Mono';src:url('vendor/fonts/JetBrainsMono-Variable.ttf') format('truetype');font-weight:100 800}
+body{background:var(--bg-1);color:var(--fg-1)}
+.hero{background:var(--bg-ink);color:var(--fg-inv);padding:96px 24px 72px}
+.wrap{max-width:1080px;margin:0 auto}
+.hero .eyebrow{color:rgba(255,255,255,.6);margin-bottom:24px}
+.hero h1{color:#fff;font-size:clamp(48px,9vw,120px);line-height:.9;letter-spacing:-.04em;margin:0 0 24px}
+.hero p{color:var(--E2, #D3E7E8);font-size:22px;max-width:60ch;margin:0}
+.wordmark{font-size:32px;color:#fff;position:absolute;right:24px;top:24px}
+main{padding:56px 24px 96px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:32px}
+.card{border:1px solid var(--line);padding:24px;position:relative;overflow:hidden;min-height:200px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out)}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-3);color:inherit}
+.card .code{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3)}
+.card h3{font-family:var(--font-display);font-weight:800;font-size:26px;line-height:.98;letter-spacing:-.025em;margin:0;max-width:calc(100% - 64px)}
+.card p{color:var(--fg-2);font-size:15px;line-height:1.45;margin:0;max-width:30ch}
+.card .block{position:absolute;right:-20px;top:-20px;width:90px;height:90px}
+.card .x{position:absolute;right:18px;bottom:14px;font-family:var(--font-display);font-weight:900;font-size:56px;line-height:1;letter-spacing:-.04em}
+.c1 .block,.c1 .x{background:var(--accent-warm)} .c1 .x{background:none;color:var(--accent-warm)}
+.c2 .block{background:var(--accent-violet)} .c2 .x{color:var(--accent-violet)}
+.c3 .block{background:var(--accent)} .c3 .x{color:var(--accent)}
+.c4 .block{background:var(--accent-hot)} .c4 .x{color:var(--accent-hot)}
+.soon{opacity:.55}
+h2{margin:64px 0 8px}
+.meta{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3)}
+footer{padding:48px 24px;border-top:1px solid var(--line);font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3)}
+</style></head>
+<body>
+<section class="hero" style="position:relative">
+  <span class="wordmark">a<span class="dot"></span>t4<span class="x">x</span></span>
+  <div class="wrap">
+    <div class="eyebrow">POLYU SCHOOL OF DESIGN · SD2112 · SEMESTER 1 · 2026/27</div>
+    <h1>Artificial intelligence in design.</h1>
+    <p>Two ways to teach a machine: write the rule, or show the examples. Thirteen weeks on what that does to the tools you use, the products you make, and the job.</p>
+  </div>
+</section>
+<main class="wrap">
+  <div class="meta">Slides · one deck per week</div>
+  <div class="grid">
+    <a class="card c1" href="week01/"><span class="block"></span><span class="code">SD2112 · WEEK 01</span><h3>Two ways to teach a machine</h3><p>The journey, a definition of AI, chairs, using vs incorporating, the designer's turn. Press S for speaker notes.</p><span class="x">x</span></a>
+    <div class="card c2 soon"><span class="block"></span><span class="code">SD2112 · WEEK 02</span><h3>Rules that make things</h3><p>Nake, Nees, LeWitt, Cage, and your first p5.js sketch.</p><span class="x">x</span></div>
+    <div class="card c3 soon"><span class="block"></span><span class="code">SD2112 · WEEK 03</span><h3>Learning from examples</h3><p>Concepts, neurons, Move 37.</p><span class="x">x</span></div>
+    <div class="card c4 soon"><span class="block"></span><span class="code">SD2112 · WEEKS 04 – 13</span><h3>Language, image, sound; AI inside products; the designer's turn</h3><p>Decks are published here the day before each class.</p><span class="x">x</span></div>
+  </div>
+  <h2>Course documents</h2>
+  <div class="grid">
+    <a class="card c3" href="syllabus.html"><span class="block"></span><span class="code">SYLLABUS · 2026/27</span><h3>Thirteen weeks, four modules, five components</h3><p>Weekly plan, assessment, rubrics, readings, rules.</p><span class="x">x</span></a>
+    <a class="card c2" href="week01-lesson-plan.html"><span class="block"></span><span class="code">LESSON PLAN · WEEK 01</span><h3>Run of show, the activity, ClassPoint questions</h3><p>For the teaching team: timings, roles, contingencies.</p><span class="x">x</span></a>
+    <a class="card c1" href="https://www.youtube.com/playlist?list=PLU58DFEI5YDQ" target="_blank" rel="noopener"><span class="block"></span><span class="code">PLAYLIST · BY NICOLÒ</span><h3>Fifteen videos, in the order we need them</h3><p>AlphaGo, Illiac Suite, Cage, Tinguely, Kaprow, then LLMs, diffusion, CLIP, sound, chatbots.</p><span class="x">x</span></a>
+  </div>
+</main>
+<footer class="wrap">SD2112 · AI IN DESIGN · POLYU SCHOOL OF DESIGN · GIOVANNI LION · TAs NICOLÒ AND AMBER · COORDINATOR ZHOU ZHIBIN</footer>
+</body></html>

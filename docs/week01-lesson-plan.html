@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SD2112 · Week 1 lesson plan</title>
+<link rel="stylesheet" href="vendor/ait4x-colors_and_type.css">
+<style>
+@font-face{font-family:'Inter';src:url('vendor/fonts/Inter-Variable.ttf') format('truetype');font-weight:100 900}
+@font-face{font-family:'JetBrains Mono';src:url('vendor/fonts/JetBrainsMono-Variable.ttf') format('truetype');font-weight:100 800}
+body{max-width:980px;margin:0 auto;padding:48px 24px 96px;color:var(--fg-1)}
+.eyebrow{margin-bottom:24px} h1{margin:0 0 24px;font-size:clamp(36px,6vw,72px)} h2{margin:56px 0 16px} h3{margin:32px 0 8px}
+p,li{font-size:17px;line-height:1.55;color:var(--fg-2)} li{margin:4px 0}
+table{border-collapse:collapse;width:100%;margin:16px 0 24px;font-size:15px} th,td{text-align:left;vertical-align:top;padding:10px 12px;border-top:1px solid var(--line)} th{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3)}
+blockquote{margin:24px 0;padding:0 0 0 20px;border-left:4px solid var(--accent-warm);font-family:var(--font-display);font-weight:800;font-size:24px;line-height:1.15;letter-spacing:-.02em;color:var(--fg-1)} blockquote p{font-size:inherit;color:inherit;line-height:inherit;margin:0}
+code{font-family:var(--font-mono);font-size:.92em;background:var(--bg-2);padding:1px 5px}
+a{text-decoration:underline;text-underline-offset:.12em} a:hover{color:var(--accent-deep)}
+nav{display:flex;gap:24px;align-items:baseline;margin-bottom:48px} nav a{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--fg-3)}
+nav a.wordmark{font-family:var(--font-display);font-size:28px;font-weight:900;letter-spacing:-.04em;text-transform:none;color:var(--fg-1)}
+</style></head><body>
+<nav><a href="index.html" class="wordmark" style="text-decoration:none;color:var(--fg-1)">a<span class="dot"></span>t4<span class="x">x</span></a><a href="index.html">SD2112</a><a href="week01/">Week 1 slides</a><a href="syllabus.html">Syllabus</a><a href="week01-lesson-plan.html">Lesson plan</a></nav>
+<div class="eyebrow">POLYU SCHOOL OF DESIGN · SD2112 · 2026/27</div>
+<h1>SD2112 · Week 1 lesson plan</h1>
+<p><strong>Two ways to teach a machine</strong> · lecture-workshop, about 100 minutes · deck: <code>export/week01-classpoint.pptx</code> (59 slides) · web: <code>docs/week01/</code></p>
+<h2>Purpose of this session</h2>
+<p>For us:</p>
+<ol>
+<li>Give a preview of the whole journey, so every later week lands in a place students already know.</li>
+<li>Collect the level and the expectations of the room (studio, AI use, coding, hopes and worries) and keep the data.</li>
+<li>Land one concept that carries the semester: <strong>rules vs examples</strong>, on a chair.</li>
+<li>Establish the team, the rules and the tools.</li>
+</ol>
+<p>For students, by the end of the class they can:</p>
+<ul>
+<li>state the working definition of AI and say what "intelligent-like" and "computation" are doing in it;</li>
+<li>explain the two ways to teach a machine and give one design example of each (Auto Levels vs Generative Fill);</li>
+<li>say why a definition of "chair" leaks and why a model returns the prototype;</li>
+<li>tell using AI (process) from incorporating AI (product);</li>
+<li>know what is due, when, and who to ask.</li>
+</ul>
+<h2>Before class (TAs, from 30 minutes before)</h2>
+<table>
+<thead>
+<tr>
+<th>Who</th>
+<th>Task</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nicolò</td>
+<td>Open ClassPoint on the classroom PC; open <code>week01-classpoint.pptx</code>; put the join code on screen from slide 1. Import <code>classpoint/roster-2026-classpoint.csv</code> as the saved class (names are the last four digits + letter of the student ID). Fire the slide-3 word cloud once as a test and reset it.</td>
+</tr>
+<tr>
+<td>Amber</td>
+<td>Paper and pens for 114 people (one sheet each for the chair drawing and the activity). Seating that allows pairs and fours. Blackboard: post the deck link, the playlist and the homework.</td>
+</tr>
+<tr>
+<td>Gio</td>
+<td>Fonts on the classroom PC: install <code>tools/fonts/Inter-Variable.ttf</code> and <code>JetBrainsMono-Variable.ttf</code>, restart PowerPoint, check slide 1 shows Inter Black without a substitution warning. Fallback: Arial. Backup: the HTML deck on a laptop (<code>docs/week01/index.html</code>, press <code>S</code> for speaker notes).</td>
+</tr>
+</tbody>
+</table>
+<h2>Run of show</h2>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>Slides</th>
+<th>Segment</th>
+<th>What happens</th>
+<th>ClassPoint</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0:00</td>
+<td>1–2</td>
+<td>Welcome</td>
+<td>Course code, the eight stops, where the interactive moments are.</td>
+<td></td>
+<td>Join code stays visible until stop 2.</td>
+</tr>
+<tr>
+<td>0:03</td>
+<td>3</td>
+<td>Word cloud: <em>AI in design, one word</em></td>
+<td>One minute on screen; read the three biggest words aloud and keep them.</td>
+<td>Word cloud (1 submission)</td>
+<td>Screenshot the cloud.</td>
+</tr>
+<tr>
+<td>0:05</td>
+<td>4–5</td>
+<td>Why are we here</td>
+<td>Tools, products, job: the three things that changed.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0:09</td>
+<td>6–8</td>
+<td>Who is teaching you · the team</td>
+<td>Gio's background; the three AI avatars (one photo, three models). Team card: TAs 30 min before and after; Zhibin for absences.</td>
+<td></td>
+<td>Say the absence rule out loud.</td>
+</tr>
+<tr>
+<td>0:14</td>
+<td>9–11</td>
+<td>Who are you</td>
+<td>Three multiple-choice questions: studio, AI use, code.</td>
+<td>3 × multiple choice</td>
+<td>This is the level check. Note the splits; they steer weeks 2, 4 and 5.</td>
+</tr>
+<tr>
+<td>0:20</td>
+<td>12–15</td>
+<td>The journey</td>
+<td>The semester map (you are here); Lovelace's objection; the course question.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0:26</td>
+<td>16–18</td>
+<td>What is AI</td>
+<td>Short answer in their own words (90 s); read four that disagree; the working definition.</td>
+<td>Short answer</td>
+<td></td>
+</tr>
+<tr>
+<td>0:31</td>
+<td>19–20</td>
+<td>Intelligent or creative · Babbage</td>
+<td>Wiggins' definition judges output; Turing 1936/1950; the engine as brass and steel.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0:34</td>
+<td>21–24</td>
+<td>Two machines</td>
+<td>Write the rule or show the examples; twelve parametric chairs (machine A); four generated chairs (machine B).</td>
+<td></td>
+<td>Slides 23 and 24 are the core of the class.</td>
+</tr>
+<tr>
+<td>0:40</td>
+<td>25</td>
+<td><strong>Draw a chair</strong></td>
+<td>15 seconds, pen and paper, hold it up, look around: nearly everyone drew the prototype.</td>
+<td></td>
+<td>Slide has a 15 s timer label.</td>
+</tr>
+<tr>
+<td>0:42</td>
+<td>26–28</td>
+<td>Typicality · the edge · quick check</td>
+<td>Rosch's middle and edge; "ask for the edge, get the middle"; <em>which of these is a chair?</em></td>
+<td>Multiple choice</td>
+<td>The split is the point; there is no correct answer.</td>
+</tr>
+<tr>
+<td>0:47</td>
+<td>29</td>
+<td>Same app, two machines</td>
+<td>Auto Levels · Content-Aware Fill · Generative Fill. Ask which one they would trust for a client shot.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0:50</td>
+<td>30–34</td>
+<td>How we got here</td>
+<td>Timeline; Nake 1965; how a network learns; Move 37 (play the chapter if time); Belamy.</td>
+<td></td>
+<td>Cut 31–32 if behind.</td>
+</tr>
+<tr>
+<td>0:56</td>
+<td></td>
+<td>Break, 5 min</td>
+<td></td>
+<td></td>
+<td>Optional.</td>
+</tr>
+<tr>
+<td>1:01</td>
+<td>35–37</td>
+<td>AI in design, now</td>
+<td>Using vs incorporating; three cases: Coca-Cola, Netflix, Humane. Ask for one more case from the last month.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1:06</td>
+<td>38</td>
+<td>Short answer: <em>where did AI touch your design work this week?</em></td>
+<td>Two minutes; sort a few live into using and incorporating.</td>
+<td>Short answer</td>
+<td>Replaces the old scavenger hunt. Keep the list for week 3.</td>
+</tr>
+<tr>
+<td>1:09</td>
+<td>39</td>
+<td>The playlist</td>
+<td>Fifteen videos; what to watch before week 3.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1:11</td>
+<td>40–43</td>
+<td>The designer's turn</td>
+<td>Verbeek's line; the thing in between; designers as curators, guardrail setters, storytellers.</td>
+<td></td>
+<td>Keep it to five minutes.</td>
+</tr>
+<tr>
+<td>1:16</td>
+<td>44–47</td>
+<td><strong>Activity: teach the machine what a chair is</strong></td>
+<td>1 min alone: write the rule. 2 min pairs: break it. 4 min fours: teach with five examples and one hard no.</td>
+<td></td>
+<td>TAs keep time and walk the room. Slides carry the timers.</td>
+</tr>
+<tr>
+<td>1:24</td>
+<td>48</td>
+<td>Capture</td>
+<td>Scribes only, one line per four. Read three aloud.</td>
+<td>Short answer</td>
+<td>About 28 lines. Export them.</td>
+</tr>
+<tr>
+<td>1:27</td>
+<td>49</td>
+<td>What just happened</td>
+<td>You built both machines; the machine cannot decide which examples.</td>
+<td></td>
+<td>Say the last line slowly.</td>
+</tr>
+<tr>
+<td>1:29</td>
+<td>50–56</td>
+<td>How this course works</td>
+<td>Five components; reflection; group project; weekly challenges; three rules; before next week.</td>
+<td></td>
+<td>Point at Blackboard for the rubrics.</td>
+</tr>
+<tr>
+<td>1:38</td>
+<td>57–58</td>
+<td>What's your X · one hope and one worry</td>
+<td>Closing word cloud, then an anonymous short answer.</td>
+<td>Word cloud · short answer (names hidden)</td>
+<td>Compare the two clouds. Read the worries, map each to a week.</td>
+</tr>
+<tr>
+<td>1:41</td>
+<td>59</td>
+<td>End</td>
+<td>Next week: rules that make things. Bring a laptop. Watch AlphaGo.</td>
+<td></td>
+<td>TAs stay 30 minutes.</td>
+</tr>
+</tbody>
+</table>
+<p>Timing is tight at 100 minutes. If the slot is 90 minutes, drop slides 31–32 (learning from examples, Nake) and shorten the cases at 35–37 to one minute each. If the slot is two hours, take the break and extend the Move 37 discussion.</p>
+<h2>The activity, in detail: Teach the machine what a chair is</h2>
+<p>Replaces the scavenger hunt. Eight minutes, no software, three rounds, one capture. It makes students <em>do</em> both machines before they have the names for them, and it produces material we reuse in weeks 3, 9 and 11.</p>
+<ol>
+<li><strong>Alone, 1 minute — write the rule.</strong> "Define chair so that a machine could apply it with no judgement of its own. One sentence: <em>X is a chair if ___.</em> Be strict." Silent, pen and paper. (This is the classical theory of concepts: necessary and sufficient conditions.)</li>
+<li><strong>Pairs, 2 minutes — break the rule.</strong> Swap sentences. Find one thing that passes the partner's rule and is not a chair, and one chair that fails it. Write both under the rule. Typical breakers: a rock, a bean bag, a swing, a wheelchair, a throne, half a sofa. (Every rule leaks at the edge: Plato's problem, fuzziness, counter-examples.)</li>
+<li><strong>Fours, 4 minutes — teach with examples instead.</strong> Join the pair behind. Pick the five photographs you would show a machine to teach it "chair", then one hard no: something that looks like a chair and is not. Decide together: what does the machine learn if all five are office chairs? Whose chairs are missing? One person writes. (This is dataset curation; the hard negative is a guardrail.)</li>
+<li><strong>Capture, 2 minutes — ClassPoint short answer, scribes only.</strong> Format: <code>RULE broke on: ___ · FIVE EXAMPLES: ___ · HARD NO: ___</code>. One line per group of four, about 28 lines. Read three aloud.</li>
+<li><strong>Debrief, 2 minutes — slide 49.</strong> The rule-writers hit every problem of the classical theory (week 3). The example-pickers hit dataset bias and curation (weeks 9 and 11). A machine can apply the rule and learn from the examples; it cannot decide which examples. That was you.</li>
+</ol>
+<p>TA roles: Nicolò keeps time with the slide timers and calls the round changes; Amber walks the room and nudges quiet fours; both collect stray drawings at the end (they make a nice week-2 recap slide).</p>
+<h2>ClassPoint questions and what we do with the answers</h2>
+<table>
+<thead>
+<tr>
+<th>Slide</th>
+<th>Type</th>
+<th>Question</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>Word cloud</td>
+<td>AI in design, one word</td>
+<td>Opening temperature; compared with slide 57 at the end; both go into the week-2 recap.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Multiple choice</td>
+<td>Which studio are you closest to?</td>
+<td>Steers the examples used in weeks 2–6 (type and campaigns vs product form vs feeds).</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Multiple choice</td>
+<td>How much have you used AI in your design work?</td>
+<td>Level check. Mostly A/B: slow down the tool weeks. Many D: pair them with beginners in the challenges.</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Multiple choice</td>
+<td>Have you written code?</td>
+<td>Sizes the week-2 p5.js exercise; if more than a third answer C, add the harder second half.</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Short answer</td>
+<td>What is AI? One sentence</td>
+<td>Read the disagreeing ones; keep for the week-3 recap.</td>
+</tr>
+<tr>
+<td>28</td>
+<td>Multiple choice</td>
+<td>Which of these is a chair?</td>
+<td>Demonstrates fuzziness; no correct answer.</td>
+</tr>
+<tr>
+<td>38</td>
+<td>Short answer</td>
+<td>Where did AI touch your design work this week?</td>
+<td>The new "AI in the wild": the list seeds the week-3 categorising exercise.</td>
+</tr>
+<tr>
+<td>48</td>
+<td>Short answer</td>
+<td>Activity capture (scribes only)</td>
+<td>Rules become week-3 classical-theory examples; example lists become the week-9 bias exercise.</td>
+</tr>
+<tr>
+<td>57</td>
+<td>Word cloud</td>
+<td>What's your X? One word</td>
+<td>Expectations; compare with slide 3.</td>
+</tr>
+<tr>
+<td>58</td>
+<td>Short answer, names hidden</td>
+<td>One hope and one worry</td>
+<td>Expectations and anxieties; map each worry to the week that addresses it and tell them in week 2.</td>
+</tr>
+</tbody>
+</table>
+<p>After class, export the ClassPoint results and keep them in a private folder (they are student data): the three multiple-choice splits, the two clouds, the worries. Bring the numbers to the week-2 planning.</p>
+<h2>Contingencies</h2>
+<ul>
+<li><strong>ClassPoint fails.</strong> Word clouds become hands up; short answers become paper, collected by the TAs; the capture is read aloud by three scribes.</li>
+<li><strong>Projector or PC fails.</strong> The HTML deck runs from any laptop or phone browser; speaker notes with <code>S</code>, overview with <code>O</code>.</li>
+<li><strong>Fonts missing.</strong> PowerPoint substitutes Arial automatically; the deck still reads. Install the two variable fonts from <code>tools/fonts/</code> for the next class.</li>
+<li><strong>Running late.</strong> Cut in this order: 31–32, then 33–34, then the break.</li>
+<li><strong>Running early.</strong> Play the Move 37 chapter; ask the room for a fourth "case from the last month"; let two groups read their whole capture line.</li>
+</ul>
+<h2>After class</h2>
+<ul>
+<li>TAs stay 30 minutes: accounts, laptops, the four setup items (ClassPoint name, Blackboard, p5.js editor, an image tool).</li>
+<li>Post on Blackboard: the deck link, the playlist, the homework (AlphaGo and the four short art films before week 3; bring a laptop).</li>
+<li>File the ClassPoint exports and the two word-cloud screenshots for the week-2 recap.</li>
+<li>Note the three level-check splits and adjust the week-2 exercise.</li>
+</ul>
+<h2>Materials</h2>
+<ul>
+<li><code>export/week01-classpoint.pptx</code> (ClassPoint-ready, animations, ait4x master) and <code>export/week01.pptx</code> (plain, editable).</li>
+<li><code>docs/week01/index.html</code> (HTML deck, GitHub Pages) — same content, speaker notes included.</li>
+<li><code>classpoint/roster-2026-classpoint.csv</code> — saved-class roster (114 names).</li>
+<li>Paper and pens for 114; the two variable fonts; a laptop with the HTML deck as backup.</li>
+</ul>
+</body></html>

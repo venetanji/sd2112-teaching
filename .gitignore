@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.DS_Store
+# per-slide preview PNGs are rebuilt by deck/week01.py; the contact sheets are kept
+export/preview/week01/
+export/preview/html-week01/
