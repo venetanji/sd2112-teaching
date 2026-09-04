@@ -244,7 +244,7 @@ def timing(bs):
 
 # ───────────────────────── classpoint ─────────────────────────
 STRLIST = 'System.Collections.Generic.List`1[[System.String, mscorlib]], mscorlib'
-BUTTON = {'multiple_choice': 'btn-multiple-choice.png', 'short_answer': 'btn-short-answer.png', 'word_cloud': 'btn-word-cloud.png'}
+BUTTON = {'multiple_choice': 'btn-multiple-choice.png', 'short_answer': 'btn-short-answer.png', 'word_cloud': 'btn-word-cloud.png', 'image_upload': 'btn-image-upload.png'}
 BW, BH = 2222048, 581015
 
 
@@ -253,6 +253,20 @@ def activity(m):
     common = {'activityId': None, 'countdown': m.get('countdown', 0), 'StartWithSlide': False, 'CanMinimize': False, 'CanCountDown': False}
     if m['type'] == 'word_cloud':
         return base('WordCloud', 2, {'$type': 'ClassPoint2.Core.DTO.Activities.WordCloudActivity, ClassPoint2.Core', 'numOfSubmissionsAllowed': m.get('submissions', 5), 'activityType': 'Word Cloud', **common})
+    if m['type'] == 'image_upload':
+        # Not reverse-engineered yet (see venetanji/classpoint.py). Drop the JSON that verify() reads
+        # back from a deck with a hand-inserted Image Upload button into model-image_upload.json
+        # and it is used as the template; until then the slide gets no button and a warning.
+        tmpl = HERE / 'model-image_upload.json'
+        if not tmpl.exists():
+            return None
+        model = json.loads(tmpl.read_text(encoding='utf-8'))
+        ab = model.get('ActivityBase') or {}
+        if 'isNamesHidden' in ab:
+            ab['isNamesHidden'] = m.get('hide_names', False)
+        if 'countdown' in ab:
+            ab['countdown'] = m.get('countdown', 0)
+        return model
     if m['type'] == 'short_answer':
         return base('ShortAnswers', 1, {'$type': 'ClassPoint2.Core.DTO.Activities.ShortAnswerActivity, ClassPoint2.Core', 'isMultipleSubmissionsAllowed': m.get('multiple', False), 'isNamesHidden': m.get('hide_names', False), 'gradingInstructions': None, 'activityType': 'Short Answer', **common})
     return base('MultipleChoice', 0, {'$type': 'ClassPoint2.Core.DTO.Activities.MultipleChoiceActivity, ClassPoint2.Core', 'mcChoices': {'$type': STRLIST, '$values': m['choices']}, 'mcIsAllowSelectMultiple': m.get('select_multiple', False), 'mcCorrectAnswers': {'$type': STRLIST, '$values': []}, 'isQuizMode': False, 'correctPoints': 0, 'correctSpeedBonus': None, 'HasCorrectAnswers': False, 'activityType': 'Multiple Choice', **common})
@@ -276,12 +290,15 @@ def build(src: Path):
     # classpoint buttons + tags
     activities = Path(os.environ.get('DECK_ACTIVITIES', HERE / 'activities.json'))  # per-deck manifest
     manifest = {int(k): v for k, v in json.loads(activities.read_text()).items() if not k.startswith('_')}
-    for f in set(BUTTON.values()):
-        p = HERE / f
-        if not p.exists():
-            p = next(HERE.glob('btn-*.png'))  # fallback artwork
-        S(f'ppt/media/{f}', p.read_bytes())
-    for n, (no, m) in enumerate(sorted(manifest.items()), start=1):
+    n = 0
+    skipped, used = [], set()
+    for no, m in sorted(manifest.items()):
+        model = activity(m)
+        if model is None:
+            skipped.append(no)
+            continue
+        n += 1
+        used.add(BUTTON[m['type']])
         rn, sn = f'ppt/slides/_rels/slide{no}.xml.rels', f'ppt/slides/slide{no}.xml'
         rels = T(rn)
         mx = max(int(x) for x in re.findall(r'Id="rId(\d+)"', rels))
@@ -292,9 +309,11 @@ def build(src: Path):
         pic = (f'<p:pic><p:nvPicPr><p:cNvPr id="{sid}" name="btnInknoeActivityCp2"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr><p:custDataLst><p:tags r:id="{r_tag}"/></p:custDataLst></p:nvPr></p:nvPicPr>'
                f'<p:blipFill><a:blip r:embed="{r_img}"/><a:stretch><a:fillRect/></a:stretch></p:blipFill><p:spPr><a:xfrm><a:off x="{W - 120*PX - BW}" y="{H - 80*PX - BH}"/><a:ext cx="{BW}" cy="{BH}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr></p:pic>')
         S(sn, xml.replace('</p:spTree>', pic + '</p:spTree>'))
-        val = html.escape(json.dumps(activity(m), separators=(',', ':')), quote=True)
+        val = html.escape(json.dumps(model, separators=(',', ':')), quote=True)
         S(f'ppt/tags/tag{n}.xml', f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n<p:tagLst {NS}><p:tag name="ACTIVITYMODEL" val="{val}"/></p:tagLst>')
         ct = ct.replace('</Types>', f'<Override PartName="/ppt/tags/tag{n}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.tags+xml"/></Types>')
+    for f in sorted(used):  # only the button artwork that is referenced
+        S(f'ppt/media/{f}', (HERE / f).read_bytes())
     S('[Content_Types].xml', ct)
 
     # fonts + animation on every slide
@@ -309,9 +328,11 @@ def build(src: Path):
     with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
         for n, d in parts.items():
             z.writestr(n, d)
-    print(f'wrote {out}: {len(LAYOUTS)} layouts, {animated} animated slides, {len(manifest)} ClassPoint activities')
+    print(f'wrote {out}: {len(LAYOUTS)} layouts, {animated} animated slides, {len(manifest) - len(skipped)} ClassPoint activities')
     for no, m in sorted(manifest.items()):
-        print(f'  slide {no:>2}: {m["type"]}')
+        print(f'  slide {no:>2}: {m["type"]}' + ('  (NO BUTTON: add it by hand in ClassPoint)' if no in skipped else ''))
+    if skipped:
+        print(f'WARNING: slides {skipped}: image_upload has no ClassPoint model yet — insert the Image Upload button by hand in PowerPoint (ClassPoint tab) and save; see model-image_upload.json note in activity()')
 
 
 def template(out: Path):

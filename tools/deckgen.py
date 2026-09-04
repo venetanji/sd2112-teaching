@@ -276,6 +276,8 @@ html,body{background:#000B1C}
 .embed iframe{width:100%;height:100%;border:0}
 .cp{position:absolute;left:1450px;top:908px;width:350px;height:92px;border:2px dashed #ED6D24;color:#ED6D24;font:500 22px/1 var(--font-m);letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:12px}
 .cp b{width:12px;height:12px;border-radius:50%;background:#ED6D24;display:inline-block}
+.embed .print-only{display:none}
+@media print{.cp{display:none}.embed iframe{display:none}.embed .print-only{display:block;width:100%;height:100%;object-fit:cover}}
 .reveal .progress{height:4px;color:#ED6D24}
 .reveal .backgrounds{background:#000B1C}
 """
@@ -299,7 +301,7 @@ HTML_TMPL = """<!doctype html>
 <script>
 Reveal.initialize({{width:1920,height:1080,margin:0,minScale:0.05,maxScale:4,center:false,hash:true,transition:'none',
   backgroundTransition:'none',controls:false,progress:true,slideNumber:false,plugins:[RevealNotes],
-  keyboard:{{}}}});
+  pdfMaxPagesPerSlide:1,pdfSeparateFragments:false,keyboard:{{}}}});
 </script>
 </body>
 </html>
@@ -361,9 +363,10 @@ def html_slide(s, i, assets_out, assets_rel):
         elif el.kind == 'figure':
             parts.append(f'<div class="fig" style="left:{el.x}px;top:{el.y}px;width:{el.w}px;height:{el.h}px">{el.svg}</div>')
         elif el.kind == 'embed':
-            parts.append(f'<div class="embed" style="left:{el.x}px;top:{el.y}px;width:{el.w}px;height:{el.h}px"><iframe data-src="https://www.youtube-nocookie.com/embed/{el.yt}?rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>')
+            thumb = f'<img class="print-only" src="{assets_rel}/{copy_asset(el.thumb, assets_out)}" alt="">' if el.thumb else ''  # the pdf shows the thumbnail
+            parts.append(f'<div class="embed" style="left:{el.x}px;top:{el.y}px;width:{el.w}px;height:{el.h}px"><iframe data-src="https://www.youtube-nocookie.com/embed/{el.yt}?rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>{thumb}</div>')
     if s.cp:
-        label = {'word_cloud': 'Word cloud', 'multiple_choice': 'Multiple choice', 'short_answer': 'Short answer'}[s.cp['type']]
+        label = {'word_cloud': 'Word cloud', 'multiple_choice': 'Multiple choice', 'short_answer': 'Short answer', 'image_upload': 'Image upload'}[s.cp['type']]
         parts.append(f'<div class="cp" data-classpoint><b></b>{label}</div>')
     if s.notes:
         parts.append(f'<aside class="notes">{esc(s.notes)}</aside>')
@@ -679,19 +682,28 @@ def contact_sheet(files, out, cols=4, scale=0.5):
 
 
 # ───────────────────────── orchestration ─────────────────────────
-def build_all(deck, name: str, footer: str, do_pptx=True, do_html=True, do_png=True):
+def build_pdf(index_html: Path, out_pdf: Path):
+    """Print the html deck to a PDF (reveal.js print mode, Chromium via Playwright, tools/pdf.js).
+    No ClassPoint chips, video slides show their thumbnail. Needs node + the playwright package
+    (NODE_PATH or a node_modules next to the repo) and a Chromium it can launch."""
+    env = dict(os.environ)
+    if not env.get('NODE_PATH') and Path('/opt/node22/lib/node_modules').exists():
+        env['NODE_PATH'] = '/opt/node22/lib/node_modules'
+    subprocess.run(['node', str(ROOT / 'tools' / 'pdf.js'), str(index_html), str(out_pdf)], check=True, env=env)
+    return out_pdf
+
+
+def build_all(deck, name: str, footer: str, do_pptx=True, do_html=True, do_png=True, do_pdf=True):
     outputs = {}
     if do_html:
         outputs['html'] = build_html(deck, SITE / name)
+        if do_pdf:  # the published, button-free version of the deck
+            outputs['pdf'] = build_pdf(outputs['html'], SITE / name / deck.get('pdf', f'{name}.pdf'))
     if do_pptx:
         pptx_path, manifest = build_pptx(deck, EXPORT / f'{name}.pptx', footer)
         outputs['pptx'] = pptx_path
         outputs['manifest'] = manifest
         outputs['classpoint'] = run_classpoint_build(pptx_path, manifest, footer)
-        if do_html:  # the classroom file is downloadable next to the html deck
-            download = SITE / name / deck.get('download', f'{name}-classpoint.pptx')
-            shutil.copy(outputs['classpoint'], download)
-            outputs['download'] = download
     if do_png:
         files, warnings = build_png(deck, EXPORT / 'preview' / name)
         outputs['png'] = files

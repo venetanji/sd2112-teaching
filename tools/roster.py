@@ -3,8 +3,8 @@ ClassPoint saved-class roster from a list of student IDs.
 
     python tools/roster.py ids.csv classpoint/roster-2026-classpoint.csv
 
-ids.csv: one student ID per line (e.g. 25088695d). The roster uses the last four
-digits and the letter, upper-case (8695D), the convention used in the 2025 gradebook.
+ids.csv: one student ID per line (e.g. 21123456a). The roster uses the last four
+digits and the letter, upper-case (3456A), the convention used in the 2025 gradebook.
 Both files are student data and are git-ignored: keep them out of the repository.
 """
 import csv

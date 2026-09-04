@@ -1,9 +1,9 @@
-name: Build decks and publish site
+name: Publish site
 
-# On every push to main: build the html decks, the ClassPoint PowerPoints, the
-# documents and the site from source; publish _site/ to GitHub Pages; keep the
-# PowerPoints and documents as a downloadable workflow artifact.
-# Pages source must be "GitHub Actions" (Settings → Pages).
+# On every push to main (or by hand): build the html decks, print each one to a PDF
+# without the ClassPoint buttons, build the syllabus page, and publish _site/ to
+# GitHub Pages. Pages source must be "GitHub Actions" (Settings → Pages).
+# The PowerPoints are built by the separate "Build PowerPoints" workflow.
 on:
   push:
     branches: [main]
@@ -29,18 +29,15 @@ jobs:
           cache: pip
           cache-dependency-path: tools/requirements.txt
       - run: pip install -r tools/requirements.txt
-      - name: Build decks, documents and site
-        run: python tools/build_all.py
-      - name: Keep the PowerPoints, documents and previews
-        uses: actions/upload-artifact@v4
+      - uses: actions/setup-node@v4
         with:
-          name: sd2112-decks
-          path: |
-            export/*.pptx
-            export/*.json
-            export/docs/
-            export/preview/*.jpg
-          retention-days: 90
+          node-version: '22'
+      - name: Playwright Chromium (prints the PDFs)
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Build the site (html decks, PDFs, syllabus)
+        run: python tools/build_all.py --site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

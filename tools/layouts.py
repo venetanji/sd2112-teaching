@@ -75,14 +75,15 @@ def _slide(bg=WHITE, notes='', cp=None, title='', chrome=True):
 
 
 # ───────────────────────── layouts ─────────────────────────
-def title(eyebrow_text, title_text, sub, notes='', size=150):
+def title(eyebrow_text, title_text, sub, notes='', size=150, mark=False):
     s = _slide(INK, notes, title=title_text, chrome=False)
     s.els += [
         eyebrow(M, 560, eyebrow_text, MUTED_ON_INK),
         T(M, 620, CW, 300, title_text, 'black', size, WHITE, lh=0.88, valign='b', spc=-0.045),
         T(M, 940, 1400, 60, sub, 'body', 36, LIGHT_ON_INK, lh=1.2),
-        wordmark(),
     ]
+    if mark:  # the a·t4x wordmark; off by default on the title (it stays on the end slide)
+        s.els.append(wordmark())
     return s
 
 
@@ -231,12 +232,12 @@ def cards(eyebrow_text, title_text, items, notes='', bg=WHITE, head_size=None, t
             Rect(x, y0, w, 2, LINE if not _dark(bg) else '#2A3644'),
             T(x, y0 + 24, w, 36, label, 'monomed', 22, ORANGE, lh=1.2, spc=0.14, caps=True),
             T(x, y0 + 76, w, 130, head, 'xbold', hs, t, lh=1.05, spc=-0.02),
-            Text(x, y0 + 216, w, 560 - (y0 - 372), body_paras(text if isinstance(text, list) else [text], ts, b, lh=1.4, gap=12), 't'),
+            Text(x, y0 + 216, w, 980 - (y0 + 216), body_paras(text if isinstance(text, list) else [text], ts, b, lh=1.4, gap=12), 't'),  # ends above the footer
         ]
     return s
 
 
-KIND_LABEL = {'word_cloud': 'Word cloud', 'multiple_choice': 'Multiple choice', 'short_answer': 'Short answer'}
+KIND_LABEL = {'word_cloud': 'Word cloud', 'multiple_choice': 'Multiple choice', 'short_answer': 'Short answer', 'image_upload': 'Image upload'}
 
 
 def question(kind, question_text, choices=None, hint=None, notes='', eyebrow_text=None, size=None, cp=None, bg=WHITE, example=None):
@@ -264,7 +265,9 @@ def question(kind, question_text, choices=None, hint=None, notes='', eyebrow_tex
             s.els.append(T(M, 700, 1300, 120, hint, 'body', 32, m, lh=1.35))
         if example:
             s.els.append(T(M, 840, 1300, 100, example, 'mono', 24, m, lh=1.4))
-        cp = cp or ({'type': 'word_cloud', 'submissions': 1} if kind == 'word_cloud' else {'type': 'short_answer', 'hide_names': False, 'multiple': False})
+        cp = cp or ({'type': 'word_cloud', 'submissions': 1} if kind == 'word_cloud'
+                    else {'type': 'image_upload', 'hide_names': False} if kind == 'image_upload'
+                    else {'type': 'short_answer', 'hide_names': False, 'multiple': False})
     s.cp = cp
     return s
 

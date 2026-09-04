@@ -1,12 +1,15 @@
 """
-Build everything, the way the GitHub Actions workflow does:
+Build everything, the way the GitHub Actions workflows do:
 
-    python tools/build_all.py
+    python tools/build_all.py            # site + PowerPoints
+    python tools/build_all.py --site     # _site/ only: landing page, html decks, PDFs, syllabus (the Pages workflow)
+    python tools/build_all.py --pptx     # export/ only: PowerPoints, ClassPoint manifest, docx, previews (the PowerPoint workflow)
+    python tools/build_all.py --no-pdf   # skip the Chromium PDF step (no node/playwright on this machine)
 
-  _site/            the published site: landing page, vendor css/js/fonts,
-                    one folder per deck (html deck + assets + the ClassPoint pptx), syllabus
+  _site/            the published site: landing page, vendor css/js/fonts, one folder per deck
+                    (html deck + assets + the PDF without ClassPoint buttons), syllabus.html
   export/           week01.pptx, week01-classpoint.pptx, the ClassPoint manifest,
-                    docs/*.docx, preview contact sheets
+                    docs/*.docx (+ the lesson plans as html), preview contact sheets
 
 Both folders are git-ignored. Add new decks to DECKS.
 """
@@ -33,26 +36,35 @@ def load_deck(name):
     return mod
 
 
-def main():
-    site = deckgen.SITE
-    if site.exists():
-        shutil.rmtree(site)
-    shutil.copytree(ROOT / 'site', site)      # index.html + vendor/ (reveal.js, design tokens)
-    (site / '.nojekyll').touch()
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    explicit = {'--site', '--pptx'} & set(argv)
+    do_site = '--site' in explicit or not explicit
+    do_pptx = '--pptx' in explicit or not explicit
+    do_pdf = '--no-pdf' not in argv
+    if do_site:
+        site = deckgen.SITE
+        if site.exists():
+            shutil.rmtree(site)
+        shutil.copytree(ROOT / 'site', site)      # index.html + vendor/ (reveal.js, design tokens)
+        (site / '.nojekyll').touch()
     problems = []
     for name in DECKS:
         mod = load_deck(name)
-        out = deckgen.build_all(mod.DECK, name, mod.FOOTER)
+        out = deckgen.build_all(mod.DECK, name, mod.FOOTER, do_pptx=do_pptx, do_html=do_site, do_png=True, do_pdf=do_site and do_pdf)
         n = len(mod.DECK['slides'])
         cp = sum(1 for s in mod.DECK['slides'] if s.cp)
-        print(f'{name}: {n} slides, {cp} ClassPoint activities -> {out["html"].relative_to(ROOT)}, {out["download"].relative_to(ROOT)}')
+        made = [str(out[k].relative_to(ROOT)) for k in ('html', 'pdf', 'classpoint') if k in out]
+        print(f'{name}: {n} slides, {cp} ClassPoint activities -> ' + ', '.join(made))
         for w in out.get('warnings') or []:
             problems.append(f'{name}: {w}')
-    build_docs.main()
+    build_docs.main(site=do_site, export=do_pptx)
     for p in problems:
         print('WARNING', p)
-    total = sum(f.stat().st_size for f in site.rglob('*') if f.is_file())
-    print(f'_site: {sum(1 for f in site.rglob("*") if f.is_file())} files, {total / 1e6:.1f} MB')
+    if do_site:
+        site = deckgen.SITE
+        total = sum(f.stat().st_size for f in site.rglob('*') if f.is_file())
+        print(f'_site: {sum(1 for f in site.rglob("*") if f.is_file())} files, {total / 1e6:.1f} MB')
     return 1 if problems else 0
 
 

@@ -127,22 +127,30 @@ def md_to_html(md: str, out: Path, title: str):
 PUBLISH = {'SD2112-syllabus-2026.md': ('syllabus.html', 'SD2112 · Syllabus 2026/27')}
 
 
-def main():
-    site = ROOT / '_site'
+def main(site=True, export=True):
+    """site: the published html (syllabus) into _site/. export: .docx + html of everything into export/docs/."""
+    site_dir = ROOT / '_site'
     out = ROOT / 'export' / 'docs'
-    out.mkdir(parents=True, exist_ok=True)
-    site.mkdir(parents=True, exist_ok=True)
+    if export:
+        out.mkdir(parents=True, exist_ok=True)
+    if site:
+        site_dir.mkdir(parents=True, exist_ok=True)
     for src in SOURCES:
         md = src.read_text(encoding='utf-8')
-        docx_out = out / (src.stem + '.docx')
-        md_to_docx(md, docx_out)
+        made = []
+        if export:
+            docx_out = out / (src.stem + '.docx')
+            md_to_docx(md, docx_out)
+            made.append(f'export/docs/{docx_out.name}')
         if src.name in PUBLISH:
-            html_name, title = PUBLISH[src.name]
-            md_to_html(md, site / html_name, title)
-            print(f'{src.name} -> export/docs/{docx_out.name}, _site/{html_name}')
-        else:
+            if site:
+                html_name, title = PUBLISH[src.name]
+                md_to_html(md, site_dir / html_name, title)
+                made.append(f'_site/{html_name}')
+        elif export:
             md_to_html(md, out / (src.stem + '.html'), src.stem)
-            print(f'{src.name} -> export/docs/{docx_out.name}, export/docs/{src.stem}.html (not published)')
+            made.append(f'export/docs/{src.stem}.html (not published)')
+        print(f'{src.name} -> ' + ', '.join(made))
 
 
 if __name__ == '__main__':
