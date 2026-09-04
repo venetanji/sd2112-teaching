@@ -254,19 +254,12 @@ def activity(m):
     if m['type'] == 'word_cloud':
         return base('WordCloud', 2, {'$type': 'ClassPoint2.Core.DTO.Activities.WordCloudActivity, ClassPoint2.Core', 'numOfSubmissionsAllowed': m.get('submissions', 5), 'activityType': 'Word Cloud', **common})
     if m['type'] == 'image_upload':
-        # Not reverse-engineered yet (see venetanji/classpoint.py). Drop the JSON that verify() reads
-        # back from a deck with a hand-inserted Image Upload button into model-image_upload.json
-        # and it is used as the template; until then the slide gets no button and a warning.
-        tmpl = HERE / 'model-image_upload.json'
-        if not tmpl.exists():
-            return None
-        model = json.loads(tmpl.read_text(encoding='utf-8'))
-        ab = model.get('ActivityBase') or {}
-        if 'isNamesHidden' in ab:
-            ab['isNamesHidden'] = m.get('hide_names', False)
-        if 'countdown' in ab:
-            ab['countdown'] = m.get('countdown', 0)
-        return model
+        # Shape read back from a deck where the add-in inserted the button itself (Sept 2026):
+        # ActivityType 4; the model carries no ActivityId / IsLocked keys.
+        return {'$type': 'ClassPoint2.Core.Model.Activity, ClassPoint2.Core', 'Name': 'ImageUpload', 'ActivityType': 4, 'Width': 0.0, 'Height': 0.0, 'Graphics': None,
+                'ActivityBase': {'$type': 'ClassPoint2.Core.DTO.Activities.ImageUploadActivity, ClassPoint2.Core', 'isMultipleSubmissionsAllowed': m.get('multiple', False),
+                                 'isNamesHidden': m.get('hide_names', False), 'isCaptionRequired': m.get('caption_required', False), 'activityType': 'Image Upload', **common},
+                'IsMappedFromCp1': False, 'IsQuizMode': False}
     if m['type'] == 'short_answer':
         return base('ShortAnswers', 1, {'$type': 'ClassPoint2.Core.DTO.Activities.ShortAnswerActivity, ClassPoint2.Core', 'isMultipleSubmissionsAllowed': m.get('multiple', False), 'isNamesHidden': m.get('hide_names', False), 'gradingInstructions': None, 'activityType': 'Short Answer', **common})
     return base('MultipleChoice', 0, {'$type': 'ClassPoint2.Core.DTO.Activities.MultipleChoiceActivity, ClassPoint2.Core', 'mcChoices': {'$type': STRLIST, '$values': m['choices']}, 'mcIsAllowSelectMultiple': m.get('select_multiple', False), 'mcCorrectAnswers': {'$type': STRLIST, '$values': []}, 'isQuizMode': False, 'correctPoints': 0, 'correctSpeedBonus': None, 'HasCorrectAnswers': False, 'activityType': 'Multiple Choice', **common})
@@ -332,7 +325,7 @@ def build(src: Path):
     for no, m in sorted(manifest.items()):
         print(f'  slide {no:>2}: {m["type"]}' + ('  (NO BUTTON: add it by hand in ClassPoint)' if no in skipped else ''))
     if skipped:
-        print(f'WARNING: slides {skipped}: image_upload has no ClassPoint model yet — insert the Image Upload button by hand in PowerPoint (ClassPoint tab) and save; see model-image_upload.json note in activity()')
+        print(f'WARNING: slides {skipped}: activity type without a ClassPoint model — insert the button by hand in PowerPoint (ClassPoint tab) and save')
 
 
 def template(out: Path):

@@ -66,10 +66,10 @@ S.append(content('02 · WHO IS TEACHING YOU', 'I study how machines form concept
                   '- Two years operating Sophia at Hanson Robotics. It rebooted minutes before a show. It came back.',
                   '- Musical Fruitstand: fruit you can play. A-Eye: the audience repainted live at M+. Featherman: a game with WWF Mai Po.',
                   '- One photo of me, three models, three styles.'],
-                 images=['gio-avatar-1.jpg', 'gio-avatar-2.jpg', 'gio-avatar-3.jpg', 'ada-lovelace-generated.jpg'],
-                 caption='Top: one photo of me through three image models. Bottom right: "Ada Lovelace at her machine", a diffusion model, 2025.',
+                 images=['gio-avatar-1.jpg', 'gio-avatar-2.jpg', 'gio-avatar-3.jpg', 'gio-sophia.jpg'],
+                 caption='Top: one photo of me through three image models. Bottom right: the real thing, with Sophia at Hanson Robotics.',
                  body_size=30,
-                 notes='Economics, then robotics, then a PhD on concept formation in computational creativity. The point of the avatars: the same photo through three models gives three different styles — the model, not the photo, decides the look. Ada at the bottom right is also generated; she comes back later as a real quote.'))
+                 notes='Economics, then robotics, then a PhD on concept formation in computational creativity. The point of the avatars: the same photo through three models gives three different styles — the model, not the photo, decides the look. Bottom right is a real photo: Sophia with her head open, Hanson Robotics.'))
 
 S.append(team('02 · YOUR TEAM THIS SEMESTER', 'Four people. Use them.', [
     ('Giovanni Lion', 'Lecturer', ['Lectures, briefs, grading. Questions in class first, then email.', 'giovanni.lion@polyu.edu.hk · giovannilion.link'], INK, 'GL', True),
@@ -132,9 +132,9 @@ S.append(content('04 · GROUP PROJECT · 40% · DUE WEEK 13', 'Design a product 
 
 S.append(cards('04 · WEEKLY CHALLENGES · WEEKS 2 – 6', 'Make one thing a week.', [
     ('WEEK 2', 'A picture from rules', 'A p5.js sketch. One rule, one random number, your own picture.'),
-    ('WEEK 3', 'A dataset of ten', 'Ten images that teach a machine one concept from your studio. Say what it would learn wrong.'),
+    ('WEEK 3', 'A picture from text and references', 'An image generated with diffusion models using a text prompt and images as reference.'),
     ('WEEK 4', 'A brief, automated', 'A design brief drafted by a language model from your prompt, then edited by you. Show both.'),
-    ('WEEK 5', 'An image you could not draw', 'Generated, iterated, and critiqued: what did the model decide that you did not?'),
+    ('WEEK 5', 'A layout you could not design', 'Generated, iterated, and critiqued: what did the model decide that you did not?'),
     ('WEEK 6', 'Thirty seconds of sound', 'A sound or music snippet for a product. Where did control stay with you?'),
 ], head_size=30, text_size=22, notes='Small, weekly, low stakes. Bring it to the next class; the room votes; the winners get shown and a participation star. All five become evidence for the reflection. Nicolò and Amber help before and after class.'))
 
@@ -374,7 +374,7 @@ S.append(activity('4 — TWO PAIRS', 6, 'Choose what ships.',
 S.append(question('image_upload', 'Scribes only. The cup that ships.',
                   hint='One image per four. Caption: the prompt that made it, word for word.',
                   eyebrow_text='08 · CAPTURE 2 · IMAGE UPLOAD · ONE PER FOUR',
-                  cp={'type': 'image_upload', 'hide_names': False},
+                  cp={'type': 'image_upload', 'hide_names': False, 'caption_required': True},
                   notes='ClassPoint image upload, scribes only: about 28 images, not 114. Put the wall on screen. Point at three: is this still a cup? Ask the room for a show of hands on the most extreme one. Read the caption — the prompt — for the two best. Download the submissions afterwards; they come back in week 5.'))
 
 S.append(content('08 · WHAT JUST HAPPENED', 'You wrote the rules. The machine had the examples.',

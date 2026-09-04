@@ -21,7 +21,7 @@ The repository holds **sources only**. Two GitHub Actions workflows run on every
 | `site/` | The site shell: landing page, vendored reveal.js and the ait4x design tokens. |
 | `tools/deckgen.py`, `layouts.py`, `figures.py` | The generator: a 1920×1080 layout engine with html, pptx and png backends, the ait4x layouts, drawn figures. |
 | `tools/pdf.js` | Prints a built html deck to PDF with Chromium (reveal.js print mode; chips hidden, video thumbnails shown). |
-| `tools/classpoint/build.py` | From the ait4x template kit: theme, master and 8 layouts, entrance animations, ClassPoint buttons and activity tags (word cloud, multiple choice, short answer). Image upload has no model yet: those slides get a reminder and the button is added by hand in ClassPoint (drop the JSON that `verify()` in [classpoint.py](https://github.com/venetanji/classpoint.py) reads back into `tools/classpoint/model-image_upload.json` to automate it). |
+| `tools/classpoint/build.py` | From the ait4x template kit: theme, master and 8 layouts, entrance animations, ClassPoint buttons and activity tags (word cloud, multiple choice, short answer, image upload; the image-upload model was read back from a deck where the add-in inserted the button). |
 | `tools/build_all.py`, `build_docs.py`, `roster.py` | Build everything; markdown → docx/html; ClassPoint roster from a local ID list. |
 | `tools/fonts/` | Inter and JetBrains Mono variable fonts: used by the build, and to install on the classroom PC. |
 
@@ -45,7 +45,7 @@ The PDF step needs node 18+ and Playwright's Chromium: `npm install --no-save pl
 
 1. Download the PowerPoint from the latest *Build PowerPoints* run (Actions → Artifacts → `sd2112-powerpoints`).
 2. Install `tools/fonts/Inter-Variable.ttf` and `JetBrainsMono-Variable.ttf` on the classroom PC (right-click → install for all users), restart PowerPoint. Slide 1 should show *Inter Black* in the font box; Arial substitutes automatically if not.
-3. Open the deck with the ClassPoint add-in and fire one activity (slide 4, word cloud) before class; a malformed tag fails silently. Add the two Image Upload buttons (slides 51 and 54) through the ClassPoint tab and save.
+3. Open the deck with the ClassPoint add-in and fire one activity (slide 4, word cloud) before class; a malformed tag fails silently.
 4. Import the roster as the saved class. Students join with the last four digits and the letter of their ID (e.g. `3456A`).
 5. Keep the html deck or the PDF open on a laptop as backup.
 
