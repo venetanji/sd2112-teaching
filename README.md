@@ -14,12 +14,12 @@ The repository holds **sources only**. Two GitHub Actions workflows run on every
 
 | Path | What |
 |---|---|
-| `deck/week01.py` | **The Week 1 slides as one Python spec**: text, speaker notes, ClassPoint activities, in the order the class runs. Edit here; every output updates. |
+| `deck/week01.py`, `deck/week02.py` | **The slides, one Python spec per week**: text, speaker notes, ClassPoint activities, in the order the class runs. Edit here; every output updates. Week 2 carries its p5.js sketches as strings: the html deck runs them live, the pptx and PDF show a Python-drawn twin of the same rule. |
 | `deck/assets/` | Images the decks use. Drawn figures are generated at build time. |
 | `syllabus/SD2112-syllabus-2026.md` | The syllabus: team, outcomes, four modules, 13-week plan with examples and readings, assessment and rubrics, policies. Published on the site; a `.docx` is built too. |
-| `lessons/week01-lesson-plan.md` | Week 1 run of show (three hours), the *Push the machine to the edge* activity, the ClassPoint question map, contingencies. For the teaching team: `.docx` and `.html` in the artifact, **not published**. |
+| `lessons/week01-lesson-plan.md`, `lessons/week02-lesson-plan.md` | Run of show for each three-hour class, the activity in detail (*Push the machine to the edge*; *One spec, three executors*), the ClassPoint question map, contingencies. For the teaching team: `.docx` and `.html` in the artifact, **not published**. |
 | `site/` | The site shell: landing page, vendored reveal.js and the ait4x design tokens. |
-| `tools/deckgen.py`, `layouts.py`, `figures.py` | The generator: a 1920×1080 layout engine with html, pptx and png backends, the ait4x layouts, drawn figures. |
+| `tools/deckgen.py`, `layouts.py`, `figures.py`, `course.py` | The generator: a 1920×1080 layout engine with html, pptx and png backends, the ait4x layouts (plus a code-and-figure slide and an activity panel), drawn figures (Schotter, Walk-Through-Raster, LeWitt, 10 PRINT, L-systems…), and the shared semester map. |
 | `tools/pdf.js` | Prints a built html deck to PDF with Chromium (reveal.js print mode; chips hidden, video thumbnails shown). |
 | `tools/classpoint/build.py` | From the ait4x template kit: theme, master and 8 layouts, entrance animations, ClassPoint buttons and activity tags (word cloud, multiple choice, short answer, image upload; the image-upload model was read back from a deck where the add-in inserted the button). |
 | `tools/build_all.py`, `build_docs.py`, `roster.py` | Build everything; markdown → docx/html; ClassPoint roster from a local ID list. |
@@ -35,7 +35,7 @@ python tools/build_all.py --pptx          # export/: PowerPoints, manifest, docx
 python tools/build_all.py --site          # _site/: html decks, PDFs, syllabus — needs node + playwright (below)
 python tools/build_all.py                 # both
 python tools/build_all.py --no-pdf        # skip the PDF step
-python deck/week01.py                     # only the Week 1 deck
+python deck/week01.py                     # only the Week 1 deck (same for week02.py)
 python tools/roster.py ids.csv classpoint/roster-2026-classpoint.csv   # ClassPoint saved class (local only)
 ```
 
@@ -66,4 +66,4 @@ Scale: the canvas is 1920 × 1080 px on a 13.333 × 7.5 in slide, so **one desig
 
 ## Adding a week
 
-Copy `deck/week01.py` to `deck/week02.py`, change `FOOTER` and `pdf`, write slides with the layout functions in `tools/layouts.py` (`title`, `agenda`, `section`, `statement`, `quote`, `content`, `cards`, `question`, `image_full`, `timeline`, `journey`, `activity`, `video`, `assessment`, `team`, `two_col`, `figure_slide`), add `'week02'` to `DECKS` in `tools/build_all.py`, and add a card in `site/index.html`. ClassPoint activities come from `question(...)` (word cloud, multiple choice, short answer, image upload) or an explicit `cp={...}`.
+Copy `deck/week02.py` to `deck/week03.py`, change `FOOTER` and `pdf`, write slides with the layout functions in `tools/layouts.py` (`title`, `agenda`, `section`, `statement`, `quote`, `content`, `cards`, `question`, `image_full`, `timeline`, `journey`, `activity` (with an optional mono `panel`), `video`, `assessment`, `team`, `team_band`, `two_col`, `figure_slide`, `code_slide`), add `'week03'` to `DECKS` in `tools/build_all.py`, and add a card in `site/index.html`. ClassPoint activities come from `question(...)` (word cloud, multiple choice, short answer, image upload) or an explicit `cp={...}`. A `code_slide(..., sketch=(name, js, w, h))` runs the p5.js code live in the html deck (p5.js is vendored in `site/vendor/p5`, so the deck works offline); the figure you pass is what the pptx and the PDF show, so draw the same rule in `tools/figures.py`.

@@ -132,6 +132,19 @@ class Embed:
 
 
 @dataclass
+class Sketch:
+    """A live p5.js sketch, html only: an iframe laid over the figure that stands in for it in print/pptx.
+    p5 is vendored in site/vendor/p5 so the deck also runs offline."""
+    x: int; y: int; w: int; h: int
+    name: str
+    code: str
+    cw: int = 600           # the sketch's own canvas size; the page scales it to the frame
+    ch: int = 600
+    name_: str = ''
+    kind: str = 'sketch'
+
+
+@dataclass
 class Slide:
     bg: str = WHITE
     els: list = field(default_factory=list)
@@ -236,8 +249,8 @@ def wrap_para(para, width):
                 lines.append(cur); cur, cur_w = [], 0.0
                 if not wd.strip():
                     continue
-            if not cur and not wd.strip():
-                continue
+            if not cur and not wd.strip() and lines:
+                continue          # drop the whitespace a wrap lands on; keep a paragraph's own indentation (code)
             cur.append((frag, wd)); cur_w += fw
     if cur:
         lines.append(cur)
@@ -276,8 +289,9 @@ html,body{background:#000B1C}
 .embed iframe{width:100%;height:100%;border:0}
 .cp{position:absolute;left:1450px;top:908px;width:350px;height:92px;border:2px dashed #ED6D24;color:#ED6D24;font:500 22px/1 var(--font-m);letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:12px}
 .cp b{width:12px;height:12px;border-radius:50%;background:#ED6D24;display:inline-block}
+.embed.sketch{background:#fff}
 .embed .print-only{display:none}
-@media print{.cp{display:none}.embed iframe{display:none}.embed .print-only{display:block;width:100%;height:100%;object-fit:cover}}
+@media print{.cp{display:none}.embed iframe{display:none}.embed.sketch{display:none}.embed .print-only{display:block;width:100%;height:100%;object-fit:cover}}
 .reveal .progress{height:4px;color:#ED6D24}
 .reveal .backgrounds{background:#000B1C}
 """
@@ -305,6 +319,22 @@ Reveal.initialize({{width:1920,height:1080,margin:0,minScale:0.05,maxScale:4,cen
 </script>
 </body>
 </html>
+"""
+
+
+SKETCH_TMPL = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>@@NAME@@ · p5.js</title>
+<style>html,body{margin:0;height:100%;background:#fff;overflow:hidden}canvas{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}</style>
+<script src="../../vendor/p5/p5.min.js"></script>
+</head><body>
+<script>
+@@CODE@@
+</script>
+<script>
+function fit(){var c=document.querySelector('canvas');if(!c)return;var s=Math.min(innerWidth/@@CW@@,innerHeight/@@CH@@);c.style.transform='translate(-50%,-50%) scale('+s+')'}
+new MutationObserver(fit).observe(document.body,{childList:true,subtree:true});addEventListener('resize',fit);
+</script>
+</body></html>
 """
 
 
@@ -343,7 +373,7 @@ def html_text(el):
     return ''.join(out)
 
 
-def html_slide(s, i, assets_out, assets_rel):
+def html_slide(s, i, out_dir, assets_out, assets_rel):
     bg = f' data-background-color="{s.bg}"'
     parts = [f'<section{bg} data-slide="{i}">']
     for el in s.els + s.html_only:
@@ -365,6 +395,12 @@ def html_slide(s, i, assets_out, assets_rel):
         elif el.kind == 'embed':
             thumb = f'<img class="print-only" src="{assets_rel}/{copy_asset(el.thumb, assets_out)}" alt="">' if el.thumb else ''  # the pdf shows the thumbnail
             parts.append(f'<div class="embed" style="left:{el.x}px;top:{el.y}px;width:{el.w}px;height:{el.h}px"><iframe data-src="https://www.youtube-nocookie.com/embed/{el.yt}?rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>{thumb}</div>')
+        elif el.kind == 'sketch':
+            sk = out_dir / 'sketches'
+            sk.mkdir(parents=True, exist_ok=True)
+            page = SKETCH_TMPL.replace('@@NAME@@', esc(el.name)).replace('@@CODE@@', el.code).replace('@@CW@@', str(el.cw)).replace('@@CH@@', str(el.ch))
+            (sk / f'{el.name}.html').write_text(page, encoding='utf-8')
+            parts.append(f'<div class="embed sketch" style="left:{el.x}px;top:{el.y}px;width:{el.w}px;height:{el.h}px"><iframe data-src="sketches/{el.name}.html" title="{esc(el.name)}"></iframe></div>')
     if s.cp:
         label = {'word_cloud': 'Word cloud', 'multiple_choice': 'Multiple choice', 'short_answer': 'Short answer', 'image_upload': 'Image upload'}[s.cp['type']]
         parts.append(f'<div class="cp" data-classpoint><b></b>{label}</div>')
@@ -397,7 +433,7 @@ def _has_alpha(im):
 def build_html(deck, out_dir: Path):
     out_dir.mkdir(parents=True, exist_ok=True)
     assets_out = out_dir / 'assets'
-    slides = '\n'.join(html_slide(s, i + 1, assets_out, 'assets') for i, s in enumerate(deck['slides']))
+    slides = '\n'.join(html_slide(s, i + 1, out_dir, assets_out, 'assets') for i, s in enumerate(deck['slides']))
     html = HTML_TMPL.format(title=esc(deck['title']), css=CSS, slides=slides)
     (out_dir / 'index.html').write_text(html, encoding='utf-8')
     vendor_fonts = out_dir.parent / 'vendor' / 'fonts'

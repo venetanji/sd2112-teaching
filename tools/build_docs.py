@@ -109,7 +109,7 @@ a{{text-decoration:underline;text-underline-offset:.12em}} a:hover{{color:var(--
 nav{{display:flex;gap:24px;align-items:baseline;margin-bottom:48px}} nav a{{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--fg-3)}}
 nav a.wordmark{{font-family:var(--font-display);font-size:28px;font-weight:900;letter-spacing:-.04em;text-transform:none;color:var(--fg-1)}}
 </style></head><body>
-<nav><a href="index.html" class="wordmark" style="text-decoration:none;color:var(--fg-1)">a<span class="dot"></span>t4<span class="x">x</span></a><a href="index.html">SD2112</a><a href="week01/">Week 1 slides</a><a href="syllabus.html">Syllabus</a></nav>
+<nav><a href="index.html" class="wordmark" style="text-decoration:none;color:var(--fg-1)">a<span class="dot"></span>t4<span class="x">x</span></a><a href="index.html">SD2112</a><a href="week01/">Week 1 slides</a><a href="week02/">Week 2 slides</a><a href="syllabus.html">Syllabus</a></nav>
 <div class="eyebrow">POLYU SCHOOL OF DESIGN · SD2112 · 2026/27</div>
 {body}
 </body></html>

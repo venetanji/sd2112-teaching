@@ -20,11 +20,10 @@ from deckgen import build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YE
 from layouts import (title, end, agenda, section, statement, quote, content, cards, question, image_full, timeline,   # noqa: E402
                      journey, activity, video, assessment, team, team_band, two_col, figure_slide, finalize)
 
+from course import SITE, PLAYLIST, GENAI, JOURNEY                # noqa: E402
+
 COURSE = 'SD2112'
 FOOTER = 'SD2112 · AI IN DESIGN · WEEK 01'
-SITE = 'venetanji.github.io/sd2112-teaching'
-PLAYLIST = 'https://www.youtube.com/playlist?list=PLU58DFEI5YDQ'
-GENAI = 'genai.polyu.edu.hk'
 CHAIRS = [f'ai-chair-{i}.jpg' for i in range(1, 5)]   # same prompt, four seeds (deck/assets)
 
 S = []  # the slides, in order
@@ -94,14 +93,7 @@ S.append(question('multiple_choice', 'How much have you used AI in your design w
 # ───────────────────────── 03 · the journey ─────────────────────────
 S.append(section('03', 'The journey', '13 weeks · four modules · one question', notes='Chapter three: the whole semester on one slide.'))
 
-S.append(journey('03 · THE SEMESTER', 'Where we are going', [
-    dict(label='1 · What is AI?', color=TEALS[0], tint=TEALS[4], cells=[('Week 1', 'Two ways to teach a machine'), ('Week 2', 'Rules that make things: code, chance, generative art'), ('Week 3', 'Learning from examples: concepts, neurons, Move 37')]),
-    dict(label='2 · AI for the creative process', color=VIOLETS[0], dark=True, tint=VIOLETS[5], cells=[('Week 4', 'Language machines: LLMs, prompts, agents'), ('Week 5', 'Image machines: diffusion, CLIP, mediation'), ('Week 6', 'Sound machines: music, voice, spectrograms')]),
-    dict(label='Mid-term', color=PAPER, tint=PAPER, cells=[('Week 7', 'Mid-term quiz · project pitches · teams · reflection due')]),
-    dict(label='3 · AI inside products', color=ORANGES[0], tint=ORANGES[4], cells=[('Week 8', 'AI as design material: use vs incorporate'), ('Week 9', 'Data, bias and privacy'), ('Week 10', 'Recommendation systems and the feed')]),
-    dict(label="4 · The designer's turn", color=PINKS[0], dark=True, tint=PINKS[4], cells=[('Week 11', 'Curating outputs and datasets · authorship'), ('Week 12', 'Language as an interface: chatbots and agents')]),
-    dict(label='Showcase', color=INK, dark=True, tint=PAPER, cells=[('Week 13', 'Poster fair · final quiz')]),
-], here=(0, 0), notes='Four modules. Weeks 1 to 3: what AI is, in two flavours — rules and examples. Weeks 4 to 6: the tools you will use in your own process; each week ends with a small making challenge. Week 7: quiz, pitches, teams. Weeks 8 to 10: AI as a material inside the product you design. Weeks 11 and 12: what is left for the designer. Week 13: the poster fair and the final quiz, in the same three-hour class. You are here. The one question under all of it — can a machine originate a design? — comes up in chapter five.'))
+S.append(journey('03 · THE SEMESTER', 'Where we are going', JOURNEY, here=(0, 0), notes='Four modules. Weeks 1 to 3: what AI is, in two flavours — rules and examples. Weeks 4 to 6: the tools you will use in your own process; each week ends with a small making challenge. Week 7: quiz, pitches, teams. Weeks 8 to 10: AI as a material inside the product you design. Weeks 11 and 12: what is left for the designer. Week 13: the poster fair and the final quiz, in the same three-hour class. You are here. The one question under all of it — can a machine originate a design? — comes up in chapter five.'))
 
 # ───────────────────────── 04 · how this course works ─────────────────────────
 S.append(section('04', 'How this course works', 'Assessment · assignments · weekly challenges · rules', bg=VIOLET,

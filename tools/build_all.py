@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import deckgen        # noqa: E402
 import build_docs     # noqa: E402
 
-DECKS = ['week01']
+DECKS = ['week01', 'week02']
 
 
 def load_deck(name):
