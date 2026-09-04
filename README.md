@@ -1,7 +1,7 @@
 # SD2112 · Artificial Intelligence in Design — teaching repo
 
 Class planning and slides for PolyU School of Design, Semester 1 2026/27.
-Lecturer Giovanni Lion (giovanni.lion@polyu.edu.hk) · teaching assistants Nicolò and Amber (in the room 30 min before and after class) · class coordinator Zhibin Zhou.
+Lecturer Giovanni Lion (giovanni.lion@polyu.edu.hk) · teaching assistants Nicolò Azzolin, Amber, WU Zhao and MA Jie (in the room 30 min before and after class) · class coordinator Zhibin Zhou.
 
 The repository holds **sources only**. Two GitHub Actions workflows run on every push to `main` (and on demand):
 

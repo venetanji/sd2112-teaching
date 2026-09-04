@@ -24,13 +24,15 @@
 | Role | Who | What to come to them for |
 |---|---|---|
 | Lecturer | **Giovanni Lion** (PhD, computational creativity) · giovanni.lion@polyu.edu.hk | Lectures, briefs, grading, the course question. Ask in class first, then by email. |
-| Teaching assistant | **Nicolò** | Tools, accounts, code, the weekly challenges, the video playlist (which Nicolò compiled). In the room 30 min before and after class. |
+| Teaching assistant | **Nicolò Azzolin** | Tools, accounts, code, the weekly challenges, the video playlist (which Nicolò compiled). In the room 30 min before and after class. |
 | Teaching assistant | **Amber** | Assignments, the group project, feedback on work in progress. In the room 30 min before and after class. |
-| Class coordinator | **Zhibin Zhou** | Anything about the class as a whole: admin, timetabling, the group as a group. |
+| Teaching assistant | **WU Zhao** | Anything about the class. In the room 30 min before and after class. |
+| Teaching assistant | **MA Jie** | Anything about the class. In the room 30 min before and after class. |
+| Class coordinator | **Zhibin Zhou** · zhibin.zhou@polyu.edu.hk · office V502b | Anything about the class as a whole: admin, timetabling, the group as a group. |
 
 **If you cannot come to a class, let the teaching team know before it starts**: an email to the lecturer or a message to a TA. That is what keeps your participation mark.
 
-Lecturer: giovanni.lion@polyu.edu.hk. Other contact details are on Blackboard. (Fill in: TA emails, office, room numbers.)
+Lecturer: giovanni.lion@polyu.edu.hk. Coordinator: zhibin.zhou@polyu.edu.hk, office V502b. TA contact details are on Blackboard.
 
 ## What this course is about
 
@@ -152,6 +154,6 @@ Tools you will need an account for: ClassPoint (student app), Blackboard, the p5
 - Examples are designer-facing throughout: Photoshop's three fills, Netflix artwork, the Coca-Cola ad, the Humane Pin, parametric chairs, Belamy, LeWitt and the Fluxus scores.
 - The weekly challenges (previously informal "awards") are formalised as five small makes that feed the reflection.
 - The group project adds a one-page mediation brief, so the theory (Ihde, Verbeek, bias, guardrails) shows up in the deliverable.
-- Teaching assistants Nicolò and Amber hold a help desk 30 minutes before and after each class; Zhibin Zhou coordinates the class; absences go to the teaching team.
+- Four teaching assistants (Nicolò Azzolin, Amber, WU Zhao, MA Jie) hold a help desk 30 minutes before and after each class; Zhibin Zhou coordinates the class; absences go to the teaching team.
 - The playlist is mapped week by week; quizzes draw on it.
 - Slides are built from one source into an HTML deck and a PDF (GitHub Pages) and a ClassPoint-ready PowerPoint.

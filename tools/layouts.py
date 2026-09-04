@@ -394,6 +394,38 @@ def team(eyebrow_text, title_text, people, notes='', bg=WHITE):
     return s
 
 
+def team_band(eyebrow_text, title_text, leads, band_label, assistants, notes='', bg=WHITE):
+    """Two wide cards (lecturer, coordinator) over a band of small cards (the teaching assistants).
+    leads: (name, role, lines, color, initials, light) · assistants: (name, text, color, initials, light)."""
+    t, b, m = palette(bg)
+    s = _slide(bg, notes, title=title_text)
+    s.els += [eyebrow(M, 96, eyebrow_text, m), T(M, TITLE_Y, CW, 140, title_text, 'xbold', 72, t, lh=0.95, spc=-0.03)]
+    gap = 40
+    w = (CW - gap * (len(leads) - 1)) // len(leads)
+    for i, (name, role, lines, color, initials, light) in enumerate(leads):
+        x = M + i * (w + gap)
+        s.els += [
+            Rect(x, 372, 120, 120, color),
+            T(x, 372, 120, 120, initials, 'black', 44, WHITE if light else INK, lh=1.0, align='c', valign='m', spc=-0.04),
+            T(x + 152, 372, w - 152, 50, name, 'xbold', 34, t, lh=1.1, spc=-0.02),
+            T(x + 152, 424, w - 152, 34, role, 'monomed', 22, ORANGE, lh=1.2, spc=0.1, caps=True),
+            Text(x + 152, 470, w - 152, 170, body_paras(lines if isinstance(lines, list) else [lines], 26, b, lh=1.35, gap=8), 't'),
+        ]
+    y = 660
+    s.els += [Rect(M, y, CW, 2, LINE if not _dark(bg) else '#2A3644'),
+              T(M, y + 20, CW, 34, band_label, 'monomed', 22, ORANGE, lh=1.2, spc=0.14, caps=True)]
+    w = (CW - gap * (len(assistants) - 1)) // len(assistants)
+    for i, (name, text, color, initials, light) in enumerate(assistants):
+        x = M + i * (w + gap)
+        s.els += [
+            Rect(x, y + 74, 96, 96, color),
+            T(x, y + 74, 96, 96, initials, 'black', 36, WHITE if light else INK, lh=1.0, align='c', valign='m', spc=-0.04),
+            T(x, y + 186, w, 44, name, 'xbold', 30, t, lh=1.1, spc=-0.02),
+            Text(x, y + 232, w, 100, body_paras([text], 24, b, lh=1.35), 't'),
+        ]
+    return s
+
+
 def two_col(eyebrow_text, title_text, left, right, notes='', bg=WHITE, right_bg=PAPER, right_font='mono', right_size=26):
     """Body left, a code / text panel right."""
     t, b, m = palette(bg)

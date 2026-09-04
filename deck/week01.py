@@ -18,7 +18,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import figures as F                                   # noqa: E402
 from deckgen import build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YELLOW, GREEN, BLUE, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS, MUTED  # noqa: E402
 from layouts import (title, end, agenda, section, statement, quote, content, cards, question, image_full, timeline,   # noqa: E402
-                     journey, activity, video, assessment, team, two_col, figure_slide, finalize)
+                     journey, activity, video, assessment, team, team_band, two_col, figure_slide, finalize)
 
 COURSE = 'SD2112'
 FOOTER = 'SD2112 · AI IN DESIGN · WEEK 01'
@@ -33,7 +33,7 @@ S = []  # the slides, in order
 S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 01 · LECTURE',
                'Artificial intelligence in design.',
                'Week 1 — the journey, and two ways to teach a machine.',
-               notes='Welcome. Say the course code. ClassPoint join code is on the screen from 30 minutes before class; Nicolò and Amber are at the front helping people join. Everyone joins with the last four digits and the letter of their student ID.'))
+               notes='Welcome. Say the course code. ClassPoint join code is on the screen from 30 minutes before class; the TAs are at the front helping people join. Everyone joins with the last four digits and the letter of their student ID.'))
 
 S.append(agenda('SD2112 · WEEK 01', [
     'Why are we here?', 'Who are we?', 'The journey', 'How this course works',
@@ -71,12 +71,15 @@ S.append(content('02 · WHO IS TEACHING YOU', 'I study how machines form concept
                  body_size=30,
                  notes='Economics, then robotics, then a PhD on concept formation in computational creativity. The point of the avatars: the same photo through three models gives three different styles — the model, not the photo, decides the look. Bottom right is a real photo: Sophia with her head open, Hanson Robotics.'))
 
-S.append(team('02 · YOUR TEAM THIS SEMESTER', 'Four people. Use them.', [
+S.append(team_band('02 · YOUR TEAM THIS SEMESTER', 'Six people. Use them.', [
     ('Giovanni Lion', 'Lecturer', ['Lectures, briefs, grading. Questions in class first, then email.', 'giovanni.lion@polyu.edu.hk · giovannilion.link'], INK, 'GL', True),
-    ('Nicolò', 'Teaching assistant', ['In the room **30 minutes before** and **30 minutes after** every class.', 'Tools, accounts, code, the weekly challenges. Also built the course video playlist.'], TEAL, 'N', False),
-    ('Amber', 'Teaching assistant', ['In the room **30 minutes before** and **30 minutes after** every class.', 'Assignments, group project, feedback on your work in progress.'], ORANGE, 'A', False),
-    ('Zhibin Zhou', 'Class coordinator', ['Anything about the class as a whole.'], VIOLET, 'ZZ', True),
-], notes='Nicolò and Amber are here half an hour before and half an hour after every class — that hour is where laptops get fixed and assignments get unstuck. Zhibin coordinates the class as a whole. If you cannot come to a class, let us know before it starts, not after; participation is attendance plus ClassPoint activity.'))
+    ('Zhibin Zhou', 'Class coordinator', ['Anything about the class as a whole.', 'zhibin.zhou@polyu.edu.hk · office V502b'], VIOLET, 'ZZ', True),
+], 'Teaching assistants · in the room 30 minutes before and 30 minutes after every class', [
+    ('Nicolò Azzolin', 'Tools, code, the weekly challenges, the video playlist.', TEAL, 'NA', False),
+    ('Amber', 'Assignments, the group project, feedback on work in progress.', ORANGE, 'A', False),
+    ('WU Zhao', 'Anything about the class.', PINK, 'WZ', False),
+    ('MA Jie', 'Anything about the class.', YELLOW, 'MJ', False),
+], notes='Four teaching assistants this year: Nicolò, Amber, WU Zhao and MA Jie. They are here half an hour before and half an hour after every class — that hour is where laptops get fixed and assignments get unstuck. Zhibin Zhou coordinates the class as a whole, office V502b. If you cannot come to a class, let us know before it starts, not after; participation is attendance plus ClassPoint activity.'))
 
 S.append(question('multiple_choice', 'Which are you closest to?', [
     'Communication or advertising design', 'Product or industrial design', 'Interaction, digital or media design', 'Environment, interior, social — or something else',
@@ -136,7 +139,7 @@ S.append(cards('04 · WEEKLY CHALLENGES · WEEKS 2 – 6', 'Make one thing a wee
     ('WEEK 4', 'A brief, automated', 'A design brief drafted by a language model from your prompt, then edited by you. Show both.'),
     ('WEEK 5', 'A layout you could not design', 'Generated, iterated, and critiqued: what did the model decide that you did not?'),
     ('WEEK 6', 'Thirty seconds of sound', 'A sound or music snippet for a product. Where did control stay with you?'),
-], head_size=30, text_size=22, notes='Small, weekly, low stakes. Bring it to the next class; the room votes; the winners get shown and a participation star. All five become evidence for the reflection. Nicolò and Amber help before and after class.'))
+], head_size=30, text_size=22, notes='Small, weekly, low stakes. Bring it to the next class; the room votes; the winners get shown and a participation star. All five become evidence for the reflection. The TAs help before and after class.'))
 
 S.append(cards('04 · THE RULES', 'Three rules.', [
     ('ATTENDANCE', 'Come, or say so before.',
@@ -144,7 +147,7 @@ S.append(cards('04 · THE RULES', 'Three rules.', [
     ('AI USE', 'Allowed. Disclosed. Yours.',
      'Use any model, in any assignment. Say which, and how, in a process note. You are the author: you answer for accuracy, for sources, and for taste. Invented citations fail the assignment.'),
     ('ROOM', '30 minutes before, 30 after.',
-     'Nicolò and Amber are in the room before and after every class. Laptops, accounts, tools, drafts. That hour is the tutorial.'),
+     'Four teaching assistants are in the room before and after every class. Laptops, accounts, tools, drafts. That hour is the tutorial.'),
 ], notes='Three rules, no small print. The AI rule is the important one: allowed and disclosed, and you remain responsible. The TA hour before and after class is where the practical help lives.'))
 
 S.append(question('short_answer', 'One hope and one worry.',
@@ -341,7 +344,7 @@ S.append(cards('07 · WHAT IS LEFT FOR YOU', 'Designers as…', [
 S.append(end('See you next week. Rules that make things.',
              'Bring a laptop. Watch AlphaGo. Make a p5.js account.',
              f'{SITE} · {PLAYLIST.replace("https://", "")}',
-             notes='Next week: rules that make things — Nake, Nees, LeWitt, Cage, and your first p5.js sketch. Homework in one line: a laptop, the AlphaGo film, a free account at editor.p5js.org. Nicolò and Amber stay for 30 minutes after class. The activity comes next: phones or laptops out.'))
+             notes='Next week: rules that make things — Nake, Nees, LeWitt, Cage, and your first p5.js sketch. Homework in one line: a laptop, the AlphaGo film, a free account at editor.p5js.org. The TAs stay for 30 minutes after class. The activity comes next: phones or laptops out.'))
 
 # ───────────────────────── 08 · activity: the edge of a cup ─────────────────────────
 S.append(section('08', 'Push the machine to the edge.', f'30 minutes · a cup · {GENAI} · phone or laptop', bg=YELLOWS[0],

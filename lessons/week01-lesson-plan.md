@@ -25,6 +25,7 @@ For students, by the end of the class they can:
 |---|---|
 | Nicolò | Open ClassPoint on the classroom PC; open `week01-classpoint.pptx`; join code on screen from slide 1. Import the roster as the saved class (build it locally with `tools/roster.py` from the ID list; names are the last four digits + letter of the student ID; the file never goes on GitHub). Fire the slide-4 word cloud once as a test and reset it. Check the two Image Upload buttons on slides 51 and 54 open in the add-in (54 has *caption required* on). |
 | Amber | Check `genai.polyu.edu.hk` on a phone with a student login: pick an image model (Flux or Qwen), run "a cup", time it. Seating that allows pairs and fours. Blackboard: post the deck link, the PDF, the playlist and the homework. |
+| WU Zhao, MA Jie | Help people join ClassPoint at the door; during the activity walk the room, help with GenAI logins, note the best prompts. |
 | Gio | Fonts on the classroom PC: install `tools/fonts/Inter-Variable.ttf` and `JetBrainsMono-Variable.ttf`, restart PowerPoint, check slide 1 shows Inter Black without a substitution warning. Fallback: Arial. Backup: the html deck on a laptop (press `S` for speaker notes) or the PDF. |
 
 ## Run of show
@@ -33,7 +34,7 @@ For students, by the end of the class they can:
 |---|---|---|---|---|---|
 | 0:00 | 1–2 | Welcome | Course code, the eight stops, where the interactive moments are. | | Join code stays visible until stop 2. |
 | 0:04 | 3–5 | Why are we here | Section, then the word cloud *why is AI relevant for design?*, then tools, products, job. | Word cloud (1 submission) | Screenshot the cloud for the week-2 recap. |
-| 0:12 | 6–10 | Who are we | Gio's background; the three AI avatars; the team card (email, TAs 30 min before and after, Zhibin for the class as a whole). Two multiple-choice questions: closest field, AI use. | 2 × multiple choice | This is the level check. Note the splits; they steer weeks 2, 4 and 5. Say the absence rule out loud: let us know before, not after. |
+| 0:12 | 6–10 | Who are we | Gio's background; the three AI avatars; the team card (email, four TAs 30 min before and after, Zhibin for the class as a whole). Two multiple-choice questions: closest field, AI use. | 2 × multiple choice | This is the level check. Note the splits; they steer weeks 2, 4 and 5. Say the absence rule out loud: let us know before, not after. |
 | 0:22 | 11–12 | The journey | The semester map, you are here; week 13 is poster fair plus final quiz. | | |
 | 0:28 | 13–19 | How this course works | Five components; reflection; group project; weekly challenges; three rules; then the anonymous hope and worry. | Short answer (names hidden) | Point at Blackboard for the rubrics. Read two worries aloud, keep the rest for week 2. |
 | 0:42 | 20–25 | What is AI | Short answer in their own words (90 s); read four that disagree; the working definition; Babbage's engine; Lovelace's objection; intelligent vs creative (Wiggins, Turing). | Short answer | The course question lives in the Lovelace slide now: can a machine originate a design? |
@@ -43,7 +44,7 @@ For students, by the end of the class they can:
 | 1:45 | 39–43 | AI in design, now | Using vs incorporating; three cases: Coca-Cola, Netflix, Humane; *where did AI touch your design work this week?*; the playlist. | Short answer | Sort a few answers live into using and incorporating. Keep the list for week 3. |
 | 2:02 | 44–47 | The designer's turn | Verbeek's line; the thing in between; designers as curators, guardrail setters, storytellers. | | Keep it to ten minutes; the activity needs the time. |
 | 2:12 | 48 | Homework in one line | Laptop, AlphaGo, a p5.js account. The site and the playlist address. | | Not goodbye yet: the activity follows. |
-| 2:14 | 49–55 | **Activity: push the machine to the edge** | Section (2 min); round 1 alone (4); capture 1, everyone (3); round 2 in pairs (5); round 4 in fours (6); capture 2 and the wall (6); what just happened (4). | 2 × image upload | Nicolò keeps time with the slide timers; Amber walks the room. Details below. |
+| 2:14 | 49–55 | **Activity: push the machine to the edge** | Section (2 min); round 1 alone (4); capture 1, everyone (3); round 2 in pairs (5); round 4 in fours (6); capture 2 and the wall (6); what just happened (4). | 2 × image upload | Nicolò keeps time with the slide timers; the other three TAs walk the room. Details below. |
 | 2:44 | | Questions, buffer | | | TAs stay 30 minutes. |
 
 If GenAI is slow, give round 1 six minutes and drop the Move 37 chapter. If the room is fast, let three groups read their prompts aloud before the debrief.
@@ -59,7 +60,7 @@ Replaces the scavenger hunt and the pen-and-paper chair exercise. What Gio did w
 5. **Capture 2, 6 minutes — scribes only (slide 54).** ClassPoint image upload, one per four, **caption = the prompt, word for word** (set caption required). Put the wall on screen; point at three: still a cup? Show of hands on the most extreme one. Read the two best prompts. Download the submissions afterwards; week 5 revisits them.
 6. **Debrief, 4 minutes (slide 55).** Prompts were rules, the model had the examples, and it pulled every cup towards its middle (week 3). Whose middle: the dataset's (weeks 9 and 11). Labov 1973: the same object is a cup with coffee in it and a bowl with soup in it; the edge moves with the context. The machine made every image; they decided which one was still a cup. Say the last line slowly.
 
-TA roles: Nicolò keeps time with the slide timers and calls the round changes; Amber walks the room, helps with logins and nudges quiet fours; both note the best prompts for the week-2 recap.
+TA roles: Nicolò keeps time with the slide timers and calls the round changes; Amber, WU Zhao and MA Jie walk the room, help with logins and nudge quiet fours; all four note the best prompts for the week-2 recap.
 
 ## ClassPoint questions and what we do with the answers
 
