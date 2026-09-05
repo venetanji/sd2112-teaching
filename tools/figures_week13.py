@@ -80,11 +80,11 @@ def w13_room(name='w13-room', w=1680, h=560):
     c.text(rx + 336, ry + 168, f'HALF B · TEAMS {HALF + 1} – {TEAMS} · PRESENT IN ROUNDS 2 AND 4', size=17, color=INK)
     c.rect(rx + 300, ry + 190, 22, 22, fill=INK)
     c.text(rx + 336, ry + 208, 'A LAPTOP AT EVERY BOARD · THE VIDEO LOOPS · A QR CODE ON THE POSTER', size=17, color=INK)
-    _arrow(c, rx + 880, ry + 262, rx + 420, ry + 262, ORANGE, 4, 12)
-    c.text(rx + 650, ry + 250, 'rounds 1 and 3: B walks to A', size=15, color=MUTED, anchor='middle')
-    _arrow(c, rx + 420, ry + 306, rx + 880, ry + 306, TEAL, 4, 12)
-    c.text(rx + 650, ry + 334, 'rounds 2 and 4: A walks to B', size=15, color=MUTED, anchor='middle')
-    _lines(c, rx + 300, ry + 368, ['one presenter at the board at all times; the others visit',
+    _arrow(c, rx + 880, ry + 248, rx + 420, ry + 248, ORANGE, 4, 12)
+    c.text(rx + 650, ry + 236, 'rounds 1 and 3: B walks to A', size=15, color=MUTED, anchor='middle')
+    _arrow(c, rx + 420, ry + 286, rx + 880, ry + 286, TEAL, 4, 12)
+    c.text(rx + 650, ry + 314, 'rounds 2 and 4: A walks to B', size=15, color=MUTED, anchor='middle')
+    _lines(c, rx + 300, ry + 350, ['one presenter at the board at all times; the others visit',
                                    'the graders walk with one sheet per team; the peer wall grows on the screen'], size=15, color=MUTED, lh=22)
     c.text(20, 34, 'THE ROOM · TWENTY-SIX BOARDS ON THREE WALLS · TWO HALVES', size=18, color=ORANGE)
     c.text(w - 20, 34, 'team numbers as on the Blackboard group list · 30 minutes before class: posters up, videos playing', size=15, color=MUTED, anchor='end')
