@@ -66,7 +66,7 @@ def w03_family(name='w03-family', w=1680, h=560):
     """Wittgenstein's games: a tick matrix in which no column is full. A definition needs a full column."""
     c = Canvas(w, h)
     x0, col_w, y0, row_h = 330, 144, 128, 62
-    c.text(0, 40, 'WITTGENSTEIN, 1953, §66: "CONSIDER THE PROCEEDINGS THAT WE CALL GAMES"', size=18, color=ORANGE)
+    c.text(0, 40, 'WITTGENSTEIN, 1953, §66 · CONSIDER FOR EXAMPLE THE PROCEEDINGS THAT WE CALL "GAMES"', size=18, color=ORANGE)
     for j, f in enumerate(FEATURES):
         cx = x0 + j * col_w + col_w / 2
         c.text(cx, 100, f, size=19, anchor='middle', color=INK)
@@ -318,10 +318,10 @@ def w03_layers(name='w03-layers', w=1680, h=560):
         c.rect(lx + 110, y - 14, 120, 28, fill=PAPER)
         c.rect(lx + 110, y - 14, 120 * p, 28, fill=ORANGE if k == 0 else TEAL)
         c.text(lx + 280, y + 6, f'{p:.2f}', size=16, anchor='end', color=MUTED)
-    c.text(xs[0], 440, 'layer 1', size=16, color=MUTED)
-    c.text(xs[1], 440, 'layers 2 – 3', size=16, color=MUTED)
-    c.text(xs[2], 440, 'layers 4 – 5', size=16, color=MUTED)
-    c.text(xs[3], 440, 'layers 6 – 8', size=16, color=MUTED)
+    c.text(xs[0], 440, 'input: the pixels', size=16, color=MUTED)
+    c.text(xs[1], 440, 'layer 1 (convolutional)', size=16, color=MUTED)
+    c.text(xs[2], 440, 'layers 2 – 5 (convolutional)', size=16, color=MUTED)
+    c.text(xs[3], 440, 'layers 6 – 8 (fully connected)', size=16, color=MUTED)
     c.text(xs[4], 440, 'output: 1,000 scores', size=16, color=MUTED)
     c.text(0, 500, 'AlexNet, 2012: 8 layers, 60 million weights, all found from 1.2 million labelled photos.', size=20, color=INK)
     c.text(0, 532, 'nobody wrote a rule for "edge" or "leg"; the layers became those detectors because it lowered the error', size=18, color=MUTED)

@@ -144,10 +144,13 @@ function keyPressed() {
 }"""
 
 # (b) Labov's cups and bowls: a 2-D space, a nearest prototype and a 5-nearest-neighbour vote
+# (the verdicts sit on the left so that the resting mouse of the snapshot, at 60 % / 40 % of the canvas,
+#  lands between the cup and the bowl prototypes: a big cup, or a tall bowl — the edge)
 CUPS_CODE = """// Labov's cups and bowls: thirty example vessels in a space of shape (height ÷ width) and size.
 // The mouse is a new object. Two machines judge it: the nearest prototype, and a vote of its 5 nearest examples.
-const PW = 920, PH = 480, K = 5;
-const R0 = 0.3, R1 = 2.3;                       // ratio axis (height ÷ width)
+const PANEL = 480, K = 5;                       // the verdicts on the left, the space on the right
+const X0 = 540, X1 = 1380, Y0 = 40, Y1 = 440;   // the plot box
+const R0 = 0.3, R1 = 2.3;                       // shape axis: height ÷ width, wide … tall
 const CLASSES = ['cup', 'bowl', 'vase'];
 const COL = {cup: [237, 109, 36], bowl: [100, 194, 195], vase: [148, 56, 144]};
 let ex = [], proto = {};
@@ -155,9 +158,9 @@ let ex = [], proto = {};
 function setup() {
   createCanvas(1400, 480);
   randomSeed(1973);
-  for (let i = 0; i < 12; i++) ex.push({r: randomGaussian(1.0, 0.22), s: randomGaussian(0.35, 0.12), c: 'cup'});
-  for (let i = 0; i < 10; i++) ex.push({r: randomGaussian(0.5, 0.1), s: randomGaussian(0.55, 0.18), c: 'bowl'});
-  for (let i = 0; i < 8; i++) ex.push({r: randomGaussian(1.9, 0.22), s: randomGaussian(0.62, 0.14), c: 'vase'});
+  for (let i = 0; i < 12; i++) ex.push({r: randomGaussian(1.05, 0.2), s: randomGaussian(0.36, 0.14), c: 'cup'});
+  for (let i = 0; i < 10; i++) ex.push({r: randomGaussian(0.5, 0.14), s: randomGaussian(0.6, 0.17), c: 'bowl'});
+  for (let i = 0; i < 8; i++) ex.push({r: randomGaussian(1.95, 0.2), s: randomGaussian(0.6, 0.15), c: 'vase'});
   for (const e of ex) { e.r = constrain(e.r, R0 + 0.05, R1 - 0.05); e.s = constrain(e.s, 0.08, 0.95); }
   for (const c of CLASSES) {                     // the prototype: the middle of the class
     const m = ex.filter(e => e.c == c);
@@ -166,7 +169,7 @@ function setup() {
   textFont('JetBrains Mono');
 }
 
-const px = r => map(r, R0, R1, 60, 900), py = s => map(s, 0, 1, 440, 40);
+const px = r => map(r, R0, R1, X0, X1), py = s => map(s, 0, 1, Y1, Y0);
 const dist = (a, b) => sqrt(sq((a.r - b.r) / (R1 - R0)) + sq(a.s - b.s));   // both axes count the same
 
 function vessel(x, y, r, s, col, w = 2) {       // a little profile: width from size, height from ratio
@@ -177,12 +180,12 @@ function vessel(x, y, r, s, col, w = 2) {       // a little profile: width from 
 
 function draw() {
   background(255);
-  noStroke(); fill(244, 244, 242); rect(PW, 0, width - PW, height);
+  noStroke(); fill(244, 244, 242); rect(0, 0, PANEL, height);
   stroke(225); strokeWeight(1);
-  line(60, 440, 900, 440); line(60, 40, 60, 440);
+  line(X0, Y1, X1, Y1); line(X0, Y0, X0, Y1);
   noStroke(); fill(92, 100, 112); textSize(15); textAlign(LEFT);
-  text('shape: height ÷ width  →  ' + R0 + ' (wide) … ' + R1 + ' (tall)', 70, 468);
-  push(); translate(24, 260); rotate(-HALF_PI); textAlign(CENTER); text('size  →', 0, 0); pop();
+  text('height ÷ width: ' + R0 + ' wide → ' + R1 + ' tall', X0 + 8, 468);
+  push(); translate(X0 - 36, 240); rotate(-HALF_PI); textAlign(CENTER); text('size  →', 0, 0); pop();
   for (const e of ex) vessel(px(e.r), py(e.s), e.r, e.s, COL[e.c]);
   for (const c of CLASSES) {                     // the prototypes
     const p = proto[c];
@@ -190,8 +193,7 @@ function draw() {
     noStroke(); fill(255, 230); rect(px(p.r) - 62, py(p.s) + 28, 124, 18);
     fill(COL[c]); textSize(14); textAlign(CENTER); text(c + ' prototype', px(p.r), py(p.s) + 42);
   }
-  const inPlot = mouseX >= 60 && mouseX <= 900 && mouseY >= 40 && mouseY <= 440;
-  const m = {r: map(constrain(mouseX, 60, 900), 60, 900, R0, R1), s: map(constrain(mouseY, 40, 440), 440, 40, 0, 1)};
+  const m = {r: map(constrain(mouseX, X0, X1), X0, X1, R0, R1), s: map(constrain(mouseY, Y0, Y1), Y1, Y0, 0, 1)};
   // machine 1: the nearest prototype
   let best = CLASSES[0];
   for (const c of CLASSES) if (dist(m, proto[c]) < dist(m, proto[best])) best = c;
@@ -205,7 +207,7 @@ function draw() {
 }
 
 function panel(m, best, win, votes, near) {
-  const x = PW + 30;
+  const x = 30;
   noStroke(); fill(237, 109, 36); textSize(15); textAlign(LEFT);
   text('A NEW OBJECT · WHAT IS IT?', x, 40);
   const wd = 40 + m.s * 90, ht = constrain(wd * m.r, 12, 150);
@@ -269,7 +271,7 @@ function draw() {
   stroke(225); strokeWeight(1); line(X0, Y1, X1, Y1); line(X0, Y0, X0, Y1);
   stroke(0, 11, 28); strokeWeight(3); noFill();
   beginShape();
-  for (let x = 0; x <= 1.0001; x += 0.004) { const v = evalAt(co, x); if (v > -0.2 && v < 1.2) vertex(px(x), py(v)); else { endShape(); beginShape(); } }
+  for (let x = 0; x <= 1.0001; x += 0.004) { const v = evalAt(co, x); if (v >= -0.01 && v <= 1.01) vertex(px(x), py(v)); else { endShape(); beginShape(); } }   // clipped to the plot box
   endShape();
   strokeWeight(1.5); stroke(0); fill(237, 109, 36);
   for (const [x, v] of train) circle(px(x), py(v), 14);
@@ -285,7 +287,7 @@ function panel(d, eTrain, eTest) {
   noStroke(); fill(244, 244, 242); rect(PW, 0, width - PW, height);
   fill(237, 109, 36); textSize(15); text('HOW FLEXIBLE IS THE RULE?', x, 40);
   fill(0); textSize(40); text('degree ' + d, x, 100);
-  textSize(15); fill(92, 100, 112); text(d + ' + 1 numbers to find', x, 128);
+  textSize(15); fill(92, 100, 112); text((d + 1) + ' numbers to find', x, 128);
   const bar = (label, e, y, col) => {
     fill(0); textSize(17); text(label, x, y);
     fill(232, 232, 228); rect(x, y + 12, 340, 22);
@@ -303,11 +305,11 @@ function panel(d, eTrain, eTest) {
 
 function mousePressed() { showTest = !showTest; }"""
 
-VOTE_ENTRIES = [
-    'Entry 1 · "a grid of circles; each radius is random, up to half a cell"',
-    'Entry 2 · "one line per row, its angle random within 20 degrees"',
-    'Entry 3 · "a hundred squares; each one 10% likely to be black"',
-    'Entry 4 · "a spiral of dots; every dot drifts by a random amount that grows"',
+VOTE_ENTRIES = [   # placeholders: the TAs paste the four shortlisted specs here before the deck is built (spec only, no names)
+    '(the first shortlisted spec goes here — TAs fill in; no names)',
+    '(the second shortlisted spec goes here)',
+    '(the third shortlisted spec goes here)',
+    '(the fourth shortlisted spec goes here)',
 ]
 
 RULE_PANEL = [
@@ -325,7 +327,8 @@ SHOW_PANEL = [
     '"a chair like these"', ' ',
     'Attached: your two round-1 images.', 'No other words.', ' ',
     'Then ask, out loud:', ' ',
-    'What did it take from each image?', 'What did neither of us ask for?',
+    'What did it take from each image?', 'What did neither of us ask for?', ' ',
+    'One of you uploads it. Caption:', 'the three words + whose two chairs.',
 ]
 
 PUSH_PANEL = [
@@ -401,7 +404,7 @@ S.append(cards('02 · THE CLASSICAL THEORY', 'A concept is a definition.', [
 ], text_size=22, notes='The classical theory is machine A applied to meaning: a definition is a rule, membership is a verdict. It works for mathematics and for law and fails for almost everything a designer makes. Wittgenstein\'s games are the famous counter-example: he asks you to look, not think, and you find no feature shared by all. Next slide is that paragraph as a table.'))
 
 S.append(figure_slide('02 · WITTGENSTEIN · FAMILY RESEMBLANCE', 'No feature runs through all of them.', W.w03_family(),
-                      body=['Six games, seven features. A definition would need a full column; there is none. Chess and ring-a-ring-a-roses share nothing at all, yet both are games, because a chain of resemblances links them: "family resemblances", he called it, §67.'],
+                      body=['Six games, seven features. A definition would need a full column; there is none. Chess and ring-a-ring-a-roses share almost nothing, yet both are games, because a chain of resemblances links them: "family resemblances", he called it, §67.'],
                       caption='After Philosophical Investigations §66–67 (1953). The features are ours; the argument is his. Rosch borrowed the term for her 1975 experiments.',
                       notes='Walk one column: "winning" — ring-a-ring-a-roses has no winner. "players" — patience has one. No column is full, so no definition exists, and yet nobody in this room is confused about what a game is. Hold this table: in twenty minutes the perceptron will be doing the same thing with numbers instead of ticks.'))
 
@@ -415,8 +418,8 @@ S.append(cards('02 · ROSCH · 1975', 'Concepts have a middle and an edge.', [
 ], text_size=22, notes='Eleanor Rosch, Berkeley, 1975: two papers that ended the classical theory for psychology. The first measures typicality and finds everyone agrees on it; the second explains it with Wittgenstein\'s family resemblance, counted. Say the design version: every category has a middle everyone can draw and an edge everyone argues about. The prompts in week 1 pulled to the middle because the model is a prototype machine. Now the cups.'))
 
 S.append(sketch_slide('02 · LABOV · 1973 · CUPS AND BOWLS · LIVE', 'Where does a cup stop being a bowl?',
-                      live('w03-cups', CUPS_CODE, 1400, 480, hint='move the mouse: it is a new object · watch the two verdicts'),
-                      caption='Thirty example vessels in a space of shape (height ÷ width) and size. The mouse is a new object. Left verdict: the nearest prototype. Right verdict: a vote of its five nearest examples — where they disagree, you are at the edge.',
+                      live('w03-cups', CUPS_CODE, 1400, 480, hint='the mouse is a new object'),
+                      caption='Thirty example vessels in a space of shape (height ÷ width) and size. The mouse is a new object. First verdict: the nearest prototype. Second verdict: a vote of its five nearest examples — where they disagree, you are at the edge. At rest it sits between the cup and the bowl.',
                       notes='Labov showed people line drawings of containers that varied in width and depth and asked them to name each one. The names shifted gradually from cup to bowl as the drawing widened, with a wide region where people disagreed. This sketch is his experiment as a machine: move the mouse from the cups to the bowls and watch the vote go from five-nil to three-two — that is the edge, and it is a region, not a line. Note that neither verdict uses a definition: one measures distance to a prototype, the other asks the neighbours. Both are machine B in miniature. Cut short if behind, but do the crossing once.'))
 
 S.append(content('02 · LABOV · 1973 · CONTEXT', 'The edge moves with what is in it.',
@@ -437,11 +440,11 @@ S.append(cards('02 · TWO THEORIES · TWO MACHINES', 'A definition is a rule. A 
 
 S.append(question('multiple_choice', 'Which sentence is prototype theory?', [
     'A chair is anything with a seat, a back and at least three legs',
+    'Every chair shares one feature that makes it a chair',
     'Some chairs are better examples of "chair" than others',
     'A chair is whatever the dictionary says it is',
-    'Every chair shares one feature that makes it a chair',
 ], eyebrow_text='02 · QUICK CHECK · MULTIPLE CHOICE',
-    notes='B. A, C and D are all the classical theory in different clothes: a list of conditions, an authority holding the list, a single essential feature. Only B admits degrees. Ask for a chair that is a "worse example": a beanbag, a swing, a throne — and notice nobody says "not a chair".'))
+    notes='C. A, B and D are all the classical theory in different clothes: a list of conditions, a single essential feature, an authority holding the list. Only C admits degrees. Ask for a chair that is a "worse example": a beanbag, a swing, a throne — and notice nobody says "not a chair".'))
 
 # ───────────────────────── 03 · machine B: neurons that learn ─────────────────────────
 S.append(section('03', 'Machine B', 'GOFAI vs connectionism · 1958 · 1986 · 2012', bg=TEALS[0],
@@ -477,7 +480,7 @@ S.append(cards('03 · 1958 · 1969 · 1986', 'A machine that learns, and what it
     ('1969 · MINSKY & PAPERT', 'One line cannot.',
      'Perceptrons, the book: a single layer can only draw one straight line, so it cannot even learn XOR. Funding for networks dries up for a decade. The rules school wins the seventies.'),
     ('1986 · BACKPROPAGATION', 'Rumelhart, Hinton and Williams.',
-     'Nature, three pages: put units in layers, send the error backwards, nudge every weight. Hidden units invent their own features. Hinton: Nobel Prize in Physics, 2024, with Hopfield.'),
+     'Four pages in Nature: put units in layers, send the error backwards, nudge every weight. Hidden units invent their own features. Hinton: Nobel Prize in Physics, 2024, with Hopfield.'),
 ], text_size=21, notes='Three dates. 1958: the machine learns, and the press promises consciousness — the first AI hype cycle, sixty-eight years ago. 1969: the limit is real; a single neuron is a single line. 1986: layers plus backpropagation, and the limit is gone, on paper. What was still missing was examples and speed. Next slide shows the limit and the fix as pictures.'))
 
 S.append(figure_slide('03 · THE LIMIT, AND THE FIX', 'One line cannot. Two layers can.', W.w03_xor(),
@@ -486,7 +489,7 @@ S.append(figure_slide('03 · THE LIMIT, AND THE FIX', 'One line cannot. Two laye
                       notes='Left: try to draw a line; every one gets a cluster wrong. Middle: two hidden units, each a neuron, each one line; the output unit combines their verdicts. Right: the band between the two lines is the concept the network found. Nobody said "band". That is what "learned representation" means in the 1986 title: the hidden units come to represent features nobody named. Stack more layers and the features get richer, which is the next slide.'))
 
 S.append(figure_slide('03 · 2012 · ALEXNET', 'Deep: the features are learned too.', W.w03_layers(),
-                      body=['30 September 2012: Krizhevsky, Sutskever and Hinton win the ImageNet challenge with an eight-layer network: 15.3% error against 26.2% for the next entry. Trained on 1.2 million labelled photos, in about a week, on two gaming GPUs. Every earlier system had hand-written feature detectors; theirs grew them.'],
+                      body=['30 September 2012: Krizhevsky, Sutskever and Hinton win the ImageNet challenge with an eight-layer network: 15.3% error against 26.2% for the runner-up, trained on 1.2 million labelled photos in about a week on two gaming GPUs. The other entries that year ran on hand-crafted features (SIFT, Fisher vectors); AlexNet grew its own from the pixels, at a scale nobody had managed.'],
                       caption='ImageNet: Fei-Fei Li, from 2006; 14 million images labelled by 49,000 Mechanical Turk workers in 167 countries. Who chose the examples, and who labelled them, is week 9.',
                       notes='The picture is a story of layers: the first layers become edge detectors, the middle ones parts, the last ones objects — and nobody programmed any of that; the layers became those detectors because it lowered the error. AlexNet is the 1986 idea with a million examples and a graphics card. Say the two enablers plainly: the web gave the examples, gaming gave the chips. And then the design point in the caption: 49,000 people labelled the photos for pennies. The examples are the material, and someone chose them.'))
 
@@ -515,7 +518,7 @@ S.append(section('04', 'Rule-based, or adaptive?', 'the same menu · two machine
 
 S.append(cards('04 · THE SAME MENU', 'Three pairs you use every week.', [
     ('PHOTOSHOP', 'Auto Levels · Generative Fill',
-     ['**Auto Levels** stretches the histogram so the darkest pixel is black and the lightest white. A rule, since the 1990s. Same input, same output.',
+     ['**Auto Levels** stretches the histogram so the darkest pixel is black and the lightest white. A rule, for decades. Same input, same output.',
       '**Generative Fill**, May 2023: a diffusion model trained on Adobe Stock invents what belongs in the hole. Examples.']),
     ('FIGMA', 'Auto layout · Figma Make',
      ['**Auto layout**, December 2019: padding, direction, spacing; the frame resizes by rules you set.',
@@ -537,9 +540,9 @@ S.append(cards('04 · FOUR TESTS', 'How to tell which machine you are holding.',
 ], text_size=23, notes='Four questions to ask of any feature, in a review, in a brief, in your reflection. They are the four properties of the two deals: exact/repeatable, explainable/opaque, hand-written/fed, brittle/fluent. Practise on the next slide with the list you made in week 1.'))
 
 S.append(question('multiple_choice', 'Which of these four is rule-based, machine A?', [
-    'Photoshop Generative Fill', 'Figma auto layout', 'Spotify\'s Discover Weekly playlist', 'Google Translate',
+    'Figma auto layout', 'Photoshop Generative Fill', 'Spotify\'s Discover Weekly playlist', 'Google Translate',
 ], eyebrow_text='04 · SORT THE TOOLS · MULTIPLE CHOICE',
-    notes='B. Auto layout is padding and direction, set by you, applied by rules. The other three are learned: a diffusion model, a recommender trained on listening, a neural translation model. Then, if there is time, open the week-1 answers to "where did AI touch your design work" and read four; the room sorts each one by show of hands, using the four tests. Keep the sorted list: it seeds the week-8 discussion of using versus incorporating.'))
+    notes='A. Auto layout is padding and direction, set by you, applied by rules. The other three are learned: a diffusion model, a recommender trained on listening, a neural translation model. Then, if there is time, open the week-1 answers to "where did AI touch your design work" and read four; the room sorts each one by show of hands, using the four tests. Keep the sorted list: it seeds the week-8 discussion of using versus incorporating.'))
 
 S.append(statement('Machine A is a rule you wrote. Machine B is a rule nobody wrote.', eyebrow_text='04 · WHERE WE ARE', size=104,
                    notes='The sentence to carry across the break. A rule you wrote: exact, explainable, brittle. A rule nobody wrote, found from examples: fluent, fuzzy, opaque. Neither is better; every AI feature you meet is one, the other, or a mix, and your job is to know which one you are holding.'))
@@ -553,7 +556,7 @@ S.append(section('05', 'Move 37', 'Seoul · 10 March 2016 · non-human creativit
 
 S.append(video('05 · ALPHAGO · THE FILM · 2017', 'You watched it. Now the move.', 'WXuK6gekU1Y',
                ['Seoul, 9–15 March 2016: five games, AlphaGo 4, Lee Sedol 1. Lee Sedol: 9-dan, eighteen international titles.',
-                '- Game 2, 10 March, move 37: a shoulder hit on the fifth line, a move commentators called creative and unique — and that no professional would have considered.',
+                '- Game 2, 10 March, move 37: a shoulder hit on the fifth line. Michael Redmond, commentating, called it "creative" and "unique": a move most professionals would not have considered.',
                 '- DeepMind: the model gave a human a 1-in-10,000 chance of playing it. It played it anyway, and won.',
                 '- Game 4, move 78: Lee Sedol\'s reply, "a divine move". His only win.'],
                thumb='yt/WXuK6gekU1Y.jpg', body_size=26,
@@ -592,12 +595,12 @@ S.append(question('short_answer', 'Was Move 37 creative? Yes or no, and one reas
                   notes='Two minutes to write; then five to argue. Read a yes and a no aloud, pick people who used different words, and let two more respond. No correct answer; this is the course question in its first concrete form, and it comes back in the reflection and in week 11. Keep the answers with the word cloud: by week 12 you can show them how their vocabulary changed.'))
 
 S.append(quote('"…there is an entity that cannot be defeated."',
-               'Lee Sedol, announcing his retirement, November 2019, to the Yonhap news agency: with AI in Go, even the number one player would face it.',
+               'Lee Sedol to the Yonhap news agency, November 2019, after announcing his retirement: with AI in Go, even the number one player would face it.',
                size=88,
                notes='November 2019: Lee Sedol retires, saying that even as number one he would face an entity that cannot be defeated. Read it two ways. The human reading: a game lost its point. The design reading: the field\'s conceptual space moved, and the humans in it had to decide what they were now for. That is chapter seven of week 1 — the designer\'s turn — happening to a Go player three years early. Now the tools.'))
 
 # ───────────────────────── 06 · telling and showing ─────────────────────────
-S.append(section('06', 'Telling, and showing', f'{GENAI} · Flux · Qwen · a prompt and a reference', bg=TEALS[0],
+S.append(section('06', 'Telling, and showing', f'{GENAI} · a prompt, then a reference image', bg=TEALS[0],
                  notes='Chapter six, the workshop: two ways to steer an image model, and they are the two machines again. A prompt tells; a reference shows. Phones and laptops on genai.polyu.edu.hk.'))
 
 S.append(content('06 · WEEK 1 · THE CHAIRS COME BACK', 'Your prompt told. The model had the examples.',
@@ -612,7 +615,7 @@ S.append(content('06 · WEEK 1 · THE CHAIRS COME BACK', 'Your prompt told. The 
 
 S.append(figure_slide('06 · TELL, OR SHOW', 'A reference image is an example, not a rule.', W.w03_tell_show(),
                       body=['Words select among the examples the model already has, so "a chair" lands in the middle every time. A reference puts one more example on the table and the output moves toward it. It cannot say "no handle"; it can show a cup with none.'],
-                      caption='Flux and Qwen on genai.polyu.edu.hk both take an image input next to the text. What comes back sits between the reference and the prototype: a mix, not a copy, and not a rule applied.',
+                      caption='On genai.polyu.edu.hk, use the Flux or Qwen model that takes an image input next to the text (the TAs confirm which). What comes back sits between the reference and the prototype: a mix, not a copy, and not a rule applied.',
                       notes='Two rows, same model. Top: telling; the output is the prototype. Bottom: showing; the output is pulled toward the references — their proportions, their splay, their back — and sits between them and the middle. Three consequences for the workshop: a reference cannot forbid anything; two references give you an in-between; and a reference is somebody\'s picture, which is week 11\'s question. Now how to do it.'))
 
 S.append(cards('06 · ON GENAI', 'Four moves.', [
@@ -623,7 +626,7 @@ S.append(cards('06 · ON GENAI', 'Four moves.', [
     ('3 · SHOW', 'Attach one or two references.',
      'Say almost nothing: "like this", "like these". Run it. Compare with the baseline: what moved, what the model refused to give up.'),
     ('4 · EDIT', 'One change at a time.',
-     'Swap a reference, or add three words, never both. Save the prompt and the references with every image: the caption today, the process note in your reflection.'),
+     'Feed it its own output with one instruction — "the same chair, no arms" — or swap a reference, or add three words. One change per run, so you know which machine answered. Save the prompt and the references with every image.'),
 ], text_size=22, notes='Four moves, and the discipline from week 2 applies: one change per run so you know what caused what. The TAs checked which model on GenAI accepts an image input; say which. Phone browsers work. If uploads are slow, one laptop per pair.'))
 
 S.append(cards('06 · WHAT A REFERENCE DOES', 'It can pull. It cannot forbid.', [
@@ -644,10 +647,10 @@ S.append(content('06 · LIVE · THE EDGE CHAIR', 'Watch: tell it, then show it.'
                   'Then it is your turn: alone, in pairs, in fours.'],
                  image='ai-chair-edge.jpg', fit='cover', body_size=30,
                  caption='Week 1: "an object that is barely still a chair, an unusual seat that stretches the definition of chair". Same model, one seed.',
-                 notes='Live, five minutes, on the classroom PC with GenAI. First telling: get the prototype, then ask for the edge with words and get the prototype again — the room saw this in week 1. Then attach the edge chair as a reference and run the same words: the output moves. Then two references and almost no words. Narrate the two machines while it generates: words are rules the model applies to its middle; pictures are examples that move the middle. If GenAI is slow, have the three results ready as screenshots.'))
+                 notes='Live, five minutes, on the classroom PC with GenAI. First telling: get the prototype, then ask for the edge with words and get the prototype again — the room saw this in week 1. Then attach the edge chair as a reference and run the same words: the output moves. Then two references and almost no words. If there is a minute, the edit: feed the result back with "the same chair, no arms" and see which machine answers. Narrate the two machines while it generates: words are rules the model applies to its middle; pictures are examples that move the middle. If GenAI is slow, have the three results ready as screenshots.'))
 
 # ───────────────────────── 07 · activity: show it, don't tell it ─────────────────────────
-S.append(section('07', "Show it, don't tell it.", f'30 minutes · a chair · {GENAI} · phone or laptop', bg=YELLOWS[0],
+S.append(section('07', "Show it, don't tell it.", f'35 minutes · a chair · {GENAI} · phone or laptop', bg=YELLOWS[0],
                  notes='The activity. Three rounds, one chair: alone, you tell the model in words; in pairs, you show it two pictures and no words; in fours, you push it off the prototype with references only. Each round ends in an image; the caption says which inputs made it. Nicolò keeps time; Amber, WU Zhao and MA Jie walk. One device per pair at least.'))
 
 S.append(activity('1 — ALONE · TELL IT', 5, 'Write the rule. Get the picture.',
@@ -670,6 +673,12 @@ S.append(activity('2 — IN PAIRS · SHOW IT', 8, 'Two pictures. Three words.',
                   panel=SHOW_PANEL, panel_size=22, bg=YELLOWS[1],
                   notes='Eight minutes. Now the same chair is shown, not told. Expect an in-between: the proportions of one, the material of the other, and something from the prototype nobody asked for. Make every pair say out loud what came from where; that sentence is the reflection\'s argument in miniature. The TAs help with the image input if a model refuses it.'))
 
+S.append(question('image_upload', 'One per pair: the chair like these.',
+                  hint='The image from round 2. Caption: "a chair like these", and whose two round-1 chairs went in as references.',
+                  eyebrow_text='07 · CAPTURE 2 · IMAGE UPLOAD · ONE PER PAIR',
+                  cp={'type': 'image_upload', 'hide_names': False, 'caption_required': True},
+                  notes='Two minutes, one upload per pair, caption required: the three words and the two references. This is the shown wall; put it next to the told wall and let the room see the in-betweens: the proportions of one chair, the material of the other, and something from the prototype nobody asked for. Read one caption and check what came from which picture. The fours start as soon as the upload is in.'))
+
 S.append(activity('4 — TWO PAIRS · OFF THE PROTOTYPE', 10, 'References only. Leave the middle.',
                   ['Join the pair behind you: four images on the table. Choose the **two furthest from the middle** that all four of you still call a chair.',
                    'Feed only those two. Iterate by **swapping a reference**, never by adding words. Three runs at most.',
@@ -679,9 +688,9 @@ S.append(activity('4 — TWO PAIRS · OFF THE PROTOTYPE', 10, 'References only. 
 
 S.append(question('image_upload', 'Scribes only. The chair, and what made it.',
                   hint='One image per four. Caption: the prompt, and which references — how many, whose, from which round.',
-                  eyebrow_text='07 · CAPTURE 2 · IMAGE UPLOAD · ONE PER FOUR',
+                  eyebrow_text='07 · CAPTURE 3 · IMAGE UPLOAD · ONE PER FOUR',
                   cp={'type': 'image_upload', 'hide_names': False, 'caption_required': True},
-                  notes='Scribes only, about 28 images, caption required. Put the wall up next to capture 1: told chairs on one side, shown chairs on the other. Ask the room which wall has more chairs that are not the prototype. Read two captions: the inputs, not adjectives. Download the submissions: the chairs come back in week 5, when we push a model off the prototype properly, with ControlNet and fine-tuning.'))
+                  notes='Scribes only, about 28 images, caption required. Put the three walls side by side: told (capture 1), shown two pictures (capture 2), references only (capture 3). Ask the room which wall has more chairs that are not the prototype. Read two captions: the inputs, not adjectives. Download the submissions: the chairs come back in week 5, when we push a model off the prototype properly, with ControlNet and fine-tuning.'))
 
 S.append(content('07 · WHAT JUST HAPPENED', 'The prompt was you telling. The reference was you showing.',
                  ['The model has the examples. Your prompt was a rule it applied to the middle of them: it obeyed what selected and ignored what forbade. "Never" did not survive.',
@@ -745,6 +754,7 @@ if __name__ == '__main__':
 # https://seantrott.substack.com/p/perceptrons-xor-and-the-first-ai — Minsky & Papert (1969), XOR, the funding winter
 # https://www.nature.com/articles/323533a0 — Rumelhart, Hinton & Williams (1986), Learning representations by back-propagating errors, Nature 323, 533–536
 # https://en.wikipedia.org/wiki/AlexNet — 30 Sept 2012, 15.3% vs 26.2% top-5 error, 60 M parameters, 8 layers, two GTX 580, 1.2 M images, 1,000 classes
+# https://image-net.org/challenges/LSVRC/2012/results.html — ILSVRC 2012: SuperVision (a CNN on raw pixels) 15.3%; ISI, OXFORD_VGG, XRCE/INRIA, LEAR-XRCE on SIFT + Fisher vectors (26.2% and up)
 # https://en.wikipedia.org/wiki/ImageNet — Fei-Fei Li, 2006 / CVPR 2009, 14 M images, 49,000 Mechanical Turk workers from 167 countries
 # https://www.nobelprize.org/prizes/physics/2024/summary/ — Hopfield and Hinton, Nobel Prize in Physics 2024
 # https://en.wikipedia.org/wiki/AlphaGo_versus_Lee_Sedol — 9–15 March 2016, Four Seasons Seoul, 4–1, move 37 on 10 March (Redmond: creative, unique), move 78 in game 4, 18 international titles
