@@ -156,5 +156,7 @@ Tools you will need an account for: ClassPoint (student app), Blackboard, the p5
 - The group project adds a one-page mediation brief, so the theory (Ihde, Verbeek, bias, guardrails) shows up in the deliverable.
 - Four teaching assistants (Nicolò Azzolin, Amber, WU Zhao, MA Jie) hold a help desk 30 minutes before and after each class; Zhibin Zhou coordinates the class; absences go to the teaching team.
 - The playlist is mapped week by week; quizzes draw on it.
-- Week 2 teaches specs: the same rule executed by hand, by a language model into p5.js, and as the student's own rule; the html deck runs the p5.js sketches live.
+- Week 2 teaches specs: the same rule executed by hand, by a language model into p5.js, and as the student's own rule.
+- All thirteen classes are built out: a deck, a lesson plan with a run of show, and an activity whose rounds end in a ClassPoint submission, for every week.
+- Every week carries live, interactive p5.js sketches in the html deck (a perceptron that finds its line, Labov's cups, a tokenizer, a diffusion dial, a sequencer, a feed with an exploration dial, ELIZA…): the mechanism of the week as a thing the room can touch. The sketches also live on their own pages (the Sketchbook on the course site), so students can open them at home.
 - Slides are built from one source into an HTML deck and a PDF (GitHub Pages) and a ClassPoint-ready PowerPoint.

@@ -120,8 +120,13 @@ nav .slides{{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;te
 def md_to_html(md: str, out: Path, title: str):
     import markdown
     body = markdown.markdown(md, extensions=['tables'])
+    write_page(out, title, body)
+
+
+def write_page(out: Path, title: str, body_html: str):
+    """A site page in the document style: nav with every deck, eyebrow, body."""
     decks = ' '.join(f'<a href="{d.stem}/" title="Week {int(d.stem[4:])} slides">{d.stem[4:]}</a>' for d in sorted((ROOT / 'deck').glob('week[0-9][0-9].py')))
-    out.write_text(HTML.format(title=title, body=body, decks=decks), encoding='utf-8')
+    out.write_text(HTML.format(title=title, body=body_html, decks=decks), encoding='utf-8')
 
 
 # Which documents are published on the site. Everything else (lesson plans) is for the
