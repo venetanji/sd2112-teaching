@@ -623,7 +623,7 @@ S.append(two_col('09 · THE WORKFLOW · A SYSTEM PROMPT', 'Automate the briefing
                   '- Machine A around machine B: rules in words, obeyed every time.',
                   '- Run it on two ideas. What repeats is the prompt\'s middle; what differs is the idea\'s.',
                   'Round 4 runs it on a stranger\'s idea. Then you edit the prompt, not the output.'],
-                 SYSTEM_PROMPT, right_size=22, left_size=30,
+                 SYSTEM_PROMPT, right_size=22, left_size=29,
                  notes='The template is on the course site and on Blackboard. Read the last two lines aloud: "do not praise, do not add" is the sycophancy defence and the middle defence as rules. On GenAI, if there is no system field, paste it as the first message and then paste the idea as the second; the effect is nearly the same. The exercise after the run is to compare two outputs and find what the prompt imposed on both.'))
 
 S.append(cards('09 · COMPARE', 'Four questions for every draft.', [
