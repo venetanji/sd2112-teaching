@@ -286,7 +286,7 @@ def w08_grain(name='w08-grain', w=1680, h=560):
 def w08_sprints(name='w08-sprints', w=1680, h=560):
     """Weeks 8 to 13 as sprints: a backlog above, one deliverable per sprint, a stand-up at the start of every class."""
     c = Canvas(w, h)
-    c.text(0, 34, 'THE GROUP PROJECT AS SCRUM: ONE SPRINT PER WEEK, ONE DELIVERABLE PER SPRINT', size=18, color=ORANGE)
+    c.text(0, 34, 'THE GROUP PROJECT AS SCRUM · WEEKS 8 – 13', size=18, color=ORANGE)
     c.text(w, 34, 'Scrum Guide 2020: a sprint is one month or less; ours is a week', size=16, color=MUTED, anchor='end')
     # the backlog
     c.rect(0, 70, 380, 300, fill=PAPER)
@@ -328,7 +328,7 @@ def w08_sprints(name='w08-sprints', w=1680, h=560):
     _lines(c, 0, 464, ['what did I do since last class · what will I do before the next · what is in my way'], size=15, color=INK, lh=22)
     c.text(900, 434, 'THE REVIEW: THE TAs, THIRTY MINUTES AFTER CLASS', size=16, color=ORANGE)
     _lines(c, 900, 464, ['show the increment — the thing that exists now — not the plan;', 'then move one item from the backlog into the next sprint'], size=15, color=INK, lh=22)
-    c.text(0, 540, 'Takeuchi & Nonaka, HBR 1986: the rugby team that "goes the whole distance as a unit" · Schwaber & Sutherland, Scrum, 1995 · the Scrum Guide, 2020', size=14, color=MUTED)
+    c.text(0, 540, 'Takeuchi & Nonaka, HBR, January 1986: teams that move like a rugby side, not a relay · Schwaber & Sutherland, Scrum, 1995 · the Scrum Guide, 2020', size=14, color=MUTED)
     return c.finish(name)
 
 
@@ -388,7 +388,7 @@ def w08_git(name='w08-git', w=1680, h=560):
 def w08_ladder(name='w08-ladder', w=1680, h=560):
     """Five rungs, in order: the person, the moment, the decision, the data, the failure — with one fictional example."""
     c = Canvas(w, h)
-    c.text(0, 34, 'THE BRAINSTORM LADDER: FIVE RUNGS, IN THIS ORDER, ONE LINE EACH', size=18, color=ORANGE)
+    c.text(0, 34, 'THE BRAINSTORM LADDER · ONE LINE PER IDEA', size=18, color=ORANGE)
     c.text(w, 34, 'an idea that skips a rung is a feature, not a product', size=17, color=MUTED, anchor='end')
     rungs = [('1 · THE PERSON', 'who, exactly — one person,', 'not "users"', 'a night-shift nurse in Kwun Tong', TEAL),
              ('2 · THE MOMENT', 'when and where the product', 'meets them', 'on the minibus home, 7:40 a.m., tired', TINT_TEAL),
