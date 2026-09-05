@@ -64,9 +64,10 @@ function setup() { createCanvas(W, H); textFont('sans-serif'); }
 
 function draw() {
   background(255);
-  let toks = tokenize(txt), words = txt.trim().split(/\\s+/).length;
+  let toks = tokenize(txt), words = txt.trim() ? txt.trim().split(/\\s+/).length : 0;
   fill(120); noStroke(); textSize(15); textAlign(LEFT, BASELINE);
-  text('TYPE A SENTENCE  ·  click for another example  ·  hover a token', 40, 44);
+  text('TYPE A SENTENCE  ·  Delete clears  ·  hover a token  ·  click this line for another example', 40, 44);
+  textAlign(RIGHT); text('a toy tokenizer: real ones learn the pieces from data', W - 40, 44); textAlign(LEFT);
   textSize(28); fill(0);
   text(txt + (frameCount % 60 < 30 ? '|' : ' '), 40, 100);
   let x = 40, y = 172, hov = -1;   // the token boxes, in rows
@@ -82,18 +83,29 @@ function draw() {
     if (hov === i) { fill(237, 109, 36); textSize(15); text('token #' + id(toks[i]), x, y - 8); textSize(22); }
     x += w + 8;
   }
-  fill(0); textSize(44); text(toks.length + ' tokens', 40, H - 70);
+  let count = toks.length + ' tokens';   // one bottom line: the last 60 px stay free for the LIVE chip
+  fill(0); textSize(44); text(count, 40, H - 60);
+  let sx = 70 + textWidth(count);
   fill(120); textSize(18);
-  text(txt.length + ' characters  ·  ' + words + ' words  ·  about ' + (txt.length / max(toks.length, 1)).toFixed(1) + ' characters per token', 40, H - 36);
-  textAlign(RIGHT); text('a toy tokenizer: real ones learn the pieces from data', W - 40, H - 36);
+  text(txt.length + ' characters  ·  ' + words + ' words  ·  about ' + (txt.length / max(toks.length, 1)).toFixed(1) + ' characters per token', sx, H - 60);
 }
 
 function keyPressed() {           // typing edits the sentence
   if (keyCode === BACKSPACE) { txt = txt.slice(0, -1); return false; }
+  if (keyCode === DELETE) { txt = ''; return false; }
   if (key.length === 1) { txt += key; return false; }
 }
 
-function mousePressed() { which = (which + 1) % SAMPLES.length; txt = SAMPLES[which]; }"""
+function mousePressed() {         // a click on the top line: another example
+  if (mouseY < 60) { which = (which + 1) % SAMPLES.length; txt = SAMPLES[which]; }
+}"""
+
+# Appended to the sketch page only. The page forwards the deck's keys (space, S, O, F; R reloads) to reveal.js unless
+# the sketch has claimed them; p5 claims them too late (keyPressed runs after the forwarder), so typed keys are claimed
+# here in the capture phase: 'a poster' stays in the sketch, and the arrows and Escape still reach the deck.
+TOKENS_EXTRA = """window.addEventListener('keydown', e => {
+  if (!e.metaKey && !e.ctrlKey && !e.altKey && (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete')) e.preventDefault();
+}, true);"""
 
 # (b) a bigram machine: the next word depends on the last one — a Markov chain, like Nake's, with a temperature dial
 NEXT_TEXT = ('a designer writes a brief . a model writes a draft . the brief is a rule and the draft is a guess . '
@@ -141,38 +153,40 @@ function draw() {
   background(255);
   T = constrain(map(mouseY, 40, H - 40, 0.2, 1.5), 0.2, 1.5);
   let PW = min(420, W * 0.45), px = W - PW - 30;
-  // the sentence so far, wrapped
+  // the sentence so far, wrapped; the oldest lines scroll off the top
   noStroke(); fill(120); textSize(15); textAlign(LEFT, BASELINE);
   text(W > 1000 ? 'THE MACHINE WRITES  ·  click: next word  ·  mouse up/down: temperature  ·  C: start again' : 'click: next word · mouse: heat · C: reset', 30, 40);
   textSize(24); fill(0);
-  let x = 30, y = 90, row = '';
+  let x = 30, rows = [], row = '';
   for (let w of sent) {
     let piece = (w === '.' ? '.' : (row ? ' ' : '') + w);
-    if (textWidth(row + piece) > px - 60) { text(row, x, y); y += 34; row = w === '.' ? '.' : w; }
+    if (textWidth(row + piece) > px - 60) { rows.push(row); row = w; }
     else row += piece;
   }
-  text(row, x, y);
-  fill(237, 109, 36); text('_', x + textWidth(row) + 4, y);
+  rows.push(row);
+  let y = 90, first = max(0, rows.length - floor((H - 190) / 34));
+  for (let i = first; i < rows.length; i++, y += 34) text(rows[i], x, y);
+  fill(237, 109, 36); text('_', x + textWidth(row) + 4, y - 34);
   // the odds of the next word
   let last = sent[sent.length - 1], list = odds(last);
   fill(120); textSize(15);
   text('after "' + last + '"  ·  the next word, top 8', px, 40);
   textSize(18);
   for (let i = 0; i < list.length; i++) {
-    let by = 70 + i * 44;
-    fill(0); text(list[i][0], px, by + 24);
+    let by = 62 + i * 40;
+    fill(0); text(list[i][0], px, by + 22);
     fill(i === 0 ? color(237, 109, 36) : color(100, 194, 195));
-    rect(px + 110, by + 4, list[i][1] * (PW - 180), 30);
-    fill(120); text(round(list[i][1] * 100) + '%', px + 118 + list[i][1] * (PW - 180), by + 25);
+    rect(px + 110, by + 2, list[i][1] * (PW - 180), 28);
+    fill(120); text(round(list[i][1] * 100) + '%', px + 118 + list[i][1] * (PW - 180), by + 23);
   }
-  // the temperature dial
-  let dy = 70 + 8 * 44 + 20;
+  // the temperature dial (the bottom 60 px of the canvas stay free for the LIVE chip)
+  let dy = 62 + 8 * 40 + 12;
   fill(0); textSize(18); text('temperature  T = ' + T.toFixed(2), px, dy + 18);
-  fill(120); textSize(14); text('0.2 cold', px, dy + 44); textAlign(RIGHT); text('hot 1.5', px + PW - 30, dy + 44);
-  stroke(200); strokeWeight(3); line(px, dy + 60, px + PW - 30, dy + 60);
-  noStroke(); fill(237, 109, 36); circle(px + map(T, 0.2, 1.5, 0, PW - 30), dy + 60, 14);
+  fill(120); textSize(14); text('0.2 cold', px, dy + 42); textAlign(RIGHT); text('hot 1.5', px + PW - 30, dy + 42);
+  stroke(200); strokeWeight(3); line(px, dy + 58, px + PW - 30, dy + 58);
+  noStroke(); fill(237, 109, 36); circle(px + map(T, 0.2, 1.5, 0, PW - 30), dy + 58, 14);
   textAlign(LEFT); fill(120); textSize(14);
-  text('a Markov chain: the next word depends on the last one, like Nake\\'s signs', 30, H - 20);
+  text('a Markov chain: the next word depends only on the last one', 30, W > 1000 ? H - 20 : H - 64);
 }
 
 function mousePressed() { sent.push(pick(odds(sent[sent.length - 1]))); }
@@ -229,8 +243,9 @@ function draw() {{
   fill(90); textSize(15);
   for (let i = 0; i < near.length; i++)
     text((i + 1) + '. ' + near[i][0][0] + '  ' + (cosine ? near[i][1].toFixed(3) : round(near[i][1])), 24, 52 + i * 19);
-  fill(160); textSize(14); textAlign(RIGHT);
-  text('click: switch the distance  ·  nearby means similar  ·  real embeddings have thousands of axes', W - 30, H - 20);
+  fill(160); textSize(14); textAlign(RIGHT);   // top right: the bottom stays free for the LIVE chip
+  text('nearby means similar  ·  real embeddings have thousands of axes', W - 30, 30);
+  text('click: switch the distance', W - 30, 50);
   textAlign(LEFT);
 }}
 
@@ -256,12 +271,12 @@ function weights(i) {             // one row of the attention table, adding up t
 function setup() { createCanvas(W, H); textFont('sans-serif'); }
 function draw() {
   background(255);
-  let n = S.length, sp = 80, x0 = 36, yq = 150, yk = 440;
+  let n = S.length, sp = 80, x0 = 36, yq = 150, yk = 420;
   let i = constrain(round((mouseX - x0) / sp), 0, n - 1);   // the hovered token
   let w = weights(i);
   noStroke(); fill(120); textSize(14); textAlign(LEFT, BASELINE);
   text('HOVER A WORD  ·  this token looks at …', 30, 40);
-  text('… every token before it, this much  (a row of the attention table, sum = 1)', 30, yk + 90);
+  text('… every token before it, this much  (a row of the attention table, sum = 1)', 30, yk + 86);
   for (let j = 0; j < n; j++) {   // the lines: thickness is the weight
     if (w[j] < 0.001) continue;
     stroke(237, 109, 36, 40 + 200 * w[j]); strokeWeight(1 + 16 * w[j]);
@@ -275,7 +290,7 @@ function draw() {
     if (w[j] > 0.001) { fill(120); textSize(13); text(round(w[j] * 100) + '%', x0 + j * sp, yk + 26); }
   }
   noStroke(); fill(120); textSize(14); textAlign(LEFT, BASELINE);
-  text('"' + S[i] + '" mostly looks at "' + S[w.indexOf(max(w))] + '"  ·  a real model has many such tables, learned, in every layer', 30, H - 20);
+  text('"' + S[i] + '" mostly looks at "' + S[w.indexOf(max(w))] + '"  ·  a real model has many such tables, learned, in every layer', 30, H - 56);
 }"""
 
 # ───────────────────────── the briefs on the slides ─────────────────────────
@@ -289,9 +304,9 @@ BRIEF_ANATOMY = [
 ]
 
 BRIEF_STRUCTURED = [
-    'GOAL: an A2 poster that makes a tutor stop for', 'ten seconds and remember one product name.', ' ',
-    'AUDIENCE: 114 design students and their tutors,', 'walking a corridor at the week-13 fair. They know', 'what AI is; they have seen 27 other posters.', ' ',
-    'CONSTRAINTS: A2 portrait; readable from 3 m; the', 'product name first, the team name second; no', 'stock imagery; our two brand colours.', ' ',
+    'GOAL: an A0 poster that makes a tutor stop for', 'ten seconds and remember one product name.', ' ',
+    'AUDIENCE: 114 design students and their tutors,', 'walking past at the week-13 fair. They know', 'what AI is; they have seen 27 other posters.', ' ',
+    'CONSTRAINTS: A0 portrait; readable from 3 m; the', 'product name first, the team name second; no', 'stock imagery; our two brand colours.', ' ',
     'EXAMPLES: [two posters we like, one we do not,', 'pasted or linked, with one line on why each]', ' ',
     'OUTPUT: six headings: goal, audience, message,', 'must show, must not show, open questions. 200 words.', ' ',
     'LEAVE OUT: taglines, adjectives, "innovative", anything', 'the brief does not say — write "to confirm".',
@@ -306,12 +321,11 @@ SYSTEM_PROMPT = [
 ]
 
 FIRST_BRIEFS = [
-    'A HOUSE RULE · WEEK 2, SLIDE 9', ' ',
+    'AN EXAMPLE HOUSE RULE · AS ON WEEK 2, SLIDE 9', ' ',
     'Draw a square. Put a triangle on top.', 'Add a door and two windows.', ' ',
     '{muted:· no size, no roof angle, no where the door goes}', ' ',
-    'A SPEC · WEEK 2, CAPTURE 2', ' ',
-    'RULE: 30 circles on a 6 x 5 grid, each circle', 'as big as its cell.', 'CHANCE: each circle shifts up to 20 px.', 'NUMBERS: 600 x 600, white, black stroke 1 px.', 'CONSTRAINTS: noLoop, randomSeed(1), nothing else.', 'OUTPUT: the whole sketch.js.', ' ',
-    '{muted:· replace both with two real ones from the wall}',
+    'AN EXAMPLE SPEC · AS IN WEEK 2, CAPTURE 2', ' ',
+    'RULE: 30 circles on a 6 x 5 grid, each circle', 'as big as its cell.', 'CHANCE: each circle shifts up to 20 px.', 'NUMBERS: 600 x 600, white, black stroke 1 px.', 'CONSTRAINTS: noLoop, randomSeed(1), nothing else.', 'OUTPUT: the whole sketch.js.',
 ]
 
 THREE_WAYS = [
@@ -319,7 +333,7 @@ THREE_WAYS = [
      ['"Write a brief for a poster for a student design fair."',
       'Fluent, complete, plausible, and for nobody: the typical brief for the typical fair. Every word the model added, it took from its middle. Fifty runs give fifty cousins.']),
     ('A PARAGRAPH', 'Your facts, its shape.',
-     ['The fair, the corridor, the date, who walks past, three constraints, in prose.',
+     ['The fair, the room, the date, who walks past, three constraints, in prose.',
       'The facts land; the structure is still the model\'s, and so are the priorities. Where you were silent it still decided — and did not tell you.']),
     ('A STRUCTURED BRIEF', 'Your shape, its filling.',
      ['Goal, audience, constraints, two examples, the output format, what to leave out.',
@@ -346,7 +360,7 @@ S.append(section('01', 'Last week, in your words', 'the video · the awards · t
 S.append(question('short_answer', '3Blue1Brown: one thing you understood, one you did not.',
                   hint='Two short lines. "Understood: … Not yet: …". No wrong answers; the second line writes today\'s lecture.',
                   eyebrow_text='01 · HOMEWORK · SHORT ANSWER',
-                  notes='ClassPoint short answer, two minutes. The video was Large Language Models explained briefly, seven minutes, 20 November 2024. Read six aloud, sorted: what people understood is usually "it predicts the next word"; what they did not is usually attention, or why it works at all. Say which chapter answers each one. Keep the screenshot: the mid-term draws on this video.'))
+                  notes='ClassPoint short answer, two minutes. The video was Large Language Models explained briefly, eight minutes, 20 November 2024. Read six aloud, sorted: what people understood is usually "it predicts the next word"; what they did not is usually attention, or why it works at all. Say which chapter answers each one. Keep the screenshot: the mid-term draws on this video.'))
 
 S.append(cards('01 · WEEK 3 · IN THREE LINES', 'The machine that cannot say why.', [
     ('CONCEPTS', 'A middle and an edge.', 'Rosch: a concept is a prototype and a fringe, not a definition. Machine B lives in the middle. Today: the middle of language.'),
@@ -355,11 +369,11 @@ S.append(cards('01 · WEEK 3 · IN THREE LINES', 'The machine that cannot say wh
 ], notes='Three lines from last week, because module 2 stands on them. Prototype theory is the tool for reading every model output this week: what comes back is the middle of the examples. And "cannot say why" is the deal we made with machine B; today we see the price of it in text.'))
 
 S.append(cards('01 · CHALLENGE 2 · FOUR ENTRIES · BY PROMPT', 'A picture from text and references.', [
-    ('ENTRY A', 'The prompt', '"a cup that is a landscape, ceramic, studio light, after the reference sketch, no handle"'),
-    ('ENTRY B', 'The prompt', '"a chair for a corridor, plywood, one bend, seen from above, the reference is the floor plan"'),
-    ('ENTRY C', 'The prompt', '"a poster with no words, only a shadow that reads as a letter, risograph, two colours"'),
-    ('ENTRY D', 'The prompt', '"a lamp that is mostly cable, brass, the reference photo for the light, not the shape"'),
-], text_size=22, notes='Replace these four with the real ones: the four best entries from Blackboard, anonymised, the image on screen from the Blackboard page and the prompt on the card. Read each prompt before showing its picture; ask the room to guess the picture from the words. The gap between the guess and the image is the subject of the second half.'))
+    ('EXAMPLE A', 'The prompt', '"a cup that is a landscape, ceramic, studio light, after the reference sketch, no handle"'),
+    ('EXAMPLE B', 'The prompt', '"a chair for a corridor, plywood, one bend, seen from above, the reference is the floor plan"'),
+    ('EXAMPLE C', 'The prompt', '"a poster with no words, only a shadow that reads as a letter, risograph, two colours"'),
+    ('EXAMPLE D', 'The prompt', '"a lamp that is mostly cable, brass, the reference photo for the light, not the shape"'),
+], text_size=22, notes='These four are invented examples in the right shape. Replace them with the real ones: the four best entries from Blackboard, anonymised, the image on screen from the Blackboard page and the prompt on the card. Read each prompt before showing its picture; ask the room to guess the picture from the words. The gap between the guess and the image is the subject of the second half.'))
 
 S.append(question('multiple_choice', 'Challenge 2: which entry gets the star?', [
     'Entry A', 'Entry B', 'Entry C', 'Entry D',
@@ -379,9 +393,9 @@ S.append(figure_slide('02 · A TOKENIZER · GPT-4\'S, ON TWO SENTENCES', 'The mo
                       notes='Walk the top row: "poster" with its leading space is one token; "week-13" is three. Then the Chinese: the same meaning costs almost twice as many tokens, and several characters are split into bytes the model has to reassemble. For a Hong Kong designer that is money and context: the price list is per token, and the window is measured in tokens. Then the four words at the bottom: "hallucination" is three pieces, and none of them is a syllable.'))
 
 S.append(sketch_slide('02 · LIVE · A TOY TOKENIZER', 'Type a sentence. Count the pieces.',
-                      live('w04-tokens', TOKENS_CODE, 1400, 520, hint='click the sketch, then type · hover a token · click for another example'),
+                      live('w04-tokens', TOKENS_CODE, 1400, 520, hint='click, then type · Delete clears · click the top line for another example', extra=TOKENS_EXTRA),
                       caption='A toy: split on spaces and punctuation, then cut long words at common endings and every four letters. Real tokenizers learn the pieces from data; the counting is the same.',
-                      notes='Click into the sketch, type a sentence — your name, a Cantonese word in letters, a URL — and watch the count. Hover a token: it is a number, and that number is all the model gets. Ask someone to type "unbelievable" and then "unbelievably": the pieces change. The point to land: the unit of cost, of memory, of everything, is the token, and it is not the word.'))
+                      notes='Click into the sketch, press Delete to clear the example, type a sentence — your name, a Cantonese word in letters, a URL — and watch the count. Hover a token: it is a number, and that number is all the model gets. Ask someone to type "unbelievable" and then "unbelievably": the pieces change. A click on the top line brings back an example sentence. The point to land: the unit of cost, of memory, of everything, is the token, and it is not the word.'))
 
 S.append(cards('02 · WHY A DESIGNER SHOULD CARE', 'Four things tokens decide.', [
     ('THE PRICE', 'You pay per token.', 'Every model on a price list charges per token, in and out. A brief in Chinese costs more than the same brief in English, on most tokenizers.'),
@@ -440,7 +454,7 @@ S.append(cards('04 · 2017 · ATTENTION IS ALL YOU NEED', 'The whole machine, in
     ('4 · PREDICT', 'The odds of every next token.', 'The last point is turned into a probability for each of the hundred thousand pieces. Pick one. Append. Repeat. Chapter five.'),
 ], text_size=22, notes='Vaswani and seven colleagues, June 2017, a translation paper; the T in GPT. Four moves, and the third is the only new one: attention replaces reading left to right with everything looking at everything, which is why it scales on GPUs and why the whole thing exploded after 2017. The sizes are the only other thing that changed since: more layers, more data, more weights.'))
 
-S.append(video('04 · 3BLUE1BROWN · 20 NOVEMBER 2024 · THE HOMEWORK', 'Seven minutes. Rewatch the attention minute.', 'LPZh9BOjkQs',
+S.append(video('04 · 3BLUE1BROWN · 20 NOVEMBER 2024 · THE HOMEWORK', 'Eight minutes. Rewatch the attention minute.', 'LPZh9BOjkQs',
                ['You watched it. The two claims to hold on to:',
                 '- A language model is a function that predicts the next word for any piece of text, and its parameters were tuned by that one task.',
                 '- Attention lets the lists of numbers "communicate with one another and refine the meanings they encode based on the context around."',
@@ -497,17 +511,17 @@ S.append(cards('06 · WHAT THE TUNING CHANGES', 'Same weights, different manners
 
 S.append(figure_slide('06 · THE CONTEXT WINDOW', 'The model sees the window, and nothing else.', F.w04_context_window(),
                       body=['Everything the model can use right now is in one strip of tokens: a system prompt, your brief, your examples, the conversation so far, and the answer it is writing. Nothing outside the strip exists for it — not last week\'s chat, not your files, not the web — unless something puts it in.'],
-                      caption='Windows were a few thousand tokens in 2022; hundreds of thousands, and for some models a million or more, now. Bigger windows still forget the middle first: put what matters at the start and the end.',
-                      notes='Two design consequences. One: a model has no memory between conversations, and inside a conversation its memory is this strip; a long chat pushes your brief out of the window, and the draft drifts. Start a new chat for a new job. Two: everything the model "knows" about you it knows from the strip, so what you paste is the whole world it works in. The agents chapter is about tools that put things in the strip.'))
+                      caption='Liu and colleagues, 2023, Lost in the Middle: models use the start and the end of a long window best and lose what sits in the middle. Put what matters first or last.',
+                      notes='Two design consequences, and a third from the paper in the caption — Liu and colleagues measured it in 2023: what sits in the middle of a long window is used worst, so the brief goes first and the question last. One: a model has no memory between conversations, and inside a conversation its memory is this strip; a long chat pushes your brief out of the window, and the draft drifts. Start a new chat for a new job. Two: everything the model "knows" about you it knows from the strip, so what you paste is the whole world it works in. The agents chapter is about tools that put things in the strip.'))
 
 S.append(content('06 · THE SYSTEM PROMPT', 'The product designer\'s brief comes first.',
-                 ['Before your first message, the product has already put a prompt in the window: who the model is, what it may not do, how to talk. A brief, written by a designer; the model weighs it more than your message.',
+                 ['Before your first message, the product has already put a prompt in the window: who the model is, what it may not do, how to talk. A brief, written by a designer — and the model is trained to rank it above your message (OpenAI\'s instruction hierarchy, 2024): trained, not guaranteed.',
                   '- Since August 2024 Anthropic publishes the system prompts of its Claude apps. Read one: tone, refusals, formatting, what to leave out. A design document.',
                   '- Week 2 returns: a system prompt is machine A wrapped around machine B. Words, not code — but readable, and the first place to look when a product misbehaves.',
                   'The workshop ends with you writing one.'],
-                 figure=F.w04_window_stack(), caption='The window as a stack: the system prompt first, and heaviest. The workshop template comes in chapter nine.',
+                 figure=F.w04_window_stack(), caption='The window as a stack: the system prompt first, and ranked highest — Wallace and colleagues, OpenAI, April 2024. The workshop template comes in chapter nine.',
                  body_size=27,
-                 notes='The system prompt is the designer\'s handle on a chatbot and the subject of week 12. Show a published one if there is time — it reads like a style guide with refusals. Land the connection to week 2: it is a rule in words, and everything we said about specs applies, including "it does what you said, not what you meant".'))
+                 notes='The system prompt is the designer\'s handle on a chatbot and the subject of week 12. The rank is trained, not built in: Wallace and colleagues at OpenAI (April 2024) call it the instruction hierarchy — system above user above tool output — and prompt injection is the attack on it; a chat product also keeps the system prompt when a long conversation pushes the oldest turns out of the window. Show a published one if there is time — it reads like a style guide with refusals. Land the connection to week 2: it is a rule in words, and everything we said about specs applies, including "it does what you said, not what you meant".'))
 
 # ───────────────────────── 07 · fluent, typical, cannot say why ─────────────────────────
 S.append(section('07', 'Fluent, typical, cannot say why', 'hallucination · sycophancy · agents and tools', bg=INK,
@@ -520,16 +534,16 @@ S.append(content('07 · HALLUCINATION · OPENAI, SEPTEMBER 2025', 'It guesses be
                   'Fluent is not the same as true.'],
                  figure=F.w04_guess_or_blank(), caption='The paper\'s argument as an exam: score blanks and wrong answers the same, and guessing wins. Score wrong answers below blanks, and it stops.',
                  body_size=26,
-                 notes='The paper is the reading for this slide: OpenAI\'s own statisticians saying that hallucination is not a bug in transformers but a consequence of how models are trained and graded — a guess scores better than a blank on almost every benchmark, so models learned to guess. For a designer: never ask a model for a fact you cannot check, and design the prompt so that "I don\'t know" is a permitted answer. The mid-term will ask why models make things up: because guessing was rewarded, not because they are broken.'))
+                 notes='The paper is the reading for this slide: OpenAI\'s researchers, with Georgia Tech\'s Santosh Vempala, saying that hallucination is not a bug in transformers but a consequence of how models are trained and graded — a guess scores better than a blank on almost every benchmark, so models learned to guess. For a designer: never ask a model for a fact you cannot check, and design the prompt so that "I don\'t know" is a permitted answer. The mid-term will ask why models make things up: because guessing was rewarded, not because they are broken.'))
 
 S.append(content('07 · SYCOPHANCY · APRIL 2025', 'It agrees because agreeing was rewarded.',
                  ['On 25 April 2025 OpenAI updated GPT-4o; within days it was praising every idea, validating every doubt, agreeing with everything. The update was rolled back by 29 April.',
-                  '- OpenAI\'s explanation: the update "was informed too much by short-term feedback" — the thumbs-up — "and did not fully account for how users\' interactions with ChatGPT evolve over time."',
+                  '- OpenAI\'s post-mortem: "we focused too much on short-term feedback, and did not fully account for how users\' interactions with ChatGPT evolve over time" — the thumbs-up, in their own words.',
                   '- RLHF in one incident: train on what people click, and you get what people click. People click on praise.',
                   'For a designer the failure is precise: a model that likes your idea is not a critic. Do not ask it whether the work is good.'],
                  figure=F.w04_thumbs(), caption='Stage three of the pipeline is where it happened: a reward signal from the thumbs, and a model trained to earn it.',
                  body_size=26,
-                 notes='Dates verified: the update went out on 25 April 2025, complaints filled the weekend, the rollback was announced on 29 April, and OpenAI published two post-mortems. The design lesson is the one to spend time on: the thing you are talking to was trained to be liked. So brief it to disagree — "give me three reasons this poster fails" gets critique; "is this good?" gets applause. That is a briefing rule, and it comes back after the break.'))
+                 notes='Dates verified: the update went out on 25 April 2025, complaints filled the weekend, the rollback was announced on 29 April, and OpenAI published two post-mortems; the quotation on the slide is OpenAI\'s own sentence from the first of them, not the press paraphrase. The design lesson is the one to spend time on: the thing you are talking to was trained to be liked. So brief it to disagree — "give me three reasons this poster fails" gets critique; "is this good?" gets applause. That is a briefing rule, and it comes back after the break.'))
 
 S.append(cards('07 · A DESIGNER\'S FOUR DEFENCES', 'Fluent, typical, cannot say why — so:', [
     ('CHECK', 'Every fact, every name, every date.', 'A citation from a model is a plausible citation. Open it. Invented references fail the assignment; the rule is in the syllabus because this is why.'),
@@ -549,7 +563,7 @@ S.append(question('multiple_choice', 'Why do language models make things up?', [
     notes='B, the September 2025 paper. C is half of the sycophancy story but not hallucination, and "on purpose" is the wrong word for a die on a table. A and D are the two folk theories; neither explains why the same model guesses confidently on things it was never trained on.'))
 
 S.append(statement('Break. Fifteen minutes.', eyebrow_text='AFTER THE BREAK · A PROMPT IS A BRIEF · THEN YOU WRITE THREE', size=120, bg=PAPER,
-                   notes='1:25. Everyone logged into genai.polyu.edu.hk before leaving the room; the TAs help anyone whose login fails. Pick one language model there and stay with it for the session.'))
+                   notes='1:24. Everyone logged into genai.polyu.edu.hk before leaving the room; the TAs help anyone whose login fails. Pick one language model there and stay with it for the session.'))
 
 # ───────────────────────── 08 · prompting as briefing ─────────────────────────
 S.append(section('08', 'Prompting as briefing', 'the spec becomes a brief · one job, three ways · the middle', bg=YELLOWS[0],
@@ -566,7 +580,7 @@ S.append(figure_slide('08 · WEEK 2 → WEEK 4', 'The week-2 spec is the week-4 
 S.append(cards('08 · ANATOMY OF A BRIEF', 'Six headings a model cannot guess.', [
     ('GOAL', 'One sentence.', 'What the thing must do, for whom, and how you will know. "A poster that makes a tutor stop for ten seconds."'),
     ('AUDIENCE', 'Who, and what they know.', 'The model writes for the average reader unless told. Tell it: tutors who have seen 27 other posters.'),
-    ('CONSTRAINTS', 'Format, length, tone, brand.', 'Numbers, like week 2: A2, 200 words, two colours, readable from three metres. What you do not fix, it guesses.'),
+    ('CONSTRAINTS', 'Format, length, tone, brand.', 'Numbers, like week 2: A0, 200 words, two colours, readable from three metres. What you do not fix, it guesses.'),
     ('EXAMPLES', 'Two you like, one you do not.', 'Paste them. A model was trained to continue text; examples move it further than adjectives ever will. Say why for each.'),
     ('OUTPUT · LEAVE OUT', 'The shape, and the door.', 'Headings, a table, a length. Then the list of things it would add if you let it: taglines, "innovative", praise, anything not in the brief — "write to confirm".'),
 ], text_size=21, notes='Five cards, six headings. Put the anatomy next to the week-2 template in your head: the same discipline, for words. The two that students skip are examples and leave out — and those are the two that move the model off its middle. "Leave out" is the sycophancy defence and the hallucination defence written into the brief.'))
@@ -577,7 +591,7 @@ S.append(two_col('08 · THE FIRST BRIEFS · YOURS, FROM WEEK 2', 'You have alrea
                   '- Read the spec. Where can the model still decide? The stroke colour, what "up to" means at the edge.',
                   'Same author, same week, two gaps of different sizes. The brief decides the size of the gap.'],
                  FIRST_BRIEFS, right_size=22, left_size=30,
-                 notes='Pull two real ones from the week-2 wall before class: one house rule from the slide-9 short answers and one spec from the capture-2 captions, anonymised. Read them as briefs. The house rule leaves the executor almost everything; the spec leaves it almost nothing. Ask the room which they would send to a model and which to a friend. Cut if behind.'))
+                 notes='The two on the slide are examples in the right shape. Pull two real ones from the week-2 wall before class if you can — one house rule from the slide-9 short answers and one spec from the capture-2 captions, anonymised — and paste them over these. Read them as briefs. The house rule leaves the executor almost everything; the spec leaves it almost nothing. Ask the room which they would send to a model and which to a friend. Cut if behind.'))
 
 S.append(cards('08 · ONE JOB, THREE BRIEFS', 'A design brief, written three ways.', THREE_WAYS, text_size=23,
                notes='The same job three times. The one-liner is what most people type, and what most people get is the average brief on the internet — fluent and for nobody. The paragraph gets your facts in but leaves the structure and the priorities to the model. The structured brief hands the model a shape and a door: it fills the shape, and "leave out" keeps the middle from walking in. The next slide is what each gets back.'))
@@ -611,7 +625,7 @@ S.append(section('09', 'The workshop', f'a real small job · {GENAI} · a brief,
                  notes='Chapter nine: the tools for the activity. The job, the system prompt that turns briefing into a workflow, and the checklist for comparing drafts. Four slides, then the rounds.'))
 
 S.append(content('09 · THE JOB', 'One small real job. Pick one.',
-                 ['**A poster for the week-13 poster fair.** A2, in a corridor, 114 students and their tutors walking past, your group project on it. You do not have the project yet; brief the poster anyway — the brief is the exercise.',
+                 ['**A poster for the week-13 poster fair.** A0, on a wall, 114 students and their tutors walking past, your group project on it. You do not have the project yet; brief the poster anyway — the brief is the exercise.',
                   '**Or: the caption of an exhibit.** One object from your studio, on a plinth, forty words on the wall: name, maker, year, what to notice.',
                   '- Both are jobs a language model will draft in five seconds and you will edit for an hour. That ratio is the lesson.',
                   f'Tool: any language model on **{GENAI}**. One model for the whole session, so the middle stays the same middle.'],
@@ -634,7 +648,7 @@ S.append(cards('09 · COMPARE', 'Four questions for every draft.', [
 ], text_size=22, notes='The checklist for the rounds and for Challenge 3. The second and third questions are the two failure modes from the lecture — the middle and the guess — and the fourth is the final vote of the activity. Print it in your head; the TAs will ask it as they walk.'))
 
 # ───────────────────────── 10 · activity: brief it three ways ─────────────────────────
-S.append(section('10', 'Brief it three ways.', f'35 minutes · one job · {GENAI} · three briefs', bg=YELLOWS[0],
+S.append(section('10', 'Brief it three ways.', f'40 minutes · one job · {GENAI} · three briefs', bg=YELLOWS[0],
                  notes='The activity. One small job, briefed three ways: a line alone, a structured brief in pairs, a system prompt in fours on a stranger\'s idea. Each round ends in ClassPoint; the last capture is an image with the brief as the caption. Nicolò keeps time; Amber, WU Zhao and MA Jie walk with the four compare questions. One device per pair at least.'))
 
 S.append(activity('1 — ALONE · ONE LINE', 5, 'Brief it in one line.',
@@ -728,7 +742,8 @@ if __name__ == '__main__':
 # Sources (consulted 2026-09-05)
 # https://arxiv.org/abs/2509.04664 — Kalai, Nachum, Vempala, Zhang, "Why Language Models Hallucinate", submitted 4 Sep 2025 (abstract quoted verbatim)
 # https://openai.com/index/why-language-models-hallucinate/ — OpenAI's post on the paper (blocked to fetch; date and claim confirmed via arXiv and coverage)
-# https://techcrunch.com/2025/04/29/openai-explains-why-chatgpt-became-too-sycophantic/ — the GPT-4o rollback, OpenAI's "short-term feedback" explanation
+# https://techcrunch.com/2025/04/29/openai-explains-why-chatgpt-became-too-sycophantic/ — the GPT-4o rollback date (TechCrunch's wording paraphrases OpenAI; not quoted)
+# https://simonwillison.net/2025/Apr/30/sycophancy-in-gpt-4o/ — OpenAI's post-mortem reproduced verbatim (openai.com returns 403 from here): "we focused too much on short-term feedback, and did not fully account for how users' interactions with ChatGPT evolve over time" (slide 37)
 # https://www.deeplearning.ai/the-batch/openai-pulls-gpt-4o-update-after-users-report-sycophantic-behavior — the thumbs-up/down cause
 # https://openai.com/index/sycophancy-in-gpt-4o/ and https://openai.com/index/expanding-on-sycophancy/ — OpenAI's two post-mortems (25 April update; rollback)
 # https://www.law.georgetown.edu/tech-institute/research-insights/insights/tech-brief-ai-sycophancy-openai-2/ — 25 April 2025 release date
@@ -744,9 +759,13 @@ if __name__ == '__main__':
 # https://quoteinvestigator.com/2022/09/18/word-company/ — Firth, 1957, "A synopsis of linguistic theory": "You shall know a word by the company it keeps"
 # https://medium.com/plotly/understanding-word-embedding-arithmetic-why-theres-no-single-answer-to-king-man-woman-cd2760e2cb7f — word2vec 2013 and the excluded-input caveat
 # https://arxiv.org/abs/2210.03629 — Yao et al., ReAct, 2022 (ICLR 2023)
+# https://arxiv.org/abs/2404.13208 — Wallace, Xiao, Leike, Weng, Heidecke, Beutel (OpenAI), "The Instruction Hierarchy: Training LLMs to Prioritize Privileged Instructions", 19 April 2024 (slide 34: the system prompt ranked above the user's message)
+# https://arxiv.org/abs/2307.03172 — Liu, Lin, Hewitt, Paranjape, Bevilacqua, Petroni, Liang, "Lost in the Middle: How Language Models Use Long Contexts", 6 July 2023 (slide 33)
+# https://arxiv.org/pdf/2509.04664 — first page of Kalai et al.: Kalai, Nachum and Zhang at OpenAI, Vempala at Georgia Tech (slide 36 notes)
 # https://dl.acm.org/doi/10.1145/3442188.3445922 — Bender, Gebru, McMillan-Major, Shmitchell, "On the Dangers of Stochastic Parrots", FAccT 2021
 # https://techcrunch.com/2024/08/26/anthropic-publishes-the-system-prompt-that-makes-claude-tick/ and https://simonwillison.net/2024/Aug/26/anthropic-system-prompts/ — system prompts published since August 2024
 # https://community.openai.com/t/cheat-sheet-mastering-temperature-and-top-p-in-chatgpt-api/172683 and https://www.coursera.org/articles/openai-temperature — API temperature 0–2, default 1
 # https://www.3blue1brown.com/lessons/mini-llm/ — "Large Language Models explained briefly", 20 November 2024
+# https://aeon.co/videos/why-large-language-models-are-mysterious-even-to-their-creators — the same video listed at 8 minutes (YouTube is blocked from here; "Eight minutes" on slide 22)
 # https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=LPZh9BOjkQs — and iv-5mZ_9CPY, yTAMrHVG1ew, KcSXcpluDe4: video titles verified
 # https://codingscape.com/blog/llms-with-largest-context-windows — context-window sizes (kept vague on the slides)

@@ -338,7 +338,7 @@ def w04_agent_loop(name='w04-agent-loop', w=1680, h=560):
             else:
                 c.text(x, y + 90 + k * 22, ln, size=16, anchor='middle', color=MUTED)
     c.text(cx, cy + 20, 'until done,', size=15, anchor='middle', color=MUTED)
-    c.text(cx, cy + 40, 'or a person says stop', size=15, anchor='middle', color=MUTED)
+    c.text(cx, cy + 40, 'or stopped', size=15, anchor='middle', color=MUTED)
     # the tools on the right
     tx = 1000
     c.text(tx, 60, 'THE TOOLS ARE MACHINE A', size=18, color=ORANGE)
@@ -404,7 +404,7 @@ def w04_three_briefs(name='w04-three-briefs', w=1680, h=560):
                 line = wd
         # the spread of outputs: dots along a line, centred on the model's middle (left) drifting to the target (right)
         centre = x0 + 120 + (1 - spread) * (x1 - x0 - 120)
-        for _ in range(60):
+        for _ in range(100):
             dx = rnd.gauss(0, spread * 240 + 12)
             dy = rnd.gauss(0, 18)
             c.circle(min(max(centre + dx, x0), x1 + 60), y + 40 + dy, 4, fill=ORANGE if abs(dx) < 40 and spread < 0.2 else TEAL)
@@ -445,7 +445,7 @@ def w04_guess_or_blank(name='w04-guess-or-blank', w=800, h=700):
     c.text(0, 545, '"I don\'t know": 6        always guess: 4   ← honesty wins', size=18, color=INK)
     c.text(0, 620, 'Most benchmarks score the usual way. A model trained to score', size=16, color=MUTED)
     c.text(0, 646, 'well learns to guess: fluent, plausible, and sometimes wrong.', size=16, color=MUTED)
-    c.text(0, 672, 'Change the exam and the guessing stops paying. — Kalai et al., 2025', size=16, color=MUTED)
+    c.text(0, 672, 'Their fix: change how the benchmarks are scored (after Kalai et al., 2025).', size=16, color=MUTED)
     return c.finish(name)
 
 
@@ -492,5 +492,6 @@ def w04_window_stack(name='w04-window-stack', w=800, h=700):
     _arrow(c, 770, 60, 770, y - 8, MUTED, 3, 10)
     c.text(0, y + 30, 'The model reads all of it, every time it writes a token.', size=16, color=INK, mono=False)
     c.text(0, y + 56, 'The system prompt is a brief the product designer wrote before you arrived;', size=15, color=MUTED, mono=False)
-    c.text(0, y + 80, 'the model weighs it more than your message. Too long a chat, and the top falls off.', size=15, color=MUTED, mono=False)
+    c.text(0, y + 80, 'the model is trained to rank it above your message (OpenAI, 2024).', size=15, color=MUTED, mono=False)
+    c.text(0, y + 104, 'Too long a chat, and the oldest turns fall off; the system prompt is kept.', size=15, color=MUTED, mono=False)
     return c.finish(name)

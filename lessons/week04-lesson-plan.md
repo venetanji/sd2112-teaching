@@ -1,6 +1,6 @@
 # SD2112 · Week 4 lesson plan
 
-**Language machines** · three-hour lecture-workshop (about 170 minutes of content plus a 15-minute break) · deck: `week04-classpoint.pptx` (66 slides, from the *Build PowerPoints* workflow artifact or a local build) · web: `venetanji.github.io/sd2112-teaching/week04/` (html deck with the four p5.js sketches running live; `SD2112-week04.pdf` next to it)
+**Language machines** · three-hour lecture-workshop (about 155 minutes of content plus a 15-minute break, with a 10-minute buffer) · deck: `week04-classpoint.pptx` (66 slides, from the *Build PowerPoints* workflow artifact or a local build) · web: `venetanji.github.io/sd2112-teaching/week04/` (html deck with the four p5.js sketches running live; `SD2112-week04.pdf` next to it)
 
 ## Purpose of this session
 
@@ -35,7 +35,7 @@ For students, by the end of the class they can:
 |---|---|---|---|---|---|
 | 0:00 | 1–2 | Welcome | Course code, the eight stops. Devices out from the start. | | |
 | 0:03 | 3–8 | Last week, in your words | *3Blue1Brown: one thing you understood, one you did not* (2 min, read six); week 3 in three lines; the four Challenge 2 entries by prompt; the vote; the semester map (module 2 begins). | Short answer; multiple choice | The "did not understand" lines tell you which chapter to slow down on; say which. |
-| 0:13 | 9–13 | Text → tokens | The tokenizer figure (English 11 tokens, Chinese 21); the live toy tokenizer (type, hover); four things tokens decide; quick check. | Multiple choice | Slide 11 is live in the html deck only: type a Cantonese word in letters, a URL, "unbelievably". |
+| 0:13 | 9–13 | Text → tokens | The tokenizer figure (English 11 tokens, Chinese 21); the live toy tokenizer (type, hover); four things tokens decide; quick check. | Multiple choice | Slide 11 is live in the html deck only: click into it, Delete clears the example, then type a Cantonese word in letters, a URL, "unbelievably". |
 | 0:24 | 14–18 | Tokens → embeddings | Forty words on two axes; the live nearest-five (click: cosine); what a point buys you (similar, search, arithmetic, CLIP); *the word is a point, the sentence is a path*. | | Slide 16 live. Be honest about the word2vec caveat (notes on 15). |
 | 0:36 | 19–22 | The transformer | Attention, live (hover "it": chair); the whole machine in four moves; the 3Blue1Brown video, rewatch the attention minute if the short answers asked for it. | | Cut 22 if the room understood attention. |
 | 0:47 | 23–29 | The next token, and temperature | *A language model is a Markov chain with a very long memory*; Markov → Shannon → Hiller/Nake → GPT; the live bigram machine (click, mouse height, C); temperature at three heats; the whole model in three functions; quick check. | Multiple choice | Slides 26–28 are the heart of the lecture; 26 and 28 live. Cut 28 if behind. |
@@ -44,7 +44,7 @@ For students, by the end of the class they can:
 | 1:24 | 41 | **Break, 15 min** | Everyone logged into GenAI before leaving the room; one model, kept for the session. | | |
 | 1:39 | 42–50 | Prompting as briefing | *A prompt is a brief*; the week-2 spec becomes the brief; anatomy (six headings); the first briefs (yours, from week 2); one job, three briefs; what each gets back (the middle); the structured brief for the poster; edit the brief, not the draft. | | Slide 48 is the core of the second half. Cut 46 or 50 if behind. |
 | 1:57 | 51–54 | The workshop | The job (fair poster or exhibit caption); the system prompt as a workflow; the four compare questions. | | Nicolò's tested model is the one everyone uses. |
-| 2:06 | 55–63 | **Activity: brief it three ways** | Section (1 min); round 1 alone, one line (5); capture 1, everyone (3); round 2 in pairs, the anatomy (8); pulse (2); round 4 in fours, the workflow on a stranger's idea (10); capture 2, scribes, and the wall (5); the vote (2); what just happened (3). | Short answer; multiple choice; image upload; multiple choice | Nicolò keeps time; the other three TAs walk. Details below. |
+| 2:06 | 55–63 | **Activity: brief it three ways** (40 min) | Section (1 min); round 1 alone, one line (5); capture 1, everyone (3); round 2 in pairs, the anatomy (8); pulse (2); round 4 in fours, the workflow on a stranger's idea (10); capture 2, scribes, and the wall (5); the vote (2); what just happened (3). | Short answer; multiple choice; image upload; multiple choice | Nicolò keeps time; the other three TAs walk. Details below. |
 | 2:45 | 64–66 | Challenge 3, homework | The brief: prompt, unedited draft, your edit, on Blackboard before week 5; three videos and Verbeek. | | TAs stay 30 minutes. |
 | 2:50 | | Buffer | | | |
 
@@ -52,7 +52,7 @@ If GenAI is slow, give round 2 ten minutes and cut slides 22, 28 and 46. If the 
 
 ## The activity, in detail: Brief it three ways
 
-One small real job — an A2 poster for the week-13 poster fair, or the forty-word caption of an exhibit — briefed three ways: a line alone, the six-heading brief in pairs, a system prompt in fours run on a stranger's idea. **Each round ends in ClassPoint; the last capture is an image, and its caption is the brief or the prompt.** One device per pair with a language model on `genai.polyu.edu.hk`; the same model for everyone, so the middle stays the same middle.
+One small real job — an A0 poster for the week-13 poster fair, or the forty-word caption of an exhibit — briefed three ways: a line alone, the six-heading brief in pairs, a system prompt in fours run on a stranger's idea. **Each round ends in ClassPoint; the last capture is an image, and its caption is the brief or the prompt.** One device per pair with a language model on `genai.polyu.edu.hk`; the same model for everyone, so the middle stays the same middle.
 
 1. **Alone, 5 minutes — one line (slide 56).** Pick the job. Type one line and no more: *Write a brief for a poster for a student design fair* (or *a caption for an object in a design exhibition*). Read the draft; underline every sentence you did not ask for. Stop anyone who improves the line — the point is the middle.
 2. **Capture 1, 3 minutes — everyone pastes the first sentence (slide 57).** A wall of a hundred first sentences, most of them the same sentence: "This brief outlines…". Read five in a row; the room laughs at the third. That is the model's middle, and nobody typed it. Screenshot it.
