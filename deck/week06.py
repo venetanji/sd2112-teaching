@@ -105,7 +105,7 @@ function axes() {
     text(f >= 1000 ? f / 1000 + ' kHz' : f + ' Hz', X0 - 10, y);
   }
   textAlign(LEFT, BASELINE); text('time →', X0, H - 18);
-  textAlign(RIGHT, BASELINE); text(status, X1, H - 18);
+  textAlign(RIGHT, BASELINE); text(status, X1, 24);
 }
 
 function readout() {            // mouse y = a frequency, and the nearest note
@@ -126,10 +126,12 @@ function mousePressed() {       // audio starts on a click
   if (mode !== 'demo') return;
   userStartAudio();
   fft = new p5.FFT(0.8, 1024);
-  mic = new p5.AudioIn();
   status = 'asking for the microphone…';
-  mic.start(() => { fft.setInput(mic); mode = 'mic'; lastLoud = millis() + 1500; status = 'microphone: live · speak, whistle, clap'; },
-            () => sweep('no microphone: a built-in sweep'));
+  try {
+    mic = new p5.AudioIn();
+    mic.start(() => { fft.setInput(mic); mode = 'mic'; lastLoud = millis() + 1500; status = 'microphone: live · speak, whistle, clap'; },
+              () => sweep('no microphone: a built-in sweep'));
+  } catch (e) { mic = null; sweep('no microphone here: a built-in sweep'); }
 }
 function sweep(why) {           // the fallback: a sawtooth that sweeps, or follows the mouse
   if (mic) mic.stop();
@@ -178,7 +180,7 @@ function draw() {
   text(amps.length + (amps.length > 1 ? ' harmonics' : ' harmonic: a sine') + ' · amplitude of harmonic k = 1 / k^' + nf(moved ? map(mouseY, 0, H, 0.4, 2.2) : 1.2, 1, 1), 40, 440);
   fill(90); textSize(14);
   text(amps.length == 1 ? 'one sine: the purest tone there is, and the dullest' : amps.length < 5 ? 'few, fast-fading harmonics: soft, flute-like' : amps.length < 11 ? 'more harmonics: brighter, reedier' : 'many harmonics: buzzing, saw-like', 40, 466);
-  textAlign(RIGHT, BASELINE); text(on ? 'playing · move the mouse' : 'click to hear it', W - 40, 466);
+  textAlign(RIGHT, BASELINE); text(on ? 'playing · move the mouse' : 'click to hear it', W - 40, 30);
   if (on) for (let k = 0; k < MAX; k++) oscs[k].amp(k < amps.length ? 0.35 * amps[k] / sum : 0, 0.05);
 }
 
@@ -304,7 +306,10 @@ MARKOV_CODE = """// a Markov melody: eight pitches and a hand-written table of w
 const HZ = [261.6, 293.7, 329.6, 349.2, 392.0, 440.0, 493.9, 523.3];
 let last = 0, from = -1, melody = [], temp = 1, nextAt = 0, osc, env, on = false, moved = false;
 
-function setup() { createCanvas(800, 600); randomSeed(1957); frameRate(30); }
+function setup() {
+  createCanvas(800, 600); randomSeed(1957); frameRate(30);
+  for (let i = 0; i < 12; i++) { from = last; last = nextNote(last, 1); melody.push(last); }   // a silent start
+}
 
 """ + MARKOV_STEP + """
 
@@ -342,17 +347,17 @@ function strip() {                                     // the melody so far, as 
     let n = melody[k], lastOne = k == melody.length - 1;
     fill(lastOne ? color(237, 109, 36) : color(0, 11, 28)); rect(X + k * CW + 1, Y + (7 - n) * S + 6, CW - 2, S - 12);
   }
-  fill(237, 109, 36); textSize(13); textAlign(LEFT, BASELINE); text('THE MELODY · one note every 320 ms', X, Y - 30);
+  fill(237, 109, 36); textSize(13); textAlign(LEFT, BASELINE); text('THE MELODY · our table, their idea', X, Y - 30);
   fill(90); textAlign(LEFT, CENTER); for (let i = 0; i < 8; i++) text(NOTES[i], X + 22 * CW + 8, Y + (7 - i) * S + S / 2);
 }
 
 function labels() {
   noStroke(); fill(0, 11, 28); textSize(16); textAlign(LEFT, BASELINE);
-  text('temperature ' + nf(temp, 1, 1) + (temp < 0.5 ? ' · the likeliest note, almost always' : temp < 1.5 ? ' · the table as written' : ' · the table flattened: almost any note'), 70, 470);
+  text('temperature ' + nf(temp, 1, 1) + (temp < 0.5 ? ' · the likeliest note, almost always' : temp < 1.5 ? ' · the table as written' : ' · the table flattened: almost any note'), 70, 452);
   fill(90); textSize(14);
-  text('mouse x = temperature · T → 0: a rule · T → 3: a die · the orange cell is the transition just taken', 70, 500);
-  text(on ? 'playing · click = new dice' : 'click to hear it', 70, 526);
-  text('Hiller & Isaacson, 1957, experiment 4: the next note depends on the last. Our table, their idea.', 70, 560);
+  text('mouse x = temperature · T → 0: a rule · T → 3: a die', 70, 482);
+  text('orange = the transition just taken · ' + (on ? 'playing · click = new dice' : 'click to hear it'), 70, 508);
+  text('Hiller & Isaacson 1957, experiment 4: the next note depends on the last.', 70, 536);
 }
 
 function mouseMoved() { moved = true; }
@@ -365,6 +370,17 @@ function mousePressed() {
   }
   randomSeed(millis()); melody = []; last = 0; from = -1;            // new dice, same table
 }"""
+
+# Appended to every sound sketch's page (not shown on the code panels): when the audio worklets cannot load — a deck
+# opened from a file:// URL, or the headless snapshot — p5.sound would wait forever and setup() would never run.
+# The guard turns that failure into a warning, so the picture always draws; only the microphone needs a worklet.
+SOUND_GUARD = """(function () {   // keep drawing when p5.sound's worklets cannot load (file:// decks, snapshots)
+  if (!self.AudioWorklet || !AudioWorklet.prototype.addModule) return;
+  const orig = AudioWorklet.prototype.addModule;
+  AudioWorklet.prototype.addModule = function (u, o) {
+    return orig.call(this, u, o).catch(function (e) { console.warn('p5.sound worklet skipped: ' + e); });
+  };
+})();"""
 
 # ───────────────────────── the panels (specs, templates) ─────────────────────────
 SOUND_SPEC = [
@@ -420,7 +436,7 @@ S = []  # the slides, in order
 # ───────────────────────── 00 · title ─────────────────────────
 S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 06 · LECTURE + WORKSHOP',
                'Sound machines.',
-               'Week 6 — what a machine hears, rules that play, models that listen, and thirty seconds for a product.',
+               'Week 6 — what a machine hears, and thirty seconds for a product.',
                notes='Join code on screen from 30 minutes before. Headphones or earbuds out: the second half makes sound. Laptops out from the start; the TAs have paired people without a laptop with people who have one. The sketches in this deck make sound in the html deck only, after a click.'))
 
 S.append(agenda('SD2112 · WEEK 06', [
@@ -473,13 +489,13 @@ S.append(figure_slide('02 · A SPECTROGRAM', 'A spectrogram is a picture of soun
                       notes='This is the slide the homework video was about. Walk it left to right: a slice, its recipe of sines, the recipe as one column, many columns as a picture. Say the three axes out loud: time, frequency, loudness — the quick check at the end of the chapter asks for them. The design point: once sound is a picture, every image trick from last week applies to it. Chapter four does exactly that.'))
 
 S.append(sketch_slide('02 · LIVE · YOUR VOICE AS A PICTURE', 'Speak. Whistle. Clap. Watch.',
-                      live('w06-spectrogram', SPECTRO_CODE, 1400, 500, hint='click to start the microphone · speak, whistle, clap · mouse y reads the frequency', sound=True),
+                      live('w06-spectrogram', SPECTRO_CODE, 1400, 500, hint='click to start the microphone · speak, whistle, clap · mouse y reads the frequency', extra=SOUND_GUARD, sound=True),
                       body=['The microphone, drawn as a scrolling spectrogram: a whistle is one thin line, a vowel is a stack of lines, a clap is a vertical stripe. If the microphone is refused or stays silent, a built-in sweep takes over and the mouse sets its pitch.'],
                       caption='p5.js with p5.sound: p5.AudioIn into p5.FFT, 1024 bins, redrawn thirty times a second on a log-frequency axis from 50 Hz to 8 kHz. Before the click it shows a computed tone, so the still is never empty.',
                       notes='Html deck only; click the sketch once to start audio and allow the microphone. Whistle first — one line, and you can read its frequency with the mouse. Then say "aaa" and "eee": the stack of harmonics changes shape with the vowel; that shape is what a voice clone learns. Then clap: a vertical stripe, all frequencies at once. If the room\'s PC has no microphone, the sweep runs and the mouse plays it like a theremin. Two minutes; the pptx shows a still.'))
 
 S.append(sketch_slide('02 · LIVE · TIMBRE', 'An instrument is which harmonics, and how loud.',
-                      live('w06-additive', ADD_CODE, 1400, 500, hint='mouse x = how many harmonics · mouse y = how bright · click to hear', sound=True),
+                      live('w06-additive', ADD_CODE, 1400, 500, hint='mouse x = how many harmonics · mouse y = how bright · click to hear', extra=SOUND_GUARD, sound=True),
                       body=['One sine is the purest tone and the dullest. Add its multiples — 440, 660, 880 Hz — with a rule for how fast they fade, and the same pitch turns from a flute into a reed into a buzz. The recipe is the timbre. When a spec says "marimba, nothing electric", this is the thing it is asking for.'],
                       caption='Additive synthesis: sixteen sine oscillators, one per harmonic, started once; the mouse only changes their volumes. Fourier\'s sum, run backwards.',
                       notes='One minute of playing. Left to right: one sine, then more; up and down: how fast the harmonics fade. Ask the room to name the sound at each end — flute, then oboe-ish, then a buzz. The lesson for the spec: "instrument" is a recipe of harmonics over time, and a music model has learned thousands of such recipes from examples; you name one with a word. Cut if behind.'))
@@ -506,7 +522,7 @@ S.append(section('03', 'Rules that play', 'machine A · a sequencer · counterpo
                  notes='Chapter three: music from rules, live. A grid you can hear, then the first computer-composed score and its two moves — generate and test, and a table of what follows what.'))
 
 S.append(sketch_slide('03 · LIVE · A STEP SEQUENCER', 'The grid is the score.',
-                      live('w06-sequencer', SEQ_CODE, 1000, 600, hint='click to start · click a cell to toggle · mouse y = tempo · C clears', sound=True),
+                      live('w06-sequencer', SEQ_CODE, 1000, 600, hint='click to start · click a cell to toggle · mouse y = tempo · C clears', extra=SOUND_GUARD, sound=True),
                       body=['Sixteen steps, six sounds. The playhead reads the grid left to right, forever; every filled cell is a rule: on this step, this sound. The mouse changes one number, the tempo. Nothing here learned anything, and it will play the same bar until the sun goes out.'],
                       caption='Kick, snare and hat are envelopes on a sine and on white noise; the three pitched rows are oscillators at C2, C4 and E4. A step is 60 ÷ BPM ÷ 4 seconds. Press C to clear and write your own.',
                       notes='Html deck only; one click starts the sound. Let the seed pattern play for a bar, then toggle cells while it runs: the room hears the rule change the moment you click. Drag the mouse down: slower; up: faster. Press C and build a beat from nothing in twenty seconds — kick on 1, 5, 9, 13, hat on the evens. That is machine A for music: exact, explainable, and you can point at the cell that decided. This sketch comes back in the activity as the rule-based twist.'))
@@ -519,12 +535,11 @@ S.append(code_slide('03 · THE SEQUENCER · THE RULE', 'Sixteen steps, read left
 S.append(video('03 · HILLER & ISAACSON · ILLIAC I · 1956 – 57', 'A computer writes a string quartet: propose, test, keep.', 'n0njBFLQSk8',
                ['The Illiac Suite, University of Illinois: the ILLIAC generates random notes and keeps the ones that pass the rules of counterpoint. Four experiments, four movements.',
                 '- Generate and test: chance proposes, the rules decide. The oldest move in symbolic AI, in music.',
-                '- The fourth experiment replaces the rules with a table: the next note depends on the last. Week 2 met it with Nake\'s signs; week 4 with tokens.',
-                '- On the playlist since week 2. The quiz draws on it.'],
+                '- The fourth experiment replaces the rules with a table: the next note depends on the last. Week 2 met it with Nake\'s signs; week 4 with tokens. On the playlist since week 2.'],
                thumb='yt/n0njBFLQSk8.jpg',
                notes='Play a minute of the first movement if there is time: it sounds like Renaissance polyphony because the rules are Renaissance rules. First performed in 1956, published in 1957, and generally called the first score composed by a computer. Then the structure: experiments one and two are rules; three is rhythm and dynamics; four is a Markov chain. The next two slides open experiments one and four.'))
 
-S.append(figure_slide('03 · THE ILLIAC SUITE · TWO MOVES', 'Generate a note. Test it against the rules. Or: a table instead.', F.w06_generate_test(),
+S.append(figure_slide('03 · THE ILLIAC SUITE · TWO MOVES', 'Propose, test, keep — or a table instead.', F.w06_generate_test(),
                       body=['Left, experiments one and two: a random number proposes a pitch; the rules of strict counterpoint accept or reject it; the melody grows one accepted note at a time. Right, experiment four: no rulebook, only a table of how likely each next interval is, given the last. Simpler intervals more likely than bigger ones.'],
                       caption='Our reading of Hiller and Isaacson\'s experiments; the rules on the left are a few of the classical ones, the table on the right uses our numbers. What they share: the design is in the rules and the table; chance only proposes.',
                       notes='Two machines that are both machine A. The generate-and-test loop is what Cage did with coins and the I Ching, mechanised: every note is legal because it passed. The table is subtler: nothing is illegal, some things are likely, and the texture of the music lives in the numbers. Ask the room which one they could explain to a client — both, line by line. Then the live version of the table.'))
@@ -534,14 +549,14 @@ S.append(content('03 · LIVE · EXPERIMENT 4 IN A PAGE', 'The next note depends 
                   '- **Mouse x is the temperature.** Low: the likeliest note almost always — a rule. High: the table flattened — a die.',
                   '- Click to hear it; click again for new dice with the same table.',
                   'This is Nake\'s Walk-Through-Raster in sound, and week 4\'s next-token machine with a vocabulary of eight.'],
-                 sketch=live('w06-markov-melody', MARKOV_CODE, 800, 600, hint='mouse x = temperature · click to hear · click again = new dice', sound=True),
+                 sketch=live('w06-markov-melody', MARKOV_CODE, 800, 600, hint='mouse x = temperature · click to hear · click again = new dice', extra=SOUND_GUARD, sound=True),
                  caption='A first-order Markov chain over eight pitches. The table is the aesthetic: change a row and the melody changes character; change the temperature and it changes discipline.',
                  body_size=28,
                  notes='Html deck only; click to hear it. Move the mouse to the far left: the melody becomes a loop, the likeliest path through the table, and the room can predict the next note. Far right: almost any note, no character. The middle is the table as written. Point at the orange cell moving: that is the whole machine, one lookup per note. Say the week-4 sentence: a language model is this table with fifty thousand rows and a very long memory. Then the code.'))
 
-S.append(code_slide('03 · THE MARKOV STEP', 'A table and a die. The temperature sharpens or flattens the table.', MARKOV_TABLE + '\n\n' + MARKOV_STEP,
-                    caption='Eight rows, eight columns, and five lines of loop. Raising every number to 1 ÷ T is the temperature: T below 1 makes the big numbers bigger; T above 1 evens them out. Week 4\'s temperature slide, in code.',
-                    code_size=19, sketch=live('w06-markov-melody-2', MARKOV_CODE, 800, 600, hint='mouse x = temperature · click to hear · click again = new dice', sound=True),
+S.append(code_slide('03 · THE MARKOV STEP', 'A table, a die, a temperature.', MARKOV_TABLE + '\n\n' + MARKOV_STEP,
+                    caption='Eight rows, eight columns, five lines of loop. Raising every number to 1 ÷ T is the temperature: below 1 the big numbers win; above 1 they even out.',
+                    code_size=19, sketch=live('w06-markov-melody-2', MARKOV_CODE, 800, 600, hint='mouse x = temperature · click to hear · click again = new dice', extra=SOUND_GUARD, sound=True),
                     notes='The table first: each row sums to about a hundred, each row is one note\'s habits. Then nextNote: raise to a power, add them up, throw one die, walk down the row until the die is spent. Ask: where is the design? In the table. Where is chance? One line. Where would a model be? It would fill the table from a million melodies instead of us writing it — machine B is a Markov chain that learned its table. Cut if behind; the previous slide carries it.'))
 
 S.append(video('03 · STANFORD LAPTOP ORCHESTRA · BING CONCERT HALL · 10 JUNE 2023', 'The dawn of computer music, replayed by a laptop orchestra.', 'Ih9lHXMlrtE',
@@ -560,7 +575,7 @@ S.append(question('multiple_choice', 'In the Illiac Suite\'s first experiments, 
 S.append(section('04', 'Models that listen', 'machine B · a picture of sound · a language of sound · the products', bg=INK,
                  notes='Chapter four: show the machine examples instead. Two roads, both built from things you already met — last week\'s diffusion and week 4\'s next-token machine — and then the three products the room will use.'))
 
-S.append(figure_slide('04 · TWO ROADS', 'Show it examples: as pictures of sound, or as a language of sound.', F.w06_two_roads(),
+S.append(figure_slide('04 · TWO ROADS', 'A picture of sound, or a language of sound.', F.w06_two_roads(),
                       body=['Road one: turn sound into a spectrogram and treat it as an image; a diffusion model denoises a new one, steered by words; the inverse Fourier transform plays the picture. Road two: a codec turns sound into a few tokens per frame; a next-token model writes new tokens; the codec plays them back.'],
                       caption='Riffusion, 15 December 2022, is road one. Jukebox (April 2020), MusicLM (January 2023) and MusicGen (June 2023) are road two, and so, as far as they say, are the products of 2024–26. Nobody wrote a rule about music in either road.',
                       notes='The whole chapter in one figure. Road one is last week: the picture of sound is just another picture, and a diffusion model does not know the difference. Road two is week 4: tokens, a table, a die, a temperature — except the tokens come from a codec instead of a tokenizer, and mean fractions of a second instead of pieces of words. Say the spine: in neither road did anyone write a rule of counterpoint. The rules are in the examples.'))
@@ -577,7 +592,7 @@ S.append(cards('04 · ROAD 2 · A LANGUAGE OF SOUND', 'A codec turns sound into 
     ('JUKEBOX · APRIL 2020', 'OpenAI: raw audio, 1.2 million songs.', 'Sound compressed into codes, a transformer writing codes, a decoder playing them back — with rudimentary singing. Slow, rough, and the proof that road two works.'),
     ('MUSICLM · JANUARY 2023', 'Google: text to music through SoundStream tokens.', 'A neural codec gives the tokens; a text model trained on captions gives the steering. Thirty seconds of coherent music from a sentence.'),
     ('MUSICGEN · JUNE 2023', 'Meta: open weights, EnCodec tokens.', 'One transformer over the codec\'s codes; a melody can be given as a reference. Runs on a laptop; the free demo on Hugging Face is one of today\'s tools.'),
-    ('THE PRODUCTS · 2024 – 26', 'Suno, Udio, and the rest.', 'Full songs with lyrics and vocals from a prompt. What is inside is not published in detail; what they were trained on is what the lawsuits after the break are about.'),
+    ('PRODUCTS · 2024 – 26', 'Suno, Udio, and the rest.', 'Full songs with lyrics and vocals from a prompt. What is inside is not published in detail; what they were trained on is what the lawsuits after the break are about.'),
 ], text_size=21, notes='Four steps of road two. The mechanism is the week-4 lecture with a different tokenizer: a codec that turns each fraction of a second into a few symbols from a fixed vocabulary, then a transformer predicting the next symbol, then the codec run backwards. The last card is honest: the companies do not publish their architectures, so we say what they do, not how. What they trained on is a court question now.'))
 
 S.append(video('04 · ALTEXSOFT · THE HOMEWORK', 'How AI sound and music generation works.', 'bp7Qb8QY1Pw',
@@ -629,14 +644,14 @@ S.append(cards('05 · THREE CASES', 'Whose voice is it?', [
 ], text_size=22, notes='Three cases, three questions. The first is about a voice as a likeness: the takedown was not a copyright judgment, it was a platform acting on a label\'s request. The second is about consent even when the voice is technically someone else\'s. The third is about disclosure: nothing was stolen, nobody was told. Ask the room which of the three bothers them most; the split is the mediation brief they will write in week 11.'))
 
 S.append(timeline('05 · TWO YEARS OF LAWSUITS', 'Sued, settled, licensed — and still in court.', [
-    ('24 JUN 2024', 'The majors sue', 'Universal, Sony and Warner, with the RIAA, sue Suno in Massachusetts and Udio in New York: training on their recordings, up to $150,000 a work.'),
-    ('29 OCT 2025', 'UMG settles with Udio', 'A licensed platform for 2026, trained on authorised music; artists opt in and are paid. The next day Udio switches downloads off.'),
-    ('19 NOV 2025', 'Warner settles with Udio', 'The same shape: a licensed creation service for 2026, across recordings and publishing.'),
-    ('25 NOV 2025', 'Warner settles with Suno', 'Licensed models to replace the current ones in 2026; downloads only on paid plans, with monthly caps; Songkick moves to Suno.'),
-    ('20 JUL 2026', 'Sony sues Udio again', 'A second complaint in New York over 30,117 recordings the court would not let it add to the first case. Sony is the one major still fighting.'),
-    ('31 JUL 2026', 'GEMA beats Suno in Munich', 'The German collecting society wins on training and on outputs for a set of compositions; Suno says it will consider an appeal.'),
-    ('25 AUG 2026', 'UMG and Sony amend', 'The Massachusetts case against Suno adds "stream ripping" from YouTube to the claims. The fair-use question is still open.'),
-    ('2026 →', 'The licensed products', 'Udio\'s and Suno\'s new models are promised for this year. Whether the outputs are yours is a question of the terms, not of the law.'),
+    ('JUN 2024', 'The majors sue', '24 June: UMG, Sony and Warner, with the RIAA, sue Suno (Boston) and Udio (New York) over training.'),
+    ('OCT 2025', 'UMG settles with Udio', '29 October: a licensed platform for 2026, trained on authorised music; artists opt in. The next day Udio switches downloads off.'),
+    ('NOV 2025', 'Warner settles with Udio', '19 November: the same shape, a licensed creation service for 2026, across recordings and publishing.'),
+    ('NOV 2025', 'Warner settles with Suno', '25 November: licensed models to replace the current ones in 2026; downloads only on paid plans, with caps.'),
+    ('JUL 2026', 'Sony sues Udio again', '20 July: a second New York complaint over 30,117 recordings. Sony is the one major still fighting both companies.'),
+    ('JUL 2026', 'GEMA beats Suno in Munich', '31 July: the German society wins on training and on outputs; Suno may appeal.'),
+    ('AUG 2026', 'UMG and Sony amend', '25 August: the Massachusetts case against Suno adds "stream ripping" from YouTube. Fair use is still open.'),
+    ('2026 →', 'The licensed products', 'New models promised this year. Whether the output is yours is a question of the terms, not the law.'),
 ], notes='Two years in eight steps, verified on 5 September 2026; add anything that happened since. The shape to teach: sue, settle, license — two of the three majors made deals with both companies; the third is still fighting both, and a German court said no to Suno\'s training. Nothing here is final, and none of it is a rule you can build on: what you can build on is the terms of the product in front of you. Do not read every step; pick the first, the second and the last.'))
 
 S.append(cards('05 · WHERE IT STANDS · 5 SEPTEMBER 2026', 'Settled with two majors. Fighting the third. Lost once in Munich.', [
@@ -646,7 +661,7 @@ S.append(cards('05 · WHERE IT STANDS · 5 SEPTEMBER 2026', 'Settled with two ma
      'Sony against Udio (New York, two cases) and, with Universal, against Suno (Massachusetts). GEMA won against Suno on 31 July 2026; an appeal is expected. Fair use in the US is undecided.'),
     ('WHAT YOU OWN', 'Read the plan, not the law.',
      'Suno free: non-commercial. Suno paid: whatever rights Suno has, no promise there are any. AIVA Pro: the copyright. Udio: no downloads. Terms change; note the date.'),
-    ('THE RULE FOR CHALLENGE 5', 'Name the tool and the plan.',
+    ('CHALLENGE 5', 'Name the tool and the plan.',
      'Your process note says which model, which plan, and what its terms let you do with the sound. A sound you cannot download or reuse is evidence for the reflection, not a deliverable for a client.'),
 ], text_size=21, notes='The take-away card is the third: for a designer the live question is the terms of service, because that is what decides whether the sound you made for a client is yours to hand over. Say the date again — these change monthly. Then the mock quiz starts: three questions now, two in the next chapter, three at the end. Same format as next week.'))
 
@@ -688,11 +703,11 @@ S.append(figure_slide('06 · THE SOUND SPEC', 'A sound spec is a brief for a mac
                       notes='Read one line from each column aloud and ask which machine could execute it. "3 seconds, 120 BPM, two notes then a chord" — the sequencer, exactly. "Light, outdoors, a small win" — only a model, from its middle. That split is the reflection\'s argument again, and it tells them what to expect in the rounds: the rule lines will come back exactly, the example lines will come back typical.'))
 
 S.append(two_col('06 · THE TEMPLATE', 'A language model writes the prompt. A music model plays it.',
-                 ['Fill the spec on the right. Then paste it into a language model on **genai.polyu.edu.hk** and ask for a prompt for a text-to-music model — under sixty words, no lyrics, no artist names.',
+                 ['Fill the spec. Paste it into a language model on **genai.polyu.edu.hk**; ask for a prompt for a text-to-music model: under sixty words, no lyrics, no artist names.',
                   '- Two machines in a row: the language model translates your spec into the music model\'s dialect; the music model answers from its middle.',
-                  '- Ask for the rule back: "in one sentence, the rule the sound follows." If it does not match your spec, the prompt does not either.',
-                  'Keep the spec. When the sound drifts, fix the spec, not the prompt, not the sound.'],
-                 SOUND_SPEC, right_size=22, left_size=29,
+                  '- Ask for the rule back: "in one sentence, the rule the sound follows." If it does not match the spec, the prompt does not either.',
+                  'When the sound drifts, fix the spec — not the prompt, not the sound.'],
+                 SOUND_SPEC, right_size=22, left_size=26,
                  notes='The template is on the course site and on Blackboard. The pipeline is the week-2 pipeline with one more machine: spec → language model → prompt → music model → sound. Each arrow loses something; the "rule back" check catches the first loss before you spend a generation on it. Tell them the tool and the plan now: Nicolò has tested one music model from the classroom network; use that one, so the middle is the same middle for everyone.'))
 
 S.append(cards('06 · WHAT THE MODEL DECIDES', 'Four questions for every sound.', [
@@ -713,7 +728,7 @@ S.append(question('multiple_choice', 'A diffusion model makes an image by…', [
     notes='Question 5 of 8, week 5 and the playlist. Correct: B. Start from noise, remove a little at every step, let the words steer each step. C is the common misconception and worth a sentence: the model holds the middle of millions of examples, not the examples. Road one of today\'s lecture is B applied to a spectrogram.'))
 
 # ───────────────────────── 07 · activity: thirty seconds for a product ─────────────────────────
-S.append(section('07', 'Thirty seconds for a product.', f'35 minutes · a product · a music model · {GENAI} · the sequencer', bg=YELLOWS[0],
+S.append(section('07', 'Thirty seconds for a product.', f'35 minutes · a product · a music model · {GENAI}', bg=YELLOWS[0],
                  notes='The activity. A sound spec alone; generate, listen and write what the model decided in pairs; the same brief as a rule in fours, with the sequencer. Each round ends in ClassPoint; the last capture is an image with the spec as the caption. Nicolò keeps time; Amber, WU Zhao and MA Jie walk with the four questions. Headphones on; one laptop per pair.'))
 
 S.append(content('07 · THE TOOLS', 'One music model for the room. And a fallback that is a rule.',
@@ -752,7 +767,7 @@ S.append(activity('4 — TWO PAIRS · THE RULE', 10, 'The same brief, as a rule.
                   ['Join the pair behind you. Take the better spec. Build it in the sequencer: **the spec\'s tempo, sixteen steps, three sounds at most.** Press C first.',
                    'Play both back to back: the model\'s and the grid\'s. **Which one is the product\'s?** All four have to agree, and say why in one sentence.',
                    'One scribe screenshots the grid — or the model\'s waveform — and uploads it with the spec as the caption.'],
-                  sketch=live('w06-sequencer-act', SEQ_CODE, 1000, 600, hint='click to start · click a cell to toggle · mouse y = tempo · C clears', sound=True),
+                  sketch=live('w06-sequencer-act', SEQ_CODE, 1000, 600, hint='click to start · click a cell to toggle · mouse y = tempo · C clears', extra=SOUND_GUARD, sound=True),
                   bg=YELLOWS[2],
                   notes='Ten minutes in fours. The sequencer obeys the rule lines exactly and has no idea what "light, outdoors" means; the model had the mood and ignored the tempo. Four people arguing about which is the product\'s sound are doing the design. Expect a split: the grid wins for notifications and unlocks, the model for anything longer than five seconds. The sketch runs here in the html deck; the share link on Blackboard runs it in the editor on any device.'))
 
@@ -771,7 +786,7 @@ S.append(content('07 · WHAT JUST HAPPENED', 'You wrote the spec. Two machines p
                  notes='Mirror of the whole class, and of weeks 1, 2 and 4: the cup, the spec, the brief, the sound. Say the last line slowly; it is the week-2 line with one word changed, for the third time. Then the sentence for the reflection: a sound has a rule side and an example side, and the designer is the one who decides which lines are which.'))
 
 # ───────────────────────── 08 · the quiz, the reflection, the challenge ─────────────────────────
-S.append(section('08', 'The quiz, the reflection, the challenge', 'three questions left · the draft check · challenge 5 · before week 7', bg=INK,
+S.append(section('08', 'The quiz, the reflection, the challenge', 'three questions · the draft check · challenge 5 · week 7', bg=INK,
                  notes='Chapter eight: the last three mock questions, how the real quiz works, what a good reflection draft has, Challenge 5, and the homework. Twelve minutes.'))
 
 S.append(question('multiple_choice', 'The Illiac Suite\'s fourth experiment (1957) chose notes with…', [
@@ -780,7 +795,7 @@ S.append(question('multiple_choice', 'The Illiac Suite\'s fourth experiment (195
     notes='Question 6 of 8, today and the playlist. Correct: B. A is experiments one and two with the rules removed — not what they did; C is what happened to the third movement, which was adjusted by hand, but not the fourth. The live version was the orange cell moving across the table.'))
 
 S.append(question('multiple_choice', 'Riffusion (December 2022) made music by…', [
-    'Training a model on MIDI files', 'Generating spectrogram images with a diffusion model and turning them back into sound', 'Recording musicians and mixing the takes', 'Applying the rules of counterpoint'],
+    'Training a model on MIDI files', 'Generating spectrogram images with a diffusion model, then playing them', 'Recording musicians and mixing the takes', 'Applying the rules of counterpoint'],
     eyebrow_text='08 · MOCK QUIZ · 7 OF 8 · MULTIPLE CHOICE',
     notes='Question 7 of 8, today. Correct: B. Road one: Stable Diffusion fine-tuned on spectrograms, the picture played back with the inverse Fourier transform. A is road two\'s symbolic cousin, D is the Illiac. If the room gets this, the two roads landed.'))
 
@@ -799,7 +814,7 @@ S.append(content('08 · THE MID-TERM · WEEK 7 · 10%', 'Multiple choice. Weeks 
                  notes='Say clearly what is and is not examined: the decks and the playlist, nothing from outside them. The eight mock questions are not graded; the real one is ten percent. The revision advice is concrete: the quick checks in each deck, and the two machines as the question behind every question.'))
 
 S.append(cards('08 · REFLECTION · DUE WEEK 7 · 20%', 'What a good draft has. Check it with a TA today.', [
-    ('UNDERSTANDING · 30%', 'Both machines, accurately.', 'Rule-based and adaptive, explained in your own tools: which of your instruments are rules, which learned, and what each did to your process.'),
+    ('CONCEPTS · 30%', 'Both machines, accurately.', 'Rule-based and adaptive, explained in your own tools: which of your instruments are rules, which learned, and what each did to your process.'),
     ('ARGUMENT · 30%', 'A stance.', 'Where AI belongs in your creative process, and where it does not — and why. One claim, defended, not a list of pros and cons.'),
     ('EVIDENCE · 20%', 'Three experiments, with images.', 'At least three of your challenges from weeks 2 to 6, with the spec or prompt, the output, and what you changed. The walls from class count.'),
     ('CLARITY · 10%', 'About 1000 words, in order.', 'A structure a stranger can follow. A missing process note costs a band: say how you used AI to write it.'),

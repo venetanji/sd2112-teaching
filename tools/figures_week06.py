@@ -261,11 +261,11 @@ def w06_generate_test(name='w06-generate-test', w=1680, h=560):
     rules = ['stays inside the range?', 'no leap of a tritone?', 'no parallel fifths or octaves?', 'no more than one repeat?', 'ends on the tonic?']
     for k, r in enumerate(rules):
         c.text(rx + 20, by + 56 + k * 27, '- ' + r, size=16, color=MUTED)
-    _arrow(c, rx + 380, by + 40, rx + 440, by + 40, INK, 3, 10)
-    c.text(rx + 410, by + 24, 'all yes', size=14, anchor='middle', color=ORANGE)
-    c.rect(rx + 444, by, 220, 80, fill=ORANGE)
-    c.text(rx + 554, by + 34, 'KEEP IT', size=18, anchor='middle', color=INK)
-    c.text(rx + 554, by + 62, 'next note', size=15, anchor='middle', color=INK)
+    _arrow(c, rx + 380, by + 40, rx + 460, by + 40, INK, 3, 10)
+    c.text(rx + 420, by + 24, 'all yes', size=14, anchor='middle', color=ORANGE)
+    c.rect(rx + 464, by, 220, 80, fill=ORANGE)
+    c.text(rx + 574, by + 34, 'KEEP IT', size=18, anchor='middle', color=INK)
+    c.text(rx + 574, by + 62, 'next note', size=15, anchor='middle', color=INK)
     _arrow(c, rx + 190, by + 190, rx + 190, by + 228, INK, 3, 10)
     c.text(rx + 204, by + 214, 'any no', size=14, color=ORANGE)
     c.rect(rx + 60, by + 232, 260, 52, fill=PAPER, stroke=MUTED, width=2)
