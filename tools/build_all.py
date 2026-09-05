@@ -5,13 +5,14 @@ Build everything, the way the GitHub Actions workflows do:
     python tools/build_all.py --site     # _site/ only: landing page, html decks, PDFs, syllabus (the Pages workflow)
     python tools/build_all.py --pptx     # export/ only: PowerPoints, ClassPoint manifest, docx, previews (the PowerPoint workflow)
     python tools/build_all.py --no-pdf   # skip the Chromium PDF step (no node/playwright on this machine)
+    python tools/build_all.py --snap     # also redo the snapshots of the live sketches (deck/assets/sketches, committed)
 
   _site/            the published site: landing page, vendor css/js/fonts, one folder per deck
                     (html deck + assets + the PDF without ClassPoint buttons), syllabus.html
   export/           week01.pptx, week01-classpoint.pptx, the ClassPoint manifest,
                     docs/*.docx (+ the lesson plans as html), preview contact sheets
 
-Both folders are git-ignored. Add new decks to DECKS.
+Both folders are git-ignored. Every deck/weekNN.py is a deck.
 """
 from __future__ import annotations
 
@@ -26,7 +27,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import deckgen        # noqa: E402
 import build_docs     # noqa: E402
 
-DECKS = ['week01', 'week02']
+DECKS = sorted(p.stem for p in (ROOT / 'deck').glob('week[0-9][0-9].py'))   # every deck/weekNN.py
 
 
 def load_deck(name):
@@ -42,6 +43,7 @@ def main(argv=None):
     do_site = '--site' in explicit or not explicit
     do_pptx = '--pptx' in explicit or not explicit
     do_pdf = '--no-pdf' not in argv
+    snap = '--snap' in argv          # redo the sketch snapshots (deck/assets/sketches) before building
     if do_site:
         site = deckgen.SITE
         if site.exists():
@@ -51,7 +53,7 @@ def main(argv=None):
     problems = []
     for name in DECKS:
         mod = load_deck(name)
-        out = deckgen.build_all(mod.DECK, name, mod.FOOTER, do_pptx=do_pptx, do_html=do_site, do_png=True, do_pdf=do_site and do_pdf)
+        out = deckgen.build_all(mod.DECK, name, mod.FOOTER, do_pptx=do_pptx, do_html=do_site, do_png=True, do_pdf=do_site and do_pdf, snap=snap)
         n = len(mod.DECK['slides'])
         cp = sum(1 for s in mod.DECK['slides'] if s.cp)
         made = [str(out[k].relative_to(ROOT)) for k in ('html', 'pdf', 'classpoint') if k in out]

@@ -1,5 +1,5 @@
 """
-Shared course facts used by more than one deck: links, the semester map.
+Shared course facts used by more than one deck: links, the semester map, the week titles.
 Edit here and every deck that shows the journey updates.
 """
 from deckgen import INK, PAPER, TEALS, VIOLETS, ORANGES, PINKS
@@ -18,3 +18,25 @@ JOURNEY = [
     dict(label="4 · The designer's turn", color=PINKS[0], dark=True, tint=PINKS[4], cells=[('Week 11', 'Curating outputs and datasets · authorship'), ('Week 12', 'Language as an interface: chatbots and agents')]),
     dict(label='Showcase', color=INK, dark=True, tint=PAPER, cells=[('Week 13', 'Poster fair · final quiz')]),
 ]
+
+# module number of each week, and the topic as the syllabus names it (deck titles may be more playful)
+WEEKS = {
+    1: (1, 'Two ways to teach a machine'),
+    2: (1, 'Rules that make things'),
+    3: (1, 'Learning from examples'),
+    4: (2, 'Language machines'),
+    5: (2, 'Image machines and mediation'),
+    6: (2, 'Sound machines'),
+    7: (0, 'Mid-term: quiz, pitches, teams'),
+    8: (3, 'AI as design material'),
+    9: (3, 'Data, bias and privacy'),
+    10: (3, 'Recommendation systems'),
+    11: (4, 'Curators of outputs and datasets'),
+    12: (4, 'Language as an interface'),
+    13: (0, 'Poster fair and final quiz'),
+}
+MODULE_COLORS = {0: (INK, PAPER), 1: (TEALS[0], TEALS[4]), 2: (VIOLETS[0], VIOLETS[5]), 3: (ORANGES[0], ORANGES[4]), 4: (PINKS[0], PINKS[4])}
+
+
+def footer(week):
+    return f'SD2112 · AI IN DESIGN · WEEK {week:02d}'
