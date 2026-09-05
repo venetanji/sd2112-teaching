@@ -102,10 +102,12 @@ function draw() {{
   fill(237, 109, 36); text('\\u2190 the network,', (x2 + size + x3) / 2, y + size / 2 - 16); text('one step at a time', (x2 + size + x3) / 2, y + size / 2 + 6);
   fill(120); textAlign(LEFT); textSize(15);
   text('DIFFUSION \\u00b7 mouse x = how much noise (t) \\u00b7 click = run the denoiser', 40, 36);
-  stroke(225); strokeWeight(3); line(70, 460, W - 70, 460);     // the schedule
-  noStroke(); fill(237, 109, 36); circle(70 + t * (W - 140), 460, 12);
-  fill(120); textAlign(LEFT); text('t = 0 \\u00b7 the image', 70, 490); textAlign(RIGHT); text('t = 1 \\u00b7 pure noise', W - 70, 490);
-  textAlign(CENTER); text('a toy: it learned one picture, so it always finds it \\u00b7 a real model learned billions, and finds the middle of them', W / 2, 490);
+  textAlign(RIGHT); textSize(14);
+  text('a toy: it learned one picture, so it always finds it', W - 40, 24);
+  text('a real model learned billions, and finds the middle of them', W - 40, 44);
+  textAlign(LEFT); text('t = 0 \\u00b7 the image', 70, 440); textAlign(RIGHT); text('t = 1 \\u00b7 pure noise', W - 70, 440);
+  stroke(225); strokeWeight(3); line(70, 452, W - 70, 452);     // the schedule; below it stays free for the LIVE chip
+  noStroke(); fill(237, 109, 36); circle(70 + t * (W - 140), 452, 12);
 }}
 
 function mousePressed() {{ run = frameCount; k = 0; }}"""
@@ -142,13 +144,13 @@ function setup() { createCanvas(W, H); textFont('sans-serif'); }
 
 function draw() {
   background(255);
-  let row = constrain(floor((mouseY - 60) / 62), 0, 7);      // the hovered row
+  let row = constrain(floor((mouseY - 57) / 57), 0, 7);      // the hovered row
   let side = mouseX < W / 2 ? 0 : 1;                        // 0: a word, 1: a picture
   let q = side == 0 ? WORD[row] : PIC[row], others = side == 0 ? PIC : WORD;
   noStroke(); fill(120); textSize(14); textAlign(LEFT, BASELINE);
   text('ONE SPACE \\u00b7 hover a word or a picture \\u00b7 the bars are how close they are', 30, 36);
   for (let i = 0; i < 8; i++) {
-    let y = 90 + i * 62, sim = cosine(q, others[i]);
+    let y = 86 + i * 57, sim = cosine(q, others[i]);
     noStroke(); fill(side == 0 && i == row ? color(237, 109, 36) : 0); textSize(22); textAlign(LEFT, CENTER);
     text('"' + NAMES[i] + '"', 60, y);
     icon(i, 720, y, 16, side == 1 && i == row ? color(237, 109, 36) : color(0));
@@ -157,14 +159,15 @@ function draw() {
     fill(120); textSize(14); textAlign(side == 0 ? LEFT : RIGHT, CENTER);
     text(sim.toFixed(2), side == 0 ? 236 + sim * 340 : 604 - sim * 340, y);
   }
-  noStroke(); fill(120); textSize(14); textAlign(LEFT, BASELINE);
-  text('cosine similarity of hand-made 7-number vectors \\u00b7 CLIP\\'s are hundreds long, learned from 400 million pairs', 30, H - 22);
+  noStroke(); fill(120); textSize(14); textAlign(LEFT, BASELINE);   // two short lines, clear of the LIVE chip
+  text('cosine similarity of hand-made 7-number vectors', 30, H - 72);
+  text('CLIP\\'s are hundreds long, learned from 400 million pairs', 30, H - 52);
 }"""
 
 # (c) a latent space of chairs: two numbers in, a whole chair out — week 1's rule with learned parameters
 LATENT_CODE = """// a latent space of chairs: two numbers in, a whole chair out. the mouse is the point.
 const W = 1400, H = 500;
-let pinned = null;                 // a click pins the point; moving the mouse frees it
+let pinned = null;                 // a click pins the point; the next click frees it
 
 function decode(z1, z2) {          // the 'decoder': two numbers -> six chair parameters, with a few bends
   let s = x => 1 / (1 + exp(-x));  // an S-curve: the nonlinearity a network is made of
@@ -200,6 +203,7 @@ function draw() {
   for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++)   // every chair in between: a 5 x 5 walk
     chair(mx + 6 + i * (ms - 12) / 5, my + 6 + j * (ms - 12) / 5, (ms - 12) / 5 - 10, decode(i / 4, j / 4));
   noStroke(); fill(237, 109, 36); circle(mx + z1 * ms, my + z2 * ms, 14);
+  if (pinned) { noFill(); stroke(237, 109, 36); strokeWeight(2); circle(mx + z1 * ms, my + z2 * ms, 30); }
   let p = decode(z1, z2);
   chair(100, 60, 380, p);                         // the chair at the point, large
   noStroke(); fill(0); textSize(22); textAlign(LEFT, BASELINE);
@@ -208,13 +212,14 @@ function draw() {
   text('seat ' + p.seat.toFixed(2) + ' \\u00b7 back ' + p.back.toFixed(2) + ' \\u00b7 ' + round(p.angle) + '\\u00b0', 560, 232);
   text('width ' + p.width.toFixed(2) + ' \\u00b7 ' + p.legs + ' legs \\u00b7 splay ' + p.splay.toFixed(2), 560, 254);
   text('two numbers in,', 560, 300); text('six parameters out,', 560, 322); text('one chair.', 560, 344);
-  textSize(14); text('LATENT SPACE \\u00b7 move the mouse: two numbers, every chair in between \\u00b7 click: pin', 40, 36);
+  textSize(14); text('LATENT SPACE \\u00b7 move the mouse: two numbers, every chair in between \\u00b7 click: pin, click again: free', 40, 36);
   text('z\\u2081 \\u2192', mx + ms - 30, my + ms + 20); text('z\\u2082 \\u2193', mx + ms + 8, my + 16);
-  text('a parametric design (week 1) whose parameters were learned. nobody writes decode(): here we did, to show its shape.', 40, H - 20);
+  if (pinned) { fill(237, 109, 36); text('PINNED \\u00b7 click to free', mx, my + ms + 20); fill(120); }
+  text('a parametric design (week 1) whose parameters were learned.', 40, H - 32);   // two lines, clear of the LIVE chip
+  text('nobody writes decode(): here we did, to show its shape.', 40, H - 12);
 }
 
-function mousePressed() { pinned = pinned ? null : [constrain(mouseX / W, 0, 1), constrain(mouseY / H, 0, 1)]; }
-function mouseMoved() { pinned = null; }"""
+function mousePressed() { pinned = pinned ? null : [constrain(mouseX / W, 0, 1), constrain(mouseY / H, 0, 1)]; }"""
 
 # (d) ControlNet as a rule laid over a generator: your scribble decides the shape, a texture fills in
 CONTROL_CODE = """// ControlNet as a rule laid over a generator: your line decides the shape, the texture obeys it
@@ -266,7 +271,8 @@ function draw() {
   noStroke(); fill(120); textSize(14); textAlign(LEFT, BASELINE);
   text('CONTROL \\u00b7 your scribble, a rule \\u00b7 drag to draw \\u00b7 C clears', 30, 36);
   text('GENERATED \\u00b7 a texture that obeys the line: perpendicular near it, its own way far from it', HALF + 30, 36);
-  text('ControlNet, 2023: a sketch, a pose or an edge map is read by a trained copy of the denoiser and steers every step', 30, H - 20);
+  text('ControlNet, 2023: a sketch, a pose or an edge map is read by a trained copy', 30, H - 32);   // two lines, clear of the LIVE chip
+  text('of the denoiser, and steers every step', 30, H - 12);
 }
 
 function mousePressed() { if (mouseX < HALF) { cur = []; strokes.push(cur); } }
@@ -294,6 +300,13 @@ ITERATE = [
     'v1 → v2: change ONE thing. Write it down.', 'v2 → v3: change ONE thing. Write it down.', 'v3 → v4: change ONE thing. Write it down.', ' ',
     'THE SPEC (the caption of your upload):', 'what changed at each step, and', 'THE SILENT DECISION: one thing the model', 'decided that nobody asked for —', 'and whether you kept it.', ' ',
     'One prompt per change. New chat if it drifts.',
+]
+
+CHALLENGE3_ENTRIES = [   # placeholders: Amber pastes the four shortlisted one-liners here before the deck is built (no names, no IDs)
+    '(entry A: the one line "what the model decided" goes here — Amber fills in from Blackboard; no names)',
+    '(entry B: the one line goes here)',
+    '(entry C: the one line goes here)',
+    '(entry D: the one line goes here)',
 ]
 
 S = []  # the slides, in order
@@ -333,11 +346,11 @@ S.append(video('01 · WELCH LABS · 25 JULY 2025 · THE HOMEWORK', 'Diffusion, C
                notes='If the short answers said "why does removing noise make a picture" was the thing not understood, play the noise minute now and go straight to the sketch on slide 12. Otherwise cut this slide. AssemblyAI\'s video comes back in chapter two as the four-level version.'))
 
 S.append(cards('01 · CHALLENGE 3 · FOUR ENTRIES · THE EDIT', 'A brief, automated — then edited by you.', [
-    ('ENTRY A', 'What the model decided', '"It invented a launch date and a tagline. I cut both and added the constraint it had ignored: two colours."'),
-    ('ENTRY B', 'What the model decided', '"The system prompt made every brief start with the goal. Mine start with the audience now; I changed the prompt, not the draft."'),
-    ('ENTRY C', 'What the model decided', '"It wrote for a general reader. The audience heading fixed it: tutors who have seen 27 other posters."'),
-    ('ENTRY D', 'What the model decided', '"It praised the idea in the first line. I added: do not praise. The second draft was a critic."'),
-], text_size=22, notes='Replace these four with the real ones: the four best entries from Blackboard, anonymised, the prompt and the edit on screen from the Blackboard page and the one-line "what the model decided" on the card. Read each card before showing the edit; ask the room to guess what was cut. The gap between the guess and the edit is the subject of the whole day.'))
+    ('ENTRY A', 'What the model decided', CHALLENGE3_ENTRIES[0]),
+    ('ENTRY B', 'What the model decided', CHALLENGE3_ENTRIES[1]),
+    ('ENTRY C', 'What the model decided', CHALLENGE3_ENTRIES[2]),
+    ('ENTRY D', 'What the model decided', CHALLENGE3_ENTRIES[3]),
+], text_size=22, notes='The four cards are placeholders until Amber pastes the shortlisted entries into CHALLENGE3_ENTRIES in deck/week05.py before the build: the four best Challenge 3 entries from Blackboard, anonymised, one line each — the "what the model decided" line. The prompt, the draft and the edit go on screen from the Blackboard page, not on the slide. Read each card before showing the edit; ask the room to guess what was cut. The gap between the guess and the edit is the subject of the whole day.'))
 
 S.append(question('multiple_choice', 'Challenge 3: which entry gets the star?', [
     'Entry A', 'Entry B', 'Entry C', 'Entry D',
@@ -345,7 +358,7 @@ S.append(question('multiple_choice', 'Challenge 3: which entry gets the star?', 
     notes='ClassPoint vote, one minute. No correct answer: the room decides, the winner gets a participation star and thirty seconds to say what the edit undid. Note the split for the awards list.'))
 
 S.append(journey('01 · THE SEMESTER', 'Where we are', JOURNEY, here=(1, 1),
-                 notes='Week 5 of module 2: language last week, images today, sound next week. Challenge 4 is briefed at the end of today; the reflection is due in week 7, and next week the TAs check drafts. Two more weeks of tool weeks, then the quiz and the pitches.'))
+                 notes='Week 5 of module 2: language last week, images today, sound next week. Challenge 4 is briefed at the end of today; the reflection is due in week 7, and next week the TAs check drafts. One more tool week, then the quiz and the pitches.'))
 
 # ───────────────────────── 02 · noise → picture ─────────────────────────
 S.append(section('02', 'Noise → picture', 'destroy · learn one step · run it backwards', bg=INK,
@@ -386,7 +399,7 @@ S.append(question('multiple_choice', 'What does the network learn to predict?', 
 
 # ───────────────────────── 03 · words → pictures ─────────────────────────
 S.append(section('03', 'Words → pictures', 'CLIP · one space · the prompt steers the walk',
-                 notes='Chapter three: how "a chair" gets into a machine that only knows about noise. Five slides.'))
+                 notes='Chapter three: how "a chair" gets into a machine that only knows about noise. Four slides.'))
 
 S.append(figure_slide('03 · CLIP · 2021', 'Words and pictures in the same space.', F.w05_clip_space(),
                       body=['Two encoders — one for text, one for images — trained together on 400 million captioned pictures from the internet. The task: for a batch of pairs, pull each caption towards its own picture and away from all the others. Nobody labels a chair. The caption is the label.'],
@@ -406,7 +419,7 @@ S.append(content('03 · LIVE · ONE SPACE', 'A word and its picture are neighbou
 S.append(cards('03 · HOW THE WORDS REACH THE PICTURE', 'Three ways the prompt steers the walk.', [
     ('THE EMBEDDING', 'The prompt becomes points.', 'The text encoder turns your words into a list of points — one per token, up to 77 in Stable Diffusion v1. Every one of them is a handle the denoiser can hold.'),
     ('CROSS-ATTENTION', 'Every step looks at the words.', 'At each denoising step the network attends from the image to the prompt\'s points: week 4\'s attention, from pixels to tokens. "Wooden" pulls the texture; "chair" pulls the shape.'),
-    ('GUIDANCE', 'How hard to push.', 'Classifier-free guidance (Ho and Salimans, 2022): denoise once with the prompt and once without, and exaggerate the difference. Stable Diffusion\'s default is 7.5. Low: loose and varied. High: literal, then burnt.'),
+    ('GUIDANCE', 'How hard to push.', 'Classifier-free guidance (Ho and Salimans, 2021–22): denoise once with the prompt and once without, and exaggerate the difference. Stable Diffusion\'s default is 7.5. Low: loose and varied. High: literal, then burnt.'),
 ], text_size=22, notes='Three mechanisms, three knobs you can find in ComfyUI. The embedding is why word order and word choice matter. Cross-attention is why a prompt with two objects sometimes swaps their colours — the attention got the wrong token. Guidance is the one to try tonight: the same seed at 3, 7.5 and 20 is a lesson in the difference between a suggestion and an order.'))
 
 S.append(video('03 · COMPUTERPHILE · THE HOMEWORK', 'How AI "understands" images: CLIP.', 'KcSXcpluDe4',
@@ -426,9 +439,9 @@ S.append(figure_slide('04 · AUTOENCODERS', 'Squeeze the picture, then rebuild i
                       notes='The IBM video on the playlist is this slide. Two things to land. One: no labels again — the picture is its own answer key. Two: the latent is not a small picture; it is a list of numbers nobody named, and the violet block is only a drawing. The reason this matters for you: the noise, the denoising, the ControlNet, the LoRA all happen on the 16,384 numbers, not the 786,432 pixels, which is why a laptop can do it.'))
 
 S.append(sketch_slide('04 · LIVE · A LATENT SPACE OF CHAIRS', 'Two numbers, every chair in between.',
-                      live('w05-latent', LATENT_CODE, 1400, 500, hint='move the mouse: the point in the space · click to pin it'),
+                      live('w05-latent', LATENT_CODE, 1400, 500, hint='move the mouse: the point in the space · click to pin or free'),
                       caption='Week 1\'s chair rule, six parameters, driven by two numbers through a few bends. The map on the right is the space: a 5 × 5 walk through it. A real latent has thousands of numbers and nobody wrote decode() — it was learned.',
-                      notes='Move slowly along one edge of the map: the seat rises, the back leans, the legs change count at a line you cannot see. That is a latent space: every point is a design, nearby points are similar designs, and the axes have no names. Say the link to week 1 out loud: this is a parametric design whose parameters were learned — machine A with its numbers chosen by machine B. Click to pin a chair and ask the room to guess where in the map it is.'))
+                      notes='Move slowly along one edge of the map: the seat rises, the back leans, the legs change count at a line you cannot see. That is a latent space: every point is a design, nearby points are similar designs, and the axes have no names. Say the link to week 1 out loud: this is a parametric design whose parameters were learned — machine A with its numbers chosen by machine B. Click to pin a chair — the orange ring says it is pinned — and ask the room to guess where in the map it is; click again to free it.'))
 
 S.append(figure_slide('04 · THE WHOLE MACHINE', 'Text → points. Noise → less noise. Latent → pixels.', F.w05_pipeline(),
                       body=['Every box is a node in ComfyUI. Solid boxes are the model: learned, machine B. Orange is what you set: the prompt, the seed, the steps, the guidance — rules, machine A. Dashed are the handles of chapter five: a reference, a sketch, a style.'],
@@ -442,18 +455,16 @@ S.append(cards('04 · FOUR PARTS, FOUR NAMES', 'What the menus call them.', [
     ('VAE · SAMPLER', 'The bottleneck and the walk.', 'The VAE squeezes and rebuilds. The sampler is the rule for how the fifty steps are taken — a schedule, machine A, and the reason step counts differ between tools.'),
 ], text_size=22, notes='The vocabulary of the ComfyUI video on the playlist and of every "advanced" panel. The two to remember: a checkpoint has a middle — change the checkpoint and you change the prototype more than any prompt will — and the sampler is a rule, so the same seed with a different sampler is a different picture. Everything else on the menu is one of these four.'))
 
-S.append(content('04 · ON THE PLAYLIST', 'Two short ones: the squeeze, and the funnel.',
-                 ['**IBM Technology, What are Autoencoders?** The encoder, the bottleneck, the decoder — and why a network forced through a bottleneck learns what matters.',
-                  '- **UNet for Image Segmentation (Johannes Frey).** The denoiser\'s architecture: a funnel down, a funnel up, and shortcuts across so that fine detail survives. Built in 2015 to outline cells in microscope images.',
-                  'Neither was written for image generation. Both are inside every image model you will use today.'],
-                 images=['yt/qiUEgSCyY5o.jpg', 'yt/-dfSZ_uLfo8.jpg'],
-                 caption='On the course playlist, in this week\'s block. The mid-term draws on the autoencoder video.',
-                 body_size=27,
-                 notes='Two minutes. The point of showing them together: the two networks in the machine were borrowed. The autoencoder is an old idea for compression; the UNet was a medical-imaging tool. Diffusion put them in a loop. Cut if behind; both are homework.'))
+S.append(video('04 · IBM TECHNOLOGY · ON THE PLAYLIST', 'Two short ones: the squeeze, and the funnel.', 'qiUEgSCyY5o',
+               ['**What are Autoencoders?** The encoder, the bottleneck, the decoder — and why a network forced through a bottleneck learns what matters. The mid-term draws on it.',
+                '- **And the funnel:** [UNet for Image Segmentation, Johannes Frey](https://www.youtube.com/watch?v=-dfSZ_uLfo8), next on the playlist. A funnel down, a funnel up, shortcuts across so that fine detail survives. Built in 2015 to outline cells in microscope images.',
+                'Neither was written for image generation. Both are inside every image model you will use today.'],
+               thumb='yt/qiUEgSCyY5o.jpg', body_size=27,
+               notes='Two minutes. The point of showing them together: the two networks in the machine were borrowed. The autoencoder is an old idea for compression; the UNet was a medical-imaging tool. Diffusion put them in a loop. Play the IBM minute on the bottleneck if there is time; the UNet video is the link on the slide. Cut if behind; both are homework.'))
 
 S.append(timeline('04 · HOW WE GOT HERE', 'Ten years, from a physics idea to a poster tool.', [
     ('2015', 'Diffusion', 'Sohl-Dickstein and colleagues: destroy structure slowly, learn to reverse it.'),
-    ('2020', 'DDPM', 'Ho, Jain and Abbeel: a thousand steps, a UNet, photographs that fool people.'),
+    ('2020', 'DDPM', 'Ho, Jain and Abbeel: a thousand steps, a UNet, samples as good as a GAN\'s.'),
     ('2021', 'CLIP · LoRA', 'Words and pictures in one space (Radford et al.). LoRA: a small fine-tune (Hu et al.).'),
     ('2022', 'Stable Diffusion', 'Latent diffusion (Rombach et al.); released 22 August 2022, open weights, on a laptop.'),
     ('2023', 'ControlNet · ComfyUI', 'A rule laid over the model (Zhang, Rao, Agrawala). ComfyUI: the machine as a diagram.'),
@@ -469,7 +480,7 @@ S.append(question('multiple_choice', 'Where does Stable Diffusion\'s denoising r
 
 # ───────────────────────── 05 · off the prototype ─────────────────────────
 S.append(section('05', 'Off the prototype', 'a reference · a rule · a style · the chairs and the cups return', bg=INK,
-                 notes='Chapter five: week 1\'s edge chair, with the machinery to do it properly. Nine slides, then the break.'))
+                 notes='Chapter five: week 1\'s edge chair, with the machinery to do it properly. Eight slides, then the break.'))
 
 S.append(content('05 · WEEK 1 · THE MIDDLE', 'Ask for a chair. Get the middle, four times.',
                  ['The week-1 chairs: one prompt, four seeds. Now you know what the seeds are — four grids of noise — and why the chairs are cousins: the same walk, steered by the same points, from four different starting grids.',
@@ -531,7 +542,7 @@ S.append(statement('Break. Fifteen minutes.', eyebrow_text='AFTER THE BREAK · W
 
 # ───────────────────────── 06 · mediation ─────────────────────────
 S.append(section('06', 'Mediation', 'Ihde · Verbeek · four relations, three more, and their AI versions', bg=VIOLETS[0],
-                 notes='Chapter six, after the break: the reading. Verbeek\'s six pages, in nine slides, with an AI example for every relation. This is the vocabulary of the mediation brief in the group project.'))
+                 notes='Chapter six, after the break: the reading. Verbeek\'s six pages, in eight slides, with an AI example for every relation. This is the vocabulary of the mediation brief in the group project.'))
 
 S.append(quote('"Designing technology is designing human beings: robots, vacuum cleaners, smart watches — any technology creates specific relations between its users and their world, resulting in specific experiences and practices."',
                'Peter-Paul Verbeek, Beyond Interaction: A Short Introduction to Mediation Theory, Interactions 22(3), May–June 2015 — the core reading', size=60,
@@ -556,12 +567,12 @@ S.append(cards('06 · ONE MODEL, FOUR PRODUCTS', 'The same diffusion model, ship
 ], text_size=22, notes='The product designer\'s slide: the relation is not in the model, it is in the product, and you choose it. The same weights can be a tool, a display, a face or a setting. Each choice has its risk from the figure. For the group project, the mediation brief asks exactly this: which relation are you building, and what does it do to the person? Netflix next: a real one, chosen and measured.'))
 
 S.append(content('06 · NETFLIX · 7 DECEMBER 2017', 'The poster you saw was chosen for you.',
-                 ['"Artwork Personalization at Netflix", Netflix Tech Blog: Chandrashekar, Amat, Basilico and Jebara. The same title, several images; a model picks the one each member is most likely to click, and learns from the click (a contextual bandit).',
-                  '- Good Will Hunting: someone who watches romances sees Matt Damon and Minnie Driver; someone who watches comedies sees Robin Williams.',
+                 ['"Artwork Personalization at Netflix" (Netflix Tech Blog; Chandrashekar, Amat, Basilico and Jebara): one title, several images. A model picks the one each member is most likely to click, and learns from the click — a contextual bandit.',
+                  '- Good Will Hunting: a romance viewer sees Matt Damon and Minnie Driver; a comedy viewer sees Robin Williams.',
                   '- Pulp Fiction: a fan of Uma Thurman sees Uma; a fan of John Travolta sees John.',
-                  'Which relation? You read the catalogue off it: hermeneutic. Hidden, and mild: seductive, in Verbeek\'s terms. The poster designer now designs a space of images and the rule for choosing — and never sees the choice.'],
-                 body_size=27,
-                 notes='Verified: the post is from 7 December 2017 and both examples are in it. Two design readings. As mediation: hermeneutic — the picture is how you read the catalogue — and the influence is hidden and weak, which Verbeek calls seductive. As a job: the designer no longer makes one poster; they make a family and hand the choice to a model, and the choice is invisible to the viewer and to them. Ask: is this the same film? Is it the same catalogue for two people? The mediation brief in week 8 asks your product these questions.'))
+                  'Which relation? Hermeneutic: you read the catalogue off it. Hidden and mild: seductive, in Verbeek\'s terms. The designer now makes a family of images and a rule — and never sees the choice.'],
+                 figure=F.w05_netflix(), body_size=25,
+                 notes='The post is from 7 December 2017, and both examples are in it. Two design readings. As mediation: hermeneutic — the picture is how you read the catalogue — and the influence is hidden and weak, which Verbeek calls seductive. As a job: the designer no longer makes one poster; they make a family and hand the choice to a model, and the choice is invisible to the viewer and to them. Walk the figure: the family, the model, two viewers, and the click that teaches it. Ask: is this the same film? Is it the same catalogue for two people? The mediation brief in week 8 asks your product these questions.'))
 
 S.append(cards('06 · THE FORCE OF A MEDIATION', 'Hidden or apparent. Weak or strong.', [
     ('COERCIVE', 'Strong, apparent.', 'Verbeek: a turnstile; a car that will not start without the seat belt. AI: a model that refuses to generate; a filter that blocks the upload.'),
@@ -580,7 +591,7 @@ S.append(statement('A tool is never neutral. A model is a tool that also has a m
 
 # ───────────────────────── 07 · the layout workshop ─────────────────────────
 S.append(section('07', 'The layout workshop', f'a brief · two references · {GENAI} · Flux or Qwen', bg=INK,
-                 notes='Chapter seven: the tools for the activity. The brief, what a layout model decides, and the four questions to ask a generated page. Four slides, then the rounds.'))
+                 notes='Chapter seven: the tools for the activity. The brief, what a layout model decides, and the four questions to ask a generated page. Three slides, then the rounds.'))
 
 S.append(two_col('07 · THE BRIEF', 'One small real job. A poster you could design.',
                  ['The week-13 poster fair needs a poster. You briefed it in words last week; today an image model gives you a picture back — and you know what a layout should look like, so you can see what it decided.',
@@ -605,8 +616,8 @@ S.append(cards('07 · READ IT LIKE A DESIGNER', 'Four questions for a generated 
 ], text_size=22, notes='Week 4\'s four questions with the last one replaced: the mediation question. The TAs walk with these. The second question is the whole activity; the fourth is the bridge to the group project. Say that "which relation" has no wrong answer today, only a reason.'))
 
 # ───────────────────────── 08 · activity: the silent decisions ─────────────────────────
-S.append(section('08', 'The silent decisions.', f'35 minutes · one brief · {GENAI} · a layout, three ways', bg=YELLOWS[0],
-                 notes='The activity. One brief, three rounds: alone from the brief only; in pairs with two references; in fours iterating three times with a spec of what changed. Each round ends in ClassPoint; the last capture is an image whose caption is the decision the model made silently. Nicolò keeps time; Amber, WU Zhao and MA Jie walk with the four questions. One device per pair at least; pen and paper for round two.'))
+S.append(section('08', 'The silent decisions.', f'40 minutes · one brief · {GENAI} · a layout, three ways', bg=YELLOWS[0],
+                 notes='The activity. One brief, three rounds: alone from the brief only; in pairs with two references; in fours iterating three times with a spec of what changed. Each round ends in an image upload; the caption of the last one is the decision the model made silently. Nicolò keeps time; Amber, WU Zhao and MA Jie walk with the four questions. One device per pair at least; pen and paper for round two.'))
 
 S.append(activity('1 — ALONE · THE BRIEF ONLY', 5, 'Generate it from the brief.',
                   [f'Open **{GENAI}**, pick **Flux** or **Qwen-Image**. Paste the brief on the right, as it is, with "an A2 poster layout, flat, no photograph" in front.',
@@ -627,10 +638,11 @@ S.append(activity('2 — IN PAIRS · TWO REFERENCES', 8, 'Give it a grid and a c
                   panel=REFERENCES, panel_size=21, bg=YELLOWS[1],
                   notes='Eight minutes, one laptop per pair, pen and paper for the grid. The two references are the two handles from chapter five in miniature: the grid is a rule about geometry — ControlNet in words if there is no image input — and the colours are a constraint on the surface. Push them to say which reference did what. Expect the model to keep the centred title anyway: that is the middle winning over the reference, and it is worth saying aloud.'))
 
-S.append(question('multiple_choice', 'Compared with round 1, the references…', [
-    'Changed the layout, and we can say which reference did what', 'Changed the surface, not the geometry', 'Were mostly ignored: it did its own thing', 'Not back yet — help',
-], eyebrow_text='08 · PULSE · MULTIPLE CHOICE',
-    notes='Pulse, one minute; no correct answer, but A is the hoped-for one. B is the common honest answer: the colours landed, the grid did not — the middle keeps its grid. C means the reference was described too vaguely or the model has no image input; ask what words they used. Ds get a TA now.'))
+S.append(question('image_upload', 'Pairs: upload the layout with the references.',
+                  hint='One image per pair, the round-2 layout as it came. Caption: "grid: … · colours: …" — what each reference moved.',
+                  eyebrow_text='08 · CAPTURE 2 · IMAGE UPLOAD · ONE PER PAIR',
+                  cp={'type': 'image_upload', 'hide_names': False, 'caption_required': True},
+                  notes='One per pair, about 57 images, three minutes, caption required. Put this wall next to capture 1: the same brief, without and with references. Then the pulse, by hands: did the references change the layout, and can you say which did what (the hoped-for answer); only the surface, not the geometry (the common honest one: the colours landed, the grid did not — the middle keeps its grid); or were they mostly ignored (the reference was described too vaguely, or the model has no image input: ask what words they used)? Anyone still waiting for an image gets a TA now.'))
 
 S.append(activity('4 — TWO PAIRS · ITERATE, AND KEEP THE SPEC', 10, 'Three changes. Write each one down.',
                   ['Join the pair behind you. Pick the better round-2 layout. **Three iterations, one change each**, in three prompts. After each: what changed, in one line.',
@@ -641,9 +653,9 @@ S.append(activity('4 — TWO PAIRS · ITERATE, AND KEEP THE SPEC', 10, 'Three ch
 
 S.append(question('image_upload', 'Scribes only. The layout, and what it decided.',
                   hint='One image per four. Caption: the three changes, then "silent decision: …" — kept, or undone.',
-                  eyebrow_text='08 · CAPTURE 2 · IMAGE UPLOAD · ONE PER FOUR',
+                  eyebrow_text='08 · CAPTURE 3 · IMAGE UPLOAD · ONE PER FOUR',
                   cp={'type': 'image_upload', 'hide_names': False, 'caption_required': True},
-                  notes='Scribes only, about 28 images, caption required. Put the wall on screen next to capture 1. Read two captions aloud and ask the room to find the silent decision on the picture before you say it. Where the room finds a different one, both are right: the picture is full of them. Download the submissions: they are the seed of Challenge 4 and evidence for the reflection.'))
+                  notes='Scribes only, about 28 images, caption required. Put the wall on screen next to captures 1 and 2. Read two captions aloud and ask the room to find the silent decision on the picture before you say it. Where the room finds a different one, both are right: the picture is full of them. Download the submissions: they are the seed of Challenge 4 and evidence for the reflection.'))
 
 S.append(question('short_answer', 'Which relation did your layout tool create?',
                   hint='Embodiment, hermeneutic, alterity, background — or cyborg, immersion, augmentation. One word, then one line: why.',
@@ -658,15 +670,15 @@ S.append(content('08 · WHAT JUST HAPPENED', 'It laid out every page. You found 
                  body_size=31,
                  notes='Mirror of the whole class, and of weeks 1, 2 and 4: the cup, the spec, the brief, the layout. Say the last line slowly. Then the sentence for the reflection: an image model is machine B with a middle; every handle you used today was a rule laid over it or an example given to it; and the relation it made with you was chosen by whoever put it in a text box.'))
 
-# ───────────────────────── 09 · challenge 4 · homework ─────────────────────────
-S.append(cards('09 · CHALLENGE 4 · DUE BEFORE WEEK 6', 'A layout you could not design — generated, iterated, critiqued.', [
+# ───────────────────────── 08 · challenge 4 · homework ─────────────────────────
+S.append(cards('08 · CHALLENGE 4 · DUE BEFORE WEEK 6', 'A layout you could not design — generated, iterated, critiqued.', [
     ('THE LAYOUT', 'A poster or a page.', 'A real job of yours, or today\'s brief pushed somewhere you could not have taken it by hand. The brief and the references, kept.'),
     ('THE SPEC', 'What changed, each step.', 'v1 to v4 at least: one change per step, one line each. The model named. The seed, if the tool shows it.'),
     ('THE CRITIQUE', 'What it decided.', 'Three lines: the silent decisions you found, which you kept and why, and the relation the tool created with you — one of the seven.'),
     ('THE VOTE', 'All of it on Blackboard.', 'Layout, spec, critique, together. The room votes in week 6; winners get a star. TAs help 30 minutes before and after class.'),
 ], notes='Four things on Blackboard before week 6: the final layout with the brief and references, the spec of changes, the three-line critique, and the model named. The critique is the assignment; the layout is the evidence. Next week the room votes.'))
 
-S.append(video('09 · BEFORE WEEK 6 · SOUND MACHINES', 'One video, and a draft of your reflection.', 'bp7Qb8QY1Pw',
+S.append(video('08 · BEFORE WEEK 6 · SOUND MACHINES', 'One video, and a draft of your reflection.', 'bp7Qb8QY1Pw',
                ['**Watch, on the playlist:** AltexSoft, How AI Sound and Music Generation Works. Spectrograms, MIDI, and the same walk from noise — in sound.',
                 '- **Bring a draft of your reflection.** Next week the TAs check drafts: the rule-based versus adaptive argument, and three experiments from the challenges. Due in week 7.',
                 '- Next week also has the mock quiz: weeks 1 to 6 and the playlist.',
@@ -705,10 +717,12 @@ if __name__ == '__main__':
 #   https://netflixtechblog.com/artwork-personalization-c589f074ad76 (Good Will Hunting, Pulp Fiction examples; contextual bandits)
 #   https://www.dezeen.com/2017/12/20/netflix-targets-film-artwork-depending-users-viewing-habits-design-technology/
 # Sohl-Dickstein, Weiss, Maheswaranathan & Ganguli (2015). Deep Unsupervised Learning using Nonequilibrium Thermodynamics. https://arxiv.org/abs/1503.03585
-# Ho, Jain & Abbeel (2020). Denoising Diffusion Probabilistic Models. https://arxiv.org/abs/2006.11239 (T = 1000; β from 1e-4 to 0.02, linear)
+# Ho, Jain & Abbeel (2020). Denoising Diffusion Probabilistic Models. https://arxiv.org/abs/2006.11239 (T = 1000; β from 1e-4 to 0.02, linear;
+#   abstract: "On 256x256 LSUN, we obtain sample quality similar to ProgressiveGAN")
 # Ronneberger, Fischer & Brox (2015). U-Net: Convolutional Networks for Biomedical Image Segmentation. https://arxiv.org/abs/1505.04597
 # Radford et al. (2021). Learning Transferable Visual Models From Natural Language Supervision (CLIP). https://arxiv.org/abs/2103.00020 (400M pairs)
-# Ho & Salimans (2022). Classifier-Free Diffusion Guidance. https://arxiv.org/abs/2207.12598
+# Ho & Salimans. Classifier-Free Diffusion Guidance. arXiv 26 July 2022; "a short version of this paper appeared in the
+#   NeurIPS 2021 Workshop on Deep Generative Models and Downstream Applications" (the arXiv comments). https://arxiv.org/abs/2207.12598
 # Rombach, Blattmann, Lorenz, Esser & Ommer (2022). High-Resolution Image Synthesis with Latent Diffusion Models, CVPR 2022. https://arxiv.org/abs/2112.10752
 # Stable Diffusion: https://github.com/CompVis/stable-diffusion (factor-8 autoencoder, 860M UNet, CLIP ViT-L/14, 50 PLMS steps, scale 7.5)
 #   https://huggingface.co/CompVis/stable-diffusion-v1-4 (H × W × 3 → H/8 × W/8 × 4) · https://en.wikipedia.org/wiki/Stable_Diffusion (22 August 2022)

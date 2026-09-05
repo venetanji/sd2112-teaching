@@ -4,7 +4,7 @@ starts with w05_ / w05- (the generated files share one folder). Each figure expl
 the forward process (an image destroyed by noise, step by step), the training step (learn to undo one
 step), CLIP's shared space and its contrastive diagonal, the autoencoder and the latent, the whole
 text-to-image machine as a node graph (the ComfyUI diagram), pushing a model off its prototype, and
-Ihde's four human–technology relations with their AI versions.
+Ihde's four human–technology relations with their AI versions, and Netflix's artwork choice as a learning loop.
 
 W05_SHAPE is the 24 × 24 chair the noise sketch (w05-noise) also uses: the deck turns it into the JS array.
 Numbers on the figures: DDPM (Ho, Jain & Abbeel, 2020) trained with T = 1000 steps and a linear noise
@@ -100,7 +100,8 @@ def w05_forward(name='w05-forward', w=1680, h=560):
         if i < 5:
             _arrow(c, x + size + 8, y + size / 2 - 14, x + size + gap - 8, y + size / 2 - 14, MUTED, 3, 10)
             _arrow(c, x + size + gap - 8, y + size / 2 + 14, x + size + 8, y + size / 2 + 14, ORANGE, 3, 10)
-    c.text(0, 430, 'x_t = √(1 − t) · x₀  +  √t · ε        ε ~ gaussian noise, one number per pixel', size=22, color=INK)
+    c.text(0, 430, 'x_t = √(1 − t) · x₀ + √t · ε', size=22, color=INK)
+    c.text(480, 430, 'ε ~ gaussian noise, one number per pixel', size=20)   # its own text run: SVG collapses runs of spaces
     c.text(0, 470, 'grey arrows: forward, no learning — a rule. orange arrows: backward, one step at a time — a network learns each one.', size=18)
     c.text(0, 500, 'nothing is drawn: the picture is the noise, subtracted.', size=18)
     return c.finish(name)
@@ -470,4 +471,66 @@ def w05_relations(name='w05-relations', w=1680, h=560):
             c.text(x + 20, 390 + j * 22, ln, size=14, color=VIOLET)
         c.text(x + 20, 470, ['designed as a tool: it must vanish', 'designed as a display: it must be read', 'designed as a face: it must be trusted', 'designed as a setting: it is never seen'][i], size=13)
         c.text(x + 20, 492, ['the risk: you forget it decides', 'the risk: you mistake it for the world', 'the risk: you mistake it for a person', 'the risk: nobody is accountable'][i], size=13, color=ORANGE)
+    return c.finish(name)
+
+
+# ───────────────────────── 8 · Netflix: one title, several artworks, one choice per viewer ─────────────────────────
+def _frame(c, x, y, w, h, kind, label, color=INK):
+    """A small abstract 'artwork': two heads (a couple), one head (a face) or a horizon (a scene). Drawn, not a poster."""
+    c.rect(x, y, w, h, fill='#FFFFFF', stroke=color, width=2)
+    if kind == 'couple':
+        c.circle(x + w * 0.36, y + h * 0.42, h * 0.17, fill=color)
+        c.circle(x + w * 0.64, y + h * 0.42, h * 0.17, fill=color)
+        c.line(x + w * 0.2, y + h * 0.84, x + w * 0.8, y + h * 0.84, color, 4, cap='butt')
+    elif kind == 'face':
+        c.circle(x + w * 0.5, y + h * 0.4, h * 0.22, fill=color)
+        c.line(x + w * 0.3, y + h * 0.84, x + w * 0.7, y + h * 0.84, color, 4, cap='butt')
+    else:
+        c.line(x + w * 0.1, y + h * 0.62, x + w * 0.9, y + h * 0.62, color, 2)
+        c.circle(x + w * 0.72, y + h * 0.34, h * 0.12, stroke=color, width=2)
+    if label:
+        c.text(x, y + h + 20, label, size=13, color=INK)   # left-aligned: wider than the frame, must not clip at x = 0
+
+
+def w05_netflix(name='w05-netflix', w=800, h=720):
+    """Artwork personalization as a mechanism: a family of images → a model → one choice per viewer → the click teaches it."""
+    c = Canvas(w, h)
+    c.text(0, 30, 'ONE TITLE · SEVERAL ARTWORKS · ONE CHOICE PER VIEWER', size=16, color=ORANGE)
+    # the family the designer made
+    c.text(0, 76, 'THE FAMILY', size=15, color=INK)
+    c.text(0, 98, 'the designer makes several', size=13)
+    fw, fh = 120, 72
+    mx, my, mw, mh = 290, 170, 230, 200
+    for i, (kind, label) in enumerate([('couple', 'artwork A · the couple'), ('face', 'artwork B · the comedian'), ('scene', 'artwork C · the scene')]):
+        y = 120 + i * 120
+        _frame(c, 0, y, fw, fh, kind, label)
+        _arrow(c, fw + 8, y + fh / 2, mx - 6, my + mh / 2, MUTED, 2, 8)
+    # the model
+    c.rect(mx, my, mw, mh, fill=INK)
+    c.text(mx + mw / 2, my + 34, 'THE MODEL', size=16, anchor='middle', color='#FFFFFF')
+    c.text(mx + mw / 2, my + 58, 'a contextual bandit', size=13, anchor='middle', color='#B3B7BE')
+    c.text(mx + mw / 2, my + 96, 'in: what you watched', size=14, anchor='middle', color=TEAL)
+    c.text(mx + mw / 2, my + 120, 'out: which artwork to show', size=14, anchor='middle', color=TEAL)
+    c.text(mx + mw / 2, my + 164, 'learns from every click', size=14, anchor='middle', color=ORANGE)
+    # two viewers, two choices
+    vx = 600
+    for i, (who, kind, saw) in enumerate([('watches romances', 'couple', 'sees artwork A'), ('watches comedies', 'face', 'sees artwork B')]):
+        y = 150 + i * 150
+        c.text(vx, y - 34, f'VIEWER {i + 1}', size=13, color=INK)
+        c.text(vx, y - 14, who, size=13)
+        _frame(c, vx, y, fw, fh, kind, saw)
+        _arrow(c, mx + mw + 6, my + mh / 2, vx - 6, y + fh / 2, INK, 3, 10)
+    # the click goes back into the model: the loop
+    c.line(vx + fw / 2, 300 + fh + 34, vx + fw / 2, 450, ORANGE, 3, cap='butt')
+    c.line(vx + fw / 2, 450, mx + mw / 2, 450, ORANGE, 3, cap='butt')
+    _arrow(c, mx + mw / 2, 450, mx + mw / 2, my + mh + 4, ORANGE, 3, 10)
+    c.text((vx + mx + mw) / 2 + 20, 474, 'the click: the reward it learns from', size=14, anchor='middle', color=ORANGE)
+    # the reading
+    c.text(0, 530, 'WHICH RELATION?', size=15, color=INK)
+    c.text(0, 556, 'hermeneutic: you read the catalogue off the picture it chose', size=14, color=VIOLET)
+    c.text(0, 578, 'seductive: hidden and weak — you never see the other artworks', size=14, color=ORANGE)
+    c.text(0, 620, "THE DESIGNER'S JOB", size=15, color=INK)
+    c.text(0, 646, 'not one poster: a family of images and a rule for choosing,', size=14)
+    c.text(0, 668, 'and never the choice itself. Is it the same film for two people?', size=14)
+    c.text(0, 706, "Netflix Tech Blog, 7 December 2017. Frames drawn here, not Netflix's artwork.", size=13)
     return c.finish(name)
