@@ -303,7 +303,8 @@ html,body{background:#000B1C}
 .cp{position:absolute;left:1450px;top:908px;width:350px;height:92px;border:2px dashed #ED6D24;color:#ED6D24;font:500 22px/1 var(--font-m);letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:12px}
 .cp b{width:12px;height:12px;border-radius:50%;background:#ED6D24;display:inline-block}
 .embed.sketch{background:#fff}
-.embed.sketch .live{position:absolute;right:0;bottom:0;max-width:100%;box-sizing:border-box;white-space:nowrap;overflow:hidden;background:#000B1C;color:#fff;font:500 18px/1 var(--font-m);letter-spacing:.12em;text-transform:uppercase;padding:12px 16px;display:flex;align-items:center;gap:12px;pointer-events:none;opacity:.92}
+.embed.sketch .live{position:absolute;right:0;bottom:0;max-width:100%;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#000B1C;color:#fff;font:500 17px/1 var(--font-m);letter-spacing:.12em;text-transform:uppercase;padding:10px 14px;display:flex;align-items:center;gap:12px;pointer-events:none;opacity:.92;transition:opacity .5s}
+.embed.sketch .live.dim{opacity:.14}
 .embed.sketch .live b{width:10px;height:10px;border-radius:50%;background:#ED6D24;display:inline-block;animation:pulse 1.6s infinite}
 .embed.sketch .live a{color:#fff;text-decoration:none;pointer-events:auto;padding:0 4px;font-size:22px}
 @keyframes pulse{50%{opacity:.35}}
@@ -333,6 +334,14 @@ HTML_TMPL = """<!doctype html>
 Reveal.initialize({{width:1920,height:1080,margin:0,minScale:0.05,maxScale:4,center:false,hash:true,transition:'none',
   backgroundTransition:'none',controls:false,progress:true,slideNumber:false,plugins:[RevealNotes],
   pdfMaxPagesPerSlide:1,pdfSeparateFragments:false,keyboard:{{}}}});
+// the LIVE chip on a sketch shows its hint for four seconds, then fades so it does not cover the picture
+var dimTimer = null;
+function chips() {{
+  clearTimeout(dimTimer);
+  var all = document.querySelectorAll('.live'); all.forEach(function (c) {{ c.classList.remove('dim'); }});
+  dimTimer = setTimeout(function () {{ document.querySelectorAll('.present .live').forEach(function (c) {{ c.classList.add('dim'); }}); }}, 4000);
+}}
+Reveal.on('ready', chips); Reveal.on('slidechanged', chips);
 // a live sketch that has the keyboard focus relays the navigation keys (tools/deckgen.py SKETCH_TMPL)
 addEventListener('message', function (e) {{
   var d = e.data; if (!d || d.sd2112 !== 'key') return;

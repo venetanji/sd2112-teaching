@@ -19,7 +19,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import figures as F                                   # noqa: E402
 from deckgen import build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YELLOW, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS, MUTED  # noqa: E402
 from layouts import (title, end, agenda, section, statement, quote, content, cards, question, image_full,   # noqa: E402
-                     journey, activity, video, two_col, figure_slide, code_slide, finalize)
+                     journey, activity, video, two_col, figure_slide, code_slide, live, finalize)
 from course import SITE, PLAYLIST, GENAI, P5, JOURNEY  # noqa: E402
 
 FOOTER = 'SD2112 · AI IN DESIGN · WEEK 02'
@@ -124,6 +124,63 @@ function draw() {
   for (let a of pts)                   // all connected
     for (let b of pts)
       line(a[0], a[1], b[0], b[1]);
+}"""
+
+# ───────────────────────── interaction in the html deck (not shown on the code panels) ─────────────────────────
+# Appended to the sketch pages only: the code above stays what the students type; the mouse becomes the number.
+TEN_EXTRA = """function mousePressed() {            // new dice, same rule
+  pts.length = 0;
+  for (let i = 0; i < 10; i++) pts.push([random(600), random(600)]);
+  background(255); redraw();
+}"""
+
+SCHOTTER_EXTRA = """let gain = 1, moved = false;        // how much disorder: the mouse is the number
+function draw() {
+  background(255);
+  if (moved) gain = constrain(map(mouseX, 0, width, 0, 2), 0, 2);
+  for (let r = 0; r < rows; r++) {
+    let k = r / (rows - 1) * gain;
+    let d = k * s / 2, a = k * PI / 4;
+    for (let c = 0; c < cols; c++) {
+      push();
+      translate(20 + s * (c + 0.5), 20 + s * (r + 0.5));
+      translate(random(-d, d), random(-d, d));
+      rotate(random(-a, a));
+      square(-s / 2, -s / 2, s);
+      pop();
+    }
+  }
+  noStroke(); fill(0); textSize(13); textFont('JetBrains Mono');
+  text('disorder x ' + nf(gain, 1, 2), 20, 690); stroke(0); noFill();
+}
+function mouseMoved() { moved = true; randomSeed(seed); redraw(); }
+let seed = 1968;
+function mousePressed() { seed = floor(random(1e6)); randomSeed(seed); redraw(); }"""
+
+WALK_EXTRA = """let stay = 0.6, moved = false;      // the mouse sets the table: y = how sticky
+function next() {
+  if (moved) stay = constrain(map(mouseY, 0, height, 0.92, 0.1), 0.1, 0.92);
+  let p = random();
+  if (p < stay) return last;
+  if (p < stay + (1 - stay) * 0.6) return drift[last];
+  return floor(random(5));
+}
+function mouseMoved() { moved = true; background(255); last = 0; redraw(); label(); }
+function mousePressed() { background(255); last = 0; redraw(); label(); }
+function label() {
+  noStroke(); fill(0); textSize(13); textFont('JetBrains Mono');
+  text('stay ' + round(stay * 100) + '% · drift ' + round((1 - stay) * 60) + '% · jump ' + round((1 - stay) * 40) + '%', 20, 592);
+  stroke(0); noFill();
+}"""
+
+LEWITT_EXTRA = """function mousePressed() {            // the same words, new dice
+  pts.length = 0;
+  let cols = 10, rows = 5, w = width / cols, h = height / rows;
+  for (let i = 0; i < n; i++) {
+    let c = i % cols, r = floor(i / cols);
+    pts.push([c * w + random(w), r * h + random(h)]);
+  }
+  background(255); redraw();
 }"""
 
 TEMPLATE = [
@@ -346,12 +403,12 @@ S.append(figure_slide('04 · FRIEDER NAKE · WALK-THROUGH-RASTER · 1966', 'A ra
 
 S.append(code_slide('04 · WALK-THROUGH-RASTER · THE CHAIN AND THE REPERTOIRE', 'The next sign depends on the last one.', WALK_CODE_A, F.walk_through_raster(),
                     caption='Our execution, after Nake. The table — stay 60%, drift 25%, jump 15% — is the whole aesthetic. Change it and the fields dissolve or freeze.',
-                    code_size=19, sketch=('walk-through-raster', WALK_CODE, 600, 600),
+                    code_size=19, sketch=live('walk-through-raster', WALK_CODE, 600, 600, hint='mouse y = how sticky · click = new dice', extra=WALK_EXTRA),
                     notes='Two functions. next() is the Markov step: one throw of the die, three outcomes, and the outcome depends on last. sign() is the repertoire: nothing, a horizontal, a vertical, both, a small square. In the html deck this runs live: every visit to the slide is a new chain.'))
 
 S.append(code_slide('04 · WALK-THROUGH-RASTER · THE WALK', 'The walk writes the chain into the cells.', WALK_CODE_B, F.walk_through_raster(),
                     caption='Two loops walk the raster, row by row, cell by cell. At every cell the chain advances one step and the sign is drawn. Four hundred cells, four hundred throws of the die.',
-                    code_size=21, sketch=('walk-through-raster-2', WALK_CODE, 600, 600),
+                    code_size=21, sketch=live('walk-through-raster-2', WALK_CODE, 600, 600, hint='mouse y = how sticky · click = new dice', extra=WALK_EXTRA),
                     notes='The mapping in Nake\'s words: the first sign goes into the top-left cell, the second into the next, and so on. Ask what would change if the walk went down the columns instead — the fields would run vertically. The picture is the rule plus the walk plus the dice; only the dice are not yours.'))
 
 S.append(video('04 · HILLER & ISAACSON · UNIVERSITY OF ILLINOIS · 1957', 'A computer writes a string quartet.', 'n0njBFLQSk8',
@@ -411,7 +468,7 @@ S.append(content('06 · PROCESSING → P5.JS', 'Code as a sketchbook.',
 
 S.append(code_slide('06 · ANATOMY', 'setup() runs once. draw() runs the rule.', TEN_CODE, F.lewitt_ten(seed=7),
                     caption='(0,0) is the top-left corner; y grows downwards; random(600) is a number between 0 and 600. noLoop() draws once instead of sixty times a second.',
-                    sketch=('ten-points', TEN_CODE, 600, 600),
+                    sketch=live('ten-points', TEN_CODE, 600, 600, hint='click = new dice', extra=TEN_EXTRA),
                     notes='Read it top to bottom. setup: make a canvas, paint it white, say "once", then the rule: ten times, push a point at a random place. draw: for every pair, a line; then a dot on every point. Ten words: createCanvas, background, noLoop, for, random, push, stroke, line, fill, circle. That is the whole vocabulary for today.'))
 
 S.append(figure_slide('06 · RANDOM() · RANDOMSEED()', 'Same rule, three seeds.', F.lewitt_seeds(),
@@ -421,7 +478,7 @@ S.append(figure_slide('06 · RANDOM() · RANDOMSEED()', 'Same rule, three seeds.
 
 S.append(code_slide('06 · SCHOTTER · IN P5.JS', 'A grid is two loops. Disorder is one number.', SCHOTTER_CODE, F.schotter(),
                     caption='Twenty lines. The outer loop walks the rows, the inner loop the columns; k grows from 0 to 1 down the picture and scales both the shift and the turn.',
-                    code_size=21, sketch=('schotter', SCHOTTER_CODE, 400, 700),
+                    code_size=21, sketch=live('schotter', SCHOTTER_CODE, 400, 700, hint='mouse x = disorder · click = new dice', extra=SCHOTTER_EXTRA),
                     notes='Two loops make a grid — say that sentence twice, it is the most useful thing in generative art. push/translate/rotate/pop: move the pen to the cell, nudge it, turn it, draw a square, come back. The chance is two lines. Nees wrote this in ALGOL for a plotter; you have it in a browser tab.'))
 
 S.append(figure_slide('06 · CHANGE ONE NUMBER', 'The same rule. Which one is yours?', F.schotter_variations(),
@@ -468,7 +525,7 @@ S.append(two_col('07 · THE TEMPLATE', 'A prompt that is a spec.',
 
 S.append(code_slide('07 · WHAT GOOD LOOKS LIKE', 'Fifty points, all connected, from forty-five words.', LEWITT_CODE, F.lewitt_wall(),
                     caption='LeWitt\'s spec as twenty-two lines a model can write in seconds. Read it: where is the rule, where is the chance, where are the numbers?',
-                    code_size=21, sketch=('fifty-points', LEWITT_CODE, 800, 500),
+                    code_size=21, sketch=live('fifty-points', LEWITT_CODE, 800, 500, hint='click = new dice', extra=LEWITT_EXTRA),
                     notes='This is what should come back from the template filled with Wall Drawing 118. Notice the decision in the middle: "evenly distributed" became a grid with one point per cell, at random inside it. A model may make that decision, or may not — next slide. Either way you can read it, because it is machine A.'))
 
 S.append(figure_slide('07 · WHAT YOU SAID · WHAT YOU MEANT', '"At random", or "evenly distributed"?', F.lewitt_random_vs_even(),
