@@ -149,11 +149,9 @@ def w09_windows(name='w09-windows', w=1680, h=560):
         c.text(ox, 352, label, size=18, color=ORANGE)
         c.text(ox, 384, f'trained on {len(sample)} people · right in the window: {acc_win:.0f} %', size=18, color=INK)
         c.text(ox, 412, f'right in the world: {acc_world:.0f} %  ({wrong_world} red rings)', size=18, color=INK)
-    c.text(0, 470, '300 people, two colours, one hidden rule (the grey curve). Each team trained a straight line on what fell inside its window.',
+    c.text(0, 470, '300 people, two colours (teal / orange), one hidden rule: the grey curve. Each team trained a straight line on what fell inside its window.',
            size=18, color=MUTED)
-    c.text(0, 500, 'A red ring is a person the line gets wrong. The model knows the window, not the world.', size=18, color=MUTED)
-    c.text(w, 470, '● in the window: the training set', size=16, color=MUTED, anchor='end')
-    c.text(w, 500, 'teal / orange: the two kinds of person', size=16, color=MUTED, anchor='end')
+    c.text(0, 500, 'Ringed dots are the training set; a red ring is a person the line gets wrong. The model knows the window, not the world.', size=18, color=MUTED)
     return c.finish(name)
 
 
@@ -161,8 +159,8 @@ def w09_windows(name='w09-windows', w=1680, h=560):
 def w09_doors(name='w09-doors', w=1680, h=560):
     c = Canvas(w, h)
     boxes = [('THE WORLD', 'people, as they are', PAPER), ('THE DATA', 'the examples collected', TEAL_TINT),
-             ('THE LABELS', 'what each example is called', TEAL_TINT), ('THE MODEL', 'an objective, a threshold', ORANGE_TINT),
-             ('THE PRODUCT', 'a decision for each person', ORANGE_TINT)]
+             ('THE LABELS', 'the name of each example', TEAL_TINT), ('THE MODEL', 'an objective, a threshold', ORANGE_TINT),
+             ('THE PRODUCT', 'a decision per person', ORANGE_TINT)]
     bw, bh, y = 260, 110, 170
     xs = [40 + i * 340 for i in range(5)]
     doors = [('1 · DATA BIAS', 'who is in the dataset,', 'and who is not'),
@@ -232,8 +230,8 @@ def w09_threshold_anatomy(name='w09-threshold-anatomy', w=1680, h=560, t=60):
         c.text(tx + 12, base + 30, 'YES →', size=16, color=MUTED)
         fpr = 1 - _phi((t - mu_no) / sd)
         fnr = _phi((t - mu_yes) / sd)
-        c.text(ax0 + 120, 120, 'people who should get NO', size=16, color=MUTED)
-        c.text(ax1 - 120, 120, 'people who should get YES', size=16, color=TEAL, anchor='end')
+        c.text(ax0, 130, 'grey: should get NO', size=16, color=MUTED)
+        c.text(ax1, 130, 'teal: should get YES', size=16, color=TEAL, anchor='end')
         c.text(ox, 440, f'false YES (orange): {100 * fpr:.0f} % of the NO-people are let through', size=18, color=INK)
         c.text(ox, 470, f'false NO (dark teal): {100 * fnr:.0f} % of the YES-people are turned away', size=18, color=INK)
     c.text(0, 530, 'Same score, same threshold, same rule for everyone. The wider the curves, the more of both errors, and the two groups do not pay the same.',
