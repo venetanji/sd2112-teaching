@@ -147,12 +147,12 @@ def w11_belamy_chain(name='w11-belamy-chain', w=1680, h=560):
     c = Canvas(w, h)
     c.text(20, 44, 'WHO MADE EDMOND DE BELAMY? SIX HANDS, ONE SIGNATURE.', size=18, color=ORANGE)
     hands = [
-        ('MADE', 'The painters', ['14th – 19th century.', 'Fifteen thousand', 'portraits, one at a', 'time, by hand.'], TINT_GRAY),
+        ('MADE', 'The painters', ['14th – 20th century.', 'Fifteen thousand', 'portraits, one at a', 'time, by hand.'], TINT_GRAY),
         ('GATHERED', 'WikiArt', ['Scanned, tagged and', 'put online: the', 'dataset, before anyone', 'called it that.'], TINT_GRAY),
         ('INVENTED', 'Goodfellow · 2014', ['The GAN: a forger and', 'a critic, trained', 'against each other.', 'One loss function.'], TINT_TEAL),
         ('WROTE', 'Robbie Barrat · 2017', ['The code, on GitHub,', 'open source, trained', 'on portraits. He was', 'a teenager.'], TINT_TEAL),
-        ('CHOSE', 'Obvious · 2018', ['Ran the code. Kept', 'eleven. Printed one.', 'Signed it with the', 'loss function.'], TINT_ORANGE),
-        ('SOLD', 'Christie’s · 2018', ['25 October, New York.', 'Estimate $7,000 to', '$10,000. Hammer:', '$432,500.'], TINT_PINK),
+        ('CHOSE', 'Obvious · 2018', ['Ran the code. Kept', 'eleven. Sent one to', 'auction, signed with', 'the loss function.'], TINT_ORANGE),
+        ('SOLD', 'Christie’s · 2018', ['25 October, New York.', 'Estimate $7,000 to', '$10,000. Sold for', '$432,500 with premium.'], TINT_PINK),
     ]
     bw, gap, y0, bh = 240, 40, 100, 280
     for i, (tag, who, lines, tint) in enumerate(hands):
@@ -213,7 +213,7 @@ def w11_funnel(name='w11-funnel', w=1680, h=560):
     # the two brackets
     c.line(60, 470, 300, 470, MUTED, 3, cap='butt'); c.text(180, 500, 'THE MODEL’S WORK', size=16, color=MUTED, anchor='middle')
     c.line(430, 470, 1400, 470, ORANGE, 3, cap='butt'); c.text(915, 500, 'YOUR WORK: THE PICK IS THE AUTHORSHIP', size=16, color=ORANGE, anchor='middle')
-    c.text(w - 20, 540, 'Belamy: eleven kept, one printed. Netflix: several posters, one shown. Midjourney: four, and you press one.', size=15, color=MUTED, anchor='end')
+    c.text(w - 20, 540, 'Belamy: eleven kept, one sent to auction. Netflix: several posters, one shown. Midjourney: four, and you press one.', size=15, color=MUTED, anchor='end')
     return c.finish(name)
 
 
@@ -275,7 +275,7 @@ def w11_lora_mean(name='w11-lora-mean', w=1680, h=560):
 def w11_authorship_ladder(name='w11-authorship-ladder', w=1680, h=560):
     c = Canvas(w, h)
     steps = [
-        ('PROMPT', ['You typed. Even', '624 times, for 100', 'hours (Allen).'], ['not an author: a prompt', 'is an instruction; the', 'model decides the picture'], TINT_GRAY),
+        ('PROMPT', ['You typed. Even', '624 times, about', '80 hours (Allen).'], ['not an author: a prompt', 'is an instruction; the', 'model decides the picture'], TINT_GRAY),
         ('PICK', ['You chose one of', '64 and shipped it', 'as it came.'], ['the picked image is not', 'yours in law; a pick alone', 'is not a work'], TINT_GRAY),
         ('ARRANGE', ['You chose several', 'and composed them:', 'pages, a layout.'], ['the selection and the', 'arrangement are yours', '(Zarya, 2023); the images', 'inside are not'], TINT_YELLOW),
         ('MODIFY', ['You repainted,', 'cut, redrew what', 'came back.'], ['what you changed is', 'yours; the rest is not;', 'how much, case by case'], TINT_ORANGE),
@@ -322,56 +322,76 @@ def w11_authorship_ladder(name='w11-authorship-ladder', w=1680, h=560):
 
 # ───────────────────────── 5 · the A0 poster, and where the marks are ─────────────────────────
 def w11_poster_anatomy(name='w11-poster-anatomy', w=1680, h=560):
+    """The A0's four zones and the process strip, the rubric weight written on the zone it rewards, and the five
+    rubric rows beside it. Drawn at 1680 × 560 for a slide with no body, so nothing is scaled down."""
     c = Canvas(w, h)
-    px, py, pw, ph = 60, 20, 360, 509            # 841 × 1189 mm, at scale
+    px, py, pw, ph = 40, 16, 364, 515            # 841 × 1189 mm, portrait, at scale
     c.rect(px, py, pw, ph, fill=WHITE, stroke=INK, width=3)
-    # the zones
-    c.rect(px + 10, py + 10, pw - 20, 52, fill=INK)
-    c.text(px + 20, py + 42, 'TITLE · THE PRODUCT IN ONE SENTENCE · TEAM', size=11, color=WHITE)
-    zones = {
-        'research': (px + 10, py + 72, (pw - 30) / 2, 150, TINT_TEAL, 'RESEARCH'),
-        'concept': (px + 20 + (pw - 30) / 2, py + 72, (pw - 30) / 2, 150, TINT_YELLOW, 'CONCEPT'),
-        'decision': (px + 10, py + 232, pw - 20, 110, TINT_ORANGE, 'THE DECISION'),
-        'mediation': (px + 10, py + 352, pw - 20, 100, TINT_PINK, 'THE MEDIATION'),
-        'process': (px + 10, py + 462, pw - 20, 37, TINT_GRAY, 'PROCESS · roles · tools disclosed · sources · QR → video'),
-    }
-    for key, (x, y, zw, zh, tint, label) in zones.items():
-        c.rect(x, y, zw, zh, fill=tint)
-        c.text(x + 10, y + 22, label, size=12 if key != 'process' else 10, color=INK)
-    # research: sources; concept: the person and the moment
-    for k in range(4):
-        c.rect(px + 22, py + 104 + k * 26, 120 - k * 14, 12, fill=WHITE)
-    c.circle(px + 250, py + 130, 22, fill=WHITE, stroke=INK, width=2)
-    c.rect(px + 232, py + 160, 36, 46, fill=WHITE, stroke=INK, width=2)
-    # the decision: data → score → threshold → decision / fallback (week 8's anatomy)
-    dx, dy = px + 22, py + 270
-    for k, lab in enumerate(['data', 'score', 'line']):
-        c.rect(dx + k * 76, dy, 60, 36, fill=WHITE, stroke=INK, width=2)
-        c.text(dx + k * 76 + 30, dy + 23, lab, size=11, color=INK, anchor='middle')
-        if k < 2:
-            _arrow(c, dx + k * 76 + 62, dy + 18, dx + (k + 1) * 76 - 2, dy + 18, INK, 2, 7)
-    _arrow(c, dx + 214, dy + 18, dx + 246, dy + 6, INK, 2, 7); _arrow(c, dx + 214, dy + 18, dx + 246, dy + 32, INK, 2, 7)
-    c.text(dx + 252, dy + 10, 'decides', size=11, color=INK); c.text(dx + 252, dy + 36, 'fallback', size=11, color=MUTED)
-    # the mediation: four cells
-    for k, lab in enumerate(['relation', 'data', 'bias', 'guardrails']):
-        c.rect(px + 22 + k * 82, py + 384, 74, 54, fill=WHITE)
-        c.text(px + 59 + k * 82, py + 416, lab, size=11, color=INK, anchor='middle')
-    # the annotations, with the rubric weights, joined to the zones they reward
-    notes = [
-        ('30%', 'Research and context', ['Sources you read, products you compared, people you asked. Zone: RESEARCH.', 'Thin here is the most common way to lose marks.'], 'research', 60),
-        ('30%', 'Ethical and social impact', ['The mediation brief, drawn: the relation, the data, the bias register, the guardrails.', 'Zone: THE MEDIATION. Names, not adjectives.'], 'mediation', 150),
-        ('20%', 'Communication and poster', ['One sentence a stranger can read from three metres. One image of the moment.', 'Whole poster: hierarchy, not decoration.'], 'decision', 240),
-        ('10%', 'Video', ['3–5 minutes: how it works, for someone who has never seen it. A QR code in the strip.', 'Storyboard next slide.'], 'process', 330),
-        ('10%', 'Team and process', ['Who did what; which tools; what the model made and what you chose.', 'The process strip, and the process note.'], 'process', 420),
+    ix, iw = px + 10, pw - 20                     # the inner column
+    half = (iw - 10) / 2
+    # the title band, and the whole-poster mark on it
+    c.rect(ix, py + 10, iw, 50, fill=INK)
+    c.text(ix + 12, py + 41, 'TITLE · ONE SENTENCE · TEAM', size=15, color=WHITE)
+    c.text(ix + iw - 12, py + 41, '20%', size=20, color=ORANGE, anchor='end')
+    # the zones, each with its weight
+    zones = [
+        (ix, py + 70, half, 150, TINT_TEAL, 'RESEARCH', '30%'),
+        (ix + half + 10, py + 70, half, 150, TINT_YELLOW, 'CONCEPT', ''),
+        (ix, py + 230, iw, 104, TINT_ORANGE, 'THE DECISION', ''),
+        (ix, py + 344, iw, 110, TINT_PINK, 'THE MEDIATION', '30%'),
+        (ix, py + 464, iw, 41, TINT_GRAY, 'PROCESS · TOOLS · QR', '10% + 10%'),
     ]
-    for pct, head, lines, zone, y in notes:
-        c.text(520, y + 30, pct, size=34, color=ORANGE)
-        c.text(620, y + 12, head.upper(), size=16, color=INK)
-        _lines(c, 620, y + 40, lines, size=15, color=MUTED, lh=24)
-        x, zy, zw, zh, _t, _l = zones[zone]
-        _dashed(c, 500, y + 20, x + zw + 4, zy + zh / 2 + (12 if zone == 'process' and pct == '10%' and 'Team' in head else -12 if zone == 'process' else 0), MUTED, 2)
-    c.text(w - 20, 540, 'A0 is 841 × 1189 mm: three metres away it is one sentence and one picture; one metre away it is the research', size=15, color=MUTED, anchor='end')
-    c.text(px, py + ph + 24, '841 × 1189 mm, portrait', size=13, color=MUTED)
+    for x, y, zw, zh, tint, label, pct in zones:
+        c.rect(x, y, zw, zh, fill=tint)
+        c.text(x + 10, y + 26, label, size=16 if zh > 60 else 14, color=INK)
+        if pct:
+            c.text(x + zw - 10, y + 26, pct, size=20 if zh > 60 else 18, color=ORANGE, anchor='end')
+    # research: four sources; concept: the person and the moment
+    for k in range(4):
+        c.rect(ix + 12, py + 108 + k * 26, 118 - k * 14, 12, fill=WHITE)
+    cx = ix + half + 10 + half / 2
+    c.circle(cx, py + 134, 22, fill=WHITE, stroke=INK, width=2)
+    c.rect(cx - 18, py + 164, 36, 46, fill=WHITE, stroke=INK, width=2)
+    # the decision: data → score → line → decides, or falls back (week 8's anatomy)
+    dx, dy = ix + 12, py + 274
+    for k, lab in enumerate(['data', 'score', 'line']):
+        c.rect(dx + k * 70, dy, 56, 36, fill=WHITE, stroke=INK, width=2)
+        c.text(dx + k * 70 + 28, dy + 23, lab, size=14, color=INK, anchor='middle')
+        if k < 2:
+            _arrow(c, dx + k * 70 + 58, dy + 18, dx + (k + 1) * 70 - 2, dy + 18, INK, 2, 7)
+    _arrow(c, dx + 198, dy + 18, dx + 228, dy + 6, INK, 2, 7)
+    _arrow(c, dx + 198, dy + 18, dx + 228, dy + 32, INK, 2, 7)
+    c.text(dx + 234, dy + 11, 'decides', size=14, color=INK)
+    c.text(dx + 234, dy + 37, 'fallback', size=14, color=MUTED)
+    # the mediation: the four cells of the brief
+    cw_ = (iw - 24 - 8) / 2
+    for k, lab in enumerate(['relation', 'data', 'bias', 'guardrails']):
+        col, row = k % 2, k // 2
+        x, y = ix + 12 + col * (cw_ + 8), py + 378 + row * 38
+        c.rect(x, y, cw_, 32, fill=WHITE)
+        c.text(x + cw_ / 2, y + 21, lab, size=14, color=INK, anchor='middle')
+    # the QR code in the strip
+    qx, qy = ix + 190, py + 470                 # between the label and the weight
+    c.rect(qx, qy, 29, 29, fill=INK)
+    for (ox, oy) in ((4, 4), (18, 4), (4, 18)):
+        c.rect(qx + ox, qy + oy, 7, 7, fill=WHITE)
+    c.text(px, py + ph + 22, '841 × 1189 mm, portrait', size=15, color=MUTED)
+    # the rubric, row by row, with the zone each row reads
+    rows = [
+        ('30%', 'Research and context', ['Sources you read, products you compared, people you asked. Zone: RESEARCH.', 'Thin here is the most common way to lose marks.']),
+        ('30%', 'Ethical and social impact', ['The mediation brief, drawn: the relation, the data, the bias register, the guardrails.', 'Zone: THE MEDIATION. Names, not adjectives.']),
+        ('20%', 'Communication and poster', ['One sentence a stranger can read from three metres; one image of the moment.', 'The whole poster: hierarchy, not decoration.']),
+        ('10%', 'Video', ['3 to 5 minutes: how it works, for someone who has never seen it. A QR code in the strip.', 'Storyboard on the next slide.']),
+        ('10%', 'Team and process', ['Who did what; which tools; what the model made and what you chose.', 'The process strip, and the process note.']),
+    ]
+    for i, (pct, head, lines) in enumerate(rows):
+        y = 34 + i * 100
+        c.text(500, y + 32, pct, size=34, color=ORANGE)
+        c.text(600, y + 14, head.upper(), size=18, color=INK)
+        _lines(c, 600, y + 44, lines, size=16, color=MUTED, lh=25)
+        if i < len(rows) - 1:
+            c.rect(500, y + 84, 1160, 1, LINE)
+    c.text(w - 20, 548, 'A0 is 841 × 1189 mm: three metres away it is one sentence and one picture; one metre away it is the research and the mediation', size=16, color=MUTED, anchor='end')
     return c.finish(name)
 
 
@@ -398,7 +418,7 @@ def w11_storyboard(name='w11-storyboard', w=1680, h=560):
             c.circle(cx - 40, cy, 22, fill=WHITE, stroke=INK, width=3)
             c.line(cx + 10, cy - 30, cx + 60, cy + 30, ORANGE, 5); c.line(cx + 60, cy - 30, cx + 10, cy + 30, ORANGE, 5)
         elif i == 2:
-            c.rect(cx - 90, cy - 16, 50, 32, fill=WHITE, stroke=INK, width=2); c.text(cx - 65, cy + 6, 'data', size=13, color=INK, anchor='middle')
+            c.rect(cx - 90, cy - 16, 50, 32, fill=WHITE, stroke=INK, width=2); c.text(cx - 65, cy + 6, 'data', size=14, color=INK, anchor='middle')
             _arrow(c, cx - 36, cy, cx - 4, cy, INK, 2, 8)
             c.poly([(cx + 30, cy - 34), (cx + 64, cy), (cx + 30, cy + 34), (cx - 4, cy)], fill=TINT_ORANGE, stroke=INK, width=2)
             c.text(cx + 30, cy + 5, '?', size=16, color=INK, anchor='middle')

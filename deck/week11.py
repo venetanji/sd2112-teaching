@@ -441,7 +441,7 @@ S.append(section('06', 'The poster lab', 'A0 · four zones · six shots · one p
                  notes='Chapter six, short and practical: what the A0 poster is made of and where the marks sit; the video in six shots; the one-page mediation brief; and how to critique a draft. Twelve minutes, then the activity uses all of it.'))
 
 S.append(figure_slide('06 · THE A0', 'Four zones. The marks sit on two of them.', F.w11_poster_anatomy(),
-                      caption='Title band · RESEARCH and CONCEPT · THE DECISION (week 8’s anatomy, drawn) · THE MEDIATION (the brief, drawn) · the process strip with the QR code to the video. The rubric weights from the syllabus, on the zones they reward: sixty percent of the mark is in the two zones most drafts leave thin.',
+                      caption='Title band · RESEARCH and CONCEPT · THE DECISION (week 8’s anatomy, drawn) · THE MEDIATION (the brief, drawn) · the process strip with the QR code to the video. The rubric weights sit on the zones they reward: sixty percent of the mark is in the two zones most drafts leave thin.',
                       notes='Read the poster top to bottom, then the annotations. Title: the product in one sentence a stranger can read from the door. Research and concept side by side: what you found, and the person and the moment. The decision, drawn as week 8 drew it — data, score, line, decide or fall back — because a label saying "AI" is not a decision. The mediation: the four cells of the brief. The strip: roles, tools, sources, the QR code. Then point at the percentages: research thirty, ethics thirty. The two zones drafts leave thin are worth more than half the mark.'))
 
 S.append(cards('06 · THE FOUR ZONES', 'What goes in each.', [
