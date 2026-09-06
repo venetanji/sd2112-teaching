@@ -50,7 +50,7 @@ def w07_quiz_flow(name='w07-quiz-flow', w=1680, h=520):
         if i < len(lane1) - 1:
             _arrow(c, x + bw + 4, y + bh / 2, x + step - 6, y + bh / 2, INK, 3, 10)
     # the switch
-    c.text(20, 240, 'IF CLASSPOINT FAILS THE ROOM: GIO SAYS "BLACKBOARD" AND EVERYONE SWITCHES LANES TOGETHER. NOBODY SWITCHES ON THEIR OWN.', size=18, color=MUTED)
+    c.text(20, 240, 'IF CLASSPOINT FAILS THE ROOM: GIO SAYS "BLACKBOARD" AND EVERYONE SWITCHES LANES TOGETHER. NOBODY SWITCHES ALONE.', size=18, color=MUTED)
     # lane 2: Blackboard
     c.text(20, 290, 'THE FALLBACK · BLACKBOARD · A TEST WITH A TIMER · YOUR OWN PACE', size=18, color=TEAL)
     lane2 = [('OPEN THE TEST', ['Blackboard → SD2112', '→ Mid-term quiz', 'laptop or phone']),

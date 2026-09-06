@@ -6,10 +6,11 @@ SD2112 · Artificial Intelligence in Design · Week 07 — the slide spec.
     python tools/build_all.py        # everything, as the GitHub Actions workflows run it
 
 Mid-term: the Challenge 5 vote, the reflection (due today), the quiz on weeks 1–6 and the playlist
-(run in ClassPoint quiz mode, Blackboard as the fallback; the questions live in a separate quiz deck,
-not in this repository), the group project brief (40 %), sixty-second pitches, and teams of four or
-five. Two live sketches: the course so far on one line (rules ↔ examples), and a pitch timer; the
-same timer, set to twenty-five minutes, sits on the quiz placeholder slide.
+(run in ClassPoint quiz mode, Blackboard as the fallback; the twenty questions sit at the end of a
+local classroom copy of the PowerPoint, never in this repository), the group project brief (40 %),
+sixty-second pitches, and teams of four or five. Two live sketches: the course so far on one line
+(rules ↔ examples), and a pitch timer; the same timer, set to twenty-five minutes, sits on the quiz
+placeholder slide.
 """
 import sys
 from pathlib import Path
@@ -30,7 +31,7 @@ TWO_MACHINES_JS = """// The course so far, on one line: write the rule (left) or
 // The mouse is a product. Where it sits on the line decides what it is like, and which tool it is.
 const items = [
   [0.04, 'a grid system', 'snap to 8 px: a rule you set once, and every screen obeys it', 'week 2'],
-  [0.20, 'a parametric chair', 'chair(seat, back, angle, legs): six numbers, a million chairs, never a beanbag', 'week 1'],
+  [0.20, 'a parametric chair', 'chair(seat, width, back, angle, legs, splay): six numbers, a million chairs, never a beanbag', 'week 1'],
   [0.40, 'spell-check', 'a word list and four edits; the commonest candidate wins. Rules, plus a count', 'weeks 2 · 3'],
   [0.60, 'autocomplete', 'the next word, learned from what people typed: a small network on your phone', 'week 4'],
   [0.80, 'generative fill', 'a diffusion model trained on Adobe Stock invents what belongs in the hole', 'weeks 1 · 5'],
@@ -53,7 +54,7 @@ function draw() {
     let x = X0 + items[i][0] * (X1 - X0);
     if (abs(items[i][0] - t) < abs(items[near][0] - t)) near = i;
     noStroke(); fill(lerpColor(color(A), color(B), items[i][0])); circle(x, Y, 16);
-    fill(INK); textSize(15); textAlign(CENTER, BASELINE); text(items[i][1], x, Y - 24);
+    fill(INK); textSize(16); textAlign(CENTER, BASELINE); text(items[i][1], x, Y - 40);
   }
   noStroke(); textAlign(LEFT, BASELINE); textSize(18); fill(A); text('RULES · MACHINE A', X0, Y + 46);
   textAlign(RIGHT); fill(B); text('EXAMPLES · MACHINE B', X1, Y + 46);
@@ -61,7 +62,7 @@ function draw() {
   textAlign(RIGHT); text('show the examples · weeks 3 to 6', X1, Y + 68);
   // the marker: where the mouse says the product is
   let mx = X0 + t * (X1 - X0);
-  stroke(INK); strokeWeight(3); line(mx, Y - 60, mx, Y + 14);
+  stroke(INK); strokeWeight(3); line(mx, Y - 26, mx, Y + 30);
   noStroke(); fill(INK); circle(mx, Y, 26);
   // what it is like there: four pairs of words, the dot between them
   for (let k = 0; k < pairs.length; k++) {
@@ -119,7 +120,7 @@ function draw() {
     let on = t0 >= 0 && left > 0 && e >= acc / 60 * total && e < (acc + secs) / 60 * total;
     fill(on ? col : '#F4F4F2'); rect(bx, y, bw - 4, 60);
     fill(on ? '#FFFFFF' : '#000B1C'); textSize(15); textAlign(LEFT, CENTER); text(name, bx + 12, y + 30);
-    fill(on ? '#FFFFFF' : '#5C6470'); textSize(13); text(round(secs / 60 * total) + ' s', bx + 12, y + 50);
+    fill(on ? '#FFFFFF' : '#5C6470'); textSize(14); text(round(secs / 60 * total) + ' s', bx + 12, y + 50);
     acc += secs;
   }
   stroke('#000B1C'); strokeWeight(3); let mx = x0 + constrain(e / total, 0, 1) * w; line(mx, y - 12, mx, y + 72);
@@ -175,12 +176,12 @@ S.append(agenda('SD2112 · WEEK 07', [
 
 # ───────────────────────── 01 · last week, in your words ─────────────────────────
 S.append(section('01', 'Last week, in your words', 'challenge 5 · the reflection · the map', bg=INK,
-                 notes='Fifteen minutes: what you want back before the quiz, the last challenge vote, the reflection, and where we are.'))
+                 notes='Twelve minutes: what you want back before the quiz, the last challenge vote, the reflection, and where we are.'))
 
 S.append(question('word_cloud', 'The one idea you want back before the quiz.',
-                  hint='One word or two: "tokens", "CLIP", "Move 37", "Markov", "mediation". The biggest words get five minutes each, right before the quiz.',
+                  hint='One word or two: "tokens", "CLIP", "Move 37", "Markov", "mediation". The three biggest words get two minutes each, right before the quiz.',
                   eyebrow_text='01 · WARM-UP · WORD CLOUD',
-                  notes='ClassPoint word cloud, one word each, ninety seconds. This is the revision agenda: read the three biggest words and promise them five minutes each on the recap slide. Expect tokens, diffusion, CLIP, mediation, Markov. Keep the screenshot: the least-sure answers after the quiz will match it, and that is what week 8 opens with.'))
+                  notes='ClassPoint word cloud, one word each, ninety seconds. This is the revision agenda: read the three biggest words and promise them two minutes each on the recap slide. Expect tokens, diffusion, CLIP, mediation, Markov. Keep the screenshot: the least-sure answers after the quiz will match it, and that is what week 8 opens with.'))
 
 S.append(cards('01 · CHALLENGE 5 · FOUR ENTRIES · BY SPEC', 'Thirty seconds of sound.', [
     ('ENTRY A', 'The spec', '"a bike-share app · the lock clicks open · 3 s · marimba, no voice · the model added a reverb tail; kept"'),
@@ -199,9 +200,9 @@ S.append(content('01 · THE REFLECTION · 20% · DUE TODAY', 'The reflection is 
                   '- Evidence: at least three of your own experiments from the challenges of weeks 2 to 6, with images. The walls from class are on Blackboard.',
                   '- **The process note, at the end:** which tools you used to write it, and how. Allowed, expected, disclosed. A missing note costs one grade band on clarity and style.',
                   '- Invented citations fail the assignment. Check every reference before you press submit.',
-                  'Not submitted yet? Submit what you have before the quiz starts. The TAs\' desk is for uploads, not for edits.'],
+                  'Not submitted yet? Talk to Amber at the break. The TAs\' desk is for uploads, not for edits.'],
                  body_size=30,
-                 notes='Say the time out loud — Amber confirms it before class — and say what happens at that time: the assignment closes. The process note is the thing people forget: one paragraph, which model, for what, and what you changed. Programme policy on late work applies; ask before the deadline, not after. Anyone in trouble goes to Amber at the break, not now.'))
+                 notes='Say the time out loud — Amber confirms it before class. If the assignment closes during the class, say so now and once more at the break; if it closes later today, say the time and nothing more. The process note is the thing people forget: one paragraph, which model, for what, and what you changed. Programme policy on late work applies; ask before the deadline, not after. Anyone in trouble goes to Amber at the break, not now.'))
 
 S.append(journey('01 · THE SEMESTER', 'Where we are', JOURNEY, here=(2, 0),
                  notes='The middle of the semester. Six weeks of what AI is and how to use it in your own process are behind you; the quiz closes them. Six weeks of AI inside a product are ahead, and they are the group project: module three is what the product needs, module four is what is left for the designer, week 13 is the fair and the final quiz. Today is the hinge.'))
@@ -214,12 +215,12 @@ S.append(sketch_slide('02 · LIVE · SIX WEEKS ON ONE LINE', 'Six weeks in one p
                       live('w07-two-machines', TWO_MACHINES_JS, 1400, 500, hint='move the mouse along the line: the product changes, and so do its properties'),
                       body=['One line, two ends. Write the rule: exact, explainable, brittle, hand-written. Show the examples: fluent, opaque, typical, learned. Every tool from the six weeks sits somewhere on it, and most products are a mix. The quiz asks, twenty times, where.'],
                       caption='Grid system, parametric chair, spell-check, autocomplete, generative fill, a diffusion model: six products, one line. Spell-check is a word list and four edits plus a count of what people write; autocomplete is a small network trained on what people typed. The mix is the point.',
-                      notes='Walk the line slowly, left to right, and say the week for each stop: the grid and the chair are week 2 and week 1, spell-check is rules with a count, autocomplete is week 4 in your pocket, generative fill and the diffusion model are weeks 1 and 5. Then the words: at every stop ask which four words apply. Give the three biggest words from the warm-up cloud five minutes each here — tokens, CLIP, Markov, whatever they were — with the deck of that week open on the second screen. This is the last thing before the quiz; do not add new material.'))
+                      notes='Walk the line slowly, left to right, and say the week for each stop: the grid and the chair are week 2 and week 1, spell-check is rules with a count, autocomplete is week 4 in your pocket, generative fill and the diffusion model are weeks 1 and 5. Then the words: at every stop ask which four words apply. Give the three biggest words from the warm-up cloud two minutes each here — tokens, CLIP, Markov, whatever they were — with the deck of that week open on the second screen. This is the last thing before the quiz; do not add new material.'))
 
 S.append(figure_slide('02 · HOW IT WORKS', 'Twenty questions. Twenty-five minutes. One attempt.', F.w07_quiz_flow(),
                       body=['One idea, four choices, one right answer, weeks 1 to 6 and the playlist, in course order. On ClassPoint, one question at a time on the big screen and on your phone, about a minute each; a closed question stays closed. If ClassPoint fails the room we switch to a Blackboard test with the same questions and a 25-minute timer — only when Gio says so.'],
                       caption='Ten percent. The marks come from the ClassPoint summary, or from the Blackboard test, onto Blackboard within the week. The mock questions in week 6 were the model.',
-                      notes='Two lanes, one quiz. The plan is ClassPoint quiz mode: Nicolò opens the quiz deck with the add-in, each question is a multiple-choice activity in quiz mode, one right answer, auto-marked. Say the pace: about a minute per question, you answer once, then it closes and the next opens; there is no going back, so answer every question. The fallback is a Blackboard test with a timer, the same twenty questions in random order, one attempt, submitting itself at 25 minutes. Nobody switches lanes alone: if the room switches, everyone switches, and I say so.'))
+                      notes='Two lanes, one quiz. The plan is ClassPoint quiz mode: Nicolò jumps to the quiz slides at the end of the classroom copy, each question is a multiple-choice activity in quiz mode, one right answer, auto-marked. Say the pace: about a minute per question, you answer once, then it closes and the next opens; there is no going back, so answer every question. The fallback is a Blackboard test with a timer, the same twenty questions in random order, one attempt, submitting itself at 25 minutes. Nobody switches lanes alone: if the room switches, everyone switches, and I say so.'))
 
 S.append(cards('02 · TWO WAYS TO RUN IT · AND THE ROOM', 'The plan, the fallback, the rules.', [
     ('THE PLAN · CLASSPOINT', 'Quiz mode, on your phone.',
@@ -231,13 +232,13 @@ S.append(cards('02 · TWO WAYS TO RUN IT · AND THE ROOM', 'The plan, the fallba
     ('THE ROOM', 'Quiet, closed, face down.',
      ['Laptops closed unless we switch to Blackboard. No talking, no second screen, no notes, no chatbot.',
       'Late: you join at the question on screen; the closed ones stay closed. Finished: phone face down until the last question closes.']),
-], text_size=22, notes='Read the third card aloud, all of it. The TAs walk the aisles during the quiz: Nicolò drives the quiz deck, Amber, WU Zhao and MA Jie watch the room from the sides and the back. Someone arriving late joins at the question on screen and that is that — say it now so nobody argues later. Anyone whose phone dies borrows the TAs\' spare or moves to the Blackboard lane on a laptop at the front, on the TAs\' say.'))
+], text_size=22, notes='Read the third card aloud, all of it. During the quiz Nicolò drives the deck, Amber sits at the desk with the Blackboard fallback hidden and ready, WU Zhao and MA Jie walk the aisles from the back and the side. Someone arriving late joins at the question on screen and that is that — say it now so nobody argues later. Anyone whose phone dies borrows the TAs\' spare, or joins from classpoint.app in a laptop browser at the front on a TA\'s say. Nobody goes to Blackboard alone.'))
 
 S.append(sketch_slide('02 · THE QUIZ · 25 MINUTES', 'Quiz: open the ClassPoint quiz mode.',
                       live('w07-timer-quiz', QUIZ_TIMER_JS, 1400, 500, hint='click to start the clock · click again to reset · + and - change the length'),
-                      body=['The questions are in the quiz deck, not in this one. Nicolò opens it with the ClassPoint add-in; this clock stays on the second screen. Blackboard fallback: the test opens at Gio\'s word and closes itself 25 minutes later.'],
-                      caption='A placeholder. The twenty questions are never in the published deck; they live in the quiz deck on the classroom PC and in the Blackboard test, and change every year.',
-                      notes='Placeholder: this slide is what the room sees for a moment while Nicolò switches to the quiz deck. Start the clock with a click when question one opens; it turns orange at the last minute and red at zero. In the quiz deck: twenty multiple-choice slides in quiz mode, one right answer each, about a minute per question — Nicolò closes each question when the room has answered and opens the next. After the last question: phones face down, and come back to this deck for the next slide. If we are on Blackboard instead, this clock is the only thing on screen for 25 minutes.'))
+                      body=['The questions are not in this deck: in the classroom copy they sit after slide 34, and Nicolò jumps there from here and back after question twenty. This clock stays on the second screen. Blackboard fallback: the test opens at Gio\'s word and closes itself 25 minutes later.'],
+                      caption='A placeholder. The twenty questions are never in the published deck; they live at the end of the classroom copy on the PC and in the Blackboard test, and change every year.',
+                      notes='Placeholder: this slide is what the room sees for a moment while Nicolò types 35 and Enter to jump to the first quiz slide — the same slideshow, so nobody rejoins ClassPoint. Start the clock with a click when question one opens; it turns orange at the last minute and red at zero. The quiz slides: twenty multiple-choice slides in quiz mode, one right answer each, about a minute per question — Nicolò closes each question when the room has answered and opens the next. After the last question: phones face down, then 14 and Enter brings the deck back to the next slide. If we are on Blackboard instead, this clock is the only thing on screen for 25 minutes.'))
 
 S.append(question('short_answer', 'The question you were least sure about.',
                   hint='One line: the topic, or the number of the question. Names are hidden. It decides what week 8 opens with, and what the final quiz revisits.',
@@ -246,7 +247,7 @@ S.append(question('short_answer', 'The question you were least sure about.',
                   notes='Anonymous short answer, two minutes, straight after the quiz while it is fresh. Read six aloud, sorted by topic; do not give the answers yet — the marks are not out. Match the list against the warm-up cloud: the overlap is what week 8 opens with, and it is the revision list for the final quiz. Then the break.'))
 
 S.append(statement('Break. Fifteen minutes.', eyebrow_text='AFTER THE BREAK · THE GROUP PROJECT · PITCHES · TEAMS', size=120, bg=PAPER,
-                   notes='1:05. Anyone who has not submitted the reflection: Amber, now. Everyone who wants to pitch: your name on the list at the door before you come back — the TAs keep it, first come, first on. Bring one sentence.'))
+                   notes='1:00. Anyone who has not submitted the reflection: Amber, now. Everyone who wants to pitch: your name on the list at the door before you come back — the TAs keep it, first come, first on. Bring one sentence.'))
 
 # ───────────────────────── 03 · the group project ─────────────────────────
 S.append(section('03', 'The group project', '40% · four or five people · a poster, a video, one page · week 13', bg=ORANGES[0],
@@ -265,34 +266,34 @@ S.append(question('multiple_choice', 'Which of these is "a model deciding someth
 S.append(cards('03 · THREE DELIVERABLES · WEEK 13', 'A poster, a video, one page.', [
     ('A0 POSTER', 'The research and the concept.',
      ['Who the person is, what the model decides, what that does to them: the argument on a wall, readable from two metres, with the sources on it.',
-      'Rubric: research and context 30, poster 20.']),
+      'Rubric: research and contextual analysis 30; communication and poster design 20.']),
     ('VIDEO · 3 TO 5 MINUTES', 'How it works, for a stranger.',
      ['One person, one session, the decision being made and felt. Not a feature list; a story with a model in it. Shown at the fair on a loop.',
-      'Rubric: video 10.']),
+      'Rubric: video presentation 10.']),
     ('MEDIATION BRIEF · ONE PAGE', 'The relation, the data, the bias, the guardrails.',
      ['Four answers on one page, in the vocabulary of weeks 5, 9, 11 and 12. The part of the project that the ethics mark reads first.',
-      'Rubric: ethical and sociological impact 30. Team and process: 10.']),
-], text_size=22, notes='Three things on the wall in week 13, and a process log behind them. The poster carries the research: sources on the poster, not in a folder. The video is for someone who has never seen the product — one person, one session. The brief is one page and it is where the theory shows up: the relation, the data, the bias, the guardrails. Next slide, its anatomy.'))
+      'Rubric: ethical and sociological impact 30.']),
+], text_size=22, sub='Behind them, a process log: the evidence for the team-and-process ten percent.', notes='Three things on the wall in week 13, and a process log behind them. The poster carries the research: sources on the poster, not in a folder. The video is for someone who has never seen the product — one person, one session. The brief is one page and it is where the theory shows up: the relation, the data, the bias, the guardrails. Next slide, its anatomy.'))
 
 S.append(figure_slide('03 · THE MEDIATION BRIEF', 'One page. Four questions. Every answer has a week.', F.w07_brief_anatomy(),
                       body=['Which relation, and how hard does it push? What must the model know, and where from? Where is it wrong, and for whom? What may it not decide, and who answers when it does? One page, in the words of the course.'],
-                      caption='Ihde 1990 and Verbeek 2015 for the relation (week 5). Data, bias and the bias register: weeks 8 to 10. Guardrails, output curation and explainability: weeks 11 and 12. Draft due in week 11.',
-                      notes='Go section by section. The relation: one of Ihde\'s four or Verbeek\'s three, and its force — hidden or apparent, weak or strong; you did this for a layout tool in week 5, now do it for your product. The data: what it needs, given, taken or inferred, and consent; week 8 and week 9 give you the words. The bias: the four kinds and the bias register, week 9. The guardrails: what it may not decide, when a human is in the loop, how it fails in front of a person — weeks 11 and 12. The brief is due in draft in week 11; start it in week 8 with the proposal, because the proposal is its first two sections.'))
+                      caption='Ihde 1990 and Verbeek 2015 for the relation (week 5). Data, bias and the bias register: weeks 8 to 10. Guardrails, output curation and explainability: weeks 11 and 12. Due in week 11.',
+                      notes='Go section by section. The relation: one of Ihde\'s four or Verbeek\'s three, and its force — hidden or apparent, weak or strong; you did this for a layout tool in week 5, now do it for your product. The data: what it needs, given, taken or inferred, and consent; week 8 and week 9 give you the words. The bias: the four kinds and the bias register, week 9. The guardrails: what it may not decide, when a human is in the loop, how it fails in front of a person — weeks 11 and 12. The brief is due in week 11; start it in week 8 with the proposal, because the proposal is its first two sections.'))
 
 S.append(assessment('03 · THE RUBRIC · 40%', 'Five criteria.', [
-    ('30%', 'Research and context', 'Thorough, well-structured research from multiple credible sources; the product situated in the AI-and-design discourse.', False),
-    ('30%', 'Ethical and social impact', 'The mediation brief names the relation, the data, the bias and the guardrails convincingly; risks and opportunities, not generalities.', True),
-    ('20%', 'Poster design', 'Visually clear, engaging, professional; well organised; a balance of visuals and text.', False),
-    ('10%', 'Video', 'Clear, well paced; explains the product and its implications; polished.', False),
-    ('10%', 'Team and process', 'Strong shared effort; a transparent, documented process; roles clear. The scribe\'s log is the evidence.', False),
-], notes='Sixty percent of the mark is research and ethics, forty is craft. Say that slowly: this is not a prototype competition, and a beautiful poster for a shallow idea sits at C. The last ten percent is the one teams lose: a process log, who did what, when. That is the scribe\'s job, and today every team appoints one. The full rubric with the A, B and C bands is in the syllabus on the course site and on Blackboard.'))
+    ('30%', 'Research and contextual analysis', 'Thorough, well-structured research from multiple credible sources; the product situated in the AI-and-design discourse.', False),
+    ('30%', 'Ethical and sociological impact', 'The mediation brief names the relation, the data, the bias and the guardrails convincingly; risks and opportunities, not generalities.', True),
+    ('20%', 'Communication and poster design', 'Visually clear, engaging, professional; well organised; a balance of visuals and text.', False),
+    ('10%', 'Video presentation', 'Clear, well paced; explains the product and its implications; polished.', False),
+    ('10%', 'Team and process', 'Team collaboration and process documentation: strong shared effort; a transparent, documented process; roles clear. The scribe\'s log is the evidence.', False),
+], notes='Sixty percent of the mark is research and ethics, forty is craft. Say that slowly: this is not a prototype competition, and a beautiful poster for a shallow idea sits at C. The last ten percent is the one teams lose: a process log, who did what, when. That is the scribe\'s job, and today every team appoints one. The full rubric with the A, B and C bands, under these five names, is in the syllabus on the course site and on Blackboard.'))
 
 S.append(timeline('03 · WEEK BY WEEK', 'Six weeks, six milestones.', [
-    ('WEEK 8', 'Proposal', 'One page: the decision the product makes, for whom, with what data. Drafted in class, on Blackboard after it.'),
+    ('WEEK 8', 'Proposal', 'One page: the decision the product makes, for whom, with what data. Drafted before the class, finished in it, on Blackboard after it.'),
     ('WEEK 9', 'Concept board + bias register', 'The concept on a board. Where the data and the model are wrong, and for whom: a register, kept from now on.'),
     ('WEEK 10', 'Prototype v1', 'The interaction: paper, Figma or code. The decision, made and shown to one person.'),
     ('WEEK 11', 'Draft poster + mediation brief', 'The A0 in draft; the one page in full. Feedback from the TAs in the poster lab.'),
-    ('WEEK 12', 'Final poster and video', 'Ready. The mock poster session in class: three minutes per team, the room asks the four questions.'),
+    ('WEEK 12', 'Final poster and video', 'Ready. The mock poster session: two rounds, half the teams present, half review with the rubric card; one fix each.'),
     ('WEEK 13', 'The fair', 'A0 posters, 3 to 5 minute videos, peer and instructor feedback. Then the final quiz, same class.'),
 ], notes='One milestone a week, each one checked in class by the TAs; none of them is graded on its own, all of them feed the forty percent. The proposal is next week: one page, the three things in the pitch format. Week 13 is the fair and the final quiz in the same three hours, so the poster and the video are ready in week 12, not in week 13. Amber is the TA for the group project: feedback on work in progress, before and after every class.'))
 
@@ -309,13 +310,13 @@ S.append(sketch_slide('04 · LIVE · YOUR SIXTY SECONDS', 'Your sixty seconds.',
                       live('w07-timer', TIMER_JS, 1400, 500, hint='click to start · click again to reset · + and - change the length'),
                       body=['One click when you start. The ring drains; the bar underneath shows which beat you should be in. Orange at fifteen seconds, red at zero — and at zero you stop, mid-sentence if you must. The next person is already walking up.'],
                       caption='The timer counts the pitches done. Nicolò runs it from the html deck; + and − change the length in fifteen-second steps if the room is short of time.',
-                      notes='Nicolò clicks; the pitcher speaks; the room writes. Keep the rhythm brutal and kind: thank, next. Between pitches say the number and the pitcher\'s first name only, no more. Every five pitches, glance at the join answers coming in on the ClassPoint screen — if an idea is getting nothing, it may be the pitch, not the idea; say so gently at the end. At thirty pitches, or at 2:30, stop, whatever the list says; the leftovers pitch at their tables in the forming round.'))
+                      notes='Nicolò clicks; the pitcher speaks; the room writes. Keep the rhythm brutal and kind: thank, next. Between pitches say the number and the pitcher\'s first name only, no more. Every five pitches, glance at the join answers coming in on the ClassPoint screen — if an idea is getting nothing, it may be the pitch, not the idea; say so gently at the end. At thirty pitches, or at 2:21, stop, whatever the list says; the leftovers pitch at their tables in the forming round.'))
 
 S.append(question('short_answer', 'The idea you would join, in three words.',
                   hint='Submit as many times as you like, one line per idea, while the pitches run: "night bus · alarms · ward". The wall is the market for the next twenty minutes.',
-                  eyebrow_text='04 · WHILE THE PITCHES RUN · SHORT ANSWER · MULTIPLE SUBMISSIONS',
-                  cp={'type': 'short_answer', 'hide_names': False, 'multiple': True},
-                  notes='Open this activity before the first pitch and leave it open on the second screen through all of them; multiple submissions are on, so one person can name five ideas. After the last pitch put the wall up: the ideas with the most lines are the tables that will fill first, and the ones with none need a merger. Read the three most-named aloud. Names are shown, so the pitchers can find who wants them.'))
+                  eyebrow_text='04 · WHILE THE PITCHES RUN · SHORT ANSWER · ANONYMOUS · MULTIPLE SUBMISSIONS',
+                  cp={'type': 'short_answer', 'hide_names': True, 'multiple': True},
+                  notes='Open this activity before the first pitch and leave it open on the second screen through all of them; multiple submissions are on, so one person can name five ideas. After the last pitch put the wall up: the ideas with the most lines are the tables that will fill first, and the ones with none need a merger. Read the three most-named aloud. Names are hidden: the wall counts demand, and the walk to the numbered sheets does the matching.'))
 
 S.append(question('word_cloud', 'The domain of the idea you want to build. One word.',
                   hint='health · transport · food · music · learning · money · home · care · games · the city. The cloud shows where the room is going, and where nobody is.',
@@ -354,7 +355,7 @@ S.append(content('06 · GUEST LECTURE · IF CONFIRMED', 'A guest, when the slot 
                  notes='Placeholder, hidden or replaced on the day. If a guest is confirmed: swap this slide for their title slide, move it to right after the break, and tell Nicolò the pitch cap is twenty. The question to ask the guest in front of the room is the one on the loop: what did the model decide, and what did that do to people? That is the brief the teams just received, seen from the inside.'))
 
 S.append(content('06 · BEFORE WEEK 8', 'Bring the idea and the team.',
-                 ['**The team**, registered on Blackboard tonight: four or five people, a name, a scribe. Not registered by tomorrow: the TAs place you.',
+                 ['**The team**, on Blackboard (Groups) before you leave the room: four or five people, a name, a scribe. Not there by tomorrow: Amber registers you from your scribe\'s line.',
                   '**The proposal**, one page, drafted before the class and finished in it: the decision the product makes, for whom, with what data — the four beats of the pitch, written down. On Blackboard after week 8.',
                   '**One product** that decided something for you today — a feed, a route, a price, an autocomplete — and one line on what it decided. Week 8 opens with those.',
                   '**The quiz marks** on Blackboard within the week; the least-sure list opens week 8.',
@@ -380,7 +381,7 @@ if __name__ == '__main__':
         else:
             print(f'{k}: {v}')
 
-# Sources (consulted 5 September 2026)
+# Sources (consulted 5–6 September 2026)
 # Course facts (weights, deliverables, rubric, milestones, team size, the reflection and its process note, the playlist):
 #   syllabus/SD2112-syllabus-2026.md (this repository) and deck/week06.py (the mock quiz and the week-7 order announced there)
 # ClassPoint:
@@ -388,11 +389,22 @@ if __name__ == '__main__':
 #       the Quiz Summary with correct count and answer speed; export to Excel)
 #   https://www.classpoint.io/features/multiple-choice  (multiple choice is the only activity that runs in Quiz Mode)
 #   https://www.classpoint.io/features/timer-stopwatch  (the add-in's own countdown timer and stopwatch, docked or full screen)
+#   https://www.classpoint.io/blog/student-guide-to-classpoint  (students join at classpoint.app "on any browser with any device"
+#       with the class code and a name: the laptop-browser route for a dead phone)
 # Blackboard tests (the fallback lane):
-#   https://help.anthology.com/blackboard/instructor/en/assessments/tests.html  (Ultra: Time Limit, attempts, Access Code,
-#       Prohibit Late Submissions and New Attempts After Due Date, Proctored Assessments)
+#   https://help.anthology.com/blackboard/instructor/en/assessments/tests.html  (Ultra: the Tests landing page; the settings
+#       are on its sub-pages, below)
+#   https://help.anthology.com/blackboard/instructor/en/assessments/assessment-settings/time-limit.html  (whole minutes, 1 to 1440;
+#       "work is automatically saved and submitted when time expires", or extra time after the limit)
+#   https://help.anthology.com/blackboard/instructor/en/assessments/assessment-settings/presentation-options.html  (randomise
+#       questions; randomise answers for Multiple Choice and Multiple Answer questions)
+#   https://help.anthology.com/blackboard/instructor/en/assessments/assessment-settings/grading---submissions.html  (the number
+#       of attempts allowed)
 #   https://sites.reading.ac.uk/TEL-Support-Staff/blackboard-ultra-tests-settings/  (attempts allowed 1–10 or unlimited;
 #       randomise questions and answers; "work is automatically saved and submitted when the time expires")
+# The jump to the quiz slides (one slideshow, so the room never rejoins ClassPoint):
+#   https://support.microsoft.com/en-us/office/use-keyboard-shortcuts-to-deliver-powerpoint-presentations-1524ffce-bd2a-45f4-9a7f-f18b992b93a0
+#       ("Go to a specific slide: type the slide number, then press Enter")
 # The mediation brief's vocabulary:
 #   https://dl.acm.org/doi/10.1145/2751314  Verbeek, P.-P. (2015). Beyond interaction: a short introduction to mediation theory.
 #       Interactions 22(3), 26–31 (Ihde's four relations as schemas; cyborg, immersion, augmentation; visibility and force)
@@ -406,6 +418,9 @@ if __name__ == '__main__':
 #       (Gboard next-word prediction: a recurrent network trained on phones from what people type)
 #   https://research.google/blog/federated-learning-collaborative-machine-learning-without-centralized-training-data/
 #       (McMahan & Ramage, 6 April 2017)
-#   https://techcrunch.com/2023/05/23/adobe-brings-fireflys-generative-ai-to-photoshop/  (Generative Fill, 23 May 2023,
-#       Firefly trained on Adobe Stock, public-domain and openly licensed content)
+#   https://techcrunch.com/2023/05/23/adobe-brings-fireflys-generative-ai-to-photoshop/  (Generative Fill in the Photoshop beta,
+#       23 May 2023; Firefly trained on Adobe Stock photos and other commercially safe images)
+#   https://news.adobe.com/news/news-details/2023/adobe-unveils-future-of-creative-cloud-with-generative-ai-as-a-creative-co-pilot-in-photoshop
+#       (Adobe, 23 May 2023: Firefly "trained on Adobe Stock images, openly licensed content and other public domain content
+#       without copyright restrictions")
 #   The grid system, the parametric chair and the diffusion model: deck/week01.py, deck/week02.py, deck/week05.py
