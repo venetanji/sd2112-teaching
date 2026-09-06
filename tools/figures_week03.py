@@ -336,22 +336,23 @@ def w03_conceptual_space(name='w03-conceptual-space', w=1680, h=560):
     c.rect(ux, uy, uw, uh, fill=PAPER, stroke=INK, width=3)
     c.text(ux + 20, uy + 34, 'THE UNIVERSE · EVERY LEGAL MOVE', size=18, color=INK)
     cx, cy, rx, ry = 480, 310, 330, 160
-    _dashed_ellipse(c, cx + 80, cy - 10, rx + 190, ry + 78, VIOLET, 3)
+    # the space after 2016: wider than the human one and it holds move 37; kept clear of the labels and inside the box
+    _dashed_ellipse(c, 560, 305, 540, 190, VIOLET, 3)
     c.text(ux + uw - 20, uy + 34, 'dashed: the space after 2016. human Go, moved', size=17, anchor='end', color=VIOLET)
     _ellipse(c, cx, cy, rx, ry, fill=TEAL_TINT, stroke=TEAL, width=3)
     c.text(cx, cy - 100, 'THE CONCEPTUAL SPACE', size=18, anchor='middle', color=INK)
     c.text(cx, cy - 74, 'the moves people think are good · the rules R', size=16, anchor='middle', color=MUTED)
     for _ in range(60):
         a, r = rnd.uniform(0, 2 * math.pi), math.sqrt(rnd.random())
-        c.circle(cx + rx * 0.9 * r * math.cos(a), cy + 20 + ry * 0.75 * r * math.sin(a), 4, fill=INK)
-    c.text(cx, cy + 135, 'exploratory: search inside the space (T), keep what scores well (E)', size=16, anchor='middle', color=INK)
-    mx, my = 980, 160
+        c.circle(cx + rx * 0.88 * r * math.cos(a), cy + 30 + ry * 0.6 * r * math.sin(a), 4, fill=INK)
+    c.text(ux + 20, uy + uh - 16, 'exploratory: search inside the space (T), keep what scores well (E)', size=16, color=INK)
+    mx, my = 930, 195
     c.circle(mx, my, 14, fill=ORANGE)
-    c.text(mx, my - 30, 'MOVE 37', size=18, anchor='middle', color=ORANGE)
-    c.text(mx, my + 44, 'outside R, inside the game', size=16, anchor='middle', color=INK)
+    c.text(mx, my + 40, 'MOVE 37', size=18, anchor='middle', color=ORANGE)
+    c.text(mx, my + 64, 'outside R, inside the game', size=16, anchor='middle', color=INK)
     _arrow(c, cx + rx * 0.7, cy - 40, mx - 24, my + 14, ORANGE, 3, 12)
-    c.text(860, 300, 'transformational:', size=16, anchor='middle', color=ORANGE)
-    c.text(860, 324, 'the space itself moves', size=16, anchor='middle', color=ORANGE)
+    c.text(820, 300, 'transformational:', size=16, color=ORANGE)
+    c.text(820, 324, 'the space itself moves', size=16, color=ORANGE)
     # right: the vocabulary
     tx = 1200
     c.text(tx, 84, 'BODEN, 1990 / 2004', size=18, color=ORANGE)
