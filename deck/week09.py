@@ -107,8 +107,8 @@ function panel(s, w, wrongWin, wrongWorld) {
           : accWorld > 85 ? 'a fair sample: it learned the world' : 'a straight line; the world is curved';
     text(v, x, 384);
   }
-  if (locked) { fill('#ED6D24'); textSize(15); text('LOCKED · click to release', x, 470); }
-  else { fill(92, 100, 112); textSize(14); text('mouse = the window · click = lock it', x, 470); }
+  if (locked) { fill('#ED6D24'); textSize(15); text('LOCKED · click to release', x, 436); }
+  else { fill(92, 100, 112); textSize(14); text('mouse = the window · click = lock it', x, 436); }
 }
 function bar(x, y, label, v, col) {
   fill(0); textSize(16); text(label, x, y + 14);
@@ -171,7 +171,7 @@ function draw() {
 }
 
 function stats(r, t) {
-  let y = 404;
+  let y = 388;                                              // the verdict line stays clear of the deck's LIVE chip
   for (let g = 0; g < 2; g++) {
     let x = X0 + g * 640;
     noStroke(); fill(0); textSize(15); textAlign(LEFT, BASELINE); text('GROUP ' + (g + 1) + ' · threshold ' + t[g], x, y);
@@ -248,8 +248,8 @@ function draw() {
   fill(0); textSize(16);
   let done = STEPS.slice(0, L), lines = L == 0 ? ['nothing'] : [done.slice(0, 3).join(' · '), done.slice(3).join(' · ')].filter(s => s);
   lines.forEach((s, i) => text(s, x, 222 + i * 22));                            // three steps per line
-  fill('#ED6D24'); textSize(15); text('UNIQUE ROWS', x, 270);
-  fill(0); textSize(28); text(unique + ' of 12', x, 306);
+  fill('#ED6D24'); textSize(15); text('UNIQUE ROWS', x, 278);
+  fill(0); textSize(28); text(unique + ' of 12', x, 313);
   fill('#ED6D24'); textSize(15); text('A NEIGHBOUR WHO KNOWS YOU ARE 46, DISTRICT F, M', x, 356);
   fill(0); textSize(16);
   text(twins.length == 1 ? 'finds one row: ' + ROWS[YOU][3] + '. That is your diagnosis.' : 'narrows it to ' + twins.length + ' rows:', x, 382);
@@ -440,7 +440,7 @@ S.append(content('04 · EQUAL THRESHOLDS, OR EQUAL ERROR RATES', 'Choose which "
                   '- **A person in the loop.** Send the uncertain band to a human. Which human, how fast, and can they overrule the score?',
                   'Google’s 2016 explorable by Wattenberg, Viégas and Hardt let you drag the thresholds; our sketch is the small version.'],
                  body_size=28,
-                 notes='Four things a team can actually do, none of them free. One threshold is what you get by default, and the default is a decision too. Equal error rates is the sketch on the previous slide, click mode: it is a rule you add on top of machine B — machine A guarding machine B — and it shifts the cost onto the company, which is the incentive Hardt wants. A better model is the only real fix and takes months. A person in the loop is the one most products ship, and the register asks the two questions that make it real: who, and can they say no. Then the poll.'))
+                 notes='Four things a team can actually do, none of them free. One threshold is what you get by default, and the default is a decision too. Equal error rates is the sketch two slides back, click mode: it is a rule you add on top of machine B — machine A guarding machine B — and it shifts the cost onto the company, which is the incentive Hardt wants. A better model is the only real fix and takes months. A person in the loop is the one most products ship, and the register asks the two questions that make it real: who, and can they say no. Then the poll.'))
 
 S.append(question('multiple_choice', 'Your model is less sure about one group of users. What ships?', [
     'One threshold for everyone', 'A threshold per group, so the error rates match', 'Nothing, until the model is equally good', 'The uncertain cases go to a person',
@@ -549,7 +549,7 @@ S.append(question('short_answer', 'Team number, and the decision with the bigges
                   notes='Two minutes, scribes only, about 25 lines. Read four aloud and apply the first test to each: is it a verb and a person? "Personalises the experience" fails; "dims the lamp when it thinks she is tired" passes. A line that fails goes back to its team as the first row to fix. Keep the export: week 10 opens by asking every team for the guardrail of this same decision.'))
 
 S.append(activity('2 — TEAMS · THE REGISTER', 10, 'Fill the register for the three.',
-                  ['Three rows, five columns, on paper or in a shared doc. The template is on the right; the filled example is two slides back.',
+                  ['Three rows, five columns, on paper or in a shared doc. The template is on the right; the filled example is in chapter 07.',
                    'Rule: every cell names something concrete. "Users" is not a data source; "the 20 beta testers, all students" is. "Everyone" is not a thin group.',
                    'The TAs walk. Call one over if a cell has stayed empty for two minutes: the empty cell is usually the finding.'],
                   panel=REGISTER, panel_size=21, bg=YELLOWS[1],
