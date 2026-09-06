@@ -78,17 +78,17 @@ function draw() {
   let rx = RX;                                             // the right column: the count, the hovered, the chosen
   noStroke(); textAlign(LEFT, BASELINE);
   fill(0); textSize(18); text('CURATE', rx, 40);
-  fill('#ED6D24'); textSize(22); text(chosen.length + ' of 64 chosen', rx, 74);
-  fill('#5C6470'); textSize(16); text((64 - chosen.length) + ' discarded', rx, 98);
-  if (hover >= 0) { tile(tiles[hover], rx, 122, 150, '#5C6470'); noStroke(); fill(0); textSize(14); text('#' + (hover + 1) + '  ' + label(tiles[hover]), rx, 298); }
-  else { fill('#5C6470'); textSize(14); text('hover a tile: its numbers', rx, 150); }
+  fill('#5C6470'); textSize(14); text('click = choose, up to 3 · N = 64 new', rx, 64);
+  fill('#ED6D24'); textSize(22); text(chosen.length + ' of 64 chosen', rx, 100);
+  fill('#5C6470'); textSize(16); text((64 - chosen.length) + ' discarded', rx, 124);
+  if (hover >= 0) { tile(tiles[hover], rx, 146, 150, '#5C6470'); noStroke(); fill(0); textSize(14); text('#' + (hover + 1) + '  ' + label(tiles[hover]), rx, 322); }
+  else { fill('#5C6470'); textSize(14); text('hover a tile: its numbers', rx, 174); }
   for (let j = 0; j < chosen.length; j++) {
-    let t = tiles[chosen[j]], y = 350 + j * 118;
+    let t = tiles[chosen[j]], y = 372 + j * 112;
     tile(t, rx, y, 88, '#ED6D24'); noStroke();
     fill(0); textSize(14); text('#' + (chosen[j] + 1), rx + 104, y + 20);
     fill('#5C6470'); text(label(t), rx + 104, y + 46);
   }
-  noStroke(); fill('#5C6470'); textSize(14); text('click = choose, up to 3 · N = 64 new', rx, 740);
 }
 
 function mousePressed() {                                  // choose, or un-choose
@@ -108,17 +108,20 @@ function keyPressed() {                                    // N: the same rule, 
 DATASET_JS = """// A LoRA dataset toy. Thirty candidate images; each has five features: hue, stroke, roundness, size,
 // rotation. Click one to put it in the dataset (up to twelve); click again to take it out. The style
 // learned is the mean of the dataset, drawn large, plus the spread of every feature; every click draws
-// a new sample from mean ± spread. What you put in is what comes out.
+// a new sample from mean ± spread. What you put in is what comes out. Twelve of the thirty are drawn
+// close to one style (your round sketches); at rest eight of them are already in, so the bars are narrow.
 const N = 30, T = 84, G = 8, X0 = 20, Y0 = 44, FEAT = ['hue', 'stroke', 'round', 'size', 'rot'];
 const LO = { hue: 0, stroke: 1, round: 0, size: 0.4, rot: 0 }, HI = { hue: 1, stroke: 6, round: 1, size: 0.9, rot: 45 };
+const STYLE = [1, 4, 7, 12, 15, 18, 22, 26, 3, 10, 20, 28];   // the twelve of one style: round, orange, thin
 let cands = [], data = [], sampleSeed = 1;
 
 function setup() {
   createCanvas(1400, 600); textFont('JetBrains Mono'); randomSeed(11);
-  for (let i = 0; i < N; i++) cands.push({ hue: random(), stroke: random(1, 6), round: random(), size: random(0.4, 0.9), rot: random(45) });
-  data = cands.map((c, i) => i).sort((a, b) => score(cands[b]) - score(cands[a])).slice(0, 8);   // eight already in: one style
+  for (let i = 0; i < N; i++) cands.push(STYLE.includes(i)
+    ? { hue: random(0.8, 1), stroke: random(1.2, 2.2), round: random(0.75, 1), size: random(0.62, 0.78), rot: random(12) }   // one style
+    : { hue: random(), stroke: random(1, 6), round: random(), size: random(0.4, 0.9), rot: random(45) });                   // everything else
+  data = STYLE.slice(0, 8);                                // eight already in: one style, narrow bars
 }
-function score(c) { return c.hue + c.round - abs(c.stroke - 2) / 5; }   // round, orange, thin
 
 function tile(c, x, y, s, frame, bg) {                     // one image: a rounded square, rotated
   stroke(frame); strokeWeight(frame == '#ED6D24' ? 3 : 1); fill(bg || 255); rect(x, y, s, s);
@@ -233,7 +236,7 @@ S.append(section('01', 'Last week, in your words', 'the prototypes · the video 
 S.append(question('word_cloud', 'Edmond de Belamy: who made it? One word.',
                   hint='The video was the homework: Obvious’s own account of the portrait. One word — a name, a thing, a machine.',
                   eyebrow_text='01 · QUESTION · WORD CLOUD',
-                  notes='ClassPoint word cloud, one word each; leave it on screen for a minute. Expect: Obvious, algorithm, GAN, computer, nobody, Barrat if someone read further. Read the three biggest aloud and say nothing yet; the whole of chapter two is the answer, and the same question comes back as a vote on slide 12. Screenshot it. If the cloud is thin, the room did not watch a four-minute video; say so, without blame, and play a minute on slide 10.'))
+                  notes='ClassPoint word cloud, one word each; leave it on screen for a minute. Expect: Obvious, algorithm, GAN, computer, nobody, Barrat if someone read further. Read the three biggest aloud and say nothing yet; the whole of chapter two is the answer, and the same question comes back as a vote on slide 12. Screenshot it. If the cloud is thin, the room did not watch a thirty-four-second clip; say so, without blame, and play it on slide 10.'))
 
 S.append(cards('01 · PROTOTYPE V1 · WHAT CAME BACK', 'Three things we saw in your prototypes.', [
     ('THE SCREEN', 'Most of you drew the moment.', 'The screen where the decision lands — the card, the suggestion, the voice — was there in nearly every prototype. Good. That is the shot the video needs.'),
@@ -253,23 +256,23 @@ S.append(image_full('edmond-de-belamy.jpg', '2018 · OBVIOUS · EDMOND DE BELAMY
                     notes='Same slide as week 1, with the question turned round. Let the room look for ten seconds. A blurred face in a gilt frame, a printed canvas, a formula where the signature goes. Everything about it was a choice somebody made — the frame, the blur, the formula, the name — and none of the choices was the network’s. Hold that; the next slides name the hands.'))
 
 S.append(cards('02 · THE SALE', 'Four facts about a portrait.', [
-    ('25 OCTOBER 2018', 'Christie’s, New York.', 'The Prints & Multiples sale. Estimate $7,000 to $10,000; hammer $432,500. The first work made with a GAN sold at a major auction house, and the headline that put AI art in every newspaper.'),
-    ('ONE OF ELEVEN', 'La Famille de Belamy.', 'Eleven portraits of an invented French family, from one trained network. Edmond is the one Obvious printed, framed and sent to auction. The other ten stayed in the studio.'),
+    ('25 OCTOBER 2018', 'Christie’s, New York.', 'The Prints & Multiples sale. Estimate $7,000 to $10,000; hammered at $350,000, $432,500 with the buyer’s premium. The first work made with a GAN sold at a major auction house, and the headline that put AI art in every newspaper.'),
+    ('ONE OF ELEVEN', 'La Famille de Belamy.', 'Eleven portraits of an invented French family, from one trained network. Edmond is the one Obvious framed and sent to auction; Le Comte de Belamy had already sold privately, for €10,000, that February.'),
     ('THE SIGNATURE', 'A loss function.', 'Bottom right, where a painter signs: the formula every GAN is trained with — Ian Goodfellow’s, 2014. Belamy is a pun on his name: bel ami, good fellow. The signature credits the inventor of the method.'),
     ('THE CODE', 'Robbie Barrat, 2017.', 'Open source, on GitHub, already trained on portraits. Barrat was a teenager. On Twitter, the week of the sale: "Am I crazy for thinking that they really just used my network and are selling the results?"'),
-], text_size=21, notes='Four facts, all verifiable, and the fourth is the one the room has not heard. Obvious — Hugo Caselles-Dupré, Pierre Fautrel, Gauthier Vernier, Paris — found Barrat’s code on GitHub, ran it on fifteen thousand portraits from WikiArt, kept eleven outputs, printed one. Caselles-Dupré told The Verge that not much of the code had been modified. Nobody broke a licence; the code was open. The question is not legal yet. It is: which of these hands is the author?'))
+], text_size=21, notes='Four facts, all verifiable, and the fourth is the one the room has not heard. Obvious — Hugo Caselles-Dupré, Pierre Fautrel, Gauthier Vernier, Paris — found Barrat’s code on GitHub, ran it on fifteen thousand WikiArt portraits painted between the 14th and the 20th century, kept eleven outputs, sold Le Comte privately in February 2018 and sent Edmond to Christie’s in October. Caselles-Dupré told The Verge that not much of the code had been modified. Nobody broke a licence; the code was open. The question is not legal yet. It is: which of these hands is the author?'))
 
 S.append(video('02 · THE HOMEWORK · OBVIOUS · GENERATION OF EDMOND DE BELAMY', 'The makers’ own account.', 'Pu2GZ3du7PI',
-               ['Obvious’s video of the portrait being generated: the dataset, the training, the outputs, the print.',
+               ['Obvious’s thirty-four-second clip of the portrait being generated: the dataset, the training, the outputs, the print.',
                 '- Watch for what the video shows and what it does not: you see the network run; you do not see the moment somebody said "that one".',
                 '- Every generative story is told this way. The choosing is edited out, because it looks like nothing.'],
                thumb='yt/Pu2GZ3du7PI.jpg',
-               notes='Play one minute if the word cloud was thin; skip if it was full. The design point is the edit: the video shows the machine working and cuts the human deciding, because deciding is a person looking at a screen. That is the whole of chapter three. Cut this slide if behind.'))
+               notes='Play it — thirty-four seconds — if the word cloud was thin; skip if it was full. The design point is the edit: the video shows the machine working and cuts the human deciding, because deciding is a person looking at a screen. That is the whole of chapter three. Cut this slide if behind.'))
 
 S.append(figure_slide('02 · SIX HANDS', 'Six hands between the painters and the hammer.', F.w11_belamy_chain(),
                       body=['Read it left to right: made, gathered, invented, wrote, chose, sold. The network drew every stroke; every decision on this line was a person’s. The market paid the hand that chose.'],
-                      caption='The painters (14th to 19th century, via WikiArt); Goodfellow’s GAN (2014); Barrat’s code (2017); Obvious’s run, pick and print (2018); Christie’s hammer, 25 October 2018.',
-                      notes='Walk the boxes. The painters made the examples and never knew. WikiArt gathered them: a dataset before the word. Goodfellow invented the method: two networks, a forger and a critic, trained against each other, one loss function — the formula on the canvas. Barrat wrote and trained the code, openly. Obvious ran it, kept eleven, printed one, signed it with somebody else’s formula. Christie’s sold it. Ask: which box would you put your name in? Then the vote.'))
+                      caption='The painters (14th to 20th century, via WikiArt); Goodfellow’s GAN (2014); Barrat’s code (2017); Obvious’s run, pick and print (2018); Christie’s hammer, 25 October 2018.',
+                      notes='Walk the boxes. The painters made the examples and never knew. WikiArt gathered them: a dataset before the word. Goodfellow invented the method: two networks, a forger and a critic, trained against each other, one loss function — the formula on the canvas. Barrat wrote and trained the code, openly. Obvious ran it, kept eleven, sent one to auction, signed with somebody else’s formula. Christie’s sold it. Ask: which box would you put your name in? Then the vote.'))
 
 S.append(question('multiple_choice', 'Who is the author of Edmond de Belamy?', [
     'Obvious: they chose, printed, signed and sold it', 'Robbie Barrat: he wrote and trained the code', 'The painters of the fifteen thousand portraits', 'Nobody: a machine made it',
@@ -292,7 +295,7 @@ S.append(sketch_slide('03 · LIVE · CURATE', 'Sixty-four from one rule. Three o
                       notes='In the html deck this runs live; ask the room to call out numbers. Pick three yourself, saying why out loud — "the only one with a rhythm", "the one that would survive at stamp size", "the one that looks like a mistake and is not". Then press N and do it again: the taste survives the batch, the tiles do not. Every tile obeys the rule equally; the rule cannot rank them. Ranking is what you are for. Then hand it to the room in the activity.'))
 
 S.append(figure_slide('03 · THE FUNNEL', 'From sixty-four to one. Where the taste is.', F.w11_funnel(),
-                      body=['Generate wide: that is the model’s work, and it is cheap. Discard, shortlist, ship: that is yours, and it is the whole of the authorship. Belamy: eleven kept, one printed.'],
+                      body=['Generate wide: that is the model’s work, and it is cheap. Discard, shortlist, ship: that is yours, and it is the whole of the authorship. Belamy: eleven kept, one sent to auction.'],
                       caption='The tiles follow the same rule as the sketch. 52 gone at the first pass (the wrong, the same, the unsafe); three with a written reason each; one with your name on it.',
                       notes='Four stages, and only the first belongs to the machine. Discard is fast and mostly negative: wrong, duplicate, unsafe. Shortlist is where the reasons get written, and the reasons are what you can show a client, a jury, a court. Ship is one, and you answer for it. Ask the room where they usually stop: most people stop at "that one’s nice", which is a discard without a shortlist. The written reason is the difference between taste and luck.'))
 
@@ -335,8 +338,8 @@ S.append(figure_slide('04 · A STYLE IS TWENTY IMAGES', 'What you put in is what
 
 S.append(sketch_slide('04 · LIVE · THE DATASET', 'Put twelve in. Watch what it learns.',
                       live('w11-dataset', DATASET_JS, 1400, 600, hint='click = into the dataset, up to twelve · click again = out'),
-                      caption='Thirty candidates, five features each. The dataset at the bottom; the style learned on the right: the mean, the spread of every feature, and one sample from mean ± spread on every click. Take out the odd ones and watch the bars shrink.',
-                      notes='Start from the eight already in — one style, narrow bars. Add three images that do not belong and the mean drifts, the bars go orange, the sample turns to muddle. Take them out. Then build the opposite: twelve that agree on nothing. The lesson is the bars: a dataset teaches what its images agree on, and leaves free what they do not. Ask: what should your team’s dataset agree on? That is the activity’s "what this teaches".'))
+                      caption='Thirty candidates, five features each; twelve of them from one style, eight already in. The dataset at the bottom; the style learned on the right: the mean, the spread of every feature (teal: narrow, orange: loose), and one sample from mean ± spread on every click.',
+                      notes='Start from the eight already in — one style, five teal bars. Add three images that do not belong and the mean drifts, the bars go orange, the sample turns to muddle. Take them out; put in the four that do belong and the bars stay teal. Then build the opposite: twelve that agree on nothing. The lesson is the bars: a dataset teaches what its images agree on, and leaves free what they do not. Ask: what should your team’s dataset agree on? That is the activity’s "what this teaches".'))
 
 S.append(cards('04 · HOW TO BUILD ONE', 'Twenty images, deliberately chosen.', [
     ('ONE THING IN COMMON', 'The style is the agreement.', 'Every image shares the thing you want learned — a line, a palette, a way of framing — and the model learns exactly that. Twelve that agree teach more than a hundred that do not.'),
@@ -348,7 +351,7 @@ S.append(cards('04 · HOW TO BUILD ONE', 'Twenty images, deliberately chosen.', 
 S.append(content('04 · LAION-5B · 2022', '5.85 billion pairs. Nobody chose them.',
                  ['The dataset behind most open image models: 5.85 billion image–text pairs, scraped from Common Crawl, kept if a model thought the alt-text matched the picture. Released March 2022; its makers called it uncurated, for research, not for products.',
                   '- December 2023: Stanford’s Internet Observatory found more than a thousand confirmed images of child sexual abuse in it. LAION took it down. August 2024: Re-LAION-5B, with 2,236 links removed.',
-                  '- Nobody in it consented. Spawning’s Have I Been Trained lets people search it and register an opt-out; by 2023 about eighty million works had opted out of the next round of training.',
+                  '- Nobody in it consented. Spawning’s Have I Been Trained lets people search it and register an opt-out; by March 2023 about eighty million works had opted out — most of them in bulk, by platforms such as ArtStation and Shutterstock.',
                   'Week 9 called it the window. This week it is the example of a dataset nobody curated — and the reason yours must be.'],
                  body_size=30,
                  notes='The counter-example to the twenty images. Nobody chose five billion; a similarity score did. Two consequences. The middle: week 9’s chairs and week 1’s cups came from this window, and the middle of five billion captions is a very particular middle. The floor: an uncurated scrape contains the worst of the web, which is why it was pulled in December 2023 and rebuilt eight months later. Opt-outs exist and are honoured by some trainers; they are not consent. Your dataset of twenty is the opposite object: every image chosen, every owner known.'))
@@ -385,9 +388,9 @@ S.append(cards('05 · THE OUTPUT SIDE', 'Who owns what comes out. Four positions
      'Kris Kashtanova’s graphic novel, images by Midjourney. The Office’s letter of 21 February 2023: the text and the selection, coordination and arrangement are protected; the individual images are not, because she lacked control over what came out.'),
     ('USCO · JANUARY 2025', 'Prompts alone are not authorship.',
      'Part 2 of the Office’s AI report: a prompt, however long, is an instruction and does not control the expression. Human authorship survives in what you select, coordinate, arrange or modify — case by case. No new law needed.'),
-    ('ALLEN · 2022 – PENDING', '624 prompts, 100 hours, one refusal.',
+    ('ALLEN · 2022 – PENDING', '624 prompts, about 80 hours, one refusal.',
      'Théâtre D’opéra Spatial won a Colorado State Fair prize in 2022. The Office refused registration in 2023; Allen sued in September 2024; briefing ended in early 2026 and a ruling was awaited when this deck was written. The test case for "but I worked at it".'),
-], text_size=20, notes='Four positions, one direction. The machine is never the author; the person is, exactly to the extent of what they chose, arranged and changed. Zarya is the one designers should know by heart: the book is hers, the pages’ arrangement is hers, each picture is nobody’s. Allen is the honest hard case — six hundred prompts is real labour — and the Office’s answer is that labour at the prompt is not control of the picture. Check the Colorado docket (Allen v. Perlmutter, 1:24-cv-02665) before class: a ruling was expected in 2026 and the card must say what it held. The ladder on the next slide puts your own work on this scale.'))
+], text_size=20, notes='Four positions, one direction. The machine is never the author; the person is, exactly to the extent of what they chose, arranged and changed. Zarya is the one designers should know by heart: the book is hers, the pages’ arrangement is hers, each picture is nobody’s. Allen is the honest hard case — 624 prompts and about eighty hours, by his own account to the press in 2022, is real labour — and the Office’s answer is that labour at the prompt is not control of the picture. Check the Colorado docket (Allen v. Perlmutter, 1:24-cv-02665) before class: a ruling was expected in 2026 and the card must say what it held. The ladder on the next slide puts your own work on this scale.'))
 
 S.append(figure_slide('05 · THE LADDER', 'Where a human author begins.', F.w11_authorship_ladder(),
                       body=['Five things you might have done, and what the 2025 US position says about each. The line the law draws is the line the rubric draws: what you chose, arranged, changed and made.'],
@@ -420,7 +423,7 @@ S.append(content('05 · TRANSFORMATIVE, FOR A DESIGNER', 'New purpose, not a sub
                   '- Your pick of one output is neither: it is a choice, and the law does not protect it. Your arrangement, your changes and your own drawings are, and it does.',
                   'Two questions before anything ships: would the person whose work is in it recognise theirs? And does it do their job?'],
                  body_size=29,
-                 notes='The word "transformative" comes from a 1994 Supreme Court case about a parody song and was made the centre of fair use by Google Books. Give the room the two questions and stop there; they are enough for a poster and a process note. The second question is the market one and the one the AI cases turn on. Then the process note: the practical instrument that answers all of this for your project.'))
+                 notes='The word "transformative" was adopted by the Supreme Court in 1994, in a case about a parody song (Campbell v. Acuff-Rose), from a 1990 Harvard Law Review article by Pierre Leval — the judge who later wrote the Google Books opinion. Give the room the two questions and stop there; they are enough for a poster and a process note. The second question is the market one and the one the AI cases turn on. Then the process note: the practical instrument that answers all of this for your project.'))
 
 S.append(cards('05 · YOUR PROCESS NOTE', 'What the law protects, the rubric grades.', [
     ('WHAT YOU USED', 'Name the tools.', 'Which model, which version, for which part: the images, the text, the video, the code. The course rule since week 1: allowed, disclosed. A tool left out of the note is the only way to fail this.'),
@@ -438,8 +441,7 @@ S.append(section('06', 'The poster lab', 'A0 · four zones · six shots · one p
                  notes='Chapter six, short and practical: what the A0 poster is made of and where the marks sit; the video in six shots; the one-page mediation brief; and how to critique a draft. Twelve minutes, then the activity uses all of it.'))
 
 S.append(figure_slide('06 · THE A0', 'Four zones. The marks sit on two of them.', F.w11_poster_anatomy(),
-                      body=['841 by 1189 millimetres. Three metres away it is one sentence and one picture; one metre away it is the research and the mediation. Sixty percent of the mark is in the two zones most drafts leave thin.'],
-                      caption='Title band · RESEARCH and CONCEPT · THE DECISION (week 8’s anatomy, drawn) · THE MEDIATION (the brief, drawn) · the process strip with the QR code to the video. Rubric weights from the syllabus.',
+                      caption='Title band · RESEARCH and CONCEPT · THE DECISION (week 8’s anatomy, drawn) · THE MEDIATION (the brief, drawn) · the process strip with the QR code to the video. The rubric weights from the syllabus, on the zones they reward: sixty percent of the mark is in the two zones most drafts leave thin.',
                       notes='Read the poster top to bottom, then the annotations. Title: the product in one sentence a stranger can read from the door. Research and concept side by side: what you found, and the person and the moment. The decision, drawn as week 8 drew it — data, score, line, decide or fall back — because a label saying "AI" is not a decision. The mediation: the four cells of the brief. The strip: roles, tools, sources, the QR code. Then point at the percentages: research thirty, ethics thirty. The two zones drafts leave thin are worth more than half the mark.'))
 
 S.append(cards('06 · THE FOUR ZONES', 'What goes in each.', [
@@ -470,7 +472,7 @@ S.append(cards('06 · THE CRITIQUE PROTOCOL', 'Three moves, eight minutes, no de
 ], notes='The same rule as week 9’s red pen: no defending. Critique is fast when it is structured and endless when it is not; three moves, one sticky note. The sticky note is the caption of the last upload, which is how the fix survives the afternoon. Then the activity.'))
 
 # ───────────────────────── 07 · activity: curate, assemble, critique ─────────────────────────
-S.append(section('07', 'Curate. Assemble. Critique.', '33 minutes · your team · the sketch · your images · your draft', bg=YELLOWS[0],
+S.append(section('07', 'Curate. Assemble. Critique.', '36 minutes · your team · the sketch · your images · your draft', bg=YELLOWS[0],
                  notes='The activity: three rounds, each ending in ClassPoint. Curate three of sixty-four and write why; assemble a twelve-image dataset of a style you own and say what it teaches; swap draft posters with the next team and give one fix. Nicolò keeps time; Amber, WU Zhao and MA Jie walk. One laptop per team for the sketch (the course site, week 11, the curate sketch opens on its own from the LIVE chip), phones for the images.'))
 
 S.append(activity('1 — TEAMS · CURATE', 6, 'Pick three of sixty-four. Say why.',
@@ -526,14 +528,14 @@ S.append(cards('08 · DUE · BLACKBOARD', 'Two things tonight. Two for next week
     ('MEDIATION BRIEF', 'Tonight.', 'One page, five headings — relation, data, bias, guardrails, process note. Gaps marked with a question mark are fine; a missing heading is not.'),
     ('FINAL POSTER AND VIDEO', 'For week 12’s mock session.', 'The A0 at A3 for the mock, printed; the video, 3 to 5 minutes, six shots, on a link. Next week the class runs the fair once, without the jury.'),
     ('BEFORE WEEK 12', 'Watch, and read.', 'IBM’s Generative vs Rules-Based Chatbots on the playlist (next slide) — machine A and machine B, as two chatbots. And Van Den Eede (2011), In Between Us, on Blackboard: transparency and opacity.'),
-], text_size=22, notes='Heavy week, said plainly. Tonight: draft and brief, one submission per team, so Amber can read them before the mock session. Next week: the mock fair — final poster at A3, video on a link — and it is a rehearsal with feedback, not a grade; the A0 print is for week 13. The video is eight minutes on the playlist; the reading is twenty pages and is the last one of the course. The TAs stay for 30 minutes and will read any brief brought to them.'))
+], text_size=22, notes='Heavy week, said plainly. Tonight: draft and brief, one submission per team, so Amber can read them before the mock session. Next week: the mock fair — final poster at A3, video on a link — and it is a rehearsal with feedback, not a grade; the A0 print is for week 13. The video is seven and a half minutes on the playlist; the reading is about twenty pages and is the last one of the course. The TAs stay for 30 minutes and will read any brief brought to them.'))
 
 S.append(video('08 · THE HOMEWORK · IBM TECHNOLOGY · ON THE PLAYLIST', 'Two chatbots. Two machines.', 'lZjUS_8btEo',
                ['IBM’s explainer of the two ways to build a chatbot: a decision tree of rules, or a language model. Machine A and machine B, as products that talk.',
                 '- Watch for where each one fails: the rule that has no branch for your question; the model that answers fluently and wrongly.',
                 '- Next week: language as an interface — trust, transparency, opacity, and the chatbot you design for your own product.'],
                thumb='yt/lZjUS_8btEo.jpg',
-               notes='Eight minutes; the last video on the playlist. It is the week-1 distinction one more time, as two chatbots, and it is the lens for next week’s exercise: an assistant for your product, and whether it should be rules, a model, or rules around a model. Play the first minute if there is time. Cut if behind; it is homework either way.'))
+               notes='Seven and a half minutes; the last video in course order on the playlist. It is the week-1 distinction one more time, as two chatbots, and it is the lens for next week’s exercise: an assistant for your product, and whether it should be rules, a model, or rules around a model. Play the first minute if there is time. Cut if behind; it is homework either way.'))
 
 S.append(end('See you next week. Language as an interface.',
              'Draft poster and brief tonight. Final poster and video next week.',
@@ -554,11 +556,18 @@ if __name__ == '__main__':
             print(f'{k}: {v}')
 
 # Sources (consulted 5 September 2026 by web search and fetch; every date, number and quotation on the slides was checked against these)
-# Belamy: https://en.wikipedia.org/wiki/Edmond_de_Belamy (sale, estimate, the eleven, WikiArt 14th–19th c., Obvious's members, Barrat at 19, the Verge line, the signature)
+# Belamy: https://en.wikipedia.org/wiki/Edmond_de_Belamy (sale date, estimate, the eleven, Obvious's members, Barrat at 19, the Verge line, the signature;
+#   its "14th to the 19th centuries" follows Time's profile of 20 August 2018 — the deck follows Christie's own wording, 14th to 20th, as quoted below)
+#   https://time.com/5435683/artificial-intelligence-painting-christies/ (26 October 2018: "15,000 portraits painted between the 14th and 20th centuries"; $432,500, nearly 45 times the high estimate)
+#   https://abcnews.com/Business/christies-sells-ai-produced-art-half-million-dollars/story?id=58749667 (26 October 2018: "15,000 portraits scanning the 14th to the 20th centuries")
+#   https://itsartlaw.org/art-law/welcome-to-the-machine-law-artificial-intelligence-and-the-visual-arts/ ($432,500 "including buyer's premium", citing Christie's lot page; "more than 15,000 portraits created between the 14th and 20th centuries")
+#   https://news.artnet.com/market/first-ever-artificial-intelligence-portrait-painting-sells-at-christies-1379902 (hammered down at $350,000 after six minutes of bidding; $432,500 with premium; Prints & Multiples, 23–25 October — read through search, the page answers 403 to a fetch)
+#   https://time.com/5357221/obvious-artificial-intelligence-art/ (Ciara Nugent, 20 August 2018: "In February, Obvious sold its first piece, Le Comte de Belamy to Paris-based collector Nicolas Laugero-Lasserre for €10,000"; the Belamy family)
+#   https://news.artnet.com/art-world/art-made-by-artificial-intelligence-1258745 (the same sale — through search, 403 to a fetch) · https://www.obvious-art.com/serie/physical/la-famille-de-belamy/le-comte-de-belamy (a physical work: inkjet on canvas, hand signed, 2018)
 #   https://www.dezeen.com/2018/10/29/christies-ai-artwork-obvious-portrait-edmond-de-belamy-design/ (Prints & Multiples, 23–25 October 2018)
 #   https://hyperallergic.com/christies-sells-ai-generated-art-for-432500-as-controversy-swirls-over-creators-use-of-copied-code/ (Barrat's tweet)
 #   https://www.lrb.co.uk/blog/2018/november/fool-the-discriminator (Belamy / bel ami / Goodfellow)
-#   video title via https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Pu2GZ3du7PI&format=json
+#   video title via https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Pu2GZ3du7PI&format=json; length 34 s via yt-dlp (6 September 2026)
 # Thaler v. Perlmutter: https://law.justia.com/cases/federal/appellate-courts/cadc/23-5233/23-5233-2025-03-18.html (D.C. Circuit, 18 March 2025)
 #   https://www.mayerbrown.com/en/insights/publications/2026/03/supreme-court-denies-review-in-ai-authorship-case · https://www.scotusblog.com/cases/thaler-v-perlmutter/ (cert. denied 2 March 2026)
 #   https://www.bakerdonelson.com/supreme-court-denies-certiorari-in-thaler-v-perlmutter-ai-cannot-be-an-author-under-the-copyright-act
@@ -569,12 +578,15 @@ if __name__ == '__main__':
 # Allen, Théâtre D'opéra Spatial: https://www.copyright.gov/rulings-filings/review-board/docs/Theatre-Dopera-Spatial.pdf (the 2023 refusal)
 #   https://ipwatchdog.com/2025/08/28/ai-artist-challenges-copyright-office-denial-ai-assisted-work/ · https://www.thefashionlaw.com/resource-center-snapshot-jason-allen-v-perlmutter-et-al/
 #   https://artificialinventor.com/copyright/ · https://www.courtlistener.com/docket/69198079/allen-v-perlmutter/ (filed 26 September 2024; briefed to early 2026; no ruling found by 5 September 2026)
+#   https://www.smithsonianmag.com/smart-news/artificial-intelligence-art-wins-colorado-state-fair-180980703/ (Sarah Kuta, 6 September 2022: "roughly 80 hours"; "more than 900 renderings")
+#   https://www.cnn.com/2022/09/03/tech/ai-art-fair-winner-controversy/index.html (the same figures, through search)
 # Hong Kong s.11(3) and the 2024 consultation: https://libguides.hkust.edu.hk/ai-literacy/copyright (the wording of s.11(3))
 #   https://www.ipd.gov.hk/filemanager/ipd/en/share/consultation-papers/Eng-Copyright-and-AI-Consultation-Paper-20240708.pdf (8 July 2024)
 #   https://www.mayerbrown.com/en/insights/publications/2024/10/a-new-chapter-hong-kong-proposes-introducing-copyright-exception-for-text-and-data-mining
 #   https://www.scmp.com/news/hong-kong/hong-kong-economy/article/3299206/hong-kong-lawmakers-raise-concerns-over-ai-safeguards-copyrighted-works (outcomes paper, 18 February 2025)
 #   https://www.lexology.com/library/detail.aspx?g=a4d69199-0ade-4eb8-9c8f-c3d802b8d327 (no bill introduced by the end of 2025)
 # Authors Guild v. Google: https://www.copyright.gov/fair-use/summaries/authorsguild-google-2dcir2015.pdf (2d Cir., 16 October 2015; cert. denied 2016)
+# "Transformative": https://en.wikipedia.org/wiki/Toward_a_Fair_Use_Standard (Leval, Harvard Law Review, 1990) · https://en.wikipedia.org/wiki/Campbell_v._Acuff-Rose_Music,_Inc. (adopted by the Supreme Court, 1994)
 # Bartz v. Anthropic: https://www.akingump.com/en/insights/ai-law-and-regulation-tracker/district-court-rules-ai-training-can-be-fair-use-in-bartz-v-anthropic (23 June 2025, "exceedingly transformative")
 #   https://authorsguild.org/advocacy/artificial-intelligence/what-authors-need-to-know-about-the-anthropic-settlement/ ($1.5 billion, about $3,000 a work)
 #   https://www.jurist.org/news/2026/07/judge-approves-record-1-5-billion-settlement-involving-anthropic/ · https://www.authorsalliance.org/2026/07/21/bartz-v-anthropic-settlement-receives-final-approval/ (final approval, 20 July 2026)
@@ -588,6 +600,6 @@ if __name__ == '__main__':
 # LoRA: https://export.arxiv.org/api/query?id_list=2106.09685 (Hu et al., June 2021); dataset sizes from community guides: https://learn.rundiffusion.com/how-to-prepare-a-dataset-for-model-training-on-rundiffusion/
 #   https://zsky.ai/blog/lora-training-guide · https://aiofm.info/en/guides/lora-complete-guide
 # Van Den Eede (2011): https://api.crossref.org/works/10.1007/s10699-010-9190-y (Foundations of Science 16, 139–159)
-# IBM video title via https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=lZjUS_8btEo&format=json
+# IBM video title via https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=lZjUS_8btEo&format=json; length 7:25 via yt-dlp (6 September 2026)
 # Earlier weeks referred to on the slides: deck/week01.py (the chairs, the four roles), week03.py (told and shown chairs), week05.py (the three handles, LoRA),
 #   week06.py (the three voice cases), week08.py (the anatomy of a decision), week09.py (the bias register, the red pen), week10.py (prototype v1, the homework)

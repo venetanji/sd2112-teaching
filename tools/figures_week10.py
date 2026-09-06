@@ -7,8 +7,11 @@ rather than decorating a slide:
                      the screen, the person — and what you do becoming the data of the next screen
   w10_embedding      an item described with numbers becomes a point; the nearest points are the
                      recommendation; two distances (Euclidean, cosine); the axes are a design decision
+  w10_metric         the still twin of the w10-similarity sketch for the code slide: the same forty items and
+                     the same query under two weightings, and the two different fives that come out
   w10_matrix         the user–item matrix, mostly empty, and the three ways to fill a cell:
-                     rows like yours, columns like this one, a point per row and per column
+                     rows like yours, columns like this one, a point per row and per column (the same
+                     table as the w10-collab sketch, so the figure's ? and the sketch's prediction agree)
   w10_two_tower      a two-tower model in a sentence: the person and the item become points in the same
                      space; the score is one multiplication, so it works for tens of millions of items
   w10_objective      four steps down from what a person values to what the product becomes when a proxy
@@ -18,6 +21,7 @@ rather than decorating a slide:
 """
 from __future__ import annotations
 
+import colorsys
 import math
 import random
 
@@ -167,40 +171,105 @@ def w10_embedding(name='w10-embedding', w=1680, h=560):
     return c.finish(name)
 
 
+# ───────────────────────── the metric, twice ─────────────────────────
+def _hsb(h, s, b):
+    """p5's colorMode(HSB, 360, 100, 100) as hex — the glyph colours of the w10-similarity sketch."""
+    r, g, bl = colorsys.hsv_to_rgb((h % 360) / 360, s / 100, b / 100)
+    return '#%02X%02X%02X' % (round(r * 255), round(g * 255), round(bl * 255))
+
+
+def _glyph(c, x, y, it, hot, scale=1.0):
+    """An item as the sketch draws it: 3 to 8 sides by shape (a circle at the top), hue by colour, radius by size."""
+    r = (5 + it['size'] * 9) * scale
+    n = 3 + int(it['shape'] * 5.99)
+    fill = _hsb(20 + it['hue'] * 230, 65, 92)
+    stroke, width = (ORANGE, 2.5) if hot else (INK, 1)
+    if it['shape'] > 0.92:
+        c.circle(x, y, r, fill=fill, stroke=stroke, width=width)
+    else:
+        pts = [(x + r * math.cos(-math.pi / 2 + 2 * math.pi * k / n), y + r * math.sin(-math.pi / 2 + 2 * math.pi * k / n)) for k in range(n)]
+        c.poly(pts, fill=fill, stroke=stroke, width=width)
+
+
+def w10_metric(name='w10-metric', w=800, h=600):
+    """The same forty items and the same query under two metrics: the still twin of the w10-similarity sketch."""
+    c = Canvas(w, h)
+    rnd = random.Random(10)
+    items = [dict(shape=rnd.random(), hue=rnd.random(), size=rnd.random()) for _ in range(40)]
+    q = dict(shape=0.60, hue=0.70, size=0.5)   # a query where the two metrics disagree most
+    c.text(0, 22, 'ONE QUERY, TWO METRICS, TWO FEEDS', size=16, color=ORANGE)
+    panels = [(44, 'BY SHAPE', [1, .2, .2], 'shape x 1 · colour x 0.2 · size x 0.2'),
+              (322, 'BY COLOUR', [.2, 1, .2], 'shape x 0.2 · colour x 1 · size x 0.2')]
+    px, pw, ph = 0, 480, 210
+    for py, label, wts, wtext in panels:
+        def d(a, b, wts=wts):
+            return math.sqrt(wts[0] * (a['shape'] - b['shape']) ** 2 + wts[1] * (a['hue'] - b['hue']) ** 2 + wts[2] * (a['size'] - b['size']) ** 2)
+        ranked = sorted(range(len(items)), key=lambda i: d(q, items[i]))[:5]
+        c.text(px, py + 14, label, size=15, color=INK)
+        c.text(px + 110, py + 14, wtext, size=13, color=MUTED)
+        my = py + 26
+        c.rect(px, my, pw, ph, stroke=LINE, width=1)
+        c.text(px, my + ph + 16, 'triangle', size=12, color=MUTED)
+        c.text(px + pw, my + ph + 16, 'circle', size=12, color=MUTED, anchor='end')
+        c.text(px + pw + 8, my + 12, 'warm', size=12, color=MUTED)
+        c.text(px + pw + 8, my + ph, 'cool', size=12, color=MUTED)
+
+        def P(it):
+            return px + 14 + it['shape'] * (pw - 28), my + 14 + it['hue'] * (ph - 28)
+
+        qx, qy = P(q)
+        for i in ranked:
+            x, y = P(items[i])
+            c.line(qx, qy, x, y, ORANGE, 2, cap='butt')
+        for i, it in enumerate(items):
+            x, y = P(it)
+            _glyph(c, x, y, it, i in ranked, scale=0.8)
+        c.circle(qx, qy, 11, stroke=INK, width=2.5)
+        lx = 570
+        c.text(lx, py + 14, 'THE FIVE NEAREST', size=13, color=ORANGE)
+        for k, i in enumerate(ranked):
+            y = py + 46 + k * 36
+            _glyph(c, lx + 10, y, items[i], True, scale=0.8)
+            c.text(lx + 30, y + 5, f'{k + 1} · item {i}   d = {d(q, items[i]):.2f}', size=13, color=INK)
+    c.text(0, 590, 'same forty items, same query (the ring); the weights decide which five are "near"', size=13, color=MUTED)
+    return c.finish(name)
+
+
 # ───────────────────────── the user–item matrix ─────────────────────────
-def _likes(seed=44, users=12, items=10):
-    """Fictional likes with three taste groups, so that rows agree with each other."""
-    rnd = random.Random(seed)
-    groups = [[0, 1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    rows = []
-    for u in range(users):
-        g = groups[u % 3]
-        row = [0] * items
-        for j in g:
-            if rnd.random() < 0.7:
-                row[j] = 1
-        for j in range(items):
-            if j not in g and rnd.random() < 0.08:
-                row[j] = 1
-        rows.append(row)
-    return rows
+# The eleven other listeners, written by hand — the same rows as the w10-collab sketch in deck/week10.py (COLLAB_CODE),
+# so that the figure's ? and the sketch's live prediction are one table. Three tastes: A B C D · E F G · H I J,
+# and a few likes across them.
+LIKES = [
+    [1, 1, 1, 1, 0, 0, 0, 0, 0, 0],   # U1   A B C D
+    [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],   # U2   E F G
+    [0, 0, 0, 0, 0, 0, 0, 1, 1, 1],   # U3   H I J
+    [1, 0, 1, 1, 0, 0, 0, 0, 0, 0],   # U4   A C D
+    [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],   # U5   B E G
+    [0, 0, 0, 1, 0, 0, 0, 1, 0, 1],   # U6   D H J
+    [1, 1, 0, 1, 0, 1, 0, 0, 0, 0],   # U7   A B D F
+    [0, 0, 0, 0, 0, 1, 1, 0, 0, 0],   # U8   F G
+    [0, 0, 0, 0, 1, 0, 0, 0, 1, 1],   # U9   E I J
+    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],   # U10  A B C
+    [0, 0, 0, 0, 1, 1, 0, 1, 0, 0],   # U11  E F H
+]
+YOU = [1, 0, 0, 1, 0, 0, 0, 0, 0, 0]  # you: A and D, so far
 
 
 def w10_matrix(name='w10-matrix', w=1680, h=560):
     c = Canvas(w, h)
     c.text(0, 34, 'THE USER–ITEM MATRIX IS MOSTLY EMPTY. FILLING A CELL IS THE JOB.', size=18, color=ORANGE)
     c.text(w, 34, 'Netflix, 2006: 100,480,507 ratings in 480,189 × 17,770 cells — about 1.2 % full', size=16, color=MUTED, anchor='end')
-    rows = _likes()
+    rows = LIKES + [YOU]
+    agree = [i for i, r in enumerate(LIKES) if r[0] and r[3]]       # the rows that liked A and D, like you
+    with_c = [i for i in agree if LIKES[i][2]]                        # and, of those, the ones that liked C
     x0, y0, cs = 200, 76, 34
     items = 'ABCDEFGHIJ'
     for j, it in enumerate(items):
         c.text(x0 + j * cs + cs / 2, y0 - 10, it, size=15, color=INK, anchor='middle')
-    you = [1, 0, 0, 1, 0, 0, 0, 0, 0, 0]
-    rows = rows[:11] + [you]
     for i, row in enumerate(rows):
         ry = y0 + i * cs
         label = 'YOU' if i == 11 else f'U{i + 1}'
-        c.text(x0 - 12, ry + cs / 2 + 6, label, size=15, color=ORANGE if i == 11 else (INK if i in (3, 6) else MUTED), anchor='end')
+        c.text(x0 - 12, ry + cs / 2 + 6, label, size=15, color=ORANGE if i == 11 else (INK if i in agree else MUTED), anchor='end')
         for j in range(10):
             cx = x0 + j * cs
             c.rect(cx, ry, cs, cs, stroke=LINE, width=1)
@@ -210,11 +279,13 @@ def w10_matrix(name='w10-matrix', w=1680, h=560):
     qx, qy = x0 + 2 * cs, y0 + 11 * cs
     c.rect(qx + 2, qy + 2, cs - 4, cs - 4, stroke=ORANGE, width=3)
     c.text(qx + cs / 2, qy + cs / 2 + 7, '?', size=20, color=ORANGE, anchor='middle')
-    # rows like yours: U4 and U7 (same group)
-    for i in (3, 6):
+    # rows like yours: the ones that liked A and D too, read off the table
+    for i in agree:
         c.rect(x0 - 2, y0 + i * cs - 2, 10 * cs + 4, cs + 4, stroke=TEAL, width=3)
-    c.text(x0 + 10 * cs + 16, y0 + 3 * cs + 24, 'rows that agree with yours', size=14, color=TEAL)
-    c.text(x0 + 10 * cs + 16, y0 + 6 * cs + 24, 'U4, U7 also liked A and D', size=14, color=TEAL)
+    names = lambda ix: ', '.join(f'U{i + 1}' for i in ix)
+    labels = ['rows that agree with yours', f'{names(agree)} liked A and D too', f'{names(with_c)} liked C as well']
+    for k, i in enumerate(agree[:3]):
+        c.text(x0 + 10 * cs + 16, y0 + i * cs + 24, labels[k], size=14, color=TEAL)
     # the column like the ones you liked
     c.rect(qx - 2, y0 - 2, cs + 4, 12 * cs + 4, stroke=VIOLET, width=3)
     c.text(qx + cs / 2, y0 + 12 * cs + 24, 'column C co-occurs with A and D', size=14, color=VIOLET, anchor='middle')
@@ -235,7 +306,7 @@ def w10_matrix(name='w10-matrix', w=1680, h=560):
     _lines(c, rx, 486, ['no features anywhere: the crowd is the description. Machine B, from behaviour alone —',
                         'and on day one, with an empty row, it has nothing to say. That is the cold start.'],
            size=15, color=INK, lh=24)
-    c.text(0, 540, 'twelve fictional listeners, ten items, a like is a filled cell; the ? is the prediction the sketch on the next slide makes', size=15, color=MUTED)
+    c.text(0, 540, 'twelve fictional listeners, ten items, a like is a filled cell; the ? is the cell the sketch on the next slide predicts, from this same table', size=15, color=MUTED)
     return c.finish(name)
 
 
@@ -330,7 +401,7 @@ def w10_relations(name='w10-relations', w=1680, h=560):
     rels = [('EMBODIMENT', '(I – technology) → world', 'the thumb: the scroll is a gesture', 'you stop noticing, like glasses', 0.25, TINT_GRAY),
             ('HERMENEUTIC', 'I → (technology – world)', 'you read the world through the', 'ranking, as through a thermometer', 0.9, TINT_ORANGE),
             ('ALTERITY', 'I → technology (– world)', 'the DJ that talks, the "For You"', 'that addresses you by name', 0.3, TINT_GRAY),
-            ('BACKGROUND', 'I – (technology / world)', 'it runs while you are not looking:', 'the badge, autoplay, Monday\'s playlist', 0.85, TINT_ORANGE)]
+            ('BACKGROUND', 'I (– technology / world)', 'it runs while you are not looking:', 'the badge, autoplay, Monday\'s playlist', 0.85, TINT_ORANGE)]
     cw = 390
     for i, (t, formula, l1, l2, share, fill) in enumerate(rels):
         x = i * (cw + 40)
@@ -374,6 +445,6 @@ if __name__ == '__main__':
     import sys
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    for fn in (w10_feed_anatomy, w10_embedding, w10_matrix, w10_two_tower, w10_objective, w10_relations):
+    for fn in (w10_feed_anatomy, w10_embedding, w10_metric, w10_matrix, w10_two_tower, w10_objective, w10_relations):
         svg, png = fn()
         print(png, len(svg))

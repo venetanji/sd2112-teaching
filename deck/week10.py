@@ -111,25 +111,24 @@ function glyph(x, y, it, hot) {
 
 SIM_CODE = SIM_A + '\n\n' + SIM_B
 
-COLLAB_CODE = """// Twelve listeners, ten items; a like is a filled cell. The last
-// row is you: click a cell to like or unlike an item. User–user
-// collaborative filtering: cosine similarity between your row and
-// every other row; the three rows most like yours vote on the items
-// you have not liked. Tinted cells are predictions; the top three
-// are your feed. Hover a column to see who liked it.
+COLLAB_CODE = """// Twelve listeners, ten items; a like is a filled cell — the same
+// table as the figure before this slide. The last row is you: click
+// a cell to like or unlike an item. User–user collaborative
+// filtering: cosine similarity between your row and every other
+// row; the three rows most like yours vote on the items you have
+// not liked. Tinted cells are predictions; the top three are your
+// feed. Hover a column to see who liked it.
 const U = 12, I = 10, ITEMS = 'ABCDEFGHIJ';
 let likes = [];
 
 function setup() {
-  createCanvas(1400, 560); textFont('JetBrains Mono'); randomSeed(44);
-  let groups = [[0, 1, 2, 3], [4, 5, 6], [7, 8, 9]];     // three tastes (fictional)
-  for (let u = 0; u < U - 1; u++) {
-    let row = [];
-    for (let j = 0; j < I; j++)
-      row.push(random() < (groups[u % 3].includes(j) ? 0.7 : 0.08) ? 1 : 0);
-    likes.push(row);
-  }
-  likes.push([1, 0, 0, 1, 0, 0, 0, 0, 0, 0]);             // you: A and D, so far
+  createCanvas(1400, 560); textFont('JetBrains Mono');
+  likes = [   // three tastes, written by hand: A B C D · E F G · H I J, and a few likes across them
+    [1,1,1,1,0,0,0,0,0,0], [0,0,0,0,1,1,1,0,0,0], [0,0,0,0,0,0,0,1,1,1],   // U1 U2 U3
+    [1,0,1,1,0,0,0,0,0,0], [0,1,0,0,1,0,1,0,0,0], [0,0,0,1,0,0,0,1,0,1],   // U4 U5 U6
+    [1,1,0,1,0,1,0,0,0,0], [0,0,0,0,0,1,1,0,0,0], [0,0,0,0,1,0,0,0,1,1],   // U7 U8 U9
+    [1,1,1,0,0,0,0,0,0,0], [0,0,0,0,1,1,0,1,0,0],                          // U10 U11
+    [1,0,0,1,0,0,0,0,0,0]];                                                // YOU: A and D, so far
 }
 
 function cosine(a, b) {                      // how much two rows agree: 0 to 1
@@ -216,8 +215,9 @@ FEED_CODE = """// An echo-chamber simulator. Eight topics; a screen is twelve ca
 // drawn from what the feed thinks you like. Clicking a card engages:
 // the distribution moves towards that topic by the learning rate.
 // Mouse y sets the exploration rate: the share of cards drawn at
-// random instead. The line at the right counts the topics you saw
-// in the last fifty cards. Before you arrived, twelve screens went by
+// random instead. The line at the right is how many topics your last
+// fifty cards really covered: 8 when they are spread evenly, 1 when
+// they are all the same. Before you arrived, twelve screens went by
 // with no exploration and a person who always clicked the commonest
 // card — no taste at all. That is what the loop learns anyway.
 const TOPICS = ['music', 'news', 'sport', 'food', 'film', 'travel', 'craft', 'science'];
@@ -241,7 +241,14 @@ function screen(eps) {                      // the next twelve cards
     feed.push({ t, tried });
     seen.push(t); if (seen.length > 50) seen.shift();
   }
-  hist.push(new Set(seen).size); if (hist.length > 40) hist.shift();
+  hist.push(spread()); if (hist.length > 40) hist.shift();
+}
+
+function spread() {                         // how many topics the last 50 cards really cover: 1 / the sum of squared shares
+  let n = Array(8).fill(0), s = 0;
+  for (let t of seen) n[t]++;
+  for (let k = 0; k < 8; k++) s += sq(n[k] / seen.length);
+  return 1 / s;                             // 8 = spread evenly · 1 = all the same topic
 }
 
 function commonest() {                      // the topic with most cards on the screen
@@ -277,15 +284,15 @@ function draw() {
   }
   // the history and the dial
   let hx = 1050, hy = 70, hw = 310, hh = 180;
-  fill('#ED6D24'); textSize(15); text('TOPICS SEEN IN THE LAST 50 CARDS', hx, 40);
+  fill('#ED6D24'); textSize(15); text('DIVERSITY · THE LAST 50 CARDS', hx, 40);
   stroke(225); strokeWeight(1); noFill(); rect(hx, hy, hw, hh);
   noStroke(); fill(120); textSize(12); text('8', hx - 16, hy + 10); text('1', hx - 16, hy + hh);
   stroke('#ED6D24'); strokeWeight(3); noFill(); beginShape();
   for (let i = 0; i < hist.length; i++) vertex(hx + i * hw / 39, hy + hh - (hist[i] - 1) * hh / 7);
   endShape();
   noStroke(); fill(0); textSize(14);
-  text('now: ' + hist[hist.length - 1] + ' of 8 topics', hx, hy + hh + 24);
-  fill(120); textSize(13); text('screens →   one point per screen', hx, hy + hh + 44);
+  text('now: effectively ' + nf(hist[hist.length - 1], 1, 1) + ' of 8 topics', hx, hy + hh + 24);
+  fill(120); textSize(13); text(new Set(seen).size + ' of 8 turned up · one point per screen', hx, hy + hh + 44);
   fill('#ED6D24'); textSize(15); text('THE DIAL · mouse y', hx, 350);
   fill(0); textSize(20); text('exploration ' + round(100 * explore) + ' %', hx, 380);
   fill(120); textSize(13);
@@ -465,15 +472,15 @@ S.append(agenda('SD2112 · WEEK 10', [
 ], notes='Eight stops. The stand-up first, then the lecture in five chapters: what a feed is, the two ways to say "this is like that" — by the item\'s own numbers, and by what people like you did — then the number the model is told to make bigger, and what that does to the person. Break after chapter four. Then the workshop, where you build a similarity search from ten product descriptions, and the activity, where every team writes the objective, the drift, the explanation and the dial of its own product.'))
 
 # ───────────────────────── 01 · last week, in your words ─────────────────────────
-S.append(section('01', 'Last week, in your words', 'the stand-up · the register · the board',
-                 notes='Chapter one: the stand-up at the team table, twelve minutes, then one line per team from the bias register, then week 9 in three lines and the map. Prototype v1 is this sprint\'s item; the TAs review it after class.'))
+S.append(section('01', 'Last week, in your words', 'the stand-up · the register · the board', bg=ORANGES[0],
+                 notes='Chapter one: the stand-up at the team table, fifteen minutes, then one line per team from the bias register, then week 9 in three lines and the map. Prototype v1 is this sprint\'s item; the TAs review it after class.'))
 
-S.append(activity('STAND-UP', 12, 'Three questions, standing.',
+S.append(activity('STAND-UP', 15, 'Three questions, standing.',
                   ['At your table, standing, one minute per person: **what I did, what I will do, what is in my way.**',
                    'Then the increment: show what exists of **prototype v1** — a paper screen, a Figma frame, a script. Not the plan.',
                    'The scribe writes it down. The TAs walk.'],
                   eyebrow_text='01', panel=STANDUP_PANEL, panel_size=20, bg=YELLOWS[0],
-                  notes='Twelve minutes, standing, at the team table; Nicolò keeps the time on the slide, the other three TAs walk with one question each: what exists now? The rule from week 8: show the thing, not the plan. A team with nothing to show gets a review slot with Amber after class, not a lecture now. Anyone whose team is not here goes to Amber.'))
+                  notes='Fifteen minutes, standing, at the team table — the in-class stand-up week 8 promised, so that every team has seen the format once; from next week it happens at your table in the half hour before class, with the TAs in the room. Nicolò keeps the time on the slide, the other three TAs walk with one question each: what exists now? The rule from week 8: show the thing, not the plan; week 9 asked you to bring what exists of prototype v1, and the upload is due before the week-11 class. A team with nothing to show gets a review slot with Amber after class, not a lecture now. Anyone whose team is not here goes to Amber.'))
 
 S.append(question('short_answer', 'Team number, and the guardrail your bias register names.',
                   hint='One line, scribe only. "Team 12: never below 30 %; a physical dial overrides at night; you can turn it off." No register yet? Write the team number and "not yet".',
@@ -493,7 +500,7 @@ S.append(journey('01 · THE SEMESTER', 'Where we are', JOURNEY, here=(3, 2),
                  notes='Module 3, last week of three. Week 8 put the model inside the product, week 9 asked whose data it learns from; today is the product that most people meet most often — the feed — and it closes the module. Next week module 4 opens: what is left for the designer, starting with curating outputs and datasets, and who made Belamy. Prototype v1 is this sprint; the draft poster and the mediation brief are next.'))
 
 # ───────────────────────── 02 · the feed is the product ─────────────────────────
-S.append(section('02', 'The feed is the product', 'YouTube · TikTok · Spotify · a decision, a hundred times a day', bg=ORANGES[0],
+S.append(section('02', 'The feed is the product', 'YouTube · TikTok · Spotify · a decision, a hundred times a day', bg=INK,
                  notes='Chapter two: the most-used AI product is not a chatbot. It is the thing that decides what you see next, and it has been shipping to billions of people since long before anyone typed a prompt. One word cloud, then the anatomy, then three feeds in their own words.'))
 
 S.append(question('word_cloud', 'What does your feed think you are?',
@@ -522,7 +529,7 @@ S.append(statement('Nobody drew your home screen. A rule ranked it, from what yo
                    notes='The sentence of the chapter. Week 8 said you design the space of screens; a feed is that space with a rule that assembles one screen per person per visit. Two sources of the ranking, and they are the next two chapters: what you did — the item\'s own numbers, chapter three — and what people like you did — the crowd, chapter four.'))
 
 # ───────────────────────── 03 · an item is a point ─────────────────────────
-S.append(section('03', 'An item is a point', 'features · embeddings · neighbours · content-based filtering',
+S.append(section('03', 'An item is a point', 'features · embeddings · neighbours · content-based filtering', bg=ORANGES[0],
                  notes='Chapter three: the first way to say "this is like that". Describe a thing with numbers and it becomes a point; the recommendation is the nearest points. Where the numbers come from is the two-machines question again.'))
 
 S.append(figure_slide('03 · EMBEDDINGS', 'Describe a thing with numbers, and it becomes a point.', F10.w10_embedding(),
@@ -547,8 +554,8 @@ S.append(sketch_slide('03 · LIVE · SIMILARITY SEARCH', 'The five nearest are t
 
 S.append(code_slide('03 · THE METRIC', 'Distance is a design decision.', SIM_A,
                     caption='The whole mechanism is one function: a weighted distance over the features. Change the weights and you change what "similar" means — and what everyone is shown next.',
-                    code_size=19, sketch=live('w10-similarity', SIM_CODE, 1400, 560, hint='move the mouse = the query · T = the other metric'),
-                    notes='Read dist3 aloud: three differences, each multiplied by a weight, added up, square root. That is Euclidean distance with a knob on every axis. The T key flips the knobs. Everything else in the sketch is drawing. For the workshop after the break you write this function yourself, with cosine instead of Euclidean, over ten products and five axes a language model chose for you.'))
+                    code_size=19, figure=F10.w10_metric(),
+                    notes='The figure is the rule run twice: the same forty items, the same query, and the five nearest under each weighting — two different fives. Read dist3 aloud: three differences, each multiplied by a weight, added up, square root. That is Euclidean distance with a knob on every axis. The T key flips the knobs. Everything else in the sketch is drawing. For the workshop after the break you write this function yourself, with cosine instead of Euclidean, over ten products and five axes a language model chose for you.'))
 
 S.append(cards('03 · CONTENT-BASED FILTERING', 'This is like what you liked.', [
     ('THE RULE', 'A profile is a point too.',
@@ -570,14 +577,14 @@ S.append(section('04', 'People like you', 'collaborative filtering · 1992 – 2
 
 S.append(figure_slide('04 · THE MATRIX', 'The matrix is mostly empty. Filling a cell is the job.', F10.w10_matrix(),
                       body=['Rows are people, columns are items, a filled cell is a like. Almost every cell is empty — Netflix\'s 2006 table was about 1.2 % full — and the recommendation is a guess at one empty cell in your row. Three ways to guess: the rows that agree with yours, the columns that co-occur with what you liked, or a point for every row and every column.'],
-                      caption='Twelve fictional listeners, ten items. The teal rows agree with yours; the violet column co-occurs with what you liked; the ? is the cell the next slide fills in, live.',
-                      notes='The matrix is the whole of collaborative filtering. Point at the ? and ask how you would fill it with no idea what A, C and D are. The room will say: look at U4 and U7, they liked what I liked and they liked C. That is user–user. Or: everyone who liked A and D also liked C. That is item–item. The third way is the Netflix Prize trick: give every person and every item a short list of numbers so that the product of the two predicts the cell — an embedding learned from the matrix alone, chapter three\'s point without a single feature. Say the 1.2 % again: it is why every guess is a guess.'))
+                      caption='Twelve fictional listeners, ten items. The teal rows agree with yours; the violet column co-occurs with what you liked; the ? is the cell the next slide fills in, live, from the same table.',
+                      notes='The matrix is the whole of collaborative filtering. Point at the ? and ask how you would fill it with no idea what A, C and D are. The room will say: look at U1, U4 and U7, they liked what I liked, and two of them liked C. That is user–user. Or: everyone who liked A and D also liked C. That is item–item. The third way is the Netflix Prize trick: give every person and every item a short list of numbers so that the product of the two predicts the cell — an embedding learned from the matrix alone, chapter three\'s point without a single feature. Say the 1.2 % again: it is why every guess is a guess.'))
 
 S.append(sketch_slide('04 · LIVE · COLLABORATIVE FILTERING', 'People like you liked this.',
                       live('w10-collab', COLLAB_CODE, 1400, 560, hint='click a cell in your row to like · hover a column'),
                       body=['You are the last row. Click to like an item; the sketch finds the three rows most like yours by cosine similarity and lets them vote on everything you have not liked. The tinted cells are the prediction; the top three are your feed.'],
                       caption='Nobody in this picture knows what an item is. Like two things and you have neighbours; like everything and you are like nobody; like nothing and it has nothing to say.',
-                      notes='Click B: your neighbours change, the predictions change. Click something from another taste group — H, say — and watch the similarities fall: you are now like nobody in particular, and the predictions get flat. Unlike everything: the cold start, nothing to say. The point to make slowly: there is no description of any item anywhere in this program. The crowd is the description, and it is machine B in its purest form — examples, no rule about what a thing is. Hover a column to see how many liked it: popular items are easy to predict; the long tail is where every system is bad.'))
+                      notes='Click B: U1 and U7 rise to the top and F appears in the predictions. Click something from another taste group — H, say — and watch the similarities fall and a stranger enter: U6, who liked D and H, is now as close to you as U4, and J, a taste you never showed, enters the predictions. Unlike everything: the cold start, nothing to say. The point to make slowly: there is no description of any item anywhere in this program. The crowd is the description, and it is machine B in its purest form — examples, no rule about what a thing is. Hover a column to see how many liked it: popular items are easy to predict; the long tail is where every system is bad.'))
 
 S.append(cards('04 · THREE DATES', 'Collaborative filtering, in three dates.', [
     ('1992 · TAPESTRY', 'The term is coined at Xerox PARC.',
@@ -590,7 +597,7 @@ S.append(cards('04 · THREE DATES', 'Collaborative filtering, in three dates.', 
 
 S.append(cards('04 · THE NETFLIX PRIZE · 2006 – 2009', 'A million dollars for ten percent.', [
     ('THE BET', '2 October 2006.',
-     'US$1,000,000 to whoever beat Netflix\'s own Cinematch by 10 % — from an error of 0.9514 to 0.8563 on a hidden test set. The data: 100,480,507 ratings by 480,189 people on 17,770 films, "anonymised".'),
+     'US$1,000,000 to whoever beat Netflix\'s own Cinematch by 10 % — from an error of 0.9525 to 0.8572 on a hidden test set. The data: 100,480,507 ratings by 480,189 people on 17,770 films, "anonymised".'),
     ('THE WIN', '21 September 2009.',
      'BellKor\'s Pragmatic Chaos, a team of teams, at 0.8567. What worked: giving every person and every film a short list of learned numbers — matrix factorisation — which the winners called superior to nearest-neighbour methods (Koren, Bell & Volinsky, 2009).'),
     ('THE LESSON', 'The sequel was cancelled.',
@@ -604,7 +611,7 @@ S.append(cards('04 · THREE FAMILIES', 'Like what you liked. Liked by people lik
      'No description needed; finds the thing you did not know you wanted, because someone like you did. Nothing to say about a new person or a new item, and it cannot say why beyond "people like you".'),
     ('HYBRID', 'Both, in one model.',
      'Every real feed. The item\'s features and the crowd\'s clicks go into the same score; the two towers next slide are the shape it usually takes. The cold start of one is covered by the other.'),
-], notes='Three families, and the third is the answer in practice. The exam question is the first two: what each needs, what each cannot do. The design question is the third: when your product has features and a crowd, which one wins in the score, and does the person know? Spotify\'s Stål described both in the same paragraph — similar listeners and the audio itself.'))
+], notes='Three families, and the third is the answer in practice. The exam question is the first two: what each needs, what each cannot do. The design question is the third: when your product has features and a crowd, which one wins in the score, and does the person know? Spotify\'s Stål described the collaborative side in one sentence — the other listener\'s fifth artist; what the item tower adds is the next slide.'))
 
 S.append(figure_slide('04 · TWO TOWERS', 'Two towers, in a sentence.', F10.w10_two_tower(),
                       body=['One network turns the person into a point, another turns the item into a point, in the same space; the score is one multiplication. The item points are computed once and stored, so finding the nearest for a person is a similarity search over the whole catalogue — tens of millions of videos at YouTube.'],
@@ -654,9 +661,9 @@ S.append(cards('05 · YOUTUBE, THREE OBJECTIVES', 'Clicks, then watch time, then
 
 S.append(sketch_slide('05 · LIVE · THE ECHO CHAMBER', 'The attention trap has a dial.',
                       live('w10-feed', FEED_CODE, 1400, 560, hint='click a card = engage · mouse y = exploration · R restarts'),
-                      body=['Eight topics; twelve cards drawn from what the feed thinks you like. Every click moves the feed towards that topic. Before you arrived, twelve screens went by with no exploration and a person who clicked whatever was commonest — no taste at all. The line counts the topics in the last fifty cards; mouse y is the exploration rate.'],
+                      body=['Eight topics; twelve cards drawn from what the feed thinks you like. Every click moves the feed towards that topic. Before you arrived, twelve screens went by with no exploration and a person who clicked whatever was commonest — no taste at all. The line is how many topics the last fifty cards really covered — eight when they are spread evenly, one when they are all the same; mouse y is the exploration rate.'],
                       caption='A feed with no exploration invents a taste for a person who had none, in a dozen clicks. Turn the dial down the canvas and the line climbs back — at the price of cards you did not ask for.',
-                      notes='Start where the still is: one topic has most of the weight and the diversity line is already down — and the person who produced that had no preference; they clicked the commonest card, and the loop did the rest. Move the mouse to the top — zero exploration — and keep clicking the commonest card: the line drops to one or two topics; this is the trap, and nobody designed it, the objective did. Now move to the bottom — fifty percent — and keep clicking: tries appear, the line climbs. Somewhere in between is a design decision every feed makes and few make on purpose. Ask the room where they would set it for a music app, for a news app, for a dating app. Different numbers; same model.'))
+                      notes='Start where the still is: one topic has most of the weight and the diversity line is already down to about two — and the person who produced that had no preference; they clicked the commonest card, and the loop did the rest. Move the mouse to the top — zero exploration — and click the commonest card ten times: the line drops towards one; this is the trap, and nobody designed it, the objective did. Now move to the bottom — fifty percent — and click the hollow cards, the tries: the weight spreads and the line climbs. Somewhere in between is a design decision every feed makes and few make on purpose. Ask the room where they would set it for a music app, for a news app, for a dating app. Different numbers; same model.'))
 
 S.append(quote('"When a measure becomes a target, it ceases to be a good measure."',
                'Marilyn Strathern, "Improving ratings": audit in the British University system, European Review 5(3), 1997 — the sentence usually called Goodhart\'s law', size=88,
@@ -664,12 +671,12 @@ S.append(quote('"When a measure becomes a target, it ceases to be a good measure
 
 S.append(cards('05 · BUBBLES', 'Echo chamber, filter bubble, and what the evidence says.', [
     ('2001 · SUNSTEIN', 'The echo chamber: you filter yourself.',
-     'Republic.com: with enough choice, people read only what they already agree with — the "Daily Me" — and a democracy loses the experiences it did not choose. The filter here is the person.'),
+     'Republic.com: with enough choice, people read only what they already agree with — Negroponte\'s "Daily Me" of 1995, read darkly — and a democracy loses the experiences it did not choose. The filter here is the person.'),
     ('2011 · PARISER', 'The filter bubble: the algorithm filters for you.',
      'The Filter Bubble: What the Internet Is Hiding from You, and the TED talk of March 2011: two friends search "Egypt" and get different results. TED\'s summary: "we get trapped in a \'filter bubble\' and don\'t get exposed to information that could challenge or broaden our worldview." Invisible, unchosen.'),
     ('2015 · THE EVIDENCE', 'Measured, the effect is smaller than the fear.',
-     'Bakshy, Messing and Adamic, Science, 2015: 10.1 million Facebook users; what friends shared and what people chose to click narrowed their news more than the ranking did. Later reviews found little empirical evidence for strong bubbles. Real in some feeds, small in others: measure yours.'),
-], text_size=21, notes='Two words that get mixed up, and a caution. Sunstein\'s chamber is chosen: the person filters. Pariser\'s bubble is not: the ranking filters, and you cannot see what was removed — that is why it is a design problem and not a taste problem. Then the honest slide: when researchers measured it on Facebook in 2015, individual choice narrowed exposure more than the algorithm did, and reviews since have found thinner evidence than the word suggests. The sketch shows the mechanism exists; the evidence says its size depends on the product. So: measure it — the diversity line is one number your product could log.'))
+     'Bakshy, Messing and Adamic, Science, 2015: 10.1 million Facebook users; what friends shared and what people chose to click narrowed their news more than the ranking did. Zuiderveen Borgesius et al., 2016, reviewing the studies: "little empirical evidence that warrants any worries about filter bubbles." Real in some feeds, small in others: measure yours.'),
+], text_size=21, notes='Two words that get mixed up, and a caution. Sunstein\'s chamber is chosen: the person filters. Pariser\'s bubble is not: the ranking filters, and you cannot see what was removed — that is why it is a design problem and not a taste problem. Then the honest slide: when researchers measured it on Facebook in 2015, individual choice narrowed exposure more than the algorithm did, and the 2016 review by Zuiderveen Borgesius and colleagues in Internet Policy Review found little empirical evidence that warranted the worry — while warning that stronger personalisation could change that. The sketch shows the mechanism exists; the evidence says its size depends on the product. So: measure it — the diversity line is one number your product could log.'))
 
 S.append(question('multiple_choice', 'Your feed is trained to maximise minutes spent. Which of these will it learn to do?', [
     'Show shorter videos', 'Show what keeps you watching — whether or not you are glad afterwards', 'Show what you rated highly last year', 'Show fewer videos',
@@ -677,7 +684,7 @@ S.append(question('multiple_choice', 'Your feed is trained to maximise minutes s
     notes='B. The model has minutes and nothing else; anything that produces minutes is rewarded, including the thing you regret. A is backwards — longer keeps you longer; C is a different objective, a rating; D loses minutes. The follow-up is chapter six: what number would you give it instead, and what would that cost?'))
 
 # ───────────────────────── 06 · the feed as a mediation ─────────────────────────
-S.append(section('06', 'The feed as a mediation', "Ihde's relations · the objective · why am I seeing this · the dial",
+S.append(section('06', 'The feed as a mediation', "Ihde's relations · the objective · why am I seeing this · the dial", bg=PAPER,
                  notes='Chapter six: the designer\'s three handles on a feed, with week 5\'s vocabulary. Which relation a feed is; which number to give the model; how the feed explains itself; and the dial.'))
 
 S.append(figure_slide('06 · IHDE', 'A feed is mostly hermeneutic, and mostly background.', F10.w10_relations(),
@@ -698,7 +705,7 @@ S.append(cards('06 · WHY AM I SEEING THIS', 'Three explanations, and a law.', [
     ('FACEBOOK · 2019', '"Why am I seeing this post?"',
      '31 March 2019: a menu on every post, from the obvious — you are friends — to the not obvious — you comment more on photos. The first time the ranking was explained inside the app; the ad version had existed since 2014.'),
     ('TIKTOK · 2022', '"Why this video."',
-     '20 December 2022: share panel, question mark. Reasons: "user interactions", "accounts you follow or suggested accounts", "content posted recently in your region", "popular content in your region." Four kinds of neighbour, in plain words.'),
+     '20 December 2022: share panel, question mark. Reasons: "user interactions", "accounts you follow or suggested accounts for you", "content posted recently in your region", "popular content in your region." Four kinds of neighbour, in plain words.'),
     ('SPOTIFY · 2018', 'Explanations as part of the model.',
      'McInerney et al., RecSys 2018: "recsplanations" — the model learns which explanation each listener responds to, alongside what to recommend, and balances exploring with exploiting. The reason is a design decision too.'),
     ('THE LAW · DSA', 'Plain language, and a way out.',
@@ -717,11 +724,11 @@ S.append(cards('06 · THE EXPLORATION DIAL', 'How much of the feed is not for yo
 ], text_size=21, notes='The dial has four positions to design. Exploit and explore are the two ends; the sketch is the slider between them, and it is a number somebody sets. The reset is a control that admits the model can be wrong about you, and gives you back the cold start on purpose. The shared row is the one to say slowly: it is the answer to Sunstein — the experience you did not choose — and it is cheap. Round four asks each team for its number.'))
 
 S.append(statement('You design the objective, the explanation and the dial. The model does the rest.', eyebrow_text='06 · WHERE THIS LEAVES YOU', size=100,
-                   notes='The three handles, and the activity is all three. Not "make a better model": the model will make the score whatever you decide. You decide what number it makes bigger, how it tells the person why, and how much of the screen is a try. Those are rules — machine A — around the examples. Now the workshop: a similarity search of your own in twenty minutes.'))
+                   notes='The three handles, and the activity is all three. Not "make a better model": the model will make the score whatever you decide. You decide what number it makes bigger, how it tells the person why, and how much of the screen is a try. Those are rules — machine A — around the examples. Now the workshop: a similarity search of your own — ten minutes hands-on, about fifteen with the prompt and the debrief.'))
 
 # ───────────────────────── 07 · workshop: similarity search by hand ─────────────────────────
 S.append(section('07', 'Similarity search, by hand', f'ten products · five numbers · {GENAI} · {P5}', bg=INK,
-                 notes='Chapter seven, hands-on: the mechanism of chapter three, built by each team in fifteen minutes. A language model writes the axes and the numbers; a twenty-line script finds the neighbours; you judge whether they make sense — and whose axes they were.'))
+                 notes='Chapter seven, hands-on: the mechanism of chapter three, built by each team — ten minutes hands-on, about fifteen with the prompt and the debrief. A language model writes the axes and the numbers; a twenty-six-line script finds the neighbours; you judge whether they make sense — and whose axes they were.'))
 
 S.append(two_col('07 · THE PROMPT', 'Ask the model for the numbers, not the answer.',
                  ['Ten one-line descriptions of products your team knows — chairs, snacks, apps — or the ten on the next slide.',
@@ -731,7 +738,7 @@ S.append(two_col('07 · THE PROMPT', 'Ask the model for the numbers, not the ans
                  PROMPT, right_size=21, left_size=27,
                  notes='The template is on the course site and on Blackboard. The trick of the exercise: we ask the model for features and numbers — a description, machine A style — and not for a recommendation, so that the search is done by a rule you can read. Any language model on GenAI will do; stay with one. Watch step 1: the axes it chooses are its idea of what a buyer cares about, which is the dataset\'s idea, which is the week-9 question again. Step 4 is the T key from the sketch.'))
 
-S.append(code_slide('07 · THE SCRIPT', 'Twenty lines find the neighbours.', VECTORS_CODE,
+S.append(code_slide('07 · THE SCRIPT', 'Twenty-six lines find the neighbours.', VECTORS_CODE,
                     caption='Ten fictional products, five numbers each, one cosine function, a sort. Replace the names and the table with the model\'s; change w to change the metric.',
                     code_size=18, sketch=live('w10-vectors', VECTORS_CODE, 800, 600, hint='click = next product · mouse x = the weight on price', extra=VECTORS_EXTRA),
                     notes='Read it top to bottom: the names, the table, the weights, the query. cosine() is chapter three\'s angle with a weight per axis — the same knob as dist3 in the sketch. draw() sorts everything by similarity and prints the top three. In the html deck the script runs live: click cycles the product you looked at, and the mouse moves the weight on price from zero to three; watch the neighbours change. The script is on the site; students paste it into the editor and replace the table.'))
@@ -813,22 +820,22 @@ S.append(content('08 · WHAT JUST HAPPENED', 'Every feed is an objective, an exp
                  notes='Mirror of the whole class. Say the four things each team now has, then the two sources of neighbours, then the last line slowly — it is the week-8 last line with the three handles filled in. Point at the homework and let them go; the TAs stay thirty minutes for the prototype review.'))
 
 S.append(cards('08 · BEFORE WEEK 11', 'Prototype v1, the poster, the brief, Belamy.', [
-    ('PROTOTYPE V1', 'On Blackboard, one per team.',
-     'Paper, Figma or code: the moment your product decides and what the person sees — and the "why am I seeing this" screen from today as page one. The TAs review it thirty minutes after class and in the week-11 stand-up.'),
+    ('PROTOTYPE V1', 'Before the week-11 class, on Blackboard.',
+     'Paper, Figma or code, one per team: the moment your product decides and what the person sees — and the "why am I seeing this" screen from today as page one. The date week 9 gave. The TAs review what exists thirty minutes after class.'),
     ('THE DRAFT POSTER', 'Start it now, not in week 12.',
      'A0, the research and the concept. Next week is the poster lab: bring a draft — even a sketch of the layout with the decision sentence at the top. The maker owns it; everyone brings a paragraph.'),
     ('THE MEDIATION BRIEF', 'One page. Four rows, plus today\'s two.',
      'The relation (hermeneutic? background?), the data, the bias, the guardrails — and now the objective with its drift, and the explanation. Draft it for next week; the register and today\'s three captures are the raw material.'),
     ('BELAMY', 'Watch it before week 11.',
-     'Obvious, "Generation of Edmond de Belamy": how the portrait that sold at Christie\'s in 2018 was made. Next week asks who made it — the collective, the coder, the fifteen thousand painters in the dataset.'),
-], text_size=21, notes='Four things. Prototype v1 is this sprint\'s increment and it is due on Blackboard before the week-11 class; confirm the date on Blackboard. The poster and the brief are next sprint\'s, and next week is the lab, so a draft has to exist. Belamy is the video for next week and the quiz draws on it. Say the three deadlines once more, slowly.'))
+     'Obvious, "Generation of Edmond de Belamy": how the portrait that sold at Christie\'s in 2018 was made. Next week asks who made it — the collective, the coder, the painters behind the fifteen thousand portraits in the dataset.'),
+], text_size=21, notes='Four things. Prototype v1 is this sprint\'s increment and it is due on Blackboard before the week-11 class — the date week 9 gave; Amber posts it tonight. The poster and the brief are next sprint\'s, and next week is the lab, so a draft has to exist. Belamy is the video for next week and the quiz draws on it. Say the three deadlines once more, slowly.'))
 
 S.append(video('08 · HOMEWORK · WATCH BEFORE WEEK 11', 'Who made this?', 'Pu2GZ3du7PI',
                ['Obvious, "Generation of Edmond de Belamy": the portrait from week 1, and how it was made — a network trained on portraits, an output chosen, a signature that is a formula.',
                 '- Watch it before next week. Week 11 is curating outputs and datasets: which of the hundred generated faces ships, and whose paintings taught the model.',
                 '- On the playlist. Bring one sentence: who is the author?'],
                thumb='yt/Pu2GZ3du7PI.jpg',
-               notes='Play the first thirty seconds if there is time. Next week opens with it: the collective that chose the output, the coder whose model they used, the painters in the dataset, and what a court and the Copyright Office say about each. Ask them to arrive with an answer to "who made this?" — the room will disagree, which is the class.'))
+               notes='Play the first thirty seconds if there is time. Next week opens with it: the collective that chose the output, the coder whose model they used, the painters whose portraits are in the dataset, and what a court and the Copyright Office say about each. Ask them to arrive with an answer to "who made this?" — the room will disagree, which is the class.'))
 
 S.append(end('See you next week. Curators of outputs and datasets.',
              'Upload prototype v1. Draft the poster and the brief. Watch Belamy.',
@@ -848,8 +855,9 @@ if __name__ == '__main__':
         else:
             print(f'{k}: {v}')
 
-# Sources (consulted 5 September 2026)
-# Netflix Prize (2 October 2006; US$1M; Cinematch RMSE 0.9514, target 0.8563; BellKor's Pragmatic Chaos 0.8567, 21 September 2009;
+# Sources (consulted 5–6 September 2026)
+# Netflix Prize (2 October 2006; US$1M; Cinematch RMSE 0.9525 on the test set (0.9514 on the quiz set), target 0.8572 test (0.8563 quiz);
+#   BellKor's Pragmatic Chaos 0.8567 test, 21 September 2009;
 #   100,480,507 ratings, 480,189 users, 17,770 movies; the cancelled sequel, Narayanan & Shmatikov): https://en.wikipedia.org/wiki/Netflix_Prize
 # Koren, Bell & Volinsky (2009). Matrix factorization techniques for recommender systems. IEEE Computer 42(8): 30–37: https://dl.acm.org/doi/10.1109/mc.2009.263
 # Pariser, The Filter Bubble: What the Internet Is Hiding from You (Penguin, 2011); the "Egypt" example; the critiques: https://en.wikipedia.org/wiki/The_Filter_Bubble
@@ -887,10 +895,18 @@ if __name__ == '__main__':
 #   and https://www.cnbc.com/2019/04/01/facebook-new-tool-explains-why-am-i-seeing-this-post-on-news-feed.html
 # EU Digital Services Act, Articles 27 and 38; obligations for VLOPs from 25 August 2023:
 #   https://www.pinsentmasons.com/out-law/analysis/how-the-digital-services-act-changes-things-for-platforms · https://dsa-observatory.eu/2025/05/19/making-recommender-systems-work-for-people/
+#   the date: the Commission's enforcement page (designation of 17 VLOPs and 2 VLOSEs on 25 April 2023; enforcement "under the DSA since 25 August 2023"):
+#   https://digital-strategy.ec.europa.eu/en/policies/dsa-enforcement
 # Strathern (1997). "Improving ratings": audit in the British University system. European Review 5(3): 305–321 (Goodhart's law): https://en.wikipedia.org/wiki/Goodhart's_law
 # Simon (1971). Designing organizations for an information-rich world ("a wealth of information creates a poverty of attention"): https://conversableeconomist.com/2015/08/17/economics-of-information-overload-thoughts-from-herb-simon/
 # Sunstein, Republic.com (2001), echo chambers and the Daily Me: https://hls.harvard.edu/bibliography/republic-com · https://lareviewofbooks.org/article/pointing-at-the-wrong-villain-cass-sunstein-and-echo-chambers/
+# Negroponte, Being Digital (1995): the "Daily Me", the phrase Sunstein read darkly: https://en.wikipedia.org/wiki/The_Daily_Me
+# Zuiderveen Borgesius, Trilling, Möller, Bodó, de Vreese & Helberger (2016). Should we worry about filter bubbles? Internet Policy Review 5(1)
+#   ("at present there is little empirical evidence that warrants any worries about filter bubbles"): https://policyreview.info/articles/analysis/should-we-worry-about-filter-bubbles
 # Bakshy, Messing & Adamic (2015). Exposure to ideologically diverse news and opinion on Facebook. Science 348: 1130–1132: https://pubmed.ncbi.nlm.nih.gov/25953820/
 # Netflix Top 10 rows, 24 February 2020: https://about.netflix.com/en/news/see-whats-popular-on-netflix · https://variety.com/2020/digital/news/netflix-top-10-daily-rankings-popular-titles-1203513514/
 # Ihde (1990), Technology and the Lifeworld — the four relations: https://books.google.com/books/about/Technology_and_the_Lifeworld.html?id=qGx-_VpaJKUC
+#   the schemas as week 5 writes them, after Verbeek (2015), Beyond Interaction, Interactions 22(3): https://ris.utwente.nl/ws/files/6973415/p26-verbeek.pdf
 # The Belamy video (Obvious, "GENERATION OF EDMOND DE BELAMY"): https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Pu2GZ3du7PI&format=json
+# Edmond de Belamy: the GAN "was trained on a set of 15,000 portraits from the online art encyclopedia WikiArt, spanning the 14th to the 19th centuries";
+#   Christie's, 25 October 2018: https://en.wikipedia.org/wiki/Edmond_de_Belamy
