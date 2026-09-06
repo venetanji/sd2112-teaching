@@ -11,7 +11,8 @@ of sound, a language of sound; Suno, AIVA, Udio), voices and who owns a sound (t
 of lawsuits), a sound spec for a product, the activity "Thirty seconds for a product", a mock quiz of
 eight questions spread through the second half, the reflection draft check and Challenge 5.
 Four live p5.js sketches with sound (a spectrogram of the microphone, additive timbre, a sequencer, a
-Markov melody) run in the html deck; the pptx and the PDF show their snapshots.
+Markov melody) run in the html deck; the pptx and the PDF show their snapshots. Thirteen ClassPoint activities (the
+recap, the vote, eight mock questions, three captures); the three chapter quick checks are a show of hands.
 """
 import sys
 from pathlib import Path
@@ -23,7 +24,7 @@ import figures_week06 as F                              # noqa: E402
 from deckgen import build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YELLOW, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS, MUTED  # noqa: E402
 from layouts import (title, end, agenda, section, statement, quote, content, cards, question, timeline,   # noqa: E402
                      journey, activity, video, two_col, figure_slide, code_slide, sketch_slide, live, finalize)
-from course import SITE, PLAYLIST, GENAI, P5, JOURNEY, footer  # noqa: E402
+from course import SITE, PLAYLIST, GENAI, JOURNEY, footer  # noqa: E402
 
 FOOTER = footer(6)
 
@@ -33,7 +34,7 @@ FOOTER = footer(6)
 
 # (a) a spectrogram of the microphone: time across, frequency up (log scale), loudness as darkness
 SPECTRO_CODE = """// a live spectrogram: time across, frequency up (log scale), loudness as darkness
-const W = 1400, H = 500, ROWS = 120, DX = 3;          // 120 rows of frequency, 3 px per slice
+const W = 1400, H = 500, ROWS = 120, COLS = 432;      // the picture: 120 rows of frequency, 432 slices of time
 const LO = 50, HI = 8000;                             // the vertical axis, in Hz
 const X0 = 80, X1 = W - 24, Y0 = 108, Y1 = H - 48;    // the picture; the waveform strip sits above it
 let spec, fft, mic, osc, mode = 'demo', t = 0, lastLoud = 0, moved = false, SPEC = [];
@@ -41,8 +42,8 @@ let status = 'click to start: your microphone, or a built-in sweep';
 
 function setup() {
   createCanvas(W, H); pixelDensity(1); frameRate(30);
-  spec = createGraphics(X1 - X0, Y1 - Y0); spec.pixelDensity(1); spec.background(244);
-  for (let i = 0; i < spec.width / DX; i++) { t++; pushColumn(demoAmp); }   // pre-filled: never an empty picture
+  spec = createGraphics(COLS, ROWS); spec.pixelDensity(1); spec.background(244);   // small; drawn scaled up
+  for (let i = 0; i < COLS; i++) { t++; pushColumn(demoAmp); }   // pre-filled: never an empty picture
 }
 
 function rowFreq(r) { return LO * pow(HI / LO, r / (ROWS - 1)); }     // row 0 = 50 Hz, row 119 = 8 kHz
@@ -60,13 +61,13 @@ function liveAmp(r) {                                   // the FFT of the microp
   return constrain(SPEC[i] / 255 * 1.5, 0, 1);
 }
 
-function pushColumn(ampOf) {   // scroll the picture left by DX px, paint one new slice at the right edge
+function pushColumn(ampOf) {   // scroll the picture left by one slice, paint one new slice at the right edge
   spec.loadPixels();
-  let p = spec.pixels, w = spec.width, h = spec.height;
-  for (let y = 0; y < h; y++) {
-    let s = y * w * 4; p.copyWithin(s, s + DX * 4, s + w * 4);
-    let r = ROWS - 1 - floor(y * ROWS / h), v = 244 - constrain(ampOf(r), 0, 1) * 244;   // dark = loud
-    for (let x = w - DX; x < w; x++) { let i = (y * w + x) * 4; p[i] = p[i + 1] = p[i + 2] = v; p[i + 3] = 255; }
+  let p = spec.pixels, w = spec.width;
+  for (let y = 0; y < ROWS; y++) {              // one pixel per row and slice: 432 × 120, cheap to move
+    let s = y * w * 4; p.copyWithin(s, s + 4, s + w * 4);
+    let v = 244 - constrain(ampOf(ROWS - 1 - y), 0, 1) * 244;   // dark = loud; low frequencies at the bottom
+    let i = (y * w + w - 1) * 4; p[i] = p[i + 1] = p[i + 2] = v; p[i + 3] = 255;
   }
   spec.updatePixels();
 }
@@ -79,7 +80,7 @@ function draw() {
   if (mode === 'mic' && millis() - lastLoud > 3000) sweep('quiet for 3 s: a built-in sweep instead');
   if (mode === 'sweep') osc.freq(moved ? yFreq(mouseY) : 200 * pow(2, 2.5 * (0.5 + 0.5 * sin(t / 45))), 0.05);
   background(255);
-  image(spec, X0, Y0);
+  image(spec, X0, Y0, X1 - X0, Y1 - Y0);       // the small buffer, scaled to the picture
   waveform(); axes(); readout();
 }
 
@@ -260,7 +261,7 @@ function picture() {
 
 function mouseMoved() { moved = true; }
 function mousePressed() {
-  if (!on) { userStartAudio(); build(); on = true; }
+  if (!on) { userStartAudio(); build(); on = true; return; }   // the first click only starts the sound
   let s = floor((mouseX - X0) / CS), r = floor((mouseY - Y0) / CS);
   if (s >= 0 && s < STEPS && r >= 0 && r < 6) grid[r][s] = !grid[r][s];
 }
@@ -314,7 +315,8 @@ function setup() {
 """ + MARKOV_STEP + """
 
 function draw() {
-  if (moved) temp = constrain(map(mouseX, 0, width, 0.1, 3), 0.1, 3);
+  if (moved) temp = mouseX < width / 2 ? pow(10, map(mouseX, 0, width / 2, -1, 0))     // left half: 0.1 → 1
+                                       : pow(3, map(mouseX, width / 2, width, 0, 1));   // right half: 1 → 3
   if (millis() >= nextAt) {                            // every 320 ms: one more note
     let n = nextNote(last, temp); from = last; last = n;
     melody.push(n); if (melody.length > 22) melody.shift();
@@ -431,6 +433,13 @@ SPEC_EXAMPLE = [
     'DELIVERABLE: one WAV, 3 s, tool + plan named',
 ]
 
+def hands_up(text, choices, eyebrow_text, notes):
+    """A chapter quick check answered by a show of hands: the question layout, no ClassPoint button."""
+    s = question('multiple_choice', text, choices, eyebrow_text=eyebrow_text, notes=notes)
+    s.cp = None
+    return s
+
+
 S = []  # the slides, in order
 
 # ───────────────────────── 00 · title ─────────────────────────
@@ -492,7 +501,7 @@ S.append(sketch_slide('02 · LIVE · YOUR VOICE AS A PICTURE', 'Speak. Whistle. 
                       live('w06-spectrogram', SPECTRO_CODE, 1400, 500, hint='click to start the microphone · speak, whistle, clap · mouse y reads the frequency', extra=SOUND_GUARD, sound=True),
                       body=['The microphone, drawn as a scrolling spectrogram: a whistle is one thin line, a vowel is a stack of lines, a clap is a vertical stripe. If the microphone is refused or stays silent, a built-in sweep takes over and the mouse sets its pitch.'],
                       caption='p5.js with p5.sound: p5.AudioIn into p5.FFT, 1024 bins, redrawn thirty times a second on a log-frequency axis from 50 Hz to 8 kHz. Before the click it shows a computed tone, so the still is never empty.',
-                      notes='Html deck only; click the sketch once to start audio and allow the microphone. Whistle first — one line, and you can read its frequency with the mouse. Then say "aaa" and "eee": the stack of harmonics changes shape with the vowel; that shape is what a voice clone learns. Then clap: a vertical stripe, all frequencies at once. If the room\'s PC has no microphone, the sweep runs and the mouse plays it like a theremin. Two minutes; the pptx shows a still.'))
+                      notes='Html deck only; click the sketch once to start audio and allow the microphone. Whistle first — one line, and you can read its frequency with the mouse. Then say "aaa" and "eee": the stack of harmonics changes shape with the vowel; that shape is what a voice clone learns. Then clap: a vertical stripe, all frequencies at once. If the room\'s PC has no microphone, the sweep runs and the mouse plays it like a theremin. The microphone works only when the deck is served over http(s) — the course site, or a local server; a deck opened from a file shows the sweep. Two minutes; the pptx shows a still.'))
 
 S.append(sketch_slide('02 · LIVE · TIMBRE', 'An instrument is which harmonics, and how loud.',
                       live('w06-additive', ADD_CODE, 1400, 500, hint='mouse x = how many harmonics · mouse y = how bright · click to hear', extra=SOUND_GUARD, sound=True),
@@ -512,10 +521,10 @@ S.append(cards('02 · FOUR WORDS', 'Melody, harmony, rhythm, timbre.', [
     ('TIMBRE', 'Which sound.', 'The recipe of harmonics and how it changes over the note. The hardest one to write as a rule, and the first thing a model learns from examples.'),
 ], text_size=22, notes='The vocabulary for the spec, in four words, each tied to a machine you will see today. Three of them are easy to write as rules — a sequence, a stack, a grid — and that is why rule-based music is sixty years old. Timbre is the one that resisted rules and fell to examples. When you write the spec later, notice which lines are which.'))
 
-S.append(question('multiple_choice', 'A spectrogram shows three things. Which three?', [
+S.append(hands_up('A spectrogram shows three things. Which three?', [
     'Time, frequency, loudness', 'Pitch, key, tempo', 'Left, right, centre', 'Bass, mid, treble',
-], eyebrow_text='02 · QUICK CHECK · MULTIPLE CHOICE',
-    notes='A. Time across, frequency up, loudness as darkness. B is music theory, not a picture; D is three bands of frequency with no time axis. Say why it matters: three things is what makes it an image, and an image is what last week\'s machine eats.'))
+], eyebrow_text='02 · QUICK CHECK · HANDS UP',
+    notes='A show of hands, thirty seconds: A, B, C, D. Correct: A. Time across, frequency up, loudness as darkness. B is music theory, not a picture; D is three bands of frequency with no time axis. Say why it matters: three things is what makes it an image, and an image is what last week\'s machine eats.'))
 
 # ───────────────────────── 03 · rules that play ─────────────────────────
 S.append(section('03', 'Rules that play', 'machine A · a sequencer · counterpoint · a Markov chain · 1957', bg=VIOLETS[0],
@@ -561,15 +570,15 @@ S.append(code_slide('03 · THE MARKOV STEP', 'A table, a die, a temperature.', M
 
 S.append(video('03 · STANFORD LAPTOP ORCHESTRA · BING CONCERT HALL · 10 JUNE 2023', 'The dawn of computer music, replayed by a laptop orchestra.', 'Ih9lHXMlrtE',
                ['The Dawn of Computer Music, by Terry Feng, Soohyun Kim and Yikai Li: two movements — Strauss\'s sunrise fanfare synthesised by invisible instruments, then a sound collage of space in the manner of musique concrète.',
-                '- The history it plays with: 1957, Max Mathews at Bell Labs makes an IBM 704 produce seventeen seconds of sound with MUSIC I. 1961, a Bell Labs computer sings Daisy Bell; Arthur C. Clarke hears it and gives it to HAL in 2001.',
+                '- The history it plays with: 1957, Max Mathews and Newman Guttman at Bell Labs make an IBM 704 play seventeen seconds of sound with MUSIC I. 1961, a Bell Labs computer sings Daisy Bell; Arthur C. Clarke hears it and gives it to HAL in 2001.',
                 '- Rules that play, seventy years on: a laptop is an instrument when someone writes the rule.'],
                thumb='yt/Ih9lHXMlrtE.jpg', body_size=26,
-               notes='Optional; cut if behind. The piece is on the playlist because it stages the history in eight minutes: the fanfare everyone knows from 2001, played by code, then the tape-music tradition of the 1950s done live. Mathews\' seventeen seconds in 1957 are the same year as the Illiac Suite: sound from rules and notes from rules were born together. Ask who has heard a computer sing Daisy Bell; half the room has, through HAL.'))
+               notes='Optional; cut if behind. The piece is on the playlist because it stages the history in eight minutes: the fanfare everyone knows from 2001, played by code, then the tape-music tradition of the 1950s done live. Mathews\' seventeen seconds in 1957 — Guttman\'s The Silver Scale — are the same year as the Illiac Suite: sound from rules and notes from rules were born together. Ask who has heard a computer sing Daisy Bell; half the room has, through HAL. (The year is 1961 in most accounts, 1960 in Guinness\'s; do not make a quiz question of it.)'))
 
-S.append(question('multiple_choice', 'In the Illiac Suite\'s first experiments, where does chance enter?', [
+S.append(hands_up('In the Illiac Suite\'s first experiments, where does chance enter?', [
     'Which note is proposed; the rules decide whether it stays', 'Which rules apply to each note', 'The tempo of the movement', 'The choice of instruments',
-], eyebrow_text='03 · QUICK CHECK · MULTIPLE CHOICE',
-    notes='A. The same question as Schotter in week 2 — where, exactly, is the die thrown — and the same shape of answer: chance proposes, the rule decides. In experiment four the rule becomes a table, but the die still only ever picks from the table.'))
+], eyebrow_text='03 · QUICK CHECK · HANDS UP',
+    notes='A show of hands, thirty seconds. Correct: A. The same question as Schotter in week 2 — where, exactly, is the die thrown — and the same shape of answer: chance proposes, the rule decides. In experiment four the rule becomes a table, but the die still only ever picks from the table.'))
 
 # ───────────────────────── 04 · models that listen ─────────────────────────
 S.append(section('04', 'Models that listen', 'machine B · a picture of sound · a language of sound · the products', bg=INK,
@@ -577,7 +586,7 @@ S.append(section('04', 'Models that listen', 'machine B · a picture of sound ·
 
 S.append(figure_slide('04 · TWO ROADS', 'A picture of sound, or a language of sound.', F.w06_two_roads(),
                       body=['Road one: turn sound into a spectrogram and treat it as an image; a diffusion model denoises a new one, steered by words; the inverse Fourier transform plays the picture. Road two: a codec turns sound into a few tokens per frame; a next-token model writes new tokens; the codec plays them back.'],
-                      caption='Riffusion, 15 December 2022, is road one. Jukebox (April 2020), MusicLM (January 2023) and MusicGen (June 2023) are road two, and so, as far as they say, are the products of 2024–26. Nobody wrote a rule about music in either road.',
+                      caption='Riffusion, 15 December 2022, is road one. Jukebox (April 2020), MusicLM (January 2023) and MusicGen (June 2023) are road two, and most likely so are the products of 2024–26, which do not publish what is inside. Nobody wrote a rule about music in either road.',
                       notes='The whole chapter in one figure. Road one is last week: the picture of sound is just another picture, and a diffusion model does not know the difference. Road two is week 4: tokens, a table, a die, a temperature — except the tokens come from a codec instead of a tokenizer, and mean fractions of a second instead of pieces of words. Say the spine: in neither road did anyone write a rule of counterpoint. The rules are in the examples.'))
 
 S.append(content('04 · ROAD 1 · RIFFUSION · 15 DECEMBER 2022', 'Draw the spectrogram. Then play the drawing.',
@@ -608,16 +617,16 @@ S.append(cards('04 · THREE PRODUCTS · SEPTEMBER 2026', 'Suno, AIVA, Udio: what
       'Terms effective 3 September 2026. Licensed models replacing the current ones are due in 2026, after the Warner deal.']),
     ('AIVA · LUXEMBOURG · 2016', 'A composer, on paper.',
      ['Classical and cinematic pieces, MIDI export. Registered with SACEM in 2016–17 as the first "virtual composer" a rights society recognised.',
-      'Free (€0) and Standard (€11 a month): copyright stays with AIVA. Pro (€33 a month): "copyright owned by you", full monetisation.']),
+      'Free (€0) and Standard (€11 a month, billed yearly): copyright stays with AIVA. Pro (€33 a month, billed yearly): "copyright owned by you", full monetisation.']),
     ('UDIO · NEW YORK · 2024', 'A walled garden since October 2025.',
      ['Songs from a prompt, like Suno. After settling with Universal, downloads were switched off on 30 October 2025; a 48-hour window reopened them in early November. The licensed platform with UMG and Warner is due in 2026.',
       'What you make there stays there. Read that before you build a challenge on it.']),
 ], text_size=20, head_size=32, notes='Three products, three different answers to "what do I own". Read the Suno line twice: paid users get whatever rights Suno has, and Suno says it does not know whether that is anything. AIVA sells the copyright on the Pro plan and keeps it on the others. Udio keeps the file. For Challenge 5 the rule is simple: name the tool and the plan you used; the terms are part of the process note. Prices and terms as read on 5 September 2026 — check before you quote them.'))
 
-S.append(question('multiple_choice', 'Which of these is machine B — examples, not rules?', [
+S.append(hands_up('Which of these is machine B — examples, not rules?', [
     'A step sequencer playing a grid', 'A Markov table you wrote by hand', 'Suno writing a song from a prompt', 'A metronome at 120 BPM',
-], eyebrow_text='04 · QUICK CHECK · MULTIPLE CHOICE',
-    notes='C. The other three are rules you could write on a napkin, including the Markov table — it becomes machine B only when the numbers are learned from data instead of written by you. That sentence is the reflection\'s argument in one line.'))
+], eyebrow_text='04 · QUICK CHECK · HANDS UP',
+    notes='A show of hands, thirty seconds. Correct: C. The other three are rules you could write on a napkin, including the Markov table — it becomes machine B only when the numbers are learned from data instead of written by you. That sentence is the reflection\'s argument in one line.'))
 
 S.append(statement('Break. Fifteen minutes.', eyebrow_text='AFTER THE BREAK · VOICES · THE LAWSUITS · A SOUND FOR A PRODUCT · THE MOCK QUIZ', size=120, bg=PAPER,
                    notes='1:18. Headphones, laptops charged, genai.polyu.edu.hk open, and the music model Nicolò tested open in a second tab. The TAs help anyone whose login fails now, not during the activity.'))
@@ -656,9 +665,9 @@ S.append(timeline('05 · TWO YEARS OF LAWSUITS', 'Sued, settled, licensed — an
 
 S.append(cards('05 · WHERE IT STANDS · 5 SEPTEMBER 2026', 'Settled with two majors. Fighting the third. Lost once in Munich.', [
     ('SETTLED', 'Universal and Warner.',
-     'Both have deals with Udio; Warner has one with Suno. Licensed platforms and models due in 2026, with opt-in and payment for artists. Money undisclosed.'),
+     'Both have deals with Udio; Warner has one with Suno. Licensed platforms and models due in 2026, with opt-in and payment for artists. Figures not disclosed by the parties.'),
     ('IN COURT', 'Sony, and the German society.',
-     'Sony against Udio (New York, two cases) and, with Universal, against Suno (Massachusetts). GEMA won against Suno on 31 July 2026; an appeal is expected. Fair use in the US is undecided.'),
+     'Sony against Udio (New York, two cases) and, with Universal, against Suno (Massachusetts). GEMA won against Suno on 31 July 2026; Suno says it may appeal. Fair use in the US is undecided.'),
     ('WHAT YOU OWN', 'Read the plan, not the law.',
      'Suno free: non-commercial. Suno paid: whatever rights Suno has, no promise there are any. AIVA Pro: the copyright. Udio: no downloads. Terms change; note the date.'),
     ('CHALLENGE 5', 'Name the tool and the plan.',
@@ -690,11 +699,11 @@ S.append(cards('06 · FIVE SOUNDS YOU KNOW', 'Sonic identity: a rule, a brief, a
     ('INTEL · 1994', 'The bong.',
      'Walter Werzowa: five notes, about three seconds, debuted in 1995. Intel\'s own count: five notes and twenty sounds built from them.'),
     ('WINDOWS 95 · 1995', 'The startup chime.',
-     'Brian Eno, from a brief that asked for "inspiring, universal, optimistic, futuristic, sentimental, emotional" — and three and a quarter seconds. He delivered about six.'),
+     'Brian Eno, from a brief that asked for "inspiring, universal, blah-blah, da-da-da, optimistic, futuristic, sentimental, emotional" — and three and a quarter seconds. He delivered about six.'),
     ('NETFLIX · 2015', 'Ta-dum.',
      'Lon Bender: a wedding ring knocked on a nightstand, and a guitar chord played backwards. Two notes that a hundred million people hear every night.'),
     ('MASTERCARD · 2019', 'A sound architecture.',
-     'Launched 8 February 2019: a melody for ads, a chime for the moment you pay, and versions for every country. A design system, for the ear.'),
+     'Launched 8 February 2019: a melody for ads, a chime for the moment you pay, and regional versions. A design system, for the ear.'),
 ], text_size=19, head_size=28, notes='Five briefs, five answers, none longer than a breath. Point at what each spec must have contained: a length (Eno\'s three and a quarter seconds), a moment (the payment chime, the startup), a feeling in words, a must-not. Hum the Intel one; the room finishes it. That recognition is the deliverable of sonic identity, and it is exactly what a model cannot know it has achieved. Then the anatomy.'))
 
 S.append(figure_slide('06 · THE SOUND SPEC', 'A sound spec is a brief for a machine that plays.', F.w06_sound_spec(),
@@ -720,7 +729,7 @@ S.append(cards('06 · WHAT THE MODEL DECIDES', 'Four questions for every sound.'
 S.append(question('multiple_choice', 'In a language model, a token is…', [
     'Always one word', 'A piece of text the model reads as a number', 'One letter', 'A sentence',
 ], eyebrow_text='06 · MOCK QUIZ · 4 OF 8 · MULTIPLE CHOICE',
-    notes='Question 4 of 8, week 4. Correct: B. Pieces, not words: "unbelievable" is three tokens, a Chinese character can be several bytes of one, and the model never sees letters — which is why it cannot count them. Today the same idea with a codec: a token of sound is a fraction of a second.'))
+    notes='Question 4 of 8, week 4. Correct: B. Pieces, not words: "unbelievable" is three tokens, a Chinese character can be one token or several, and the model never sees letters — which is why it cannot count them. Today the same idea with a codec: a token of sound is a fraction of a second.'))
 
 S.append(question('multiple_choice', 'A diffusion model makes an image by…', [
     'Searching the web for the closest picture', 'Removing noise step by step, steered by the prompt', 'Copying the nearest training image', 'Drawing vector shapes from a rule',
@@ -733,11 +742,11 @@ S.append(section('07', 'Thirty seconds for a product.', f'35 minutes · a produc
 
 S.append(content('07 · THE TOOLS', 'One music model for the room. And a fallback that is a rule.',
                  [f'**The language model:** any model on **{GENAI}**, to write the spec with you and translate it into a prompt.',
-                  '**The music model:** the one Nicolò tested from the classroom network this morning — Suno\'s free plan (personal, non-commercial), the MusicGen demo on Hugging Face, or Stable Audio\'s free tier, whichever answers. Same model for everyone, so the middle is the same middle.',
-                  f'**The fallback, and round 4 for everyone:** the step sequencer from chapter three, at **{P5}** — the share link is on Blackboard. It runs on a phone. The spec is what you submit; the sound is evidence.',
+                  '**The music model:** the one Nicolò tested from the classroom network this morning — its name and its link are on Blackboard. Same model for everyone, so the middle is the same middle.',
+                  '**The fallback, and round 4 for everyone:** the step sequencer from chapter three, on its own page on the course site — the link is on Blackboard. It runs on a phone. The spec is what you submit; the sound is evidence.',
                   '- Phones: the spec, the language model and the sequencer all work in a browser. Pair with a laptop for the music model.'],
                  body_size=28,
-                 notes='Say which music model it is today; it changes term by term and the free tiers change monthly. If none answers from the room — it has happened — the workshop is the spec plus the sequencer, and the debrief is the same. The point of the exercise is the spec and the comparison, not the file.'))
+                 notes='Say which music model it is today; it changes term by term and the free tiers change monthly. The candidates Nicolò tries in the morning: Suno\'s free plan (personal, non-commercial), the MusicGen demo on Hugging Face, Stable Audio\'s free tier — whichever answers from the classroom network. If none answers — it has happened — the workshop is the spec plus the sequencer, and the debrief is the same. The sequencer link on Blackboard is the sketch\'s own page on the course site (week06/sketches/w06-sequencer.html, p5.js 1.11 with p5.sound 1.0 built in), not the p5.js editor: the editor\'s default has been p5.js 2.x since August 2026, and this p5.sound code needs 1.x. The point of the exercise is the spec and the comparison, not the file.'))
 
 S.append(activity('1 — ALONE · THE SPEC', 5, 'Write the spec.',
                   ['Pick a product you know and a moment in it: a lock opening, a payment going through, an app starting, a timer ending.',
@@ -769,7 +778,7 @@ S.append(activity('4 — TWO PAIRS · THE RULE', 10, 'The same brief, as a rule.
                    'One scribe screenshots the grid — or the model\'s waveform — and uploads it with the spec as the caption.'],
                   sketch=live('w06-sequencer-act', SEQ_CODE, 1000, 600, hint='click to start · click a cell to toggle · mouse y = tempo · C clears', extra=SOUND_GUARD, sound=True),
                   bg=YELLOWS[2],
-                  notes='Ten minutes in fours. The sequencer obeys the rule lines exactly and has no idea what "light, outdoors" means; the model had the mood and ignored the tempo. Four people arguing about which is the product\'s sound are doing the design. Expect a split: the grid wins for notifications and unlocks, the model for anything longer than five seconds. The sketch runs here in the html deck; the share link on Blackboard runs it in the editor on any device.'))
+                  notes='Ten minutes in fours. The sequencer obeys the rule lines exactly and has no idea what "light, outdoors" means; the model had the mood and ignored the tempo. Four people arguing about which is the product\'s sound are doing the design. Expect a split: the grid wins for notifications and unlocks, the model for anything longer than five seconds. The sketch runs here in the html deck; the link on Blackboard opens the same sketch on its own page on the course site, on any device.'))
 
 S.append(question('image_upload', 'Scribes only. The grid or the spectrogram, and the spec that made it.',
                   hint='One image per four: a screenshot of the sequencer grid, or of the model\'s waveform. Caption: the spec, word for word.',
@@ -832,7 +841,7 @@ S.append(content('08 · BEFORE WEEK 7', 'The reflection, the revision, the sound
                  ['**The individual reflection**, about 1000 words with three experiments, on Blackboard before class. Draft check with the TAs today after class and next week before it.',
                   '**Revise weeks 1 to 6** from the PDFs on the course site and the playlist. The quick checks are the model of the quiz.',
                   '**Challenge 5** on Blackboard: the spec, the sound, the terms.',
-                  '**A pitch idea, one sentence:** a product or service in which a model decides something for each person. Next week you say it to the room in thirty seconds, and teams of four or five form around the ideas people want to build.',
+                  '**A pitch idea, one sentence:** a product or service in which a model decides something for each person. Next week you say it to the room in sixty seconds, and teams of four or five form around the ideas people want to build.',
                   f'[{SITE}]({"https://" + SITE}) · [{PLAYLIST.replace("https://", "")}]({PLAYLIST})'],
                  body_size=30,
                  notes='Four things, one of them new: the pitch. One sentence is enough — the product, who it is for, what the model decides. Next week the pitches take the middle hour, and teams form around them. Say the order of next week: the Challenge 5 vote, the quiz, the pitches, the teams.'))
@@ -875,9 +884,9 @@ if __name__ == '__main__':
 #   https://distributedmuseum.illinois.edu/exhibit/illiac-suite/  (premiere August 1956; composed by the end of 1956)
 #   https://sandred.com/texts/Revisiting_the_Illiac_Suite.pdf  (screening rules; probability tables with simpler intervals more likely)
 #   https://www.computerhistory.org/revolution/computer-graphics-music-and-art/15/222  (Max Mathews, MUSIC, 1957, IBM 704)
-#   https://120years.net/music-n-max-mathews-usa-1957/  (17 seconds, "The Silver Scale")
-#   https://www.guinnessworldrecords.com/world-records/454935-first-song-performed-using-computer-speech-synthesis  (Daisy Bell, 1961, Kelly, Lochbaum, Mathews)
-#   https://en.wikipedia.org/wiki/Daisy_Bell  (Clarke, 2001: A Space Odyssey)
+#   https://120years.net/music-n-max-mathews-usa-1957/  (Mathews and Newman Guttman, 1957: 17 seconds, "The Silver Scale")
+#   https://www.guinnessworldrecords.com/world-records/454935-first-song-performed-using-computer-speech-synthesis  (Daisy Bell: Guinness says 1960 on an IBM 704, Lochbaum, Kelly, Mathews)
+#   https://en.wikipedia.org/wiki/Daisy_Bell  (1961 on an IBM 7090, Kelly, Lochbaum, Mathews; Clarke, 2001: A Space Odyssey — the slide keeps 1961)
 # Machine B for audio:
 #   https://en.wikipedia.org/wiki/Riffusion  and  https://techcrunch.com/2022/12/15/try-riffusion-an-ai-model-that-composes-music-by-visualizing-it/
 #   https://huggingface.co/riffusion/riffusion-model-v1  (fine-tuned from Stable Diffusion v1.5)
@@ -909,6 +918,7 @@ if __name__ == '__main__':
 #   https://www.thx.com/deepnote/  and  https://en.wikipedia.org/wiki/Deep_Note  (1983, James A. Moorer)
 #   https://timeline.intel.com/1995/the-intel-bong  (composed 1994, debuted 1995, three seconds, five notes)
 #   https://www.intel.com/content/www/us/en/support/articles/000015030/programs.html
-#   https://www.musicradar.com/artists/producers-engineers/the-thing-from-the-agency-said-we-want-a-piece-of-music-that-is-inspiring-universal-blah-blah-da-da-da-and-at-the-bottom-it-said-and-it-must-be-3-and-1-4-seconds-long-brian-enos-windows-95-start-up-sound-added-to-the-us-library-of-congress
+#   https://www.musicradar.com/artists/producers-engineers/the-thing-from-the-agency-said-we-want-a-piece-of-music-that-is-inspiring-universal-blah-blah-da-da-da-and-at-the-bottom-it-said-and-it-must-be-3-and-1-4-seconds-long-brian-enos-windows-95-start-up-sound-added-to-the-us-library-of-congress  (the brief quoted whole; about six seconds delivered)
+#   https://github.com/processing/p5.js/issues/8870  and  https://github.com/processing/p5.js-web-editor/issues/3513  (p5.js 2.x the editor's default since 31 July / August 2026; the 1.x p5.sound throws under 2.x — why the sequencer link is the site's own page)
 #   https://www.hollywoodreporter.com/news/general-news/netflixs-signature-sound-was-a-goats-bleat-1305916/  (Lon Bender, 2015)
 #   https://www.mastercard.com/news/europe/en-uk/newsroom/press-releases/en-gb/2019/february/sound-on-mastercard-debuts-sonic-brand/  (8 February 2019)
