@@ -50,26 +50,28 @@ def w08_decision_anatomy(name='w08-decision-anatomy', w=1680, h=560):
     y = 200
     bw, bh = 240, 104
     # the person
-    c.circle(120, y, 60, fill=TEAL)
-    c.text(120, y + 8, 'A PERSON', size=18, color=INK, anchor='middle')
+    c.circle(100, y, 60, fill=TEAL)
+    c.text(100, y + 8, 'A PERSON', size=18, color=INK, anchor='middle')
     # data · score
-    boxes = [(270, 'THEIR DATA', ['what they did, said, are;', 'given, taken, inferred'], PAPER),
-             (610, 'A SCORE', ['one number: how likely', 'they want it · rule or model'], TINT_VIOLET)]
+    bw = 290
+    boxes = [(250, 'THEIR DATA', ['what they did, said, are;', 'given, taken, inferred'], PAPER),
+             (600, 'A SCORE', ['one number: how likely they', 'want it · rule or model'], TINT_VIOLET)]
     for x, t, lines, fill in boxes:
         c.rect(x, y - bh / 2, bw, bh, fill=fill)
         c.text(x + 18, y - 14, t, size=19, color=INK)
         _lines(c, x + 18, y + 14, lines, size=15, color=MUTED, lh=20)
-    _arrow(c, 186, y, 264, y, INK, 4, 12)
-    _arrow(c, 510, y, 604, y, INK, 4, 12)
+    _arrow(c, 166, y, 244, y, INK, 4, 12)
+    _arrow(c, 540, y, 594, y, INK, 4, 12)
     # the threshold: a gate
     gx = 950
     c.poly([(gx + 70, y - 70), (gx + 140, y), (gx + 70, y + 70), (gx, y)], fill=TINT_ORANGE, stroke=INK, width=3)
     c.text(gx + 70, y - 4, 'score', size=15, color=INK, anchor='middle')
     c.text(gx + 70, y + 18, '> t ?', size=17, color=INK, anchor='middle')
     c.text(gx + 70, y - 96, 'THE THRESHOLD', size=19, color=INK, anchor='middle')
-    _arrow(c, 850, y, gx - 6, y, INK, 4, 12)
+    _arrow(c, 890, y, gx - 6, y, INK, 4, 12)
     # yes → the decision · no → the fallback
     dx = 1300
+    bw = 240
     c.rect(dx, 60, bw + 80, bh, fill=ORANGE)
     c.text(dx + 18, 100, 'THE DECISION', size=19, color=INK)
     _lines(c, dx + 18, 128, ['show it, rank it first, say it,', 'suggest it — for this person, now'], size=15, color=INK, lh=20)
@@ -86,8 +88,8 @@ def w08_decision_anatomy(name='w08-decision-anatomy', w=1680, h=560):
     # who sets each part
     c.line(0, 430, w, 430, LINE, 2, cap='butt')
     c.text(0, 464, 'WHO SETS IT', size=16, color=ORANGE)
-    cols = [(270, 'the data', 'you choose what to take, and ask'),
-            (610, 'the score', 'written (machine A) or learned (B)'),
+    cols = [(250, 'the data', 'you choose what to take, and ask'),
+            (600, 'the score', 'written (machine A) or learned (B)'),
             (950, 'the threshold', 'a number you set; it moves'),
             (1300, 'both branches', 'designed — the wrong one most')]
     for x, t, s in cols:
@@ -114,7 +116,7 @@ def w08_decision_card(name, product, sub, rows, w=800, h=700, accent=ORANGE):
     step = (h - y - 10) / 5
     for i, label in enumerate(CARD_ROWS):
         ry = y + i * step
-        c.text(28, ry + 20, label, size=14, color=accent)
+        c.text(28, ry + 20, label, size=15, color=accent)
         lines = rows[i] if rows else None
         if lines:
             _lines(c, 28, ry + 48, lines, size=17, color=INK, lh=23)
@@ -134,7 +136,7 @@ def w08_card_spotify():
     return w08_decision_card('w08-card-spotify', 'Spotify DJ', 'beta 22 February 2023 · Premium · US and Canada, then 50 markets', [
         ['what plays next for you — and what', 'to say about it, in a voice'],
         ['each Premium listener, one lineup', 'each; nobody hears the same DJ'],
-        ['your listening history, your skips;', 'the editors\' Writers\' Room for the words'],
+        ['your listening history, your skips; for the', 'words, a Writers\' Room of music and culture', 'experts, data curators and scriptwriters'],
         ['the personalisation model ranks tracks;', 'generated commentary read by a voice model', 'of Xavier "X" Jernigan (Sonantic)'],
         ['skip; hit the DJ button and it switches', 'direction; or leave DJ for your playlist'],
     ], accent=TEAL)
@@ -156,7 +158,7 @@ def w08_card_duolingo():
         ['every learner; Max subscribers get the', 'GPT-4 tutor and Roleplay conversations'],
         ['every tap: what you got wrong, how fast,', 'when you come back, what you skip'],
         ['a model estimates what you know; the', 'courses are generated with models:', '148 in about a year, the first 100 in 12'],
-        ['a wrong explanation reads like a right', 'one; the contractor who checked is gone'],
+        ['a wrong explanation reads like a right', 'one; who checks it now? the memo\'s', 'answer: fewer contractors'],
     ], accent=VIOLET)
 
 
@@ -197,14 +199,14 @@ def w08_wizard(name='w08-wizard', w=1680, h=560):
     _lines(c, 510, y - 14, ['a paper screen, a chat window,', 'a voice from a laptop:', 'the shape of the decision'], size=15, color=MUTED, lh=20, anchor='middle')
     _arrow(c, 206, y - 16, 354, y - 16, INK, 4, 12)
     _arrow(c, 354, y + 16, 206, y + 16, INK, 4, 12)
-    c.text(280, y - 30, 'a request', size=14, color=MUTED, anchor='middle')
-    c.text(280, y + 44, 'a decision', size=14, color=MUTED, anchor='middle')
+    c.text(280, y - 30, 'a request', size=15, color=MUTED, anchor='middle')
+    c.text(280, y + 44, 'a decision', size=15, color=MUTED, anchor='middle')
     # the curtain
     cx = 800
     for k in range(0, 400, 26):
         c.line(cx, 70 + k, cx, 70 + k + 14, VIOLET, 5, cap='butt')
     c.text(cx, 500, 'THE CURTAIN', size=16, color=VIOLET, anchor='middle')
-    c.text(cx, 524, 'the person must not see behind it', size=14, color=MUTED, anchor='middle')
+    c.text(cx, 524, 'the person must not see behind it', size=15, color=MUTED, anchor='middle')
     # the wizard
     c.circle(1000, y, 60, fill=VIOLET)
     c.text(1000, y + 8, 'THE WIZARD', size=17, color='#FFFFFF', anchor='middle')
@@ -216,10 +218,10 @@ def w08_wizard(name='w08-wizard', w=1680, h=560):
     # what the wizard holds
     c.rect(1180, 100, 480, 120, fill=TINT_ORANGE)
     c.text(1200, 138, 'THE RULE ON A CARD', size=17, color=INK)
-    _lines(c, 1200, 166, ['"show the new thing if they opened it twice', 'this week" — machine A, played by a human'], size=14, color=MUTED, lh=19)
+    _lines(c, 1200, 166, ['"show the new thing if they opened it twice', 'this week" — machine A, played by a human'], size=15, color=MUTED, lh=20)
     c.rect(1180, 250, 480, 120, fill=TINT_VIOLET)
     c.text(1200, 288, 'THE DATA ON A SHEET', size=17, color=INK)
-    _lines(c, 1200, 316, ['a spreadsheet with a row per person: what', 'you already know, and what you had to invent'], size=14, color=MUTED, lh=19)
+    _lines(c, 1200, 316, ['a spreadsheet with a row per person: what', 'you already know, and what you had to invent'], size=15, color=MUTED, lh=20)
     c.line(1060, y, 1172, 160, MUTED, 2, cap='butt')
     c.line(1060, y, 1172, 310, MUTED, 2, cap='butt')
     # what you learn
@@ -228,7 +230,7 @@ def w08_wizard(name='w08-wizard', w=1680, h=560):
     _lines(c, 0, 484, ['is the decision wanted at all · how fast it has to be', 'what the person does when it is wrong · which data you do not have'], size=15, color=INK, lh=22)
     c.text(1180, 454, 'IBM, 1983: a "listening typewriter" that took dictation.', size=15, color=INK)
     c.text(1180, 480, 'The speech recogniser was a typist in the next room.', size=15, color=MUTED)
-    c.text(1180, 506, 'The findings held when the real one arrived.', size=15, color=MUTED)
+    c.text(1180, 506, 'Would an imperfect one still be useful? Some were.', size=15, color=MUTED)
     return c.finish(name)
 
 
@@ -262,8 +264,8 @@ def w08_grain(name='w08-grain', w=1680, h=560):
         if threshold is not None:
             tx = x0 + threshold * pw
             _dashed(c, tx, top - 10, tx, base + 8, INK, 3, 10, 7)
-            c.text(tx + 12, 190, 'the threshold', size=14, color=INK)
-            c.text(tx + 12, 210, 'you set', size=14, color=INK)
+            c.text(tx + 12, 190, 'the threshold', size=15, color=INK)
+            c.text(tx + 12, 211, 'you set', size=15, color=INK)
         c.text(x0, base + 30, 'edge', size=15, color=MUTED)
         c.text(x0 + pw / 2, base + 30, 'typical', size=15, color=INK, anchor='middle')
         c.text(x0 + pw, base + 30, 'edge', size=15, color=MUTED, anchor='end')
@@ -284,28 +286,29 @@ def w08_grain(name='w08-grain', w=1680, h=560):
 
 # ───────────────────────── the semester as five sprints ─────────────────────────
 def w08_sprints(name='w08-sprints', w=1680, h=560):
-    """Weeks 8 to 13 as sprints: a backlog above, one deliverable per sprint, a stand-up at the start of every class."""
+    """Weeks 8 to 13 as sprints: a backlog on the left, one deliverable per sprint, a stand-up at the team table before
+    every class from week 9, and the review with the TAs after class (the first one is today)."""
     c = Canvas(w, h)
     c.text(0, 34, 'THE GROUP PROJECT AS SCRUM · WEEKS 8 – 13', size=18, color=ORANGE)
     c.text(w, 34, 'Scrum Guide 2020: a sprint is one month or less; ours is a week', size=16, color=MUTED, anchor='end')
     # the backlog
-    c.rect(0, 70, 380, 300, fill=PAPER)
+    c.rect(0, 70, 340, 300, fill=PAPER)
     c.text(20, 104, 'THE BACKLOG', size=18, color=INK)
-    c.text(20, 128, 'one ordered list · the only source of work', size=14, color=MUTED)
+    c.text(20, 128, 'in order · the only source of work', size=14, color=MUTED)
     items = ['1  the decision, in one sentence', '2  the data we have · do not have', '3  the bias register', '4  a wizard-of-Oz test', '5  the prototype of the moment', '6  poster · video · brief']
     for i, t in enumerate(items):
         c.text(28, 166 + i * 30, t, size=15, color=INK if i < 2 else MUTED)
-    c.rect(20, 152, 340, 34, stroke=ORANGE, width=2)
-    c.text(360, 146, 'this sprint', size=13, color=ORANGE, anchor='end')
-    _arrow(c, 380, 200, 440, 200, INK, 4, 12)
+    c.rect(20, 152, 300, 34, stroke=ORANGE, width=2)
+    c.text(320, 146, 'this sprint', size=14, color=ORANGE, anchor='end')
+    _arrow(c, 340, 200, 394, 200, INK, 4, 12)
     # the sprints
-    x0, sw, gap = 450, 190, 16
-    weeks = [('WEEK 8', 'the proposal', 'one page: the decision,', 'for whom, what data'),
-             ('WEEK 9', 'concept board', 'and the bias register', 'after Coded Bias'),
-             ('WEEK 10', 'prototype v1', 'paper, Figma or code:', 'the moment, decided'),
+    x0, sw, gap = 400, 200, 16
+    weeks = [('WEEK 8', 'the proposal', 'one page: decision,', 'for whom, what data'),
+             ('WEEK 9', 'concept board', 'plus the register,', 'after Coded Bias'),
+             ('WEEK 10', 'prototype v1', 'paper, Figma, code:', 'the moment, decided'),
              ('WEEK 11', 'draft poster', 'and the one-page', 'mediation brief'),
              ('WEEK 12', 'final poster', 'and the 3–5 minute', 'video, ready'),
-             ('WEEK 13', 'the fair', 'A0 on the wall ·', 'then the final quiz')]
+             ('WEEK 13', 'the fair', 'A0 on the wall,', 'then the final quiz')]
     for i, (wk, head, l1, l2) in enumerate(weeks):
         x = x0 + i * (sw + gap)
         fill = TINT_ORANGE if i == 0 else (INK if i == 5 else PAPER)
@@ -314,18 +317,20 @@ def w08_sprints(name='w08-sprints', w=1680, h=560):
         mc = '#B3B7BE' if i == 5 else MUTED
         c.text(x + 16, 124, wk, size=15, color=ORANGE if i < 5 else '#F0BD60')
         c.text(x + 16, 160, head, size=19, color=tc, mono=False, weight=700)
-        c.text(x + 16, 192, l1, size=13, color=mc)
-        c.text(x + 16, 212, l2, size=13, color=mc)
-        # the stand-up
+        c.text(x + 16, 192, l1, size=14, color=mc)
+        c.text(x + 16, 213, l2, size=14, color=mc)
+        # today the first review; from week 9 a stand-up before every class
         c.rect(x + 16, 264, sw - 32, 52, fill=TEAL if i < 5 else '#2A3644')
-        c.text(x + sw / 2, 286, 'STAND-UP', size=13, color=INK if i < 5 else '#FFFFFF', anchor='middle')
-        c.text(x + sw / 2, 306, '15 min · start of class', size=11, color=INK if i < 5 else '#B3B7BE', anchor='middle')
+        band = ('REVIEW · THE TAs', 'after class today') if i == 0 else ('STAND-UP · 15 MIN', 'before class')
+        c.text(x + sw / 2, 286, band[0], size=14, color=INK if i < 5 else '#FFFFFF', anchor='middle')
+        c.text(x + sw / 2, 306, band[1], size=14, color=INK if i < 5 else '#B3B7BE', anchor='middle')
         if i < 5:
             _arrow(c, x + sw, 215, x + sw + gap - 2, 215, INK, 3, 9)
     # the stand-up's three questions, and the review
     c.line(0, 400, w, 400, LINE, 2, cap='butt')
-    c.text(0, 434, 'THE STAND-UP: THREE QUESTIONS, FIFTEEN MINUTES, STANDING', size=16, color=ORANGE)
-    _lines(c, 0, 464, ['what did I do since last class · what will I do before the next · what is in my way'], size=15, color=INK, lh=22)
+    c.text(0, 434, 'THE STAND-UP: THREE QUESTIONS, FIFTEEN MINUTES, STANDING, BEFORE CLASS', size=16, color=ORANGE)
+    _lines(c, 0, 464, ['what did I do since last class · what will I do before the next · what is in my way',
+                       'at your table in the half hour before class, the TAs in the room; the scribe writes it down'], size=15, color=INK, lh=22)
     c.text(900, 434, 'THE REVIEW: THE TAs, THIRTY MINUTES AFTER CLASS', size=16, color=ORANGE)
     _lines(c, 900, 464, ['show the increment — the thing that exists now — not the plan;', 'then move one item from the backlog into the next sprint'], size=15, color=INK, lh=22)
     c.text(0, 540, 'Takeuchi & Nonaka, HBR, January 1986: teams that move like a rugby side, not a relay · Schwaber & Sutherland, Scrum, 1995 · the Scrum Guide, 2020', size=14, color=MUTED)
@@ -354,33 +359,33 @@ def w08_git(name='w08-git', w=1680, h=560):
     labels = ['v1 · the pitch sentence', 'v2 · the decision card', 'v3 · the data we have', 'v4 · voice merged in', 'v5 · wizard test, fixed', 'v6 · concept board']
     for i, x in enumerate(xs):
         c.circle(x, ym, 16, fill=ORANGE if i in (1, 4) else INK)
-        c.text(x, ym + 52, labels[i], size=14, color=INK, anchor='middle')
+        c.text(x, ym + 52, labels[i], size=15, color=INK, anchor='middle')
     for x, t in ((xs[2], 'try: a voice, no screen'), (xs[3], 'the voice, tested')):
         c.circle(x, yb1, 14, fill=VIOLET)
-        c.text(x, yb1 - 30, t, size=14, color=VIOLET, anchor='middle')
+        c.text(x, yb1 - 30, t, size=15, color=VIOLET, anchor='middle')
     for x, t in ((xs[3], 'try: decide for a family'), (xs[4] + 60, 'kept, not merged')):
         c.circle(x, yb2, 14, fill=TEAL)
-        c.text(x, yb2 + 40, t, size=14, color=INK, anchor='middle')
-    c.text(xs[1], ym - 34, 'branch', size=14, color=VIOLET, anchor='middle')
-    c.text(xs[4], ym - 34, 'merge', size=14, color=VIOLET, anchor='middle')
+        c.text(x, yb2 + 40, t, size=15, color=INK, anchor='middle')
+    c.text(xs[1], ym - 34, 'branch', size=15, color=VIOLET, anchor='middle')
+    c.text(xs[4], ym - 34, 'merge', size=15, color=VIOLET, anchor='middle')
     # the vocabulary, in both tools
     x0 = 1300
-    c.rect(x0, 90, 380, 320, fill=PAPER)
+    c.rect(x0, 90, 380, 340, fill=PAPER)
     c.text(x0 + 20, 124, 'THE SAME FOUR WORDS', size=16, color=ORANGE)
     rows = [('REPOSITORY', 'Git: the folder + its history', 'Figma: the file'),
             ('COMMIT', 'Git: a saved state, with a message', 'Figma: a named version'),
             ('BRANCH', 'Git: a copy to try things in', 'Figma: a branch of the file'),
             ('MERGE', 'Git: bring the branch back', 'Figma: review, then merge')]
     for i, (t, g, f) in enumerate(rows):
-        y = 160 + i * 62
+        y = 160 + i * 66
         c.text(x0 + 20, y, t, size=15, color=INK)
-        c.text(x0 + 20, y + 20, g, size=13, color=MUTED)
-        c.text(x0 + 20, y + 38, f, size=13, color=MUTED)
+        c.text(x0 + 20, y + 22, g, size=14, color=MUTED)
+        c.text(x0 + 20, y + 44, f, size=14, color=MUTED)
     c.line(0, 440, 1240, 440, LINE, 2, cap='butt')
     _lines(c, 0, 474, ['a commit is a decision with a date and a name on it: the process documentation the rubric asks for, made as a side effect',
                        'the rule of the team: nobody works on main; every idea is a branch; a branch that is not merged is still kept — it is evidence for the poster'],
            size=15, color=INK, lh=22)
-    c.text(0, 540, 'no Organization plan? name the versions by hand: v1, v2, v3 in the file name and in the version history, with one line each', size=14, color=MUTED)
+    c.text(0, 540, 'no Organization plan? name the versions by hand: v1, v2, v3 in the file name and in the version history, with one line each', size=15, color=MUTED)
     return c.finish(name)
 
 
@@ -402,14 +407,14 @@ def w08_ladder(name='w08-ladder', w=1680, h=560):
         y = 330 - i * step_h
         c.rect(x, y, step_w, 100, fill=fill)
         c.text(x + 16, y + 34, t, size=17, color=INK)
-        c.text(x + 16, y + 60, l1, size=14, color=INK if fill in (TEAL, ORANGE) else MUTED)
-        c.text(x + 16, y + 80, l2, size=14, color=INK if fill in (TEAL, ORANGE) else MUTED)
+        c.text(x + 16, y + 60, l1, size=15, color=INK if fill in (TEAL, ORANGE) else MUTED)
+        c.text(x + 16, y + 81, l2, size=15, color=INK if fill in (TEAL, ORANGE) else MUTED)
         # the riser
         if i < n - 1:
             c.line(x + step_w, y + 100, x + step_w, y - step_h + 100, LINE, 3, cap='butt')
         # the example, hung under the rung
         c.line(x + 16, y + 118, x + 16, 470, LINE, 2, cap='butt')
-        _lines(c, x + 28, 466, _wrap(ex, 34), size=14, color=INK, lh=19)
+        _lines(c, x + 28, 466, _wrap(ex, 32), size=15, color=INK, lh=20)
     c.text(0, 540, 'the example is made up · yours will be too, until rung 4 makes you check whether the data exists — that check is the proposal', size=15, color=MUTED)
     return c.finish(name)
 

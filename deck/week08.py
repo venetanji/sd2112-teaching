@@ -60,11 +60,7 @@ function draw() {
   for (let p of people) {
     let show = w * p.nov + (1 - w) * p.tim > t;       // the rule
     shown += show; wanted += p.wants; hit += show && p.wants;
-    let x = px + p.nov * pw, y = py + ph - p.tim * ph;
-    strokeWeight(2);
-    if (show) { stroke(ORANGE); fill(p.wants ? ORANGE : 255); }
-    else { stroke(p.wants ? ORANGE : 200); fill(p.wants ? 255 : 225); }
-    circle(x, y, show ? 15 : 10);
+    mark(px + p.nov * pw, py + ph - p.tim * ph, show, p.wants);
   }
   boundary(px, py, pw, ph, t, w);
   noStroke(); fill(90); textSize(14);
@@ -79,10 +75,25 @@ function draw() {
   bar(rx, 160, shown / N, 'shown to ' + round(100 * shown / N) + ' % of people', ORANGE);
   bar(rx, 240, shown ? hit / shown : 0, 'of whom ' + (shown ? round(100 * hit / shown) : 0) + ' % would have wanted it', ORANGE);
   bar(rx, 320, wanted ? (wanted - hit) / wanted : 0, 'missed: ' + (wanted ? round(100 * (wanted - hit) / wanted) : 0) + ' % of those who wanted it never saw it', '#5C6470');
-  textSize(14); fill(0);
-  text('● shown, wanted   ○ shown, not wanted (annoyed)', rx, 420);
-  text('◌ wanted, not shown (missed)   · neither', rx, 444);
+  legend(rx, 420, true, true, 'shown, wanted');
+  legend(rx + 200, 420, true, false, 'shown, not wanted (annoyed)');
+  legend(rx, 446, false, true, 'wanted, not shown (missed)');
+  legend(rx + 300, 446, false, false, 'neither');
+  noStroke(); fill(0); textSize(14);
   text('the truth is hidden: nobody knows who wants it until it is shown', rx, 490);
+}
+
+function mark(x, y, show, wants) {      // one mark per outcome; the legend is drawn by the same function
+  strokeWeight(2);
+  if (show && wants) { stroke(ORANGE); fill(ORANGE); circle(x, y, 15); }   // the hit
+  else if (show) { stroke(ORANGE); fill(255); circle(x, y, 15); }          // the annoyance
+  else if (wants) { noStroke(); fill(ORANGE); circle(x, y, 9); }           // the miss
+  else { stroke(200); fill(225); circle(x, y, 9); }                        // the default
+}
+
+function legend(x, y, show, wants, label) {
+  mark(x + 8, y - 5, show, wants);
+  noStroke(); fill(0); textSize(14); text(label, x + 26, y);
 }
 
 function bar(x, y, k, label, col) {
@@ -93,9 +104,10 @@ function bar(x, y, k, label, col) {
 
 function boundary(px, py, pw, ph, t, w) {    // the line where score = t
   stroke(0); strokeWeight(2); noFill();
+  if (w > 0.999) { line(px + t * pw, py, px + t * pw, py + ph); return; }   // all the weight on novelty: vertical
   let pts = [];
   for (let i = 0; i <= 64; i++) {
-    let nov = i / 64, tim = w < 1 ? (t - w * nov) / (1 - w) : 2;
+    let nov = i / 64, tim = (t - w * nov) / (1 - w);
     if (tim >= 0 && tim <= 1) pts.push([px + nov * pw, py + ph - tim * ph]);
   }
   for (let i = 1; i < pts.length; i++) line(pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1]);
@@ -218,15 +230,20 @@ function draw() {
   let dx = 24 * slide;
   textAlign(LEFT); fill(0); textSize(24); text(PHASES[cur][0] + '  ·  ' + PHASES[cur][1], x0 + dx, 340);
   fill(60); textSize(16); text(PHASES[cur][2], x0 + dx, 360, 1200, 120);
-  fill(150); textSize(13); text('move the mouse across the four phases', x0, 466);
+  fill(150); textSize(14); text('move the mouse across the four phases', x0, 466);
 }
 
 function marker(ph, x0, x1, y, mid, q) {              // the model inside: where it is in each phase
-  textAlign(CENTER); textSize(13);
-  if (ph == 0) { noFill(); stroke(150); strokeWeight(1); rect(x0 + q - 22, y - 22, 44, 44); noStroke(); fill(120); text('no model yet: what data is there?', x0 + q, y + 4); }
-  if (ph == 1) { noStroke(); fill('#943890'); rect(mid - 34, y - 22, 44, 44, 4); fill(0); text('one sentence', mid - 12, y + 42); }
-  if (ph == 2) { noStroke(); fill('#943890'); rect(mid + 12 + q - 36, y - 36, 72, 72, 6); fill(255); textSize(12); text('THE MODEL', mid + 12 + q, y + 5); textSize(13); fill(0); text('rule? examples? a wizard?', mid + 12 + q, y + 60); }
-  if (ph == 3) { noStroke(); fill('#943890'); rect(x1 - 96, y - 22, 44, 44, 4); stroke('#ED6D24'); strokeWeight(3); noFill(); rect(x1 - 108, y - 34, 68, 68, 8); noStroke(); fill(0); text('inside a guardrail, watched', x1 - 74, y + 58); }
+  textAlign(CENTER); textSize(14);
+  if (ph == 0) { noFill(); stroke(150); strokeWeight(1); rect(x0 + q - 22, y - 22, 44, 44); tag(x0 + q, y + 4, 'no model yet: what data is there?', 120); }
+  if (ph == 1) { noStroke(); fill('#943890'); rect(mid - 34, y - 22, 44, 44, 4); tag(mid - 12, y + 42, 'one sentence', 0); }
+  if (ph == 2) { noStroke(); fill('#943890'); rect(mid + 12 + q - 44, y - 36, 88, 72, 6); fill(255); text('THE MODEL', mid + 12 + q, y + 5); tag(mid + 12 + q, y + 60, 'rule? examples? a wizard?', 0); }
+  if (ph == 3) { noStroke(); fill('#943890'); rect(x1 - 96, y - 22, 44, 44, 4); stroke('#ED6D24'); strokeWeight(3); noFill(); rect(x1 - 108, y - 34, 68, 68, 8); tag(x1 - 74, y + 58, 'inside a guardrail, watched', 0); }
+}
+
+function tag(x, y, t, col) {                          // a label on a white backing, so the diamond's lines do not cross it
+  noStroke(); fill(255); rectMode(CENTER); rect(x, y - 5, textWidth(t) + 12, 20); rectMode(CORNER);
+  fill(col); text(t, x, y);
 }"""
 
 # ───────────────────────── the panels of the activity ─────────────────────────
@@ -262,6 +279,14 @@ CARD_PANEL = [
     'big letters. a phone photo has to read it from the wall.',
 ]
 
+GALLERY_PANEL = [
+    'THE GALLERY · FOUR CARDS · TEAM NUMBERS, NO NAMES', ' ',
+    'CARD A   team ___', 'CARD B   team ___', 'CARD C   team ___', 'CARD D   team ___', ' ',
+    'THREE QUESTIONS FOR EACH CARD', ' ',
+    '1  is the decision one sentence?', '2  does the data exist — today, about this person?', '3  the wrong day: what does she see, what can she do?', ' ',
+    'THEN THE VOTE: the product you would let decide for you.',
+]
+
 S = []  # the slides, in order
 
 # ───────────────────────── 00 · title ─────────────────────────
@@ -276,7 +301,7 @@ S.append(agenda('SD2112 · WEEK 08', [
 ], notes='Eight stops. The first five are the lecture: the distinction from week 1 turned towards the product, five products taken apart with one card, the design process with a model in it, and the model as a material with a grain. Break. Then how a team of four or five works for six weeks, the brainstorm ladder, and the activity, which ends with your decision card on the wall and starts the group proposal.'))
 
 # ───────────────────────── 01 · last week, in your words ─────────────────────────
-S.append(section('01', 'Last week, in your words', 'the quiz · the pitches · the teams',
+S.append(section('01', 'Last week, in your words', 'the quiz · the pitches · the teams', bg=INK,
                  notes='Eight minutes of recap from what you gave us last week: the quiz, the pitch sentences, and the teams. Module 3 opens today.'))
 
 S.append(question('short_answer', 'Your team number, and what your product decides for each person.',
@@ -286,12 +311,12 @@ S.append(question('short_answer', 'Your team number, and what your product decid
 
 S.append(cards('01 · WEEK 7 · IN THREE LINES', 'The quiz, the pitches, the teams.', [
     ('THE QUIZ', 'Three questions the room got wrong.',
-     'Replace this card with the three most-missed questions and the one-line answer to each. They come back in the final quiz in week 13, reworded.'),
+     'The question, the answer, and the week that taught it — three of them, from the quiz export, read aloud. They come back in the final quiz in week 13, reworded.'),
     ('THE PITCHES', 'About twenty-five sentences.',
      'Most pitched a product. A few pitched a decision. Today turns every product into a decision: for this person, at this moment, it decides X.'),
     ('THE TEAMS', 'Four or five people. Sit with them.',
-     'Teams are on Blackboard. If you were absent, the TAs are placing you now. From today every class starts with a fifteen-minute stand-up.'),
-], text_size=24, notes='Replace the first card before class with the real three questions from the quiz export: read each, give the answer, point at the week that taught it. The pitches: name two good sentences from the wall without names. Teams: anyone not on a team goes to Amber now, not at the break.'))
+     'Teams are on Blackboard. If you were absent, the TAs are placing you now. From next week: a fifteen-minute stand-up at your table before every class.'),
+], text_size=24, notes='Before class, paste the three most-missed questions from Amber\'s quiz export into the first card, or read them from the export: read each, give the answer, point at the week that taught it. The pitches: name two good sentences from the wall without names. Teams: anyone not on a team goes to Amber now, not at the break.'))
 
 S.append(journey('01 · THE SEMESTER', 'Where we are', JOURNEY, here=(3, 0),
                  notes='Module 3, first week of three. Weeks 8 to 10 are the product side: the model inside the thing you design; next week is data, bias and privacy, then recommendation systems. Module 4 is what is left for the designer. The group proposal is the first deliverable and it is due before next week.'))
@@ -327,11 +352,6 @@ S.append(cards('02 · TWO MISTAKES', 'Every threshold makes two mistakes.', [
     ('NOT SHOWN · NOT WANTED', 'The default.', 'Most people, most of the time, get the fallback. If the fallback is bad, the product is bad for most people, however good the model. Design the fallback first.'),
 ], text_size=22, notes='The two mistakes have names in statistics — false positive, false negative — and feelings in design: the annoyance and the miss. Moving the threshold trades one for the other; it never removes both. The design question is which mistake your person can afford: a wrong song is nothing, a wrong medical nudge is not. Then the fourth card, which nobody thinks about: the fallback is what most people get.'))
 
-S.append(question('multiple_choice', 'A product shows a new feature only to people whose score is above 0.7. Who decided 0.7?', [
-    'The model learned it from the data', 'Someone chose it — and can change it', 'The users, by clicking', 'Nobody; it is the natural cut',
-], eyebrow_text='02 · QUICK CHECK · MULTIPLE CHOICE',
-    notes='B. A model gives every person a score; where to cut it is a number a person typed, in a meeting, or in a default nobody read. It moves with the business, with the season and with every retraining. If the room says A, go back one slide: the sketch has no model in it, only a rule and a slider, and the errors are already there. Whoever owns that number owns the two mistakes.'))
-
 S.append(sketch_slide('02 · LIVE · PERSONALISATION', 'At 100 %, no two people see the same product.',
                       live('w08-personalise', PERSONALISE_CODE, 1400, 560, hint='mouse x = how personalised · keys 1 – 4 = which person you are'),
                       body=['Twelve cards, one home screen. The dial blends the same-for-everyone order into a per-person order driven by a hidden profile. Turn it up and watch the four people drift apart.'],
@@ -339,10 +359,15 @@ S.append(sketch_slide('02 · LIVE · PERSONALISATION', 'At 100 %, no two people 
                       notes='At zero, four people, one product: you can screenshot it, print it, put it on a poster. At a hundred, nobody can show a friend "the app", and nobody — including you — has seen the whole product. Press 1 to 4 to become each person. Somewhere in between is a design decision most teams never make on purpose: how much of the screen is shared. Shared parts can be talked about; personal parts cannot. Ask: what on your phone is the same for everyone in this room? Not much, and that is recent.'))
 
 S.append(statement('You no longer design the screen. You design the space of screens, and who gets which.', eyebrow_text='02 · WHERE THIS LEAVES YOU', size=96,
-                   notes='The sentence of the chapter. The artefact you used to make becomes a space of possible artefacts and a rule for choosing among them. Week 1 said it about the Netflix poster; today it is every product with a model inside. The next chapter reads five of them with one card.'))
+                   notes='The sentence of the chapter. The artefact you used to make becomes a space of possible artefacts and a rule for choosing among them. Week 1 said it about the Netflix poster; today it is every product with a model inside. One quick check, then the next chapter reads five of them with one card.'))
+
+S.append(question('multiple_choice', 'A product shows a new feature only to people whose score is above 0.7. Who decided 0.7?', [
+    'The model learned it from the data', 'Someone chose it — and can change it', 'The users, by clicking', 'Nobody; it is the natural cut',
+], eyebrow_text='02 · QUICK CHECK · MULTIPLE CHOICE',
+    notes='B. A model gives every person a score; where to cut it is a number a person typed, in a meeting, or in a default nobody read. It moves with the business, with the season and with every retraining. If the room says A, go back to the threshold sketch on slide 10: it has no model in it, only a rule and a slider, and the errors are already there. Whoever owns that number owns the two mistakes.'))
 
 # ───────────────────────── 03 · five products, read as designers ─────────────────────────
-S.append(section('03', 'Five products, read as designers', 'Spotify · Netflix · Duolingo · Humane · Rabbit · 2015 – 2025',
+S.append(section('03', 'Five products, read as designers', 'Spotify · Netflix · Duolingo · Humane · Rabbit · 2015 – 2025', bg=INK,
                  notes='Chapter three: one card, five products. Three that ship and two that did not survive. Read each as a designer: what does it decide, for whom, from what, and what happens when it is wrong. The cautionary cases are the ones that teach the most.'))
 
 S.append(content('03 · HOW TO READ A PRODUCT', 'Five questions. One card.',
@@ -359,7 +384,7 @@ S.append(content('03 · HOW TO READ A PRODUCT', 'Five questions. One card.',
 S.append(content('03 · SPOTIFY DJ · 22 FEBRUARY 2023', 'A model chooses the song. A model says why.',
                  ['Beta for Premium listeners in the US and Canada; 50 markets by August 2023.',
                   '- Two decisions in one product: **what plays next**, from the personalisation model; and **what to say about it**, written with generative AI and read by a voice model of Xavier "X" Jernigan, made with Sonantic, a voice company Spotify had bought.',
-                  '- The words are not free-running: a "Writers\' Room" of editors shapes the commentary.',
+                  '- The words are not free-running: a "Writers\' Room" of music and culture experts, data curators and scriptwriters shapes the commentary.',
                   '- The fallback is a button. "If you\'re not feeling the vibe, just tap the DJ button and it will switch it up."'],
                  figure=F8.w08_card_spotify(), caption='The card, filled. Spotify Newsroom, 22 February and 8 March 2023; the expansion to 50 markets, 8 August 2023.',
                  body_size=26,
@@ -384,7 +409,7 @@ S.append(content('03 · DUOLINGO · 2023 – 2025', 'The lesson decides. Then th
                  notes='Duolingo is the honest case: a product that decides well — what to practise next, why you were wrong — and a company that decided to make the lessons themselves with models. The design question is the fifth row: a generated explanation that is wrong reads exactly like one that is right, and the person cannot tell. Who checks? The memo answered: fewer contractors. Do not moralise; ask the room who in their product plays that role, and whether the proposal names them.'))
 
 S.append(content('03 · HUMANE AI PIN · 2023 – 2025', 'A model was the whole product. Then the servers went.',
-                 ['Announced 9 November 2023 at US$699 plus US$24 a month; shipped April 2024. Founded by two former Apple designers. No screen: a laser projector on your palm, and a voice.',
+                 ['Announced 9 November 2023 at US$699 plus US$24 a month; shipped April 2024. Founded by two former Apple employees: an interface designer and a software-engineering director. No screen: a laser projector on your palm, and a voice.',
                   '- The reviews, April 2024. The Verge: "not even close". Marques Brownlee: "The Worst Product I\'ve Ever Reviewed… For Now".',
                   '- February 2025: HP bought most of Humane\'s assets for US$116 million. On 28 February 2025 the Pins stopped connecting to the servers, and stopped working.',
                   'On the card: it decided everything for you, and when it was wrong you could only ask again.'],
@@ -406,7 +431,7 @@ S.append(cards('03 · THE CAUTIONARY CASES', 'What Humane and Rabbit teach a des
      'Both objects had a state-of-the-art model in the cloud and nothing designed around it: no data of their own, no threshold anyone could set, no fallback. Week 1 said it; the market agreed.'),
     ('THE FALLBACK', 'Design row five first.',
      'Most of the time the model is slow, unsure or wrong. What the person sees then is the product they remember. A button (Spotify), a scroll (Netflix), or nothing (the Pin).'),
-    ('LATENCY', 'Ten seconds is a broken promise.',
+    ('LATENCY', 'Seconds are a broken promise.',
      'Reviewers of both objects waited, holding a device, for a cloud to answer. A decision that arrives after the moment has passed is a wrong decision, however good the score.'),
     ('THE SERVER', 'When it goes, the product goes.',
      'The Pin worked until 28 February 2025 and then did not. A product with a model inside is a service with a body. The body outlives the service; design for that day too.'),
@@ -418,7 +443,7 @@ S.append(question('multiple_choice', 'When the model is wrong, which product lea
     notes='D. The Pin had no screen, no app and no way to see what it had understood; the only move was to ask again, slower. A, B and C are all fallbacks somebody designed. Some will argue for C, because a wrong explanation is invisible: accept that as the better argument, and say the difference — Duolingo\'s person does not know it was wrong; the Pin\'s person knows and cannot act. Both are row-five failures of a different kind.'))
 
 # ───────────────────────── 04 · the double diamond, with a model inside ─────────────────────────
-S.append(section('04', 'The double diamond, with a model inside', 'discover · define · develop · deliver · Design Council, 2004',
+S.append(section('04', 'The double diamond, with a model inside', 'discover · define · develop · deliver · Design Council, 2004', bg=ORANGES[0],
                  notes='Chapter four: the process you already know, with one thing added. The Design Council drew the double diamond in 2004 from how design teams actually worked. We put a model inside it and ask what the model does, or is, in each of the four phases.'))
 
 S.append(sketch_slide('04 · LIVE · THE PROCESS', 'The model enters at define, and never leaves.',
@@ -441,7 +466,7 @@ S.append(cards('04 · WHAT THE MODEL DOES IN EACH PHASE', 'Four phases, four job
 S.append(figure_slide('04 · DEVELOP · THE WIZARD', 'Test the decision before the model exists.', F8.w08_wizard(),
                       body=['A person uses what looks like the product. Behind a curtain, a teammate plays the model: reads the rule off a card, looks up the person\'s row in a spreadsheet, types the decision. In an afternoon you learn whether the decision is wanted, how fast it must arrive, and what the person does when it is wrong.'],
                       caption='Gould, Conti & Hovanyecz, 1983: IBM\'s "listening typewriter" took dictation; the speech recogniser was a typist in the next room. Kelley, 1984, gave the method its name.',
-                      notes='The oldest trick in interaction design and the best one for this project. IBM wanted to know whether people would dictate letters to a machine before such a machine existed; a typist behind a wall was the machine. The findings held when the real one arrived. For your teams: one person is the wizard, one the interface, one observes, one is the stranger. The rule on the card is machine A played by a human; a spreadsheet is the data. What you cannot fill in the spreadsheet is the data you do not have — the last question of the activity.'))
+                      notes='The oldest trick in interaction design and the best one for this project. IBM wanted to know whether people would dictate letters to a machine before such a machine existed; a typist behind a wall was the machine. The question was whether an imperfect listening typewriter would still be worth using; the paper found that some versions were, even at first use. For your teams: one person is the wizard, one the interface, one observes, one is the stranger. The rule on the card is machine A played by a human; a spreadsheet is the data. What you cannot fill in the spreadsheet is the data you do not have — the last question of the activity.'))
 
 S.append(cards('04 · DEVELOP · RULE OR MODEL', 'Write the rule if you can. Show examples if you must.', [
     ('WRITE THE RULE', 'Machine A, if you can say it.',
@@ -507,18 +532,28 @@ S.append(cards('06 · SCRUM', 'A sprint, a backlog, a stand-up.', [
     ('THE BACKLOG', 'One ordered list. The only source of work.',
      'Everything the product needs, in order, in one place; the top item is this week\'s. Nothing is work unless it is on the list. A shared document is enough. The product owner keeps it — one person, rotating or not.'),
     ('THE STAND-UP', 'Fifteen minutes. Standing. Three questions.',
-     'Every class starts with it: what did I do since last class, what will I do before the next, what is in my way. The Guide says every working day; we say every class and one message in between. Standing keeps it short.'),
-], text_size=22, notes='Three words, no ceremony. Scrum has more parts — a review, a retrospective, a Scrum Master — and you do not need them; you need a box of time, a list, and a fifteen-minute meeting nobody can skip. The TAs run the review: thirty minutes after every class, show what exists, not what you plan. Say the rule about the backlog twice: nothing is work unless it is on the list. It saves teams from the member who "was working on the logo".'))
+     'At your table before every class, from week 9, with the TAs in the room: what did I do since last class, what will I do before the next, what is in my way. The Guide says every working day; we say every class and one message in between. Standing keeps it short.'),
+], text_size=22, notes='Three words, no ceremony. Scrum has more parts — a review, a retrospective, a Scrum Master — and you do not need them; you need a box of time, a list, and a fifteen-minute meeting nobody can skip. The TAs run the review: thirty minutes after every class, show what exists, not what you plan — the first one is today. The stand-up is the team\'s own, in the half hour before class, when the TAs are already in the room. Say the rule about the backlog twice: nothing is work unless it is on the list. It saves teams from the member who "was working on the logo".'))
 
 S.append(figure_slide('06 · THE SEMESTER AS SPRINTS', 'One sprint per week. One deliverable per sprint.', F8.w08_sprints(),
-                      body=['Six sprints from today to the fair; the backlog on the left is the syllabus in order. Every class opens with the stand-up; every review is with the TAs, thirty minutes after class, showing the thing that exists now.'],
+                      body=['Six sprints from today to the fair; the backlog on the left is the syllabus in order. From week 9 every sprint opens with the stand-up, at your table before class; every review is with the TAs, thirty minutes after class, showing the thing that exists now. The first review is today.'],
                       caption='Week 8 the proposal · 9 the concept board and the bias register · 10 prototype v1 · 11 the draft poster and the mediation brief · 12 the final poster and the video · 13 the fair, then the final quiz.',
-                      notes='The syllabus, redrawn as a backlog. The point of drawing it: every week has one deliverable and it is small; a team that does one thing a week finishes with a poster that has six layers of evidence. A team that starts the poster in week 12 finishes with a poster. The stand-up boxes are literal: the first fifteen minutes of every class from week 9, at your table, standing, with the TAs walking.'))
+                      notes='The syllabus, redrawn as a backlog. The point of drawing it: every week has one deliverable and it is small; a team that does one thing a week finishes with a poster that has six layers of evidence. A team that starts the poster in week 12 finishes with a poster. The stand-up boxes are literal: fifteen minutes at your table in the half hour before every class from week 9, standing, with the TAs in the room; week 10 opens with one in class so that every team has seen the format once. The review box on week 8 is today: thirty minutes after class, with the TAs.'))
 
 S.append(figure_slide('06 · VERSIONS', 'A repository is a history you can branch.', F8.w08_git(),
                       body=['Git, 2005: a folder that remembers every saved state, with a message; a branch to try an idea without breaking the main line; a merge to bring it back. Figma, 2021: the same four words for design files. A commit is a decision with a date and a name on it — the process documentation the rubric asks for, made as a side effect.'],
                       caption='Git: Linus Torvalds, April 2005. Figma branching: announced at Config, April 2021, in beta on the Organization plan. No branching where you are? Name the versions: v1, v2, v3, one line each.',
                       notes='You do not need Git; you need the idea. Main is the version you would show; every idea is a branch; a branch you abandon is kept, because the rubric grades process and an abandoned branch with a reason is evidence. The four words are in Figma for teams with the Organization plan, and in every tool as "save as v3" with a line about what changed. The one rule: nobody works on main. Ask: who in the room has lost a file to a teammate\'s save? Everyone. That is what this fixes.'))
+
+S.append(content('06 · THE PROCESS IS GRADED', 'Ten percent is the process. Keep the evidence.',
+                 ['The rubric: "team collaboration and process documentation, 10 %: strong shared effort; transparent, well-documented process; roles clear." Evidence, not adjectives:',
+                  '- **The backlog**, with dates: what was on top each week.',
+                  '- **The versions**: v1, v2, v3 of the card, the board, the poster — with one line each on what changed and why.',
+                  '- **The wizard logs**: who you tested, what they did when it was wrong.',
+                  '- **The stand-up notes**: three questions, five names, six weeks.',
+                  'Each member\'s contribution must show. A vanished member shows too; tell the team early, tell Amber before it costs you.'],
+                 body_size=30,
+                 notes='The 10 % is the easiest in the course to get and the easiest to lose. The scribe keeps four things and they cost nothing if you keep them as you go; they cost a weekend if you reconstruct them in week 12. The last line is the one to say slowly: PolyU rules require each member\'s contribution to show; a team with a missing member should talk to Amber in week 9, not at the fair.'))
 
 S.append(cards('06 · ROLES', 'Five jobs in a team of four or five.', [
     ('THE OWNER', 'Keeps the decision and the backlog.',
@@ -531,20 +566,10 @@ S.append(cards('06 · ROLES', 'Five jobs in a team of four or five.', [
      'The A0 and the three to five minutes. Starts in week 9 with the concept board, not in week 12 with a blank page.'),
     ('THE SCRIBE', 'Owns the record.',
      'The stand-up notes, the versions, the wizard logs, who did what. The 10 % for process — and the answer when a member vanishes.'),
-], text_size=20, head_size=26, notes='Five jobs, four or five people: with four, the scribe is a hat someone else wears. These are not the poster credits; they are who is accountable for which row of the card and which deliverable. Teams that skip the owner drift; teams that skip the scribe cannot prove who worked. Fill them in during the stand-up next week; the proposal names them.'))
-
-S.append(content('06 · THE PROCESS IS GRADED', 'Ten percent is the process. Keep the evidence.',
-                 ['The rubric: "team collaboration and process documentation, 10 %: strong shared effort; transparent, well-documented process; roles clear." Evidence, not adjectives:',
-                  '- **The backlog**, with dates: what was on top each week.',
-                  '- **The versions**: v1, v2, v3 of the card, the board, the poster — with one line each on what changed and why.',
-                  '- **The wizard logs**: who you tested, what they did when it was wrong.',
-                  '- **The stand-up notes**: three questions, five names, six weeks.',
-                  'Each member\'s contribution must show. A vanished member shows too; tell the team early, tell Amber before it costs you.'],
-                 body_size=30,
-                 notes='The 10 % is the easiest in the course to get and the easiest to lose. The scribe keeps four things and they cost nothing if you keep them as you go; they cost a weekend if you reconstruct them in week 12. The last line is the one to say slowly: PolyU rules require each member\'s contribution to show; a team with a missing member should talk to Amber in week 9, not at the fair.'))
+], text_size=20, head_size=26, sub='Sixty seconds, now, at your table: say who is who. The scribe writes it down; the proposal names them.', notes='Five jobs, four or five people: with four, the scribe is a hat someone else wears. These are not the poster credits; they are who is accountable for which row of the card and which deliverable. Teams that skip the owner drift; teams that skip the scribe cannot prove who worked. Sixty seconds at the table now: say who is who, the scribe writes it down, and the proposal names them. The chapter ends when every team has five names on paper.'))
 
 # ───────────────────────── 07 · the workshop: the brainstorm ladder ─────────────────────────
-S.append(section('07', 'The brainstorm ladder', 'the person · the moment · the decision · the data · the failure',
+S.append(section('07', 'The brainstorm ladder', 'the person · the moment · the decision · the data · the failure', bg=PAPER,
                  notes='Chapter seven, short: the tool for the next forty minutes. A ladder with five rungs, climbed in order, and the group brief it leads to.'))
 
 S.append(figure_slide('07 · THE LADDER', 'Five rungs, in this order.', F8.w08_ladder(),
@@ -552,14 +577,14 @@ S.append(figure_slide('07 · THE LADDER', 'Five rungs, in this order.', F8.w08_l
                       caption='One line per idea. The rung most teams skip is the fourth — does the data exist? — and it is the whole of the proposal.',
                       notes='Climb it once aloud with the example: a night-shift nurse; the minibus home at 7:40; it decides what she eats tonight; her roster, what she bought, what she cooked before; the day it is wrong it suggests the dish she just had at work and she orders out. Ninety seconds, five rungs, one line. Ask the room to climb it with a different person — a taxi driver, a first-year — and notice that the decision changes as soon as the moment does. Ten of these in five minutes is the first round.'))
 
-S.append(content('07 · THE GROUP PROPOSAL', 'One page. On Blackboard before week 9.',
-                 ['One page, one per team:',
+S.append(content('07 · THE GROUP PROPOSAL', 'One page, before week 9.',
+                 ['One page, one per team, on Blackboard:',
                   '- **The decision**, for whom, at what moment — one sentence.',
                   '- **The data**: have / do not have / would have to ask for.',
                   '- **Rule or model**, and why. A rule is a fine answer.',
                   '- **If it is wrong:** what the person sees; the fallback.',
                   '- The team and the five roles.',
-                  'Amber answers every one in the week-9 stand-up.'],
+                  'Amber reads every one before week 9; week 9 opens with them.'],
                  figure=F8.w08_card_blank(), caption='The decision card is the proposal, in your handwriting. Type it up, add the two lines about rule-or-model and the team, upload.',
                  body_size=28,
                  notes='Say the deadline twice and check Blackboard has it. The proposal is deliberately small: a page, five rows, and it is the define pinch of the diamond. The bit teams under-write is the data row: "user data" is not an answer; "her shift roster, which the hospital app has and we do not" is. The card today is the draft; the upload adds two lines and the names.'))
@@ -576,8 +601,8 @@ S.append(cards('07 · HOW TO BRAINSTORM', 'Four rules for the next five minutes.
 ], text_size=22, notes='Standard brainstorm hygiene, with the ladder as the format. The fourth card is the one that produces ten quickly: change one rung and you have a new line. Nicolò keeps time from the next slide; the other three walk and stop anyone who is debating instead of writing.'))
 
 # ───────────────────────── 08 · activity: ten ideas, one decision ─────────────────────────
-S.append(section('08', 'Ten ideas. One decision.', '38 minutes · your team · paper · one phone per team', bg=YELLOWS[0],
-                 notes='The activity. Four rounds at the team table, all on paper: ten ideas, one pick, one decision card, then a gallery vote and one last question. What goes into ClassPoint is a photo of the card and two short answers. Nicolò keeps time with the slide timers; Amber, WU Zhao and MA Jie walk. One phone per team for the upload.'))
+S.append(section('08', 'Ten ideas. One decision.', '35 minutes · your team · paper · one phone per team', bg=YELLOWS[0],
+                 notes='The activity. Four rounds at the team table, all on paper: ten ideas, one pick, one decision card, then a gallery vote and one last question. What goes into ClassPoint is a pulse, a photo of the card, a vote and one short answer. Nicolò keeps time with the slide timers; Amber, WU Zhao and MA Jie walk. One phone per team for the upload.'))
 
 S.append(activity('1 — TEAMS · TEN IDEAS', 5, 'Ten ideas in five minutes.',
                   ['One sheet, one pen each, the ladder on the right. **Ten lines**, each climbing all five rungs.',
@@ -598,12 +623,12 @@ S.append(activity('2 — TEAMS · PICK ONE', 3, 'Pick the one you can build.',
                   panel=PICK_PANEL, panel_size=20, bg=YELLOWS[1],
                   notes='Three minutes and a hard stop. The tests are discover, deliver and develop in disguise: does the data exist, is the failure survivable, can you wizard it. Teams that cannot choose get the tie-break; teams that choose in ten seconds get asked test A out loud. This is a pick, not a marriage: week 10 can change it.'))
 
-S.append(activity('3 — TEAMS · THE CARD', 8, 'Fill the decision card.',
+S.append(activity('3 — TEAMS · THE CARD', 10, 'Fill the decision card.',
                   ['One A4, landscape, big letters. The five rows on the right, in order; **the decision is one sentence**.',
                    'The data row has two columns: **have** and **do not have**. Be honest in the second.',
                    'Row five: the day it is wrong, what does she see, what can she do? If the answer is "nothing", write "nothing".'],
                   panel=CARD_PANEL, panel_size=20, bg=YELLOWS[2],
-                  notes='Eight minutes. This is the proposal in draft. The TAs read over shoulders for two things: a decision that is really a feature ("it has an AI chat") and a data row that says "user data". Both get one question: which person, which moment, which data, from where. Big letters: the photo goes on the wall next.'))
+                  notes='Ten minutes. This is the proposal in draft. The TAs read over shoulders for two things: a decision that is really a feature ("it has an AI chat") and a data row that says "user data". Both get one question: which person, which moment, which data, from where. Big letters: the photo goes on the wall next.'))
 
 S.append(question('image_upload', 'One per team: the decision card.',
                   hint='One photo, one per team. Caption: the team number, then the decision sentence, word for word.',
@@ -613,20 +638,20 @@ S.append(question('image_upload', 'One per team: the decision card.',
 
 S.append(activity('4 — THE GALLERY', 5, 'Read four cards. Argue.',
                   ['Four cards from the wall go on screen, one at a time, labelled **A to D** — team numbers, no names.',
-                   'For each: is the decision one sentence? does the data exist? what happens on the wrong day?',
+                   'For each, the three questions on the right, asked of the room.',
                    'Then the vote: **which product would you sign up for?** Not the best drawing — the one you would let decide for you.'],
-                  bg=YELLOWS[0],
+                  panel=GALLERY_PANEL, panel_size=20, bg=YELLOWS[0],
                   notes='Five minutes, Gio at the wall. Pick four cards that differ: one with a crisp sentence, one with a data row that says "do not have" honestly, one that is a feature dressed as a product, one with an empty row five. Do not say which is which; ask the room the three questions for each. The vote follows. Keep it kind: every card is a draft, and the team whose card is a feature gets the most useful five minutes of the day.'))
 
 S.append(question('multiple_choice', 'Gallery vote: which product would you let decide for you?', [
     'Card A', 'Card B', 'Card C', 'Card D',
 ], eyebrow_text='08 · GALLERY VOTE · MULTIPLE CHOICE · BY CARD',
-    notes='One minute, everyone votes, teams may vote for themselves. No correct answer: the room decides, and the winning team gets a participation star and thirty seconds to say what its person does on the wrong day. Note the split for the awards list. Say the team numbers of all four aloud; no names on screen.'))
+    notes='Two minutes, everyone votes, teams may vote for themselves. No correct answer: the room decides, and the winning team gets a participation star and thirty seconds to say what its person does on the wrong day. Note the split for the awards list. Say the team numbers of all four aloud; no names on screen.'))
 
 S.append(question('short_answer', 'The data your product needs and does not have.',
                   hint='One line per team, from the scribe: the team number, then the data. "Team 12: her shift roster — the hospital app has it; we do not."',
                   eyebrow_text='08 · LAST QUESTION · SHORT ANSWER · ONE PER TEAM',
-                  notes='Two minutes, scribes only. This is the discover question, answered honestly, and it is the seed of next week: every line here is either data you must ask a person for — consent — or data somebody else holds — a platform, a hospital, a school. Read five aloud and sort them into "ask" and "take". Keep the export: week 9 opens with it, and the bias register starts from it.'))
+                  notes='Three minutes, scribes only. This is the discover question, answered honestly, and it is the seed of next week: every line here is either data you must ask a person for — consent — or data somebody else holds — a platform, a hospital, a school. Read five aloud and sort them into "ask" and "take". Keep the export: week 9 opens with it, and the bias register starts from it.'))
 
 S.append(content('08 · WHAT JUST HAPPENED', 'Every product here is a mediation.',
                  ['Twenty-five cards, twenty-five decisions, each made for a stranger at a moment you chose. The loop from week 7: a person, their data, a model, a decision, and what it does to them.',
@@ -634,16 +659,16 @@ S.append(content('08 · WHAT JUST HAPPENED', 'Every product here is a mediation.
                   'The card is the proposal. The data you do not have is next week. The wrong day is the week after. The whole of module 3 is the fifth row.',
                   '**The model will make the score. You decided what it decides, for whom, from what, and what happens when it is wrong. That was the design.**'],
                  body_size=30,
-                 notes='Mirror of the whole class. Say the loop slowly: person, data, model, decision, and back to the person. Then the last line, which is the week-1 and week-2 last lines with the verb changed: the machine decides, you designed the deciding. Point at the three homework items and let them go; the TAs stay thirty minutes and the stand-up starts next week.'))
+                 notes='Mirror of the whole class. Say the loop slowly: person, data, model, decision, and back to the person. Then the last line, which is the week-1 and week-2 last lines with the verb changed: the machine decides, you designed the deciding. Point at the three homework items and let them go; the TAs stay thirty minutes — the first review — and the first stand-up is at your table before next week\'s class.'))
 
 S.append(cards('08 · BEFORE WEEK 9', 'The proposal, the film, the stand-up.', [
     ('THE PROPOSAL', 'One page, on Blackboard, one per team.',
-     'The card typed up: the decision, for whom, the data (have / do not have), rule or model and why, the wrong day, the team and the five roles. Before the week-9 class. Amber answers every one in the stand-up.'),
+     'The card typed up: the decision, for whom, the data (have / do not have), rule or model and why, the wrong day, the team and the five roles. Before the week-9 class. Amber reads every one; week 9 opens with them.'),
     ('CODED BIAS', 'Watch it before week 9.',
      'Shalini Kantayya, 2020; premiered at Sundance. Joy Buolamwini finds that face recognition fails on faces unlike its examples — the edge of the grain, with people at it. Ninety minutes. Next week starts from it.'),
-    ('THE STAND-UP', 'Fifteen minutes, at your table, at 0:00.',
-     'From week 9 every class opens with it: three questions, standing, the TAs walking. Bring the backlog with one item on top. The review with the TAs is thirty minutes after class: show the thing, not the plan.'),
-], notes='Three things, one deadline. The proposal is the first sprint\'s increment; small on purpose. Coded Bias is the reading for next week and the quiz draws on it. The stand-up starts at 0:00 next week, not at 0:15; teams that are late miss their own meeting.'))
+    ('THE STAND-UP', 'Fifteen minutes, at your table, before class.',
+     'From week 9, in the half hour before every class: three questions, standing, the TAs in the room. Bring the backlog with one item on top. The review with the TAs is thirty minutes after class: show the thing, not the plan.'),
+], notes='Three things, one deadline. The proposal is the first sprint\'s increment; small on purpose. Coded Bias is the reading for next week and the quiz draws on it. The stand-up is before next week\'s class, not in it: the TAs are in the room from half an hour before, and a team that arrives at 0:00 has missed its own meeting.'))
 
 S.append(end('See you next week. Data, bias and privacy.',
              'Upload the proposal. Watch Coded Bias. Bring your backlog.',
@@ -694,3 +719,10 @@ if __name__ == '__main__':
 # Git's first commit, 7 April 2005: https://github.blog/open-source/git/git-turns-20-a-qa-with-linus-torvalds/
 # Figma branching (Config, April 2021, beta, Organization plan): https://www.figma.com/blog/introducing-branching-space-to-iterate-and-explore-freely/
 # Coded Bias (Shalini Kantayya, 2020, Sundance): https://en.wikipedia.org/wiki/Coded_Bias · https://www.pbs.org/independentlens/documentaries/coded-bias/
+# Consulted 6 September 2026, after the review:
+# Humane's founders (Chaudhri: Apple's interface designer; Bongiorno: Apple director of software engineering):
+#   https://www.fastcompany.com/90555755/humane-imran-chaudhri-bethany-bongiorno-funding
+#   https://www.inverse.com/tech/humane-projection-device-ex-apple-employees-artificial-intelligence
+#   https://techcrunch.com/2021/09/01/humane-a-stealthy-hardware-and-software-startup-co-founded-by-an-ex-apple-designer-and-engineer-raises-100m/
+# Gould, Conti & Hovanyecz (1983), CACM 26(4): the aim was to find out whether an imperfect listening typewriter would be useful:
+#   https://dl.acm.org/doi/abs/10.1145/2163.358100 · https://research.ibm.com/publications/composing-letters-with-a-simulated-listening-typewriter--1

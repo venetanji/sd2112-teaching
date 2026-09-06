@@ -70,7 +70,7 @@ function draw() {
   stroke(200); strokeWeight(2); for (let x = 40; x < PW - 40; x += 12) point(x, rule(x));   // the rule, faintly
   const inWin = p => p.x >= x0 && p.x <= x0 + WW && p.y >= y0 && p.y <= y0 + WH;
   let sample = pts.filter(inWin), w = sample.length >= 3 ? fit(sample) : null;
-  noStroke(); fill(251, 243, 236); rect(x0, y0, WW, WH); noFill(); stroke(0); strokeWeight(2); rect(x0, y0, WW, WH);
+  noStroke(); fill(251, 243, 236); rect(x0, y0, WW, WH); noFill(); stroke(0); strokeWeight(locked ? 4 : 2); rect(x0, y0, WW, WH);
   let wrongWorld = 0, wrongWin = 0;
   for (let p of pts) {
     let inside = inWin(p), wrong = w && guess(w, p) != p.c;
@@ -107,7 +107,8 @@ function panel(s, w, wrongWin, wrongWorld) {
           : accWorld > 85 ? 'a fair sample: it learned the world' : 'a straight line; the world is curved';
     text(v, x, 384);
   }
-  fill(92, 100, 112); textSize(14); text('mouse = the window · click = lock it', x, 470);
+  if (locked) { fill('#ED6D24'); textSize(15); text('LOCKED · click to release', x, 470); }
+  else { fill(92, 100, 112); textSize(14); text('mouse = the window · click = lock it', x, 470); }
 }
 function bar(x, y, label, v, col) {
   fill(0); textSize(16); text(label, x, y + 14);
@@ -137,7 +138,7 @@ function rates(g, t) {                                      // the two ways to b
   for (let p of people[g]) { if (p.s >= t) { p.yes ? tp++ : fp++; } else { p.yes ? fn++ : tn++; } }
   return { fpr: fp / max(1, fp + tn), fnr: fn / max(1, fn + tp) };
 }
-function match(t0) {                                        // group 2's threshold with the same false-NO rate as group 1
+function matchedThreshold(t0) {                             // group 2's threshold with the same false-NO rate as group 1
   let want = rates(0, t0).fnr, best = t0, d = 9;
   for (let t = 0; t <= 100; t++) { let e = abs(rates(1, t).fnr - want); if (e < d) { d = e; best = t; } }
   return best;
@@ -147,7 +148,7 @@ const sx = s => map(s, 0, 100, X0, X1);
 function draw() {
   background(255);
   let t = [round(constrain(map(mouseX, X0, X1, 0, 100), 0, 100)), 0];
-  t[1] = separate ? match(t[0]) : t[0];
+  t[1] = separate ? matchedThreshold(t[0]) : t[0];
   let r = [rates(0, t[0]), rates(1, t[1])];
   for (let g = 0; g < 2; g++) {
     let y0 = ROW[g], base = y0 + RH, counts = [[], []], bw = (X1 - X0) / (100 / BIN);
@@ -244,13 +245,15 @@ function draw() {
   text(k == 1 ? 'no protection: rows are released as they are' : 'every row shares its age · district · sex', x, 126);
   if (k > 1) text('with at least ' + (k - 1) + ' other row' + (k > 2 ? 's' : ''), x, 148);
   fill('#ED6D24'); text('GENERALISED', x, 196);
-  fill(0); textSize(16); text(L == 0 ? 'nothing' : STEPS.slice(0, L).join(' · '), x, 222);
+  fill(0); textSize(16);
+  let done = STEPS.slice(0, L), lines = L == 0 ? ['nothing'] : [done.slice(0, 3).join(' · '), done.slice(3).join(' · ')].filter(s => s);
+  lines.forEach((s, i) => text(s, x, 222 + i * 22));                            // three steps per line
   fill('#ED6D24'); textSize(15); text('UNIQUE ROWS', x, 270);
   fill(0); textSize(28); text(unique + ' of 12', x, 306);
   fill('#ED6D24'); textSize(15); text('A NEIGHBOUR WHO KNOWS YOU ARE 46, DISTRICT F, M', x, 356);
   fill(0); textSize(16);
   text(twins.length == 1 ? 'finds one row: ' + ROWS[YOU][3] + '. That is your diagnosis.' : 'narrows it to ' + twins.length + ' rows:', x, 382);
-  if (twins.length > 1) { fill(92, 100, 112); text(twins.map(r => r[3]).filter((d, i, a) => a.indexOf(d) == i).join(', '), x, 406); }
+  if (twins.length > 1) { fill(92, 100, 112); text(twins.length == 12 ? 'all 12 rows: every diagnosis in the table' : twins.map(r => r[3]).filter((d, i, a) => a.indexOf(d) == i).join(', '), x, 406); }
   fill(twins.length == 12 ? '#ED6D24' : 92); textSize(14);
   text(L == 6 ? 'anonymous — and the table says nothing any more' : L == 0 ? 'a name is not the only name' : 'the price: ' + L + ' column step' + (L > 1 ? 's' : '') + ' lost', x, 446);
   fill(92, 100, 112); text('mouse x = k, from 1 (left) to 6 (right)', x, 480);
@@ -266,27 +269,49 @@ REGISTER = [
     '5  THE GUARDRAIL', '   the rule that catches it;', '   who a person can appeal to',
 ]
 
+STANDUP_PANEL = [
+    'THE STAND-UP · THREE QUESTIONS · STANDING', ' ',
+    '1  what did I do since last class?',
+    '2  what will I do before the next?',
+    '3  what is in my way?', ' ',
+    "THIS SPRINT'S ITEM: THE PROPOSAL",
+    '   one page, on Blackboard: the decision, for whom,',
+    '   the data you have and do not have, the wrong day.',
+    '   open it: it is the case for the whole day.', ' ',
+    'the backlog: one item on top for this week —',
+    '   the concept board and the bias register.', ' ',
+    'the scribe writes five names, three lines each.',
+    'the TAs walk: Amber answers every proposal.',
+]
+
 S = []  # the slides, in order
 
 # ───────────────────────── 00 · title ─────────────────────────
 S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 09 · LECTURE + WORKSHOP',
                'Data, bias and privacy.',
                'Week 9 — the model’s world is the dataset’s world.',
-               notes='Join code on screen from 30 minutes before. Teams sit together from the start: the last hour is the register, done as a team, and the first ClassPoint question is about the film. Anyone who has not watched Coded Bias watches the first twenty minutes at the break on a phone; it is not optional for the group project.'))
+               notes='Join code on screen from 30 minutes before. Sit with your team from the start: the stand-up is the first thing that happens, the last hour is the register, done as a team, and the first ClassPoint question is about the film. Anyone who has not watched Coded Bias watches the first twenty minutes at the break on a phone; it is not optional for the group project.'))
 
 S.append(agenda('SD2112 · WEEK 09', [
     'Last week, in your words', 'A dataset is a set of examples', 'Four doors for bias', 'The threshold',
     'Privacy: collect, link, keep', 'Can a model be neutral?', 'The bias register', 'Activity: map the ethics of your concept',
-], notes='Eight stops. The first four are the lecture: what a dataset is and why the model only ever knows the window; the four doors where bias comes in; and the threshold, one number that decides who pays for the model’s mistakes. Break. Then privacy, the debate, and the workshop: your own product, one row per decision, five columns, and a red pen from the team next to you. Two votes on the same question, one now and one at the end.'))
+], notes='Eight stops. The stand-up first, at your table, twelve minutes, then the film. Stops two to four are the lecture: what a dataset is and why the model only ever knows the window; the four doors where bias comes in; and the threshold, one number that decides who pays for the model’s mistakes. Break. Then privacy, the debate, and the workshop: your own product, one row per decision, five columns, and a red pen from the team next to you. Two votes on the same question, one now and one at the end.'))
 
 # ───────────────────────── 01 · last week, in your words ─────────────────────────
-S.append(section('01', 'Last week, in your words', 'Coded Bias · your proposals · the map', bg=ORANGES[0],
-                 notes='Chapter one: the film you watched, the proposals you wrote, and where we are.'))
+S.append(section('01', 'Last week, in your words', 'the stand-up · Coded Bias · your proposals · the map', bg=ORANGES[0],
+                 notes='Chapter one: the stand-up at the team table — twelve minutes, the first of six — then the film you watched, the proposals you wrote, and where we are.'))
+
+S.append(activity('STAND-UP', 12, 'Three questions, standing.',
+                  ['At your table, standing, one minute per person: **what I did, what I will do, what is in my way.**',
+                   'Then the increment: open **the proposal** you uploaded and read the data line aloud — what you have, what you do not. It is the case for the whole day.',
+                   'Put one item on top of the backlog for this week. The scribe writes it down. The TAs walk; Amber answers every proposal.'],
+                  eyebrow_text='01', panel=STANDUP_PANEL, panel_size=20, bg=YELLOWS[0],
+                  notes='Twelve minutes, standing, at the team table: the first stand-up of six, as promised last week. Nicolò keeps the time on the slide; the other three TAs walk with one question each — what is the data, and do you have it? Amber has read every proposal and gives each team one sentence back. The rule from week 8: show the thing, not the plan; today the thing is one page. Teams that are late miss their own meeting; anyone whose team is not here goes to Amber. The "data you need and do not have" line from last week comes back in the register, so keep the proposal open.'))
 
 S.append(question('word_cloud', 'Coded Bias: one word that stayed with you.',
                   hint='The film was the homework. One word: a scene, a person, a feeling, a question.',
                   eyebrow_text='01 · QUESTION · WORD CLOUD',
-                  notes='ClassPoint word cloud, one word each; leave it on screen for a minute. Expect: mask, face, camera, police, Brooklyn, scary, data, China. Read the three biggest aloud and ask one person for the scene behind their word. Screenshot it: it comes back on the debate slides. If the cloud is thin, the room did not watch it — say the twenty-minute rule now, without blame.'))
+                  notes='ClassPoint word cloud, one word each; leave it on screen for a minute. Expect: mask, face, camera, police, Brooklyn, scary, data, China. Read the three biggest aloud and ask one person for the scene behind their word. Screenshot it: it comes back on the three-positions slide after the break, next to the engineer, the philosopher and the designer. If the cloud is thin, the room did not watch it — say the twenty-minute rule now, without blame.'))
 
 S.append(content('01 · CODED BIAS · SHALINI KANTAYYA · 2020', 'A face the camera could not see.',
                  ['Joy Buolamwini, MIT Media Lab: the face-tracking software in her project found her face only when she put on a white mask. She went looking for the reason and found the dataset.',
@@ -294,7 +319,7 @@ S.append(content('01 · CODED BIAS · SHALINI KANTAYYA · 2020', 'A face the cam
                   '- The film follows the finding out of the lab: a police van in London, tenants in Brooklyn fighting a face-recognition lock on their building, a hearing in Washington.',
                   'Not seen it yet? Ninety minutes, Sundance 2020. On Netflix since April 2021; PBS Independent Lens premiere March 2021. Watch it before the project goes further.'],
                  body_size=28,
-                 notes='Three things to say. The mask: the software was not broken, it had learned faces from a dataset that looked like its makers. The numbers: Gender Shades is an audit — a balanced test set, three products, one table — and within seven months all three companies shipped better versions; measuring is a design act. The film: Buolamwini takes the finding to the people it lands on. Where to watch: Netflix has it in most regions; the PBS page is the US broadcast; the library may have it. No clips today: the film is the homework, not the lecture.'))
+                 notes='Three things to say. The mask: the software was not broken, it had learned faces from a dataset that looked like its makers. The numbers: Gender Shades is an audit — a balanced test set, three products, one table — and within seven months all three companies shipped better versions; measuring is a design act. The film: Buolamwini takes the finding to the people it lands on. Where to watch: Netflix lists it — check that it plays from Hong Kong before class, or ask the library for a licence; the PBS page is the US broadcast, background only. No clips today: the film is the homework, not the lecture.'))
 
 S.append(question('multiple_choice', 'Can a model be neutral?', [
     'Yes: the maths is neutral, the data is the problem', 'No: every dataset and every threshold is a choice', 'Only if a person checks every decision', 'Wrong question: neutral for whom?',
@@ -305,10 +330,10 @@ S.append(cards('01 · YOUR PROPOSALS · ONE PAGE, LAST WEEK', 'Every proposal ha
     ('THE DECISION', 'What the model decides.', 'Which lamp, which song, which route, which price, whose face gets in. Most of you wrote this part well: a verb and a person.'),
     ('FOR WHOM', 'Who gets the decision.', 'Each person, on their own. That is what makes it incorporating rather than using: the product behaves differently for you than for me. Weeks 8 and 10.'),
     ('WITH WHAT DATA', 'What it learns from.', 'The column most proposals left thin: "user data", "the internet", "our app". Today we open that column and look for the people who are not in it.'),
-], notes='Replace the quotes in the third card with three real phrases from the proposals, no team names. The point is not to scold: nobody knows what the data is yet, because nobody has asked who is in it. By the end of the day every team has a register that says. Amber has the proposals; the ones that already named a dataset get a mention.'))
+], notes='Replace the quotes in the third card with three real phrases from the proposals, no team names. The point is not to scold: nobody knows what the data is yet, because nobody has asked who is in it. By the end of the day every team has a register that says. Amber has the proposals and answered each one at the stand-up; the ones that already named a dataset get a mention.'))
 
 S.append(journey('01 · THE SEMESTER', 'Where we are', JOURNEY, here=(3, 1),
-                 notes='Week 9, the middle of module three. Last week the model became a material; this week the material turns out to be people. Next week the feed: recommendation systems, and the interaction loop we meet today at door four. Concept board and bias register are due after this class; prototype v1 in week 10.'))
+                 notes='Week 9, the middle of module three. Last week the model became a material; this week the material turns out to be people. Next week the feed: recommendation systems, and the interaction loop we meet today at door four. Concept board and bias register are due after this class; prototype v1 starts now and is shown, as it stands, at the week-10 stand-up.'))
 
 # ───────────────────────── 02 · a dataset is a set of examples ─────────────────────────
 S.append(section('02', 'A dataset is a set of examples', 'the window · the world · whose chair', bg=INK,
@@ -335,7 +360,7 @@ S.append(sketch_slide('02 · LIVE · THE WINDOW', 'The model knows the window, n
                       notes='Drive it slowly. Park the window in the crowded corner: the line is confident and mostly right. Slide it to the far right: the same fit, the same confidence, and the world accuracy collapses. Find a spot where the window holds only one colour: the model says everyone is teal and is very sure. Then lock it and ask the room where they would put the window if they could only afford one. The honest answer is: two windows, and a test outside both. In the PowerPoint this slide is a still; the html deck runs it.'))
 
 S.append(content('02 · WEEK 1, REVISITED', 'Whose chair was it?',
-                 ['"A chair", four times, one model: four legs, a back, wood, mid-century. Nobody typed "wood".',
+                 ['"A chair", four times, one model: four legs, a back, black steel tube, a grey seat, catalogue lighting. Nobody typed "black" or "steel".',
                   '- It learned "chair" from web pictures with the word nearby. The web’s most photographed chair became its middle.',
                   '- **LAION-5B, 2022:** 5.85 billion image–text pairs, filtered by another model, behind Stable Diffusion. Nobody chose the chairs.',
                   '- Bloomberg, 2023: 5,000+ Stable Diffusion images of jobs. Lighter skin for every high-paying job; darker skin for "fast-food worker".',
@@ -371,11 +396,11 @@ S.append(cards('03 · DOOR 2 · LABEL BIAS', 'Who named the examples, with which
 
 S.append(content('03 · DOOR 3 · ALGORITHMIC BIAS', 'The objective is what the model is told to want.',
                  ['A model does not want fairness. It wants the number it was given: clicks, watch time, "the point the eye goes to".',
-                  '- **Twitter, 2018 – 2021:** a saliency model, trained on eye-tracking data, cropped every photo to its most looked-at point. Twitter’s own audit in 2021 found the crops favoured white faces over Black faces, and sometimes a woman’s body over her face.',
+                  '- **Twitter, 2018 – 2021:** a saliency model, trained on eye-tracking data, cropped every photo to its most looked-at point. Twitter’s own audit in 2021: the crops favoured women over men by 8 points and white faces over Black faces by 4; the "male gaze" users had reported did not show up in the test — the disparity was there without it.',
                   '- Twitter removed the automatic crop and let people choose. Rumman Chowdhury: "how to crop an image is a decision best made by people."',
                   '- The objective was innocent: where do eyes go. The product was not. And after the objective comes the second half of door three: where the yes/no line is drawn. Next chapter.'],
                  body_size=30,
-                 notes='Door three, first half: the objective. Nobody at Twitter wrote a rule about skin; they wrote a rule about attention, trained it on where eyes had gone, and shipped the crop. Attention is not neutral, so the crop was not. The fix is a design decision, not a model one: give the crop back to the person. Note the shape of that fix — it is the same shape as the guardrail column: the model proposes, the person decides. The other half of door three is the threshold, and it needs its own chapter because it is the one you will sign.'))
+                 notes='Door three, first half: the objective. Nobody at Twitter wrote a rule about skin; they wrote a rule about attention, trained it on where eyes had gone, and shipped the crop. Attention is not neutral, so the crop was not. The numbers, if asked: demographic parity, 8 points in favour of women over men and 4 in favour of white over Black individuals; and the crop landed away from a head in no more than 3 images per 100, on things like a jersey number, the same for both genders — no evidence of the "male gaze" people had reported, which is the honest half of the finding. The fix is a design decision, not a model one: give the crop back to the person. Note the shape of that fix — it is the same shape as the guardrail column: the model proposes, the person decides. The other half of door three is the threshold, and it needs its own chapter because it is the one you will sign.'))
 
 S.append(cards('03 · DOOR 4 · INTERACTION BIAS', 'The product learns from what we do with it.', [
     ('TAY · MARCH 2016', 'Sixteen hours.', 'Microsoft’s chatbot learned from the people who talked to it. A group of users fed it abuse on purpose; within sixteen hours it was repeating it, and Microsoft switched it off.'),
@@ -406,14 +431,14 @@ S.append(cards('04 · COMPAS · 2016', 'Both sides were right. That is the probl
     ('PROPUBLICA', 'The errors fall unequally.', 'Machine Bias, May 2016: 7,214 defendants in Broward County, Florida, followed for two years. Of those who did not reoffend, 45 % of Black defendants had been scored higher risk against 23 % of white defendants. White reoffenders were labelled low risk almost twice as often.'),
     ('NORTHPOINTE', 'The scores mean the same thing.', 'The company’s reply: at each score, Black and white defendants went on to reoffend at about the same rate. Calibrated, by their measure. Both measures are called fairness.'),
     ('THE THEOREM', 'You cannot have both.', 'Kleinberg, Mullainathan and Raghavan (2016) and Chouldechova (2017): when two groups have different base rates, no score can be calibrated and have equal error rates at the same time. Choose. Say which.'),
-], text_size=21, notes='The case every fairness paper cites. COMPAS scored defendants for the risk of reoffending; judges saw the score. ProPublica measured error rates by group and found them unequal. Northpointe measured calibration — does a 7 mean the same thing for everyone — and found it equal. Then three mathematicians showed that with different base rates you cannot have both; the two fairnesses contradict each other. The design lesson is not "the maths is broken". It is that "fair" was never one number, and somebody has to pick which one and write it down. That is a design decision, and in your register it is the guardrail column.'))
+], text_size=21, notes='The case every fairness paper cites. COMPAS scored defendants for the risk of reoffending; judges saw the score. ProPublica measured error rates by group and found them unequal. Northpointe measured calibration — does a 7 mean the same thing for everyone — and found it equal. Then four researchers — Kleinberg, Mullainathan and Raghavan, and Chouldechova on her own — showed that with different base rates you cannot have both; the two fairnesses contradict each other. The design lesson is not "the maths is broken". It is that "fair" was never one number, and somebody has to pick which one and write it down. That is a design decision, and in your register it is the guardrail column.'))
 
 S.append(content('04 · EQUAL THRESHOLDS, OR EQUAL ERROR RATES', 'Choose which "equal" you mean. Then say so.',
                  ['- **Same threshold for everyone.** Equal treatment on paper; the group the model is less sure about pays in both errors.',
                   '- **Same error rates for everyone.** Hardt, Price and Srebro, 2016: move each group’s threshold until the false-no rates match. The cost moves from the group to the company, which now has a reason to build a better model.',
                   '- **A better model.** The Gender Shades answer: fix the data, retest, publish. Slow, and the only one that closes the gap instead of moving it.',
                   '- **A person in the loop.** Send the uncertain band to a human. Which human, how fast, and can they overrule the score?',
-                  'Google’s 2016 explorable by Wattenberg, Viégas and Hardt lets you drag the thresholds; our sketch is the small version.'],
+                  'Google’s 2016 explorable by Wattenberg, Viégas and Hardt let you drag the thresholds; our sketch is the small version.'],
                  body_size=28,
                  notes='Four things a team can actually do, none of them free. One threshold is what you get by default, and the default is a decision too. Equal error rates is the sketch on the previous slide, click mode: it is a rule you add on top of machine B — machine A guarding machine B — and it shifts the cost onto the company, which is the incentive Hardt wants. A better model is the only real fix and takes months. A person in the loop is the one most products ship, and the register asks the two questions that make it real: who, and can they say no. Then the poll.'))
 
@@ -426,7 +451,7 @@ S.append(statement('A threshold is a design decision. Someone signs it.', eyebro
                    notes='The sentence to carry across the break. The model gives a number; a person decides what the number means, where the line goes, and who pays for the mistakes on each side. In your mediation brief, that person is you. After the break: what the dataset knows about people that it should not, and the debate.'))
 
 S.append(statement('Break. Fifteen minutes.', eyebrow_text='AFTER THE BREAK · PRIVACY · THE DEBATE · THE REGISTER', size=120, bg=PAPER,
-                   notes='1:17. Teams sit together after the break; the last hour is the register. Anyone who has not seen Coded Bias: the first twenty minutes now, on a phone, with headphones.'))
+                   notes='1:23. Teams sit together after the break; the last hour is the register. Anyone who has not seen Coded Bias: the first twenty minutes now, on a phone, with headphones.'))
 
 # ───────────────────────── 05 · privacy ─────────────────────────
 S.append(section('05', 'Privacy', 'collect less · link less · keep less · ask', bg=ORANGES[0],
@@ -450,7 +475,7 @@ S.append(figure_slide('05 · RE-IDENTIFICATION', 'No names, and still you.', F.w
                       notes='Removing the name column is what most people mean by anonymising, and it does not work. The left table has no names. The right table is public. Three columns appear in both, and together they pick out one person — ZIP code, birth date, sex — which is how Sweeney, in the nineties, found Governor Weld’s hospital records in a dataset the state had released as anonymous. The lesson for your product: any column that is rare in your data and public somewhere else is a name. Say the word: quasi-identifier.'))
 
 S.append(statement('87 % of Americans could be picked out by ZIP code, birth date and sex.', eyebrow_text='05 · LATANYA SWEENEY · 2000 · ON THE 1990 CENSUS', size=100,
-                   notes='Sweeney, 2000: on the 1990 census, 87 % of the US population — 216 of 248 million — was unique on those three fields. Golle redid it on the 2000 census in 2006 and got 63 %. Either number is the end of "we removed the names". In Hong Kong, district plus birth date plus sex does the same work. Ask: which three columns in your product’s data would do it?'))
+                   notes='Sweeney, 2000: on the 1990 census, 87 % of the US population — 216 of 248 million — was unique on those three fields. Golle redid it on the 2000 census in 2006 and got 63 %. Either number is the end of "we removed the names". In Hong Kong the district is too coarse — eighteen of them for about seven and a half million people — but an estate or a building name plus birth date plus sex would do the same work: a building holds a few hundred people, and there are tens of thousands of birth dates. Ask: which three columns in your product’s data would do it?'))
 
 S.append(cards('05 · ANONYMISED IS NOT ANONYMOUS', 'Three ways the names came back.', [
     ('NETFLIX PRIZE · 2006 – 2009', 'Ratings plus IMDb.', 'Netflix published the film ratings of about half a million subscribers, names removed, as a competition dataset. Narayanan and Shmatikov, 2008: a handful of public IMDb ratings was enough to find a person’s Netflix record — and everything else they had rated.'),
@@ -480,7 +505,7 @@ S.append(cards('06 · THREE POSITIONS', 'Yes. No. Wrong question.', [
     ('YES · THE ENGINEER', 'The maths is neutral. Fix the data.', 'A model is a function; bias is what went in. Collect better examples, test every group, publish the numbers. Gender Shades is the proof: named, measured, and improved within months. Neutrality is a target you can move towards.'),
     ('NO · THE PHILOSOPHER', 'Every window is a choice.', 'Verbeek, week 1: designing things is designing human existence. The dataset, the labels, the objective, the threshold: four decisions, four sets of values. There is no view from nowhere, and a model is a view.'),
     ('WRONG QUESTION · THE DESIGNER', 'Neutral for whom? Accountable to whom?', 'Nobody asks whether a chair is neutral; they ask who it was made for and who cannot sit in it. Ask that of the model. Then write down who answers when it is wrong — which is the last column of the register.'),
-], text_size=21, notes='Give each position its best day. The engineer is right that bias can be measured and reduced, and that "it is all political" is a way of not doing the work. The philosopher is right that there is no neutral window: every dataset was collected by someone for something, and the threshold is a value with a number on it. The designer moves the question: neutrality is not a property a thing has, accountability is a relationship a thing is in. Notice that the register is the third position turned into a form. Do not say which one you hold; the second vote is at the end.'))
+], text_size=21, notes='Give each position its best day. The engineer is right that bias can be measured and reduced, and that "it is all political" is a way of not doing the work. The philosopher is right that there is no neutral window: every dataset was collected by someone for something, and the threshold is a value with a number on it. The designer moves the question: neutrality is not a property a thing has, accountability is a relationship a thing is in. Notice that the register is the third position turned into a form. Put the word cloud from the start of class up next to the three positions and ask which position each of the three biggest words argues for. Do not say which one you hold; the second vote is at the end.'))
 
 S.append(statement('There is no view from nowhere. Someone chose the window.', eyebrow_text='06 · THE SENTENCE TO ARGUE WITH', size=104,
                    notes='One sentence, deliberately on the philosopher’s side, so that the engineers in the room have something to push against. In pairs now.'))
@@ -518,16 +543,21 @@ S.append(activity('1 — TEAMS · THE DECISIONS', 6, 'List every decision the mo
                   bg=YELLOWS[0],
                   notes='Six minutes. Teams usually find more decisions than their proposal admits: the ranking, the default, the notification, the moment it stays silent. Silence is a decision too — a false no. Push for verbs; "recommends" is fine, "engages" is not. The three they circle are the three rows.'))
 
+S.append(question('short_answer', 'Team number, and the decision with the biggest harm.',
+                  hint='One line, scribe only: the team number, then the decision as a verb and a person. "Team 12: dims the lamp when it thinks she is tired."',
+                  eyebrow_text='08 · CAPTURE 1 · SHORT ANSWER · ONE PER TEAM',
+                  notes='Two minutes, scribes only, about 25 lines. Read four aloud and apply the first test to each: is it a verb and a person? "Personalises the experience" fails; "dims the lamp when it thinks she is tired" passes. A line that fails goes back to its team as the first row to fix. Keep the export: week 10 opens by asking every team for the guardrail of this same decision.'))
+
 S.append(activity('2 — TEAMS · THE REGISTER', 10, 'Fill the register for the three.',
                   ['Three rows, five columns, on paper or in a shared doc. The template is on the right; the filled example is two slides back.',
                    'Rule: every cell names something concrete. "Users" is not a data source; "the 20 beta testers, all students" is. "Everyone" is not a thin group.',
                    'The TAs walk. Call one over if a cell has stayed empty for two minutes: the empty cell is usually the finding.'],
                   panel=REGISTER, panel_size=21, bg=YELLOWS[1],
-                  notes='Ten minutes, the heart of the class. The third column is where teams stall, and the stall is the lesson: they do not know who is thin in their data because they have not decided what the data is. Send them back a column. The harm column wants both kinds of mistake; the guardrail wants a person’s job title. Nicolò calls two minutes before the end so that every register has something in every cell, even a question mark.'))
+                  notes='Ten minutes, the heart of the class. The third column is where teams stall, and the stall is the lesson: they do not know who is thin in their data because they have not decided what the data is. Send them back a column — and to last week’s line: Amber has every team’s "data we need and do not have" answer from the week-8 short answer, one line per team, and reads it back to any team whose data column is empty. The harm column wants both kinds of mistake; the guardrail wants a person’s job title. Nicolò calls two minutes before the end so that every register has something in every cell, even a question mark.'))
 
 S.append(question('image_upload', 'One per team: your register.',
                   hint='A photo or a screenshot of the three rows. Caption: the product name, and the row you think is the worst.',
-                  eyebrow_text='08 · CAPTURE · IMAGE UPLOAD · ONE PER TEAM',
+                  eyebrow_text='08 · CAPTURE 2 · IMAGE UPLOAD · ONE PER TEAM',
                   cp={'type': 'image_upload', 'hide_names': False, 'caption_required': True},
                   notes='One upload per team, about 28 images, caption required. Put the wall on screen and pick two registers to read a row from: one with a real person in the thin column, one with "everyone". Do not name the teams; name the rows. The captions tell you which row each team fears, and that is the row to ask about at the poster review. Download the submissions; they come back in week 11 next to the datasets.'))
 
@@ -554,19 +584,19 @@ S.append(content('08 · WHAT JUST HAPPENED', 'You found the people who are not i
 S.append(question('multiple_choice', 'Now that you have mapped your own product: can a model be neutral?', [
     'Yes: the maths is neutral, the data is the problem', 'No: every dataset and every threshold is a choice', 'Only if a person checks every decision', 'Wrong question: neutral for whom?',
 ], eyebrow_text='08 · STANCE · VOTE 2 OF 2 · MULTIPLE CHOICE',
-    notes='Same four answers as slide 6. Show the two splits side by side — the screenshot from the morning and this one. Movement is the point, in either direction; there is no correct answer, but there is a correct thing to notice: whoever moved, moved because of their own product, not because of an argument. The TAs read out the two best examples from the pair debate. Then the homework.'))
+    notes='Same four answers as slide 7. Show the two splits side by side — the screenshot from the morning and this one. Movement is the point, in either direction; there is no correct answer, but there is a correct thing to notice: whoever moved, moved because of their own product, not because of an argument. The TAs read out the two best examples from the pair debate. Then the homework.'))
 
-S.append(cards('08 · DUE · BLACKBOARD', 'Two uploads tonight. One prototype next week.', [
+S.append(cards('08 · DUE · BLACKBOARD', 'Two uploads tonight. A prototype to start.', [
     ('CONCEPT BOARD', 'Due after this class.', 'One board: the product, the person, the decision, the data, the relation you are building. The proposal, grown up, with pictures.'),
     ('BIAS REGISTER', 'With the concept board.', 'The three rows from today, cleaned up, plus the red-pen additions marked as additions. It becomes the bias and guardrail paragraphs of your mediation brief.'),
-    ('PROTOTYPE V1', 'For week 10.', 'The interaction, not the model: paper, Figma or code. The moment the product decides something for a person, and what that person sees, and how they say no.'),
-    ('BEFORE WEEK 10', 'Nothing to watch.', 'Recommendation systems: the feed as a designed mediation. Bring one screenshot of a recommendation you did not want, and one you did.'),
-], text_size=22, notes='Three things, two deadlines. Concept board and register tonight on Blackboard, one submission per team; prototype v1 next week, and the word is interaction — the screen where the decision lands, not the model behind it. Next week needs no video; it needs two screenshots. The TAs stay for 30 minutes and will read any register that is brought to them.'))
+    ('PROTOTYPE V1', 'Start it now.', 'The interaction, not the model: paper, Figma or code — the moment the product decides something for a person, what that person sees, and how they say no. Bring what exists to the week-10 stand-up; on Blackboard before week 11.'),
+    ('BEFORE WEEK 10', 'Nothing to watch.', 'Recommendation systems: the feed as a designed mediation. Open your own For You page, Discover Weekly or YouTube home once before class and ask what it thinks you are. Week 10 opens with that.'),
+], text_size=22, notes='Three things, two deadlines. Concept board and register tonight on Blackboard, one submission per team. Prototype v1 is next sprint’s item: start it now, show whatever exists at the week-10 stand-up, upload it before week 11 — and the word is interaction, the screen where the decision lands, not the model behind it. Next week needs no video; it needs a look at your own feed. The TAs stay for 30 minutes and will read any register that is brought to them.'))
 
 S.append(end('See you next week. Recommendation systems.',
-             'Concept board and bias register on Blackboard tonight. Prototype v1 for week 10.',
+             'Board and register on Blackboard tonight. Prototype v1: bring what exists.',
              f'{SITE} · {PLAYLIST.replace("https://", "")}',
-             notes='Next week: the feed — embeddings, similarity, collaborative filtering, echo chambers, and door four in full. Homework in one line: board and register tonight, prototype next week, two screenshots. The TAs stay for 30 minutes.'))
+             notes='Next week: the feed — embeddings, similarity, collaborative filtering, echo chambers, and door four in full. Homework in one line: board and register tonight, start the prototype and bring what exists to the stand-up, look at your own feed. The TAs stay for 30 minutes.'))
 
 DECK = dict(title='SD2112 · AI in Design · Week 09', slides=finalize(S, FOOTER), pdf='SD2112-week09.pdf')
 
@@ -581,7 +611,7 @@ if __name__ == '__main__':
         else:
             print(f'{k}: {v}')
 
-# Sources (consulted 2026-09-05; every date, number and attribution above was checked against these)
+# Sources (consulted 2026-09-05, revised 2026-09-06; every date, number and attribution above was checked against these)
 # Coded Bias: https://www.pbs.org/independentlens/documentaries/coded-bias/ (Independent Lens premiere 22 March 2021)
 #   https://en.wikipedia.org/wiki/Coded_Bias (Sundance 2020, 90 min, Netflix from 5 April 2021, who appears, the white mask)
 #   https://www.netflix.com/title/81328723 (listed on Netflix, September 2026)
@@ -603,15 +633,20 @@ if __name__ == '__main__':
 #   https://excavating.ai/ (Crawford & Paglen 2019); https://qz.com/1034972/the-data-that-changed-the-direction-of-ai-research-and-possibly-the-world (Mechanical Turk, 14 million images)
 #   https://www.deeplearning.ai/the-batch/imagenet-gets-a-makeover (2,832 person categories)
 # Google Photos 2015: https://www.cbc.ca/news/trending/google-photos-black-people-gorillas-1.3135754 · https://incidentdatabase.ai/cite/16/
-# Twitter cropping: https://blog.x.com/engineering/en_us/topics/insights/2021/sharing-learnings-about-our-image-cropping-algorithm (May 2021)
-#   https://www.cnn.com/2021/05/19/tech/twitter-image-cropping-algorithm-bias (Chowdhury quote); https://arxiv.org/pdf/2105.08667
+# Twitter cropping: https://blog.x.com/engineering/en_us/topics/insights/2021/sharing-learnings-about-our-image-cropping-algorithm (May 2021; 403 on 2026-09-06)
+#   https://www.cnn.com/2021/05/19/tech/twitter-image-cropping-algorithm-bias (Chowdhury quote); https://arxiv.org/pdf/2105.08667 (Yee, Tantipongpipat & Mishra:
+#   'no more than 3 out of 100 images per gender have the crop not on the head', 'a number on the jersey', 'consistent across genders')
+#   https://www.africanews.com/2021/05/20/twitter-scraps-algorithm-after-finding-it-excludes-black-people-and-women/ (AFP: 8 % in favour of women,
+#   4 % in favour of white individuals; 'We did not find any evidence of an objectification bias', Chowdhury)
 # Tay: https://en.wikipedia.org/wiki/Tay_(chatbot) (23 March 2016; 16 hours)
 # PredPol: https://rss.onlinelibrary.wiley.com/doi/full/10.1111/j.1740-9713.2016.00960.x (Lum & Isaac, Significance, 2016)
 # COMPAS: https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing and
 #   https://www.propublica.org/article/how-we-analyzed-the-compas-recidivism-algorithm (7,214 defendants; 45 % vs 23 %; 48 % vs 28 %)
 # The theorem: https://www.cs.cornell.edu/home/kleinber/aer18-fairness.pdf (Kleinberg, Mullainathan & Raghavan 2016; Chouldechova 2017)
 # Equal opportunity: https://papers.nips.cc/paper/6374-equality-of-opportunity-in-supervised-learning (Hardt, Price & Srebro, NeurIPS 2016)
-#   https://research.google.com/bigpicture/attacking-discrimination-in-ml/ (Wattenberg, Viégas & Hardt, 2016 explorable)
+#   https://research.google.com/bigpicture/attacking-discrimination-in-ml/ (Wattenberg, Viégas & Hardt, 2016 explorable; the URL now 301s to pair.withgoogle.com —
+#   archived copy: http://web.archive.org/web/20230607114941/http://research.google.com/bigpicture/attacking-discrimination-in-ml/ ;
+#   introduced in https://research.google/blog/equality-of-opportunity-in-machine-learning/ , Hardt, 7 October 2016)
 # LAION-5B: https://papers.nips.cc/paper_files/paper/2022/hash/a1859debfb3b59d094f3504d5ebb6c25-Abstract-Datasets_and_Benchmarks.html (5.85 billion pairs)
 # Bloomberg 2023: https://www.bloomberg.com/graphics/2023-generative-ai-bias/ via https://racismandtechnology.center/2023/07/07/racist-technology-in-action-stable-diffusion-exacerbates-and-amplifies-racial-and-gender-disparities/
 # Datasheets: https://arxiv.org/pdf/1803.09010 (Gebru et al. 2018) · Model collapse: https://www.nature.com/articles/s41586-024-07566-y (Shumailov et al., Nature 631, 2024)

@@ -171,15 +171,15 @@ def w09_doors(name='w09-doors', w=1680, h=560):
         x = xs[i]
         c.rect(x, y, bw, bh, fill=fill, stroke=INK, width=3)
         c.text(x + bw / 2, y + 48, title, size=22, anchor='middle', color=INK)
-        c.text(x + bw / 2, y + 82, sub, size=16, anchor='middle', color=MUTED)
+        c.text(x + bw / 2, y + 82, sub, size=16, anchor='middle', color=MUTED)   # inside a 260-px box: 18 px would not fit
         if i < 4:
             _arrow(c, x + bw, y + bh / 2, xs[i + 1] - 4, y + bh / 2, INK, 4)
             head, l1, l2 = doors[i]
             if head:
                 mx = x + bw + 40
                 c.text(mx, 62, head, size=18, color=ORANGE)
-                c.text(mx, 92, l1, size=16, color=INK)
-                c.text(mx, 116, l2, size=16, color=INK)
+                c.text(mx, 94, l1, size=18, color=INK)
+                c.text(mx, 120, l2, size=18, color=INK)
                 _arrow(c, mx + 30, 128, mx + 30, y + bh / 2 - 14, ORANGE, 3, 10)
     # the loop back: what people do with the product becomes tomorrow's data
     px, dx = xs[4] + bw / 2, xs[1] + bw / 2
@@ -188,8 +188,8 @@ def w09_doors(name='w09-doors', w=1680, h=560):
     _arrow(c, dx, 420, dx, y + bh + 6, INK, 4)
     c.text((px + dx) / 2, 458, '4 · INTERACTION BIAS', size=18, anchor='middle', color=ORANGE)
     c.text((px + dx) / 2, 488, 'what we click, skip and accept becomes tomorrow’s examples: the feed learns from us, then we learn from the feed',
-           size=16, anchor='middle', color=INK)
-    c.text((px + dx) / 2, 400, 'clicks · skips · complaints · nothing at all', size=16, anchor='middle', color=MUTED)
+           size=18, anchor='middle', color=INK)
+    c.text((px + dx) / 2, 400, 'clicks · skips · complaints · nothing at all', size=18, anchor='middle', color=MUTED)
     c.text(40, 540, 'Four doors. Every one of them is a decision somebody made, or did not make.', size=18, color=MUTED)
     return c.finish(name)
 
@@ -224,14 +224,14 @@ def w09_threshold_anatomy(name='w09-threshold-anatomy', w=1680, h=560, t=60):
         c.line(ax0, base, ax1, base, INK, 2, cap='butt')
         c.line(tx, top - 20, tx, base + 8, ORANGE, 4, cap='butt')
         c.text(tx, top - 32, f'threshold {t}', size=18, anchor='middle', color=ORANGE)
-        c.text(ax0, base + 30, 'score 0', size=16, color=MUTED)
-        c.text(ax1, base + 30, '100', size=16, color=MUTED, anchor='end')
-        c.text(tx - 12, base + 30, '← the product says NO', size=16, anchor='end', color=MUTED)
-        c.text(tx + 12, base + 30, 'YES →', size=16, color=MUTED)
+        c.text(ax0, base + 30, 'score 0', size=18, color=MUTED)
+        c.text(ax1, base + 30, '100', size=18, color=MUTED, anchor='end')
+        c.text(tx - 12, base + 30, '← the product says NO', size=18, anchor='end', color=MUTED)
+        c.text(tx + 12, base + 30, 'YES →', size=18, color=MUTED)
         fpr = 1 - _phi((t - mu_no) / sd)
         fnr = _phi((t - mu_yes) / sd)
-        c.text(ax0, 130, 'grey: should get NO', size=16, color=MUTED)
-        c.text(ax1, 130, 'teal: should get YES', size=16, color=TEAL, anchor='end')
+        c.text(ax0, 130, 'grey: should get NO', size=18, color=MUTED)
+        c.text(ax1, 130, 'teal: should get YES', size=18, color=TEAL, anchor='end')
         c.text(ox, 440, f'false YES (orange): {100 * fpr:.0f} % of the NO-people are let through', size=18, color=INK)
         c.text(ox, 470, f'false NO (dark teal): {100 * fnr:.0f} % of the YES-people are turned away', size=18, color=INK)
     c.text(0, 530, 'Same score, same threshold, same rule for everyone. The wider the curves, the more of both errors, and the two groups do not pay the same.',
@@ -247,10 +247,10 @@ VOTERS = [('L. Svensson', '14 Elm St', '02139', '1961-03-14', 'F'), ('T. Ho', '9
           ('J. Ng', '120 Main St', '02141', '1983-01-09', 'F'), ('S. Bauer', '41 Hill St', '02138', '1969-09-21', 'M')]
 
 
-def _table(c, x, y, cols, widths, rows, hl=None, size=17, rh=44):
+def _table(c, x, y, cols, widths, rows, hl=None, size=18, rh=44):
     cx = x
     for (head, wd) in zip(cols, widths):
-        c.text(cx, y, head, size=15, color=ORANGE)
+        c.text(cx, y, head, size=16, color=ORANGE)
         cx += wd
     c.line(x, y + 12, x + sum(widths), y + 12, INK, 2, cap='butt')
     for ri, row in enumerate(rows):
@@ -274,16 +274,16 @@ def w09_linkage(name='w09-linkage', w=1680, h=560):
     ry = 80 + 24 + 3 * 44 + 18
     _arrow(c, 700, ry, 906, ry, ORANGE, 4)
     _arrow(c, 906, ry, 700, ry, ORANGE, 4)
-    c.text(803, ry - 22, 'same ZIP', size=15, anchor='middle', color=ORANGE)
-    c.text(803, ry + 36, 'same birth date', size=15, anchor='middle', color=ORANGE)
-    c.text(803, ry + 58, 'same sex', size=15, anchor='middle', color=ORANGE)
+    c.text(803, ry - 22, 'same ZIP', size=16, anchor='middle', color=ORANGE)
+    c.text(803, ry + 36, 'same birth date', size=16, anchor='middle', color=ORANGE)
+    c.text(803, ry + 60, 'same sex', size=16, anchor='middle', color=ORANGE)
     c.text(0, 400, 'No name anywhere in the left table. The three shared columns are quasi-identifiers: harmless alone, a key together.',
            size=18, color=INK)
     c.text(0, 430, 'Sweeney, 1997: a hospital dataset for Massachusetts state employees, linked to the Cambridge voter roll, gave the governor’s records.',
            size=18, color=MUTED)
     c.text(0, 460, 'Sweeney, 2000: on the 1990 census, 87 % of Americans were unique on ZIP + birth date + sex. Golle, 2006: 63 % on the 2000 census.',
            size=18, color=MUTED)
-    c.text(0, 520, 'All records above are fictional.', size=16, color=MUTED)
+    c.text(0, 520, 'All records above are fictional.', size=18, color=MUTED)
     return c.finish(name)
 
 
@@ -304,7 +304,7 @@ def w09_register(name='w09-register', w=1680, h=560):
     c.text(0, 30, 'BIAS REGISTER · TEAM NIGHTLIGHT · a bedside lamp that decides when you are tired (fictional)', size=18, color=INK)
     x0, y0, cw = 0, 70, 336
     for i, head in enumerate(REGISTER_COLS):
-        c.text(x0 + i * cw + 12, y0 + 22, head, size=15, color=ORANGE)
+        c.text(x0 + i * cw + 12, y0 + 22, head, size=16, color=ORANGE)
     c.line(x0, y0 + 36, w, y0 + 36, INK, 2, cap='butt')
     rh = 138
     for ri, row in enumerate(REGISTER_ROWS):
@@ -312,12 +312,12 @@ def w09_register(name='w09-register', w=1680, h=560):
         if ri == 0:
             c.rect(x0, ry, w, rh, fill=PAPER)
         for ci, cell in enumerate(row):
-            _lines(c, x0 + ci * cw + 12, ry + 34, cell, size=16, color=INK if ri < 2 else MUTED, lh=26)
+            _lines(c, x0 + ci * cw + 12, ry + 36, cell, size=18, color=INK if ri < 2 else MUTED, lh=28)
         c.line(x0, ry + rh, w, ry + rh, LINE, 1, cap='butt')
     for i in range(1, 5):
         c.line(x0 + i * cw, y0 + 36, x0 + i * cw, y0 + 36 + 3 * rh, LINE, 1, cap='butt')
     c.text(0, 545, 'One row per decision the model makes. Three rows minimum. The guardrail is a rule (machine A) that catches machine B when it is wrong — and says who can appeal.',
-           size=16, color=MUTED)
+           size=17, color=MUTED)
     return c.finish(name)
 
 
