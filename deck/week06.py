@@ -531,7 +531,7 @@ S.append(section('03', 'Rules that play', 'machine A · a sequencer · counterpo
                  notes='Chapter three: music from rules, live. A grid you can hear, then the first computer-composed score and its two moves — generate and test, and a table of what follows what.'))
 
 S.append(sketch_slide('03 · LIVE · A STEP SEQUENCER', 'The grid is the score.',
-                      live('w06-sequencer', SEQ_CODE, 1000, 600, hint='click to start · click a cell to toggle · mouse y = tempo · C clears', extra=SOUND_GUARD, sound=True),
+                      live('w06-sequencer', SEQ_CODE, 1000, 600, hint='click to start · click cells · mouse y = tempo', extra=SOUND_GUARD, sound=True),
                       body=['Sixteen steps, six sounds. The playhead reads the grid left to right, forever; every filled cell is a rule: on this step, this sound. The mouse changes one number, the tempo. Nothing here learned anything, and it will play the same bar until the sun goes out.'],
                       caption='Kick, snare and hat are envelopes on a sine and on white noise; the three pitched rows are oscillators at C2, C4 and E4. A step is 60 ÷ BPM ÷ 4 seconds. Press C to clear and write your own.',
                       notes='Html deck only; one click starts the sound. Let the seed pattern play for a bar, then toggle cells while it runs: the room hears the rule change the moment you click. Drag the mouse down: slower; up: faster. Press C and build a beat from nothing in twenty seconds — kick on 1, 5, 9, 13, hat on the evens. That is machine A for music: exact, explainable, and you can point at the cell that decided. This sketch comes back in the activity as the rule-based twist.'))
@@ -558,14 +558,14 @@ S.append(content('03 · LIVE · EXPERIMENT 4 IN A PAGE', 'The next note depends 
                   '- **Mouse x is the temperature.** Low: the likeliest note almost always — a rule. High: the table flattened — a die.',
                   '- Click to hear it; click again for new dice with the same table.',
                   'This is Nake\'s Walk-Through-Raster in sound, and week 4\'s next-token machine with a vocabulary of eight.'],
-                 sketch=live('w06-markov-melody', MARKOV_CODE, 800, 600, hint='mouse x = temperature · click to hear · click again = new dice', extra=SOUND_GUARD, sound=True),
+                 sketch=live('w06-markov-melody', MARKOV_CODE, 800, 600, hint='mouse x = temperature · click to hear, then new dice', extra=SOUND_GUARD, sound=True),
                  caption='A first-order Markov chain over eight pitches. The table is the aesthetic: change a row and the melody changes character; change the temperature and it changes discipline.',
                  body_size=28,
                  notes='Html deck only; click to hear it. Move the mouse to the far left: the melody becomes a loop, the likeliest path through the table, and the room can predict the next note. Far right: almost any note, no character. The middle is the table as written. Point at the orange cell moving: that is the whole machine, one lookup per note. Say the week-4 sentence: a language model is this table with fifty thousand rows and a very long memory. Then the code.'))
 
 S.append(code_slide('03 · THE MARKOV STEP', 'A table, a die, a temperature.', MARKOV_TABLE + '\n\n' + MARKOV_STEP,
                     caption='Eight rows, eight columns, five lines of loop. Raising every number to 1 ÷ T is the temperature: below 1 the big numbers win; above 1 they even out.',
-                    code_size=19, sketch=live('w06-markov-melody-2', MARKOV_CODE, 800, 600, hint='mouse x = temperature · click to hear · click again = new dice', extra=SOUND_GUARD, sound=True),
+                    code_size=19, sketch=live('w06-markov-melody-2', MARKOV_CODE, 800, 600, hint='mouse x = temperature · click to hear, then new dice', extra=SOUND_GUARD, sound=True),
                     notes='The table first: each row sums to about a hundred, each row is one note\'s habits. Then nextNote: raise to a power, add them up, throw one die, walk down the row until the die is spent. Ask: where is the design? In the table. Where is chance? One line. Where would a model be? It would fill the table from a million melodies instead of us writing it — machine B is a Markov chain that learned its table. Cut if behind; the previous slide carries it.'))
 
 S.append(video('03 · STANFORD LAPTOP ORCHESTRA · BING CONCERT HALL · 10 JUNE 2023', 'The dawn of computer music, replayed by a laptop orchestra.', 'Ih9lHXMlrtE',
@@ -776,7 +776,7 @@ S.append(activity('4 — TWO PAIRS · THE RULE', 10, 'The same brief, as a rule.
                   ['Join the pair behind you. Take the better spec. Build it in the sequencer: **the spec\'s tempo, sixteen steps, three sounds at most.** Press C first.',
                    'Play both back to back: the model\'s and the grid\'s. **Which one is the product\'s?** All four have to agree, and say why in one sentence.',
                    'One scribe screenshots the grid — or the model\'s waveform — and uploads it with the spec as the caption.'],
-                  sketch=live('w06-sequencer-act', SEQ_CODE, 1000, 600, hint='click to start · click a cell to toggle · mouse y = tempo · C clears', extra=SOUND_GUARD, sound=True),
+                  sketch=live('w06-sequencer-act', SEQ_CODE, 1000, 600, hint='click to start · click cells · mouse y = tempo', extra=SOUND_GUARD, sound=True),
                   bg=YELLOWS[2],
                   notes='Ten minutes in fours. The sequencer obeys the rule lines exactly and has no idea what "light, outdoors" means; the model had the mood and ignored the tempo. Four people arguing about which is the product\'s sound are doing the design. Expect a split: the grid wins for notifications and unlocks, the model for anything longer than five seconds. The sketch runs here in the html deck; the link on Blackboard opens the same sketch on its own page on the course site, on any device.'))
 
