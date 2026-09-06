@@ -122,7 +122,7 @@ THRESHOLD_JS = """// Two groups, one score, one threshold. Above the line the pr
 // Mouse x moves the threshold. A click gives group 2 its own threshold, chosen so that the false-NO rates match.
 const G = [{ name: 'GROUP 1 · the model is sure about them', yes: 0.55, mu: [66, 36], sd: 11 },
            { name: 'GROUP 2 · the model is less sure about them', yes: 0.45, mu: [58, 42], sd: 16 }];
-const X0 = 80, X1 = 1320, ROW = [30, 222], RH = 130, BIN = 5;
+const X0 = 80, X1 = 1320, ROW = [30, 222], RH = 122, BIN = 5;
 let people = [[], []], separate = false;
 
 function setup() {
