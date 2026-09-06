@@ -102,10 +102,12 @@ function mousePressed() {         // a click on the top line: another example
 
 # Appended to the sketch page only. The page forwards the deck's keys (space, S, O, F; R reloads) to reveal.js unless
 # the sketch has claimed them; p5 claims them too late (keyPressed runs after the forwarder), so typed keys are claimed
-# here in the capture phase: 'a poster' stays in the sketch, and the arrows and Escape still reach the deck.
+# here in the capture phase: 'a poster' stays in the sketch, and the arrows and Escape still reach the deck. On its own
+# page (the Sketchbook) the title bar promises 'R restarts'; here R is a letter to type, so that promise is dropped.
 TOKENS_EXTRA = """window.addEventListener('keydown', e => {
   if (!e.metaKey && !e.ctrlKey && !e.altKey && (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete')) e.preventDefault();
-}, true);"""
+}, true);
+(function () { var b = document.querySelector('#bar span'); if (b) b.textContent = b.textContent.replace(' · R restarts', ''); })();"""
 
 # (b) a bigram machine: the next word depends on the last one — a Markov chain, like Nake's, with a temperature dial
 NEXT_TEXT = ('a designer writes a brief . a model writes a draft . the brief is a rule and the draft is a guess . '
