@@ -19,13 +19,14 @@ Two GitHub Actions workflows run on every push to `main` (and on demand):
 
 | Path | What |
 |---|---|
-| `deck/week01.py` | **The Week 1 slides as one Python spec**: text, speaker notes, ClassPoint activities, in the order the class runs. Edit here; every output updates. |
-| `deck/assets/` | Images the decks use. Drawn figures are generated at build time. |
+| `deck/week01.py`, `deck/week02.py` | **The slides of each week as one Python spec**: text, speaker notes, ClassPoint activities, live p5.js sketches, in the order the class runs. Edit here; every output updates. |
+| `deck/course.py` | Shared course facts: links, the semester map, the week titles and module colours. |
+| `deck/assets/` | Images the decks use. Drawn figures are generated at build time; `deck/assets/sketches/` holds the stills of live sketches that have no drawn twin (`deckgen snap`, committed). |
 | `syllabus/SD2112-syllabus-2026.md` | The syllabus: team, outcomes, four modules, 13-week plan with examples and readings, assessment and rubrics, policies. Published on the site; a `.docx` is built too. |
-| `lessons/week01-lesson-plan.md` | Week 1 run of show (three hours), the *Push the machine to the edge* activity, the ClassPoint question map, contingencies. For the teaching team: `.docx` and `.html` in the artifact, **not published**. |
+| `lessons/week01-lesson-plan.md`, `week02-lesson-plan.md` | Each week's run of show (three hours), the activity in detail (*Push the machine to the edge*; *One spec, three executors*), the ClassPoint question map, contingencies. For the teaching team: `.docx` and `.html` in the artifact, **not published**. |
 | `site/` | The site shell: landing page, vendored reveal.js and the ait4x design tokens. |
 | `deckgen.toml` | The course as the generator sees it: code, name, year, footer, which decks, what gets published. |
-| `deck/figures.py` | The drawn illustrations — chairs, typicality, perceptron, two machines, mediation. Built on `deckgen.figures.Canvas`. |
+| `deck/figures.py` | The drawn illustrations — chairs, typicality, perceptron, two machines, mediation; for week 2 Schotter, Walk-Through-Raster, LeWitt's points, 10 PRINT, the L-system, the spec pipeline. Built on `deckgen.figures.Canvas`. Every p5.js sketch on a slide has its Python twin here, drawing the same rule for the PDF and the PowerPoint. |
 | `tools/roster.py` | ClassPoint saved class from a local ID list. |
 
 Generated and git-ignored: `_site/` (the site), `export/` (pptx, manifest, docx, previews), `deck/assets/generated/`, `node_modules/`, `classpoint/*.csv`, `ids.csv`.
@@ -71,4 +72,6 @@ Scale: the canvas is 1920 × 1080 px on a 13.333 × 7.5 in slide, so **one desig
 
 ## Adding a week
 
-Copy `deck/week01.py` to `deck/week02.py`, change `FOOTER` and `pdf`, write slides with the layout functions in `deckgen.layouts` (`title`, `agenda`, `section`, `statement`, `quote`, `content`, `cards`, `question`, `image_full`, `timeline`, `journey`, `activity`, `video`, `assessment`, `team`, `two_col`, `figure_slide`), add `"week02"` to `decks` in `deckgen.toml`, and add a card in `site/index.html`. ClassPoint activities come from `question(...)` (word cloud, multiple choice, short answer, image upload) or an explicit `cp={...}`.
+Copy `deck/week02.py` to `deck/week03.py`, change `FOOTER` and `pdf`, write slides with the layout functions in `deckgen.layouts` (`title`, `agenda`, `section`, `statement`, `quote`, `content`, `cards`, `question`, `image_full`, `timeline`, `journey`, `activity`, `video`, `assessment`, `team`, `two_col`, `figure_slide`, `code_slide`, `sketch_slide`), add `"week03"` to `decks` in `deckgen.toml`, and add a card in `site/index.html`. ClassPoint activities come from `question(...)` (word cloud, multiple choice, short answer, image upload) or an explicit `cp={...}`.
+
+A slide can run a p5.js sketch live in the html deck: `live(name, code, w, h, hint=...)` placed with `sketch_slide(...)` or as the `sketch=` of `content`, `figure_slide`, `code_slide` and `activity`. The PowerPoint and the PDF show a still instead: the `figure=` you pass (draw the same rule in `deck/figures.py`, as week 2 does), or a snapshot made by `deckgen snap` into `deck/assets/sketches/` (committed: the PowerPoint workflow has no browser).
