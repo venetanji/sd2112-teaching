@@ -185,12 +185,15 @@ def decision_tree(name='if-then', w=1680, h=520):
 
 
 # ───────────────────────── LeWitt: points at random, all connected ─────────────────────────
-def _lewitt_pts(n, x0, y0, w, h, even, rnd, margin=24):
+def _lewitt_pts(n, x0, y0, w, h, even, rnd, margin=24, cols=None):
     """n points in a box. even=True: one point per cell of a grid, at random inside it (what LeWitt meant).
-    even=False: plain uniform random (what the words say)."""
+    even=False: plain uniform random (what the words say).
+    cols: the grid's width in cells; the p5.js code on the slides uses 10 x 5 for its fifty points, so the
+    stills that stand in for it pass 10 and every cell gets its point. Left out, a grid near the box's
+    proportions is picked, and the cells over n are skipped at random."""
     pts = []
     if even:
-        cols = max(1, round(math.sqrt(n * w / h)))
+        cols = cols or max(1, round(math.sqrt(n * w / h)))
         rows = math.ceil(n / cols)
         cells = [(r, k) for r in range(rows) for k in range(cols)]
         rnd.shuffle(cells)
@@ -218,18 +221,18 @@ def _lewitt_draw(c, pts, color=INK, width=1, dots=True, wobble=0.0, rnd=None):
 
 
 def lewitt_118(name='lewitt-118', w=1680, h=560, seed=118):
-    """Wall Drawing 118, executed on a wall-shaped canvas: fifty points, 1,225 lines."""
+    """Wall Drawing 118, executed on a wall-shaped canvas: fifty points, one per cell of a 10 x 5 grid, 1,225 lines."""
     c = Canvas(w, h)
     c.rect(1, 1, w - 2, h - 2, fill='#FFFFFF', stroke=LINE, width=2)
-    _lewitt_draw(c, _lewitt_pts(50, 0, 0, w, h, True, random.Random(seed), margin=40), color='#3B4451', width=1)
+    _lewitt_draw(c, _lewitt_pts(50, 0, 0, w, h, True, random.Random(seed), margin=40, cols=10), color='#3B4451', width=1)
     return c.finish(name)
 
 
 def lewitt_wall(name='lewitt-118-wall', w=800, h=500, seed=118):
-    """The same rule on the 800 x 500 canvas of the p5.js code on the slide."""
+    """The same rule on the 800 x 500 canvas of the p5.js code on the slide: its 10 x 5 grid, one point per cell."""
     c = Canvas(w, h)
     c.rect(1, 1, w - 2, h - 2, fill='#FFFFFF', stroke=LINE, width=2)
-    _lewitt_draw(c, _lewitt_pts(50, 0, 0, w, h, True, random.Random(seed), margin=24), color='#3B4451', width=1)
+    _lewitt_draw(c, _lewitt_pts(50, 0, 0, w, h, True, random.Random(seed), margin=24, cols=10), color='#3B4451', width=1)
     return c.finish(name)
 
 
@@ -258,7 +261,7 @@ def lewitt_random_vs_even(name='lewitt-said-meant', w=1680, h=560):
     for i, (even, label) in enumerate(panels):
         x = i * 880
         c.rect(x + 1, 1, 798, 498, fill='#FFFFFF', stroke=LINE, width=2)
-        _lewitt_draw(c, _lewitt_pts(50, x, 0, 800, 500, even, random.Random(118 + i), margin=30), color='#3B4451', width=1)
+        _lewitt_draw(c, _lewitt_pts(50, x, 0, 800, 500, even, random.Random(118 + i), margin=30, cols=10), color='#3B4451', width=1)
         c.text(x + 400, 546, label, size=19, anchor='middle', color=INK)
     return c.finish(name)
 
