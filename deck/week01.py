@@ -1,23 +1,21 @@
 """
 SD2112 · Artificial Intelligence in Design · Week 01 — the slide spec.
 
-    python deck/week01.py            # builds _site/week01/ (html deck + pdf), export/week01*.pptx, export/preview/
-    python deck/week01.py --html     # only the html deck
-    python tools/build_all.py        # everything, as the GitHub Actions workflows run it
+    deckgen build                    # everything, as the GitHub Actions workflows run it
+    deckgen build --pptx             # export/ only, no node needed
 
-One spec, three outputs (see tools/deckgen.py). Edit text here, rebuild, done.
+One spec, four outputs (the generator is ait4x/deckgen). Edit text here, rebuild, done.
 Order and chapter numbers follow Gio's September 2026 cut of the deck: the course admin
 comes right after the journey, the activity (a cup, prompts, images) closes the class.
 """
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / 'tools'))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import figures as F                                   # noqa: E402
 from deckgen import build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YELLOW, GREEN, BLUE, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS, MUTED  # noqa: E402
-from layouts import (title, end, agenda, section, statement, quote, content, cards, question, image_full, timeline,   # noqa: E402
+from deckgen.layouts import (title, end, agenda, section, statement, quote, content, cards, question, image_full, timeline,   # noqa: E402
                      journey, activity, video, assessment, team, team_band, two_col, figure_slide, finalize)
 
 COURSE = 'SD2112'

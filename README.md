@@ -3,7 +3,12 @@
 Class planning and slides for PolyU School of Design, Semester 1 2026/27.
 Lecturer Giovanni Lion (giovanni.lion@polyu.edu.hk) · teaching assistants Nicolò Azzolin, Amber, WU Zhao and MA Jie (in the room 30 min before and after class) · class coordinator Zhibin Zhou.
 
-The repository holds **sources only**. Two GitHub Actions workflows run on every push to `main` (and on demand):
+The repository holds **sources only**. The slide toolchain is not in here either — it is
+[`ait4x/deckgen`](https://github.com/ait4x/deckgen), pinned by tag in `requirements.txt` and
+shared with [`sd5913/teaching`](https://github.com/sd5913/teaching), so a fix to the PowerPoint
+or ClassPoint plumbing lands in both courses at once.
+
+Two GitHub Actions workflows run on every push to `main` (and on demand):
 
 | Workflow | What it makes | Where it goes |
 |---|---|---|
@@ -19,32 +24,32 @@ The repository holds **sources only**. Two GitHub Actions workflows run on every
 | `syllabus/SD2112-syllabus-2026.md` | The syllabus: team, outcomes, four modules, 13-week plan with examples and readings, assessment and rubrics, policies. Published on the site; a `.docx` is built too. |
 | `lessons/week01-lesson-plan.md` | Week 1 run of show (three hours), the *Push the machine to the edge* activity, the ClassPoint question map, contingencies. For the teaching team: `.docx` and `.html` in the artifact, **not published**. |
 | `site/` | The site shell: landing page, vendored reveal.js and the ait4x design tokens. |
-| `tools/deckgen.py`, `layouts.py`, `figures.py` | The generator: a 1920×1080 layout engine with html, pptx and png backends, the ait4x layouts, drawn figures. |
-| `tools/pdf.js` | Prints a built html deck to PDF with Chromium (reveal.js print mode; chips hidden, video thumbnails shown). |
-| `tools/classpoint/build.py` | From the ait4x template kit: theme, master and 8 layouts, entrance animations, ClassPoint buttons and activity tags (word cloud, multiple choice, short answer, image upload; the image-upload model was read back from a deck where the add-in inserted the button). |
-| `tools/build_all.py`, `build_docs.py`, `roster.py` | Build everything; markdown → docx/html; ClassPoint roster from a local ID list. |
-| `tools/fonts/` | Inter and JetBrains Mono variable fonts: used by the build, and to install on the classroom PC. |
+| `deckgen.toml` | The course as the generator sees it: code, name, year, footer, which decks, what gets published. |
+| `deck/figures.py` | The drawn illustrations — chairs, typicality, perceptron, two machines, mediation. Built on `deckgen.figures.Canvas`. |
+| `tools/roster.py` | ClassPoint saved class from a local ID list. |
 
 Generated and git-ignored: `_site/` (the site), `export/` (pptx, manifest, docx, previews), `deck/assets/generated/`, `node_modules/`, `classpoint/*.csv`, `ids.csv`.
 
 ## Build locally
 
 ```bash
-pip install -r tools/requirements.txt
-python tools/build_all.py --pptx          # export/: PowerPoints, manifest, docx, previews (no node needed)
-python tools/build_all.py --site          # _site/: html decks, PDFs, syllabus — needs node + playwright (below)
-python tools/build_all.py                 # both
-python tools/build_all.py --no-pdf        # skip the PDF step
-python deck/week01.py                     # only the Week 1 deck
+uv venv && uv pip install -r requirements.txt
+deckgen build --pptx          # export/: PowerPoints, manifest, docx, previews (no node needed)
+deckgen build --site          # _site/: html decks, PDFs, syllabus — needs node + playwright (below)
+deckgen build                 # both
+deckgen build --no-pdf        # skip the PDF step
 python tools/roster.py ids.csv classpoint/roster-2026-classpoint.csv   # ClassPoint saved class (local only)
 ```
+
+`deckgen build` **exits non-zero if any text overflows its box**, so a broken slide fails the
+workflow rather than reaching the projector.
 
 The PDF step needs node 18+ and Playwright's Chromium: `npm install --no-save playwright@1.56.1 && npx playwright install chromium` in the repo folder (the workflow does the same). The html deck: arrow keys, `S` speaker notes, `O` overview, `F` full screen. Video slides embed YouTube; the pptx and the PDF carry a thumbnail and a link instead. Previews and a text-overflow check land in `export/preview/`.
 
 ## Classroom checklist
 
 1. Download the PowerPoint from the latest *Build PowerPoints* run (Actions → Artifacts → `sd2112-powerpoints`).
-2. Install `tools/fonts/Inter-Variable.ttf` and `JetBrainsMono-Variable.ttf` on the classroom PC (right-click → install for all users), restart PowerPoint. Slide 1 should show *Inter Black* in the font box; Arial substitutes automatically if not.
+2. Install Inter and JetBrains Mono on the classroom PC — they ship inside the `deckgen` package (`python -c "import deckgen, pathlib; print(pathlib.Path(deckgen.__file__).parent / 'fonts')"`), right-click → install for all users. Restart PowerPoint. Slide 1 should show *Inter Black* in the font box; Arial substitutes automatically if not.
 3. Open the deck with the ClassPoint add-in and fire one activity (slide 4, word cloud) before class; a malformed tag fails silently.
 4. Import the roster as the saved class. Students join with the last four digits and the letter of their ID (e.g. `3456A`).
 5. Keep the html deck or the PDF open on a laptop as backup.
@@ -60,10 +65,10 @@ Nothing in the sources identifies a student. Keep it that way:
 
 ## Design system
 
-Slides and site follow the ait4x design system (PolyU Design brand): Pantone Black 6 ink `#000B1C`, white, cool gray, teal `#64C2C3`, the 70-tile secondary matrix for bands, orange `#ED6D24` for the X and for numbers; Inter (display 800–900, tight tracking) and JetBrains Mono (eyebrows, caps, tracked). Tokens: `site/vendor/ait4x-colors_and_type.css`. PowerPoint font names follow `tools/PPTX-EXPORT.md`: *Inter Black* / *Inter ExtraBold* / *Inter* + bold / *JetBrains Mono*.
+Slides and site follow the ait4x design system (PolyU Design brand): Pantone Black 6 ink `#000B1C`, white, cool gray, teal `#64C2C3`, the 70-tile secondary matrix for bands, orange `#ED6D24` for the X and for numbers; Inter (display 800–900, tight tracking) and JetBrains Mono (eyebrows, caps, tracked). Tokens: `site/vendor/ait4x-colors_and_type.css`. PowerPoint font names follow [`PPTX-EXPORT.md`](https://github.com/ait4x/deckgen/blob/main/PPTX-EXPORT.md) in the generator: *Inter Black* / *Inter ExtraBold* / *Inter* + bold / *JetBrains Mono*.
 
 Scale: the canvas is 1920 × 1080 px on a 13.333 × 7.5 in slide, so **one design pixel is 0.5 pt** in PowerPoint (72 px title = 36 pt, 36 px body = 18 pt, 24 px eyebrow = 12 pt). `deckgen.PT` holds that factor; the kit's master and layouts use the same scale.
 
 ## Adding a week
 
-Copy `deck/week01.py` to `deck/week02.py`, change `FOOTER` and `pdf`, write slides with the layout functions in `tools/layouts.py` (`title`, `agenda`, `section`, `statement`, `quote`, `content`, `cards`, `question`, `image_full`, `timeline`, `journey`, `activity`, `video`, `assessment`, `team`, `two_col`, `figure_slide`), add `'week02'` to `DECKS` in `tools/build_all.py`, and add a card in `site/index.html`. ClassPoint activities come from `question(...)` (word cloud, multiple choice, short answer, image upload) or an explicit `cp={...}`.
+Copy `deck/week01.py` to `deck/week02.py`, change `FOOTER` and `pdf`, write slides with the layout functions in `deckgen.layouts` (`title`, `agenda`, `section`, `statement`, `quote`, `content`, `cards`, `question`, `image_full`, `timeline`, `journey`, `activity`, `video`, `assessment`, `team`, `two_col`, `figure_slide`), add `"week02"` to `decks` in `deckgen.toml`, and add a card in `site/index.html`. ClassPoint activities come from `question(...)` (word cloud, multiple choice, short answer, image upload) or an explicit `cp={...}`.

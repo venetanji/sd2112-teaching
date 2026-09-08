@@ -1,0 +1,31 @@
+# This repo, as deckgen sees it. The toolchain itself lives in ait4x/deckgen and is
+# pinned in requirements.txt; nothing here is a copy of it.
+
+[course]
+code   = "SD2112"
+name   = "Artificial Intelligence in Design"
+year   = "2026/27"
+school = "PolyU School of Design"
+footer = "SD2112 · AI IN DESIGN"
+decks  = ["week01"]
+artifact = "sd2112-powerpoints"
+
+[[nav]]
+label = "SD2112"
+href  = "index.html"
+
+[[nav]]
+label = "Week 1 slides"
+href  = "week01/"
+
+[[nav]]
+label = "Syllabus"
+href  = "syllabus.html"
+
+# Markdown that reaches the public site. Anything in syllabus/ or lessons/ NOT listed
+# here still gets a .docx and an html copy, but only in the export/ artifact — which is
+# where the lesson plans belong.
+[[publish]]
+src   = "SD2112-syllabus-2026.md"
+out   = "syllabus.html"
+title = "SD2112 · Syllabus 2026/27"
