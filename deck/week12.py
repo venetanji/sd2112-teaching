@@ -110,8 +110,8 @@ function draw() {
     const y = 78 + i * 32, on = i === lit;
     if (on) { fill('#ED6D24'); rect(860, y - 21, 720, 30, 4); }
     fill(on ? 255 : '#5C6470'); textSize(14); text(i < RULES.length ? (i + 1) : (i === RULES.length ? 'NONE' : 'MEM'), 872, y);
-    fill(on ? 255 : 0); textSize(15); text(i < RULES.length ? RULES[i][2] : (i === RULES.length ? 'no keyword' : 'my ...'), 916, y);
-    fill(on ? 255 : '#5C6470'); textSize(14); text(clipText(i < RULES.length ? RULES[i][1].replace('$1', 'X') : (i === RULES.length ? NONE[0] + ' · ' + NONE[1] : 'Earlier you said your X. Does that still matter?'), 420), 1150, y);
+    fill(on ? 255 : 0); textSize(14); text(i < RULES.length ? RULES[i][2] : (i === RULES.length ? 'no keyword' : 'my ...'), 916, y);
+    fill(on ? 255 : '#5C6470'); textSize(14); text(clipText(i < RULES.length ? RULES[i][1].replace('$1', 'X') : (i === RULES.length ? NONE[0] + ' · ' + NONE[1] : 'Earlier you said your X. Does that still matter?'), 415), 1160, y);
   }
   if (window.place) place();
 }

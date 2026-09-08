@@ -188,7 +188,7 @@ S.append(agenda('SD2112 · WEEK 13', [
 
 # ───────────────────────── 01 · the last class ─────────────────────────
 S.append(section('01', 'The last class.', 'the fair · the quiz · goodbye', bg=INK,
-                 notes='Chapter one, ten minutes: one word from everyone, the three parts of today, the room, and a check that every board is ready.'))
+                 notes='Chapter one, eight minutes: one word from everyone, the three parts of today, the room, and a check that every board is ready.'))
 
 S.append(question('word_cloud', 'Thirteen weeks in one word.',
                   hint='The one word you would use for this course now. Week 1 asked why AI is relevant for design; this is the other end of the semester.',
@@ -205,7 +205,7 @@ S.append(cards('01 · THREE PARTS', 'Three parts. Then it is done.', [
     ('GOODBYE', 'What to take, where it stays, thanks.',
      ['Four sentences to keep. Where the slides, the sketches, the syllabus and the playlist stay. How this course was made. Thanks to the team.',
       'Marks and a paragraph per team on Blackboard after the grading meeting.']),
-], text_size=22, notes='Three parts, said once, so nobody asks at 2:30 when the quiz is. The fair is two thirds of the time before the break and forty percent of the mark; the quiz is twenty. Say the rule of the day: you present twice and you visit twice, and every visit ends in one line on ClassPoint. Then the room.'))
+], text_size=22, notes='Three parts, said once, so nobody asks at 2:30 when the quiz is. The fair is nearly everything before the break and forty percent of the mark; the quiz is twenty. Say the rule of the day: you present twice and you visit twice, and every visit ends in one line on ClassPoint. Then the room.'))
 
 S.append(figure_slide('01 · THE ROOM', 'Boards on the walls. Two halves. One clock.', F.w13_room(),
                       body=[f'Boards on three walls, one per team, numbered as on the Blackboard group list: half A is the first half of the list, teams 1 to {HALF}; half B the second, {HALF + 1} to {TEAMS}. A laptop with the video at every board, the clock on the screen, the desk by the door.'],
@@ -273,7 +273,7 @@ S.append(statement('Break. Fifteen minutes.', eyebrow_text='AFTER THE BREAK · T
 
 # ───────────────────────── 03 · the course in five slides ─────────────────────────
 S.append(section('03', 'The course in five slides', 'two machines · use vs incorporate · mediation · bias · the turn', bg=INK,
-                 notes='Chapter three, fifteen minutes: the whole course in five slides, then the course question one last time. Nothing new; this is the revision the quiz draws on.'))
+                 notes='Chapter three, twenty minutes: the whole course in five slides, then the course question one last time. Nothing new; this is the revision the quiz draws on.'))
 
 S.append(sketch_slide('03 · LIVE · THIRTEEN WEEKS IN ONE PICTURE', 'Two ways to teach a machine.',
                       live('w13-course', COURSE_JS, 1400, 500, hint='hover a week: its idea, what you made, where it sat between the two machines'),
@@ -399,7 +399,7 @@ if __name__ == '__main__':
         else:
             print(f'{k}: {v}')
 
-# Sources (consulted 5 and 6 September 2026 by web search and fetch; every date, number and quotation on the slides was checked against these)
+# Sources (consulted 5, 6 and 8 September 2026 by web search and fetch; every date, number and quotation on the slides was checked against these)
 # Course facts (weights, deliverables, the rubric and its bands, the poster's four zones, the team, the TAs' hours, the playlist, the platforms):
 #   syllabus/SD2112-syllabus-2026.md, tools/course.py, README.md (this repository); deck/week01.py (the four roles, the Lovelace quote slide),
 #   deck/week07.py and lessons/week07-lesson-plan.md (the mid-term's two lanes, the quiz clock, the team register), deck/week08.py (the least-sure
@@ -419,9 +419,10 @@ if __name__ == '__main__':
 # Wiggins: https://research.gold.ac.uk/1000/  Wiggins, G. A. (2006). A preliminary framework for description, analysis and comparison of creative systems.
 #       Knowledge-Based Systems 19(7), 449–458 (full text not fetched: the definition is paraphrased, not quoted)
 # Ihde and Verbeek:
-#   Ihde, D. (1990). Technology and the Lifeworld: From Garden to Earth. Indiana University Press — the four relations: embodiment, hermeneutic,
-#       alterity, background (record: https://philarchive.org/rec/IHDTAT-3); the example line on the mediation figure mixes Ihde's classic cases
-#       (glasses, the thermometer) with Verbeek's 2015 ones (the ATM and the robot, the fridge hum and the heating), as deck/week05.py gives them
+#   Ihde, D. (1990). Technology and the Lifeworld: From Garden to Earth. Indiana University Press, Bloomington — the four relations: embodiment,
+#       hermeneutic, alterity, background (catalogue record: https://archive.org/details/technologylifewo00ihde); the example line on the mediation
+#       figure is labelled EXAMPLES, not IHDE, because it mixes Ihde's classic cases (glasses, the thermometer) with Verbeek's 2015 ones (the ATM
+#       and the robot, the fridge hum and the heating), as deck/week05.py gives them
 #   https://link.springer.com/article/10.1007/s13347-014-0149-8  Nørskov, M. (2015). Revisiting Ihde's Fourfold "Technological Relationships":
 #       Application and Modification. Philosophy & Technology 28, 189–207 (a secondary source on the four relations; the page needs a browser)
 #   https://research.utwente.nl/en/publications/cover-story-beyond-interaction-a-short-introduction-to-mediation-/  Verbeek, P.-P. (2015). Beyond
