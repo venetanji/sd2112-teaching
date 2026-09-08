@@ -1,3 +1,4 @@
 # The slide toolchain, shared with sd5913/teaching. Pinned by tag so a rebuild months
 # from now produces the same deck.
-deckgen @ git+https://github.com/ait4x/deckgen@v0.3.1
+# live-sketches: the p5.js sketch support week 2 needs, until it is tagged (then pin the tag)
+deckgen @ git+https://github.com/ait4x/deckgen@live-sketches
