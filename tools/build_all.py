@@ -5,13 +5,14 @@ Build everything, the way the GitHub Actions workflows do:
     python tools/build_all.py --site     # _site/ only: landing page, html decks, PDFs, syllabus (the Pages workflow)
     python tools/build_all.py --pptx     # export/ only: PowerPoints, ClassPoint manifest, docx, previews (the PowerPoint workflow)
     python tools/build_all.py --no-pdf   # skip the Chromium PDF step (no node/playwright on this machine)
+    python tools/build_all.py --snap     # also redo the snapshots of the live sketches (deck/assets/sketches, committed)
 
   _site/            the published site: landing page, vendor css/js/fonts, one folder per deck
                     (html deck + assets + the PDF without ClassPoint buttons), syllabus.html
   export/           week01.pptx, week01-classpoint.pptx, the ClassPoint manifest,
                     docs/*.docx (+ the lesson plans as html), preview contact sheets
 
-Both folders are git-ignored. Add new decks to DECKS.
+Both folders are git-ignored. Every deck/weekNN.py is a deck.
 """
 from __future__ import annotations
 
@@ -26,7 +27,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import deckgen        # noqa: E402
 import build_docs     # noqa: E402
 
-DECKS = ['week01']
+DECKS = sorted(p.stem for p in (ROOT / 'deck').glob('week[0-9][0-9].py'))   # every deck/weekNN.py
 
 
 def load_deck(name):
@@ -36,12 +37,31 @@ def load_deck(name):
     return mod
 
 
+def sketchbook(sketches):
+    """_site/sketches.html: every live sketch of every deck, linked to its own page."""
+    import html
+    by_deck = {}
+    for name, title, el in sketches:
+        by_deck.setdefault((name, title), []).append(el)
+    parts = ['<h1>Sketchbook</h1>', '<p>Every interactive p5.js sketch in the decks, on its own page: move the mouse, click, press R to restart. '
+             'The same sketches run inside the html decks; the PDFs and the PowerPoints show stills.</p>']
+    for (name, title), els in by_deck.items():
+        parts.append(f'<h2>{html.escape(title)}</h2><ul>')
+        for el in els:
+            hint = f' <span style="color:var(--fg-3)">· {html.escape(el.hint)}</span>' if el.hint else ''
+            parts.append(f'<li><a href="{name}/sketches/{el.name}.html">{html.escape(el.name)}</a>{hint} · <a href="{name}/">the deck</a></li>')
+        parts.append('</ul>')
+    build_docs.write_page(deckgen.SITE / 'sketches.html', 'SD2112 · Sketchbook', '\n'.join(parts))
+    print(f'_site/sketches.html: {len(sketches)} sketches')
+
+
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     explicit = {'--site', '--pptx'} & set(argv)
     do_site = '--site' in explicit or not explicit
     do_pptx = '--pptx' in explicit or not explicit
     do_pdf = '--no-pdf' not in argv
+    snap = '--snap' in argv          # redo the sketch snapshots (deck/assets/sketches) before building
     if do_site:
         site = deckgen.SITE
         if site.exists():
@@ -49,9 +69,11 @@ def main(argv=None):
         shutil.copytree(ROOT / 'site', site)      # index.html + vendor/ (reveal.js, design tokens)
         (site / '.nojekyll').touch()
     problems = []
+    sketches = []          # (deck, week, sketch) for the sketchbook page
     for name in DECKS:
         mod = load_deck(name)
-        out = deckgen.build_all(mod.DECK, name, mod.FOOTER, do_pptx=do_pptx, do_html=do_site, do_png=True, do_pdf=do_site and do_pdf)
+        sketches += [(name, mod.DECK['title'], el) for el in deckgen.sketches_of(mod.DECK)]
+        out = deckgen.build_all(mod.DECK, name, mod.FOOTER, do_pptx=do_pptx, do_html=do_site, do_png=True, do_pdf=do_site and do_pdf, snap=snap)
         n = len(mod.DECK['slides'])
         cp = sum(1 for s in mod.DECK['slides'] if s.cp)
         made = [str(out[k].relative_to(ROOT)) for k in ('html', 'pdf', 'classpoint') if k in out]
@@ -59,6 +81,8 @@ def main(argv=None):
         for w in out.get('warnings') or []:
             problems.append(f'{name}: {w}')
     build_docs.main(site=do_site, export=do_pptx)
+    if do_site:
+        sketchbook(sketches)
     for p in problems:
         print('WARNING', p)
     if do_site:

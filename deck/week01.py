@@ -18,13 +18,76 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import figures as F                                   # noqa: E402
 from deckgen import build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YELLOW, GREEN, BLUE, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS, MUTED  # noqa: E402
 from layouts import (title, end, agenda, section, statement, quote, content, cards, question, image_full, timeline,   # noqa: E402
-                     journey, activity, video, assessment, team, team_band, two_col, figure_slide, finalize)
+                     journey, activity, video, assessment, team, team_band, two_col, figure_slide, live, finalize)
+
+from course import SITE, PLAYLIST, GENAI, JOURNEY                # noqa: E402
+
+# ───────────────────────── live sketches (html deck): the chair rule, and the edge of the concept ─────────────────────────
+CHAIR_RULE_JS = """// One rule, twelve chairs. Six numbers each. The mouse tilts every back; a click rolls new numbers.
+let chairs = [], moved = false;
+function setup() {
+  createCanvas(800, 720); randomSeed(2112); roll(); noLoop();
+}
+function roll() {
+  chairs = [];
+  for (let i = 0; i < 12; i++) chairs.push({ seat: random(0.32, 0.6), back: random(0.3, 0.75), angle: random(-2, 22),
+    width: random(0.45, 0.8), legs: random([2, 3, 4, 4, 4]), splay: random(0, 0.12) });
+}
+function draw() {
+  background(255);
+  let tilt = moved ? constrain(map(mouseX, 0, width, -12, 24), -12, 24) : 0, lift = moved ? constrain(map(mouseY, 0, height, 0.15, -0.15), -0.15, 0.15) : 0;
+  let cw = width / 4, ch = height / 3, size = min(cw, ch) * 0.62;
+  for (let i = 0; i < 12; i++) {
+    let c = chairs[i], r = floor(i / 4), k = i % 4;
+    let ox = k * cw + (cw - size) / 2, oy = r * ch + (ch - size) / 2 - 6;
+    chair(ox, oy, size, constrain(c.seat + lift, 0.2, 0.7), c.back, c.angle + tilt, c.width, c.legs, c.splay);
+    noStroke(); fill(90); textAlign(CENTER); textSize(12); textFont('JetBrains Mono');
+    text(nf(constrain(c.seat + lift, 0.2, 0.7), 1, 2) + ' · ' + round(max(0, c.angle + tilt)) + '° · ' + c.legs, k * cw + cw / 2, r * ch + ch - 10);
+  }
+  noStroke(); fill(0); textAlign(LEFT); textSize(13);
+  text('mouse x tilts every back  ·  mouse y lifts every seat  ·  click: new numbers', 16, height - 8);
+}
+function chair(ox, oy, size, seat_h, back_h, back_angle, seat_w, legs, splay) {
+  let sh = seat_h * size, sw = seat_w * size, thick = 0.05 * size;
+  let x0 = ox + (size - sw) / 2, ySeat = oy + size - sh;
+  stroke(0); strokeWeight(4); fill(0); rect(x0, ySeat, sw, thick);
+  let xs = legs == 2 ? [x0 + thick / 2, x0 + sw - thick / 2] : Array.from({ length: legs }, (_, i) => x0 + thick / 2 + i * (sw - thick) / (legs - 1));
+  for (let lx of xs) { let sp = splay * size * (lx < x0 + sw / 2 ? -1 : 1); line(lx, ySeat + thick, lx + sp, oy + size); }
+  let bh = back_h * size, ang = radians(back_angle), bx0 = x0 + sw - thick / 2;
+  let tx = bx0 + sin(ang) * bh, ty = ySeat - cos(ang) * bh;
+  strokeWeight(5); line(bx0, ySeat, tx, ty);
+  strokeWeight(4); line(tx - 0.22 * sw * cos(ang), ty - 0.22 * sw * sin(ang), tx, ty);
+}
+function mouseMoved() { moved = true; redraw(); }
+function mousePressed() { roll(); redraw(); }"""
+
+EDGE_JS = """// Rosch's scale as a thing you can walk along: the mouse is an object; how typical a chair is it?
+const items = [['dining chair', 1.0], ['armchair', 0.9], ['stool', 0.7], ['bean bag', 0.5], ['swing', 0.35], ['tree stump', 0.2], ['rock', 0.08]];
+function setup() { createCanvas(1680, 300); noLoop(); }
+function draw() {
+  background(255);
+  let n = items.length, y = 200;
+  stroke(225); strokeWeight(4); line(80, y, width - 80, y);
+  let t = constrain((mouseX - 80) / (width - 160), 0, 1);
+  for (let i = 0; i < n; i++) {
+    let x = 80 + i * (width - 160) / (n - 1), typ = items[i][1], r = 10 + 26 * typ;
+    noStroke(); fill(typ > 0.6 ? '#ED6D24' : typ > 0.3 ? '#64C2C3' : '#5C6470'); circle(x, y, 2 * r);
+    fill(0); textAlign(CENTER); textSize(20); textFont('JetBrains Mono'); text(items[i][0], x, 265);
+    fill(90); textSize(16); text(nf(typ, 1, 2), x, 150);
+  }
+  let k = t * (n - 1), i = floor(k), f = k - i, typ = lerp(items[i][1], items[min(i + 1, n - 1)][1], f);
+  let x = 80 + t * (width - 160);
+  stroke('#ED6D24'); strokeWeight(3); noFill(); circle(x, y, 90);
+  noStroke(); fill('#ED6D24'); textAlign(LEFT); textSize(18);
+  text('TYPICAL', 80, 60); fill('#5C6470'); textAlign(RIGHT); text('IS IT STILL A CHAIR?', width - 80, 60);
+  let lx = constrain(x, 190, width - 190);
+  fill(0); textAlign(CENTER); textSize(22); text(typ > 0.75 ? 'a chair, no question' : typ > 0.45 ? 'a chair, if you insist' : typ > 0.25 ? 'you can sit on it' : 'not a chair — but you sat on it', lx, 100);
+  textSize(16); fill(90); text('typicality ' + nf(typ, 1, 2), lx, 122);
+}
+function mouseMoved() { redraw(); }"""
 
 COURSE = 'SD2112'
 FOOTER = 'SD2112 · AI IN DESIGN · WEEK 01'
-SITE = 'venetanji.github.io/sd2112-teaching'
-PLAYLIST = 'https://www.youtube.com/playlist?list=PLU58DFEI5YDQ'
-GENAI = 'genai.polyu.edu.hk'
 CHAIRS = [f'ai-chair-{i}.jpg' for i in range(1, 5)]   # same prompt, four seeds (deck/assets)
 
 S = []  # the slides, in order
@@ -94,14 +157,7 @@ S.append(question('multiple_choice', 'How much have you used AI in your design w
 # ───────────────────────── 03 · the journey ─────────────────────────
 S.append(section('03', 'The journey', '13 weeks · four modules · one question', notes='Chapter three: the whole semester on one slide.'))
 
-S.append(journey('03 · THE SEMESTER', 'Where we are going', [
-    dict(label='1 · What is AI?', color=TEALS[0], tint=TEALS[4], cells=[('Week 1', 'Two ways to teach a machine'), ('Week 2', 'Rules that make things: code, chance, generative art'), ('Week 3', 'Learning from examples: concepts, neurons, Move 37')]),
-    dict(label='2 · AI for the creative process', color=VIOLETS[0], dark=True, tint=VIOLETS[5], cells=[('Week 4', 'Language machines: LLMs, prompts, agents'), ('Week 5', 'Image machines: diffusion, CLIP, mediation'), ('Week 6', 'Sound machines: music, voice, spectrograms')]),
-    dict(label='Mid-term', color=PAPER, tint=PAPER, cells=[('Week 7', 'Mid-term quiz · project pitches · teams · reflection due')]),
-    dict(label='3 · AI inside products', color=ORANGES[0], tint=ORANGES[4], cells=[('Week 8', 'AI as design material: use vs incorporate'), ('Week 9', 'Data, bias and privacy'), ('Week 10', 'Recommendation systems and the feed')]),
-    dict(label="4 · The designer's turn", color=PINKS[0], dark=True, tint=PINKS[4], cells=[('Week 11', 'Curating outputs and datasets · authorship'), ('Week 12', 'Language as an interface: chatbots and agents')]),
-    dict(label='Showcase', color=INK, dark=True, tint=PAPER, cells=[('Week 13', 'Poster fair · final quiz')]),
-], here=(0, 0), notes='Four modules. Weeks 1 to 3: what AI is, in two flavours — rules and examples. Weeks 4 to 6: the tools you will use in your own process; each week ends with a small making challenge. Week 7: quiz, pitches, teams. Weeks 8 to 10: AI as a material inside the product you design. Weeks 11 and 12: what is left for the designer. Week 13: the poster fair and the final quiz, in the same three-hour class. You are here. The one question under all of it — can a machine originate a design? — comes up in chapter five.'))
+S.append(journey('03 · THE SEMESTER', 'Where we are going', JOURNEY, here=(0, 0), notes='Four modules. Weeks 1 to 3: what AI is, in two flavours — rules and examples. Weeks 4 to 6: the tools you will use in your own process; each week ends with a small making challenge. Week 7: quiz, pitches, teams. Weeks 8 to 10: AI as a material inside the product you design. Weeks 11 and 12: what is left for the designer. Week 13: the poster fair and the final quiz, in the same three-hour class. You are here. The one question under all of it — can a machine originate a design? — comes up in chapter five.'))
 
 # ───────────────────────── 04 · how this course works ─────────────────────────
 S.append(section('04', 'How this course works', 'Assessment · assignments · weekly challenges · rules', bg=VIOLET,
@@ -199,6 +255,7 @@ S.append(content('05 · MACHINE A · RULES', 'One rule. Twelve chairs.',
                   '- It can never make a beanbag. The definition does not know beanbags exist.',
                   'This is parametric design — Grasshopper, variable fonts, CSS grid. Week 2 is this: rules that make things.'],
                  figure=F.parametric_chairs(),
+                 sketch=live('w01-chair-rule', CHAIR_RULE_JS, 800, 720, hint='mouse tilts the backs · click rolls new numbers'),
                  caption='chair(seat=0.45, width=0.62, back=0.6, angle=8, legs=4, splay=0.05) — the same function, twelve times',
                  body_size=30,
                  notes='Rules generate. Product designers know this as parametric design; type designers as variable fonts; web designers as a grid system. The strength and the limit are the same thing: nothing outside the rule can ever appear.'))
@@ -214,6 +271,7 @@ S.append(content('05 · MACHINE B · EXAMPLES', 'Ask a model for "a chair". Four
                  notes='Generated with a small, fast model and the same prompt four times. Notice how similar they are. Nobody told the model what a chair is; it learned what is typical. That word — typical — is the bridge to the next slide. You will do this yourselves at the end of the class, with a cup.'))
 
 S.append(figure_slide('05 · ROSCH, 1975 · TYPICALITY', 'Concepts have a middle and an edge.', F.typicality_scale(),
+                      sketch=live('w01-edge', EDGE_JS, 1680, 300, hint='move the mouse along the scale'),
                       body=['Typical members are named first, learned first, recognised faster. The edge is where the definition breaks: is a bean bag a chair? a swing? the rock you sat on at lunch?'],
                       caption='Rosch & Mervis 1975 — family resemblance, not necessary and sufficient conditions. Machine A lives on the definition. Machine B lives in the middle. Designers work at the edge.',
                       notes='Ask the room to picture a chair. Almost everyone pictures the same one: four legs, a back, seen from the side or the front. That is the prototype — you did what the model did. Eleanor Rosch showed this in 1975: concepts are organised around typical members, not definitions. The rule-machine cannot hold the edge: any definition of chair either lets in the rock or throws out the beanbag. The example-machine lives in the middle. Design is the art of leaving the prototype without leaving the concept. Week 3 goes deeper: classical theory versus prototype theory, GOFAI versus connectionism.'))
