@@ -1,0 +1,61 @@
+name: Build staging
+
+# On every push to `staging` (or by hand): build everything the way the two main workflows
+# do — html decks, PDFs, the published markdown, the PowerPoints, the ClassPoint manifest,
+# the documents, the previews — and keep it all as artifacts of the run, to check before it
+# goes to main. Nothing is published from here: the Publish site workflow on main picks this
+# run up and shows the html under /staging/ of the Pages site.
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: staging
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - run: pip install -r requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Playwright Chromium (prints the PDFs, makes the stills of the live sketches)
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Build everything (fails on a text overflow or a sketch with no still)
+        run: deckgen build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: staging-site
+          path: _site
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: staging-powerpoints
+          path: |
+            export/*.pptx
+            export/*.json
+            export/docs/
+            export/preview/*.jpg
+          retention-days: 30
+      - name: Where to look
+        run: |
+          {
+            echo "## Staging build of \`${GITHUB_SHA::7}\`"
+            echo
+            echo "- **html decks and PDFs**: https://venetanji.github.io/sd2112-teaching/staging/ once *Publish site* has run for this push (it starts when this run ends), or the \`staging-site\` artifact below"
+            echo "- **PowerPoints, ClassPoint manifest, documents, previews**: the \`staging-powerpoints\` artifact below"
+          } >> "$GITHUB_STEP_SUMMARY"
