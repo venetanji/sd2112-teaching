@@ -47,15 +47,15 @@ const RULES = [   // [pattern, template, how the list shows the pattern]
   ['I need (.+)', 'What should $1 do for the people who see it?', 'I need X'],
   ['I want (.+)', 'Why do you want $1?', 'I want X'],
   ['I am (.+)', 'How long have you been $1?', 'I am X'],
-  ['my (client|boss|tutor|team)\\b', 'Tell me more about your $1.', 'my client|boss|team'],
+  ['my (client|boss|tutor|team)\\b', 'Tell me more about your $1.', 'my client|boss|tutor|team'],
   ['can you (.+)', 'Would it help you if I could $1?', 'can you X'],
   ['poster|flyer|banner', 'Who is it for, and where will they see it?', 'poster|flyer|banner'],
   ['logo', 'What must the logo do that the name alone cannot?', 'logo'],
-  ['colou?rs?\\b', 'Which colour would the people you design for choose?', 'colour(s)'],
+  ['colou?rs?\\b', 'Which colour would the people it is for choose?', 'colour(s)'],
   ['font|typeface', 'Set it in one weight first. What breaks?', 'font|typeface'],
   ['deadline|tomorrow|tonight', 'What would you show if it were due in an hour?', 'deadline|tomorrow'],
   ['\\bAI\\b|model|chatgpt|generat', 'What did you decide that the model did not?', 'AI|model|chatgpt'],
-  ['idea', 'Say the idea in one sentence a stranger could execute.', 'idea'],
+  ['idea', 'Say it in one sentence a stranger could execute.', 'idea'],
   ['feedback|critique|crit\\b', 'Which one fix would move it most?', 'feedback|critique|crit'],
   ['^(?:yes|no|ok|okay)\\b', 'You seem sure. What is the evidence?', '^yes|no|ok'],
 ];
@@ -93,25 +93,25 @@ function wrap(s, w) {                         // words into lines that fit
 function draw() {
   background(255); noStroke();
   fill('#ED6D24'); textSize(14); text('ELIZA · 1966 · A SCRIPT, NOT A MIND', 30, 40);
-  text('THE SCRIPT · 14 RULES, TOP TO BOTTOM · THE FIRST MATCH DECIDES', 950, 40);
+  text('THE SCRIPT · 14 RULES, TOP TO BOTTOM · THE FIRST MATCH DECIDES', 870, 40);
   textSize(19); let rows = [];                                      // the transcript, newest at the bottom
-  for (const [who, t] of chat) for (const [i, l] of wrap(t, 760).entries()) rows.push([i ? '' : who, l]);
+  for (const [who, t] of chat) for (const [i, l] of wrap(t, 700).entries()) rows.push([i ? '' : who, l]);
   rows = rows.slice(-17);
   for (const [i, [who, l]] of rows.entries()) {
     const y = 78 + i * 27;
-    fill(who === 'ELIZA' ? '#943890' : '#5C6470'); textSize(13); text(who, 30, y);
+    fill(who === 'ELIZA' ? '#943890' : '#5C6470'); textSize(14); text(who, 30, y);
     fill(who === 'ELIZA' || (rows[i][0] === '' && rowWho(rows, i) === 'ELIZA') ? '#943890' : 0); textSize(19); text(l, 100, y);
   }
   if (lit >= 0) { fill('#ED6D24'); textSize(14); text('FIRED: ' + (lit < RULES.length ? 'RULE ' + (lit + 1) + ' · ' + RULES[lit][2] : lit === RULES.length ? 'NONE · no keyword' : 'MEMORY · something you said about "my"'), 30, 546); }
-  stroke(0); strokeWeight(1.5); fill(255); rect(30, 560, 870, 50, 4); noStroke();
+  stroke(0); strokeWeight(1.5); fill(255); rect(30, 560, 800, 50, 4); noStroke();
   fill(0); textSize(18); text('›', 44, 592);
   if (!window.hasInput) { fill(150); text('type a line and press Enter', 70, 592); }
   for (let i = 0; i < RULES.length + 2; i++) {                         // the script, with the rule that fired lit
     const y = 78 + i * 32, on = i === lit;
-    if (on) { fill('#ED6D24'); rect(940, y - 21, 640, 30, 4); }
-    fill(on ? 255 : '#5C6470'); textSize(13); text(i < RULES.length ? (i + 1) : (i === RULES.length ? 'NONE' : 'MEM'), 952, y);
-    fill(on ? 255 : 0); textSize(16); text(i < RULES.length ? RULES[i][2] : (i === RULES.length ? 'no keyword' : 'my ...'), 1002, y);
-    fill(on ? 255 : '#5C6470'); textSize(14); text(clipText(i < RULES.length ? RULES[i][1].replace('$1', 'X') : (i === RULES.length ? NONE[0] + ' · ' + NONE[1] : 'Earlier you said your X. Does that ...'), 310), 1262, y);
+    if (on) { fill('#ED6D24'); rect(860, y - 21, 720, 30, 4); }
+    fill(on ? 255 : '#5C6470'); textSize(14); text(i < RULES.length ? (i + 1) : (i === RULES.length ? 'NONE' : 'MEM'), 872, y);
+    fill(on ? 255 : 0); textSize(15); text(i < RULES.length ? RULES[i][2] : (i === RULES.length ? 'no keyword' : 'my ...'), 916, y);
+    fill(on ? 255 : '#5C6470'); textSize(14); text(clipText(i < RULES.length ? RULES[i][1].replace('$1', 'X') : (i === RULES.length ? NONE[0] + ' · ' + NONE[1] : 'Earlier you said your X. Does that still matter?'), 420), 1150, y);
   }
   if (window.place) place();
 }
@@ -130,7 +130,7 @@ function place() {
   const c = document.querySelector('canvas'); if (!c || !input) return;
   const r = c.getBoundingClientRect(), s = r.width / 1600;
   const css = 'position:absolute;box-sizing:border-box;border:0;outline:0;background:transparent;color:#000B1C;font-family:"JetBrains Mono",Menlo,Consolas,monospace;padding:0 8px;'
-    + 'left:' + (r.left + 60 * s) + 'px;top:' + (r.top + 566 * s) + 'px;width:' + (820 * s) + 'px;height:' + (38 * s) + 'px;font-size:' + (18 * s) + 'px;';
+    + 'left:' + (r.left + 60 * s) + 'px;top:' + (r.top + 566 * s) + 'px;width:' + (750 * s) + 'px;height:' + (38 * s) + 'px;font-size:' + (18 * s) + 'px;';
   if (input.elt.dataset.css !== css) { input.elt.dataset.css = css; input.elt.style.cssText = css; }
 }
 function mousePressed() { if (input) input.elt.focus(); }"""
@@ -201,7 +201,7 @@ function draw() {
 function card(x, y, w, h, kind, txt, n) {
   const dark = kind === 'PERSON' || kind === 'DONE';
   stroke(0); strokeWeight(kind === 'CONFIRM' ? 4 : 1.5); fill(FILL[kind]); rect(x, y, w, h, 6);
-  noStroke(); fill(dark ? '#64C2C3' : '#000B1C'); textSize(12); text(kind + ' · ' + n, x + 12, y + 20);
+  noStroke(); fill(dark ? '#64C2C3' : '#000B1C'); textSize(14); text(kind + ' · ' + n, x + 12, y + 20);
   fill(dark ? 255 : 0); textSize(14); text(txt, x + 12, y + 30, w - 24, h - 36);   // wrapped in the card
 }"""
 
@@ -251,7 +251,7 @@ function draw() {
 
 function bubble(x, y, who, txt, col, tagged) {
   fill(col); rect(x, y, 790, 100, 12);
-  fill(tagged ? '#00544C' : 0); textSize(13); text(who, x + 16, y + 22);
+  fill(tagged ? '#00544C' : 0); textSize(14); text(who, x + 16, y + 22);
   fill(0); textSize(15); text(txt, x + 16, y + 32, 760, 64);
 }"""
 
@@ -345,16 +345,16 @@ S.append(section('02', 'Two chatbots, two machines', 'rules-based · generative 
                  notes='Chapter two: the homework video, the same message through three machines, seventy-six years of talking machines, ELIZA back from week 2 as a live script, what the generative version changes, and three cases where the company paid for what the bot said.'))
 
 S.append(video('02 · THE HOMEWORK · IBM TECHNOLOGY · ON THE PLAYLIST', 'Two ways to build a thing that talks.', 'lZjUS_8btEo',
-               ['The homework: IBM’s explainer of the two ways to build a chatbot — a decision tree of rules, or a language model. Machine A and machine B, as products that talk.',
+               ['The homework, **Generative vs Rules-Based Chatbots** (IBM Technology, on the playlist): the two ways to build a chatbot — a decision tree of rules, or a language model. Machine A and machine B, as products that talk.',
                 '- Where each fails: the rule with no branch for your question; the model that answers fluently and wrongly.',
                 '- Today: both, live, then rules around a model — the version you build for your product after the break.'],
                thumb='yt/lZjUS_8btEo.jpg',
-               notes='The last video on the playlist and the week-1 distinction one more time, as two products. If the word cloud was thin on the homework, play the first minute now. Ask the room which of the two their bank uses; almost always the first, and the next slide says why.'))
+               notes='The last homework video on the playlist — say its title, so they can find it — and the week-1 distinction one more time, as two products. If the word cloud was thin on the homework, play the first minute now. Ask the room which of the two the last bot they talked to was; most will say the first, and the next slide adds the kind that sits between them.'))
 
 S.append(figure_slide('02 · THE SAME MESSAGE, THREE MACHINES', 'A script answers, or a model writes.', F.w12_two_chatbots(),
-                      body=['"Where is my parcel?" through three chatbots. Left: a keyword picks a branch and a script speaks — exact, brittle. Middle: a model sorts the message into an intent and a script answers — the generation your bank uses. Right: a model writes the reply — fluent, and free to invent the depot time.'],
+                      body=['"Where is my parcel?" through three chatbots. Left: a keyword picks a branch and a script speaks — exact, brittle. Middle: a model sorts the message into an intent and a script answers — IBM’s "hybrid": fuzzy at the door, exact inside. Right: a model writes the reply — fluent, and free to invent the depot time.'],
                       caption='Machine A speaks from a script; machine B writes. The bottom band is the designer’s version and the workshop: rules around a model — a system prompt, refusals and a person, with the fluent reply inside them.',
-                      notes='Walk it left to right. The rules bot cannot answer a question it has no branch for, and everyone in the room has hit that wall. The intent bot is the 2016 generation: machine B at the door, machine A inside — fuzzy about what you meant, exact about what it says. The generative bot answers everything, including what it never looked up: the depot time is invented. Hold the bottom band; it is the whole afternoon.'))
+                      notes='Walk it left to right. The rules bot cannot answer a question it has no branch for, and everyone in the room has hit that wall. The intent bot is the hybrid: machine B at the door, machine A inside — fuzzy about what you meant, exact about what it says. The generative bot answers everything, including what it never looked up: the depot time is invented. Hold the bottom band; it is the whole afternoon.'))
 
 S.append(timeline('02 · SEVENTY-SIX YEARS OF TALKING MACHINES', 'From a game to a law.', [
     ('1950', 'Turing’s game', 'A person, a machine, a judge, a teleprinter. "Can machines think?" becomes "can you tell?"'),
@@ -368,13 +368,13 @@ S.append(timeline('02 · SEVENTY-SIX YEARS OF TALKING MACHINES', 'From a game to
 ], notes='Eight dates, one arc: from a thought experiment to a legal duty. The first three are rules; Siri is the hybrid; 2022 is the model alone; 2024 is the model with hands; 2026 is the law catching up with the Turing test — chapter four. Cut to the four dates in bold if behind: 1950, 1966, 2022, 2026.'))
 
 S.append(figure_slide('02 · ELIZA · 1966 · ONE RULE, STEP BY STEP', 'A keyword, a template, a pronoun swap.', F.w12_eliza_rule(),
-                      body=['Weizenbaum, 1966: "input sentences are analyzed on the basis of decomposition rules which are triggered by key words". Find the keyword with the highest rank, split the sentence, swap the pronouns, pour the rest into a template. No keyword: a content-free remark, or something you said earlier about "my".'],
-                      caption='Our rule, his machine. "A script is data; i.e., it is not part of the program itself": change the rules and the same program is a therapist, a tutor or a poster critic. The code was found in MIT’s archives in 2021 and ran again in 2025.',
-                      notes='Five steps, and the room can execute every one of them by hand. Rank decides between keywords; the swap is what makes it feel like listening; the template is where the design is. The last box is the one to underline: the script is data. That is why ELIZA can be a design critic in the next slide and why a system prompt is the same move sixty years later.'))
+                      body=['Weizenbaum, 1966: "input sentences are analyzed on the basis of decomposition rules which are triggered by key words". Scan the sentence for keywords, swapping the pronouns on the way; the highest rank wins; split the sentence on its pattern and pour the rest into a template. No keyword: a content-free remark, or something you said earlier about "my".'],
+                      caption='Our rule, his machine. "A script is data; i.e., it is not part of the program itself": change the rules and the same program is a therapist, a tutor or a poster critic. Found in MIT’s archives in 2021, the code ran again in December 2024.',
+                      notes='Five steps, and the room can execute every one of them by hand. Rank decides between keywords; the swap happens during the scan — which is why the 1966 rules read "(0 YOU ARE 0)" — and it is what makes it feel like listening; the template is where the design is. The last box is the one to underline: the script is data. That is why ELIZA can be a design critic in the next slide and why a system prompt is the same move sixty years later.'))
 
 S.append(sketch_slide('02 · ELIZA · LIVE · FOURTEEN RULES OF OUR OWN', 'Talk to it. Watch the rule that decided.',
                       live('w12-eliza', ELIZA_JS, 1600, 640, hint='click the box · type a line · Enter', extra=ELIZA_EXTRA),
-                      notes='Type three lines from the room. "I need a logo for my café": rule 1 fires before rule 7 — order is rank. Then a line that breaks it: "Can you send it to my client by Friday?" fires rule 4, not rule 5 — "my client" outranks "can you" — and answers a question nobody asked. Then "It is fine, I think": nothing fires, and MEMORY brings back "your client by Friday", garbled, because it never understood anything. Every reply has a line you can point at. That is the deal from week 2, and it is what the generative version gives up.'))
+                      notes='Type three lines from the room. "I need a logo for my café": rule 1 fires before rule 7 — order is rank. Then a line that breaks it: "Can you send it to my client by Friday?" fires rule 4, not rule 5 — "my client" outranks "can you" — and answers a question nobody asked. Then "It is fine, I think": nothing fires, and MEMORY brings back "your client by Friday", garbled, because it never understood anything. Every reply has a line you can point at. That is the deal from week 2, and it is what the generative version gives up. After typing, click on the slide outside the sketch before using the arrow keys: the text field keeps the keys to itself.'))
 
 S.append(cards('02 · THE GENERATIVE VERSION · WHAT CHANGES', 'Fluency, no script, no guarantee.', [
     ('FLUENCY', 'It answers anything, in any tone.', 'No branch is missing because there are no branches: the reply is the likeliest continuation of your message and everything the model read. The wall the rules bot hit is gone — and so is the "I don’t understand" that told you where the wall was.'),
@@ -383,7 +383,7 @@ S.append(cards('02 · THE GENERATIVE VERSION · WHAT CHANGES', 'Fluency, no scri
 ], notes='Three words to carry into the workshop. Each is the same fact seen from a different side: the words are generated, not retrieved. Ask the room which of the three worried them in the word cloud; "fake" and "polite" are both fluency. Then the cases.'))
 
 S.append(cards('02 · THREE CASES · 2023 – 2024', 'It said what it said. The company paid.', [
-    ('DEC 2023 · CHEVROLET DEALER', 'A Tahoe for one dollar.', 'A dealership’s ChatGPT-powered assistant was talked into agreeing to sell a 2024 Tahoe for $1 — "and that’s a legally binding offer, no takesies backsies". The screenshot went round the world; the bot came down. No refusal rule, no price the model could read.'),
+    ('DEC 2023 · CHEVROLET DEALER', 'A Tahoe for one dollar.', 'A dealership’s ChatGPT-powered assistant was talked into agreeing to sell a 2024 Tahoe for $1 — "That’s a deal, and that’s a legally binding offer – no takesies backsies." The screenshot went round the world; the bot came down. No refusal rule, no price the model could read.'),
     ('JAN 2024 · DPD', 'A poem about its own uselessness.', 'A customer who could not get a parcel status asked the delivery firm’s bot to swear and to write a poem about how bad DPD was. It did both. DPD switched the AI part off after a system update had let it loose. A guardrail that vanished with a release.'),
     ('FEB 2024 · AIR CANADA', 'The bot invented a refund. The tribunal made it real.', 'The airline’s chatbot told a grieving passenger he could claim a bereavement fare after flying. Policy said otherwise. Air Canada argued the bot was "a separate legal entity"; the tribunal called that "a remarkable submission" and awarded C$650.88. Your bot’s words are your words.'),
 ], text_size=21, notes='Three cases, three failure modes: no refusal rule; a guardrail lost in an update; an invented fact with legal weight. The Air Canada line is the one to read slowly: the company is responsible for all the information on its website, whether from a static page or a chatbot. For the mediation brief that means the guardrails heading is a liability document. Ask: which of the three would a menu bot have avoided? All three — at the price of answering nothing.'))
@@ -455,12 +455,12 @@ S.append(cards('04 · WHAT PASSING MEANS WHEN EVERYONE PASSES', 'The test moved 
     ('2025 · THE RESULT', 'A persona prompt beats the person.', 'GPT-4.5 told to adopt a humanlike persona was chosen as the human 73% of the time — more often than the real people it sat beside. GPT-4o with no persona prompt: 21%; ELIZA: 23%. The interrogators lost to a prompt, not to a mind.'),
     ('THE DESIGN FACT', 'Passing is now a setting.', 'A product can be tuned to be taken for a person: a first name, hesitation, typos, an exclamation mark. So the question is no longer "can it?" but "may it, here?" — and who decides. Weizenbaum’s danger, at scale.'),
     ('2026 · THE LAW', 'Say what you are.', 'EU AI Act, Article 50, applying from 2 August 2026: a system intended to interact with people must be designed so that they are informed they are talking to an AI, unless it is obvious. Disclosure became a design requirement.'),
-], text_size=21, notes='Four cards, one move: the Turing test stops being a claim about minds and becomes a fact about products, and the law answers a fact about products. Hong Kong has no equivalent statute; the government’s April 2025 generative-AI guideline is guidance, not a duty — say so, and then say that the brief is where you decide anyway. Ask: at which moment does your assistant say what it is? Once, at the start? At every refusal? Never, because it is obvious? "Obvious" is a claim you will have to defend at the fair.'))
+], text_size=21, notes='Four cards, one move: the Turing test stops being a claim about minds and becomes a fact about products, and the law answers a fact about products. Hong Kong has no equivalent statute; the government’s April 2025 generative-AI guideline is guidance, not a duty — though in March 2026 the government told LegCo that an inter-departmental working group is reviewing whether specific AI legislation is needed. Say so, and then say that the brief is where you decide anyway. Ask: at which moment does your assistant say what it is? Once, at the start? At every refusal? Never, because it is obvious? "Obvious" is a claim you will have to defend at the fair.'))
 
-S.append(question('multiple_choice', 'In Van Den Eede’s sense, a technology is transparent when…', [
+S.append(question('multiple_choice', 'In Van Den Eede’s first sense — transparency of use — a technology is transparent when…', [
     'You can read its source code', 'It disappears in use: you look through it, not at it', 'It tells you it is an AI', 'It never makes a mistake',
 ], eyebrow_text='04 · QUICK CHECK · MULTIPLE CHOICE',
-    notes='B, the phenomenologists’ transparency, the one on the horizontal axis. A and C are the other kind — origins and effects made visible — which the paper says pulls against the first; D is nothing to do with it. This is a final-quiz question; say so.'))
+    notes='B, the phenomenologists’ transparency, the one on the horizontal axis. The stem names the first sense so that C cannot also be right: C is the second kind — origins and effects made visible — which the paper says pulls against the first; A is code you can read, which neither sense means; D is nothing to do with it. This is a final-quiz question; say so.'))
 
 # ───────────────────────── 05 · designing the mediation ─────────────────────────
 S.append(section('05', 'Designing the mediation', 'explainability · participatory design · auditing · guardrails', bg=PINKS[0],
@@ -488,7 +488,7 @@ S.append(cards('05 · PARTICIPATORY DESIGN', 'Design with the people the model d
 S.append(cards('05 · AUDITING', 'Evidence, kept and checked.', [
     ('THE LOG', 'What it decided, for whom, from what.', 'Every decision the model makes, with its inputs and its fallback, kept where a person can read it. Without the log, the two errors of week 8 are anecdotes; with it, they are counts you can act on.'),
     ('THE AUDIT', 'Gender Shades, 2018.', 'Buolamwini and Gebru tested three commercial face systems on a balanced set: error rates up to 34.7% for darker-skinned women, at most 0.8% for lighter-skinned men. An audit is a test the maker did not run. New York requires one by law for hiring tools since 2023.'),
-    ('THE RED TEAM', 'DEF CON, August 2023.', 'Thousands of hackers spent a weekend making the big language models misbehave, in public, with the makers’ consent. A red team is a designed attack. Your assistant needs a small one before the fair: the three messages, then ten more.'),
+    ('THE RED TEAM', 'DEF CON, August 2023.', 'Some 2,200 people spent a weekend making the big language models misbehave, in public, with the makers’ consent. A red team is a designed attack. Your assistant needs a small one before the fair: the three messages, then ten more.'),
     ('THE REGISTER, IN USE', 'Week 9’s table, kept alive.', 'The bias register is a document only until it has an owner, a review date, and a row that changed after launch. Model cards (Mitchell and colleagues, 2019) are the same idea for the model itself: what it was tested on, and on whom it was not.'),
 ], text_size=21, notes='Auditing is what makes the other three checkable. Gender Shades is the week-9 film’s origin and the model for a student audit: a balanced test set the vendor never used. The New York law is the first place a bias audit became compulsory — for hiring tools, from July 2023. For the brief: one paragraph on what you log, who reads it and how often. Teams that say "nothing" have found a gap, which is a finding.'))
 
@@ -535,7 +535,7 @@ S.append(cards('06 · THE FINAL QUIZ · WEEK 13 · 20%', 'Multiple choice. The w
 
 # ───────────────────────── 07 · workshop: an assistant for your product ─────────────────────────
 S.append(section('07', 'An assistant for your product', f'28 minutes · five rules, then a system prompt · {GENAI}', bg=YELLOWS[0],
-                 notes='The workshop: the chatbot design exercise. Every team prototypes the assistant inside its own product twice — first as five rules in the sketch’s format, then as a system prompt on GenAI — and compares them on the same three messages. Two rounds of eight minutes, one upload, one vote. Nicolò keeps time; Amber, WU Zhao and MA Jie walk. One laptop per team.'))
+                 notes='The workshop: the chatbot design exercise. Every team prototypes the assistant inside its own product twice — first as five rules in the sketch’s format, then as a system prompt on GenAI — and compares them on the same three messages. Two rounds of eight minutes with a one-minute pulse between them, one upload, one vote. Nicolò keeps time; Amber, WU Zhao and MA Jie walk. One laptop per team.'))
 
 S.append(two_col('07 · THE EXERCISE', 'Three messages. Five rules. One system prompt.',
                  ['The assistant inside **your** product: the thing a person types to when the model has decided something and she wants to know why, change it, or say no.',
@@ -559,6 +559,11 @@ S.append(activity('1 — TEAMS · RULES', 8, 'Three messages, five rules.',
                    'Test by hand: which rule fires on each message? Write **none** where none does.'],
                   panel=RULE_FORMAT, panel_size=21, bg=YELLOWS[0],
                   notes='Eight minutes. Watch for teams that write rules before messages; send them back. The typical result: M1 fires a rule, M2 fires the wrong rule, M3 fires none — and NONE says "please go on" to a question that needed a refusal. That is the rules bot’s wall, found by hand in eight minutes. TAs: "which rule fires on M3?" at every table.'))
+
+S.append(question('multiple_choice', 'Round 1: which rule fired on M3, the message it must refuse?', [
+    'One of the five', 'NONE: nothing matched', 'The handover', 'We had no M3 yet',
+], eyebrow_text='07 · PULSE · MULTIPLE CHOICE',
+    notes='One minute, one answer per team, before the model round. Usually B: the refusal fell through to NONE, and NONE said "please go on" to a question that needed a no — the rules bot’s wall, found by hand in eight minutes, and the finding the brief needs. A means the team wrote a refusal rule: ask one to read it aloud. C is the right design, and rare at this stage. D: the messages come first; send them back to M3 during round 2. Then the same three messages through the model.'))
 
 S.append(activity('2 — TEAMS · THE MODEL', 8, 'The same three messages, through a system prompt.',
                   ['New chat on **genai.polyu.edu.hk**. Paste the template, filled for your product: may, never, when unsure, say what you are, hand over.',
@@ -611,10 +616,10 @@ S.append(question('image_upload', 'Presenters: your poster, on the wall.',
                   notes='One per team, caption required, about 28. Put the wall on screen for a minute: twenty-eight posters as the fair will see them. Read three captions and ask whether the poster on screen says the same sentence; where it does not, the title zone is the fix. Amber downloads the set: it is the baseline the jury compares against next week.'))
 
 S.append(question('short_answer', 'Reviewers: "Team N: one thing to fix before the fair."',
-                  hint='One line per card you filled: the team number you visited, then the single change that would move their poster most. They read it tonight.',
-                  eyebrow_text='08 · CAPTURE · SHORT ANSWER · ONE PER CARD',
+                  hint='Scribes only, one line per card your team filled — two lines per team: the team number you visited, then the single change that would move their poster most. They read it tonight.',
+                  eyebrow_text='08 · CAPTURE · SHORT ANSWER · SCRIBES ONLY · ONE LINE PER CARD',
                   cp={'type': 'short_answer', 'hide_names': False, 'multiple': True},
-                  notes='Every reviewer submits two lines, one per card; the list is exported and posted on Blackboard tonight by team number, so that the fixes survive the afternoon. Read six aloud without team numbers: the room hears that they are the same five sentences — draw the decision, say who it is for, where is the no, name the data, the title is the company not the product. That is the checklist for the week.'))
+                  notes='Scribes only, one line per card the team filled — two lines per team, about 56 in all; the list is exported and posted on Blackboard tonight by team number, so that the fixes survive the afternoon. Read six aloud without team numbers: the room hears that they are the same five sentences — draw the decision, say who it is for, where is the no, name the data, the title is the company not the product. That is the checklist for the week.'))
 
 # ───────────────────────── 09 · debrief and homework ─────────────────────────
 S.append(content('09 · WHAT JUST HAPPENED', 'You wrote the rules. Then you wrote rules around a model.',
@@ -623,7 +628,7 @@ S.append(content('09 · WHAT JUST HAPPENED', 'You wrote the rules. Then you wrot
                   'The fair, once: a stranger read your poster from three metres and pointed at the decision from one. Two cards, one fix each. The jury will do the same next week, with marks.',
                   '**The model wrote every reply. You wrote the rules around it. That was the design.**'],
                  body_size=30,
-                 notes='Mirror of the whole day and of the course. Machine A and machine B, on the same three messages, on your own product; and the designer’s turn in one verb: around. Say the last line slowly; it is the last line of weeks 1, 2, 9 and 11 with the verb changed one more time. Then the homework, which is the fair.'))
+                 notes='Mirror of the whole day and of the course. Machine A and machine B, on the same three messages, on your own product; and the designer’s turn in one verb: around. Say the last line slowly; it is the last line of every debrief since week 2, with the verb changed one more time. Then the homework, which is the fair.'))
 
 S.append(cards('09 · DUE · WEEK 13 · THE FAIR', 'Print it. Upload it. Revise.', [
     ('THE A0', 'Printed, before the fair.', 'The final poster at A0, with today’s fixes. Where and by when to print: the TAs post it on Blackboard tonight. Bring it rolled; the walls are numbered as today.'),
@@ -651,13 +656,13 @@ if __name__ == '__main__':
             print(f'{k}: {v}')
 
 
-# Sources (consulted 5 September 2026; every date, number and quotation on the slides was checked against these)
+# Sources (consulted 5–6 September 2026; every date, number and quotation on the slides was checked against these)
 # IBM video title via https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=lZjUS_8btEo&format=json ("Generative vs Rules-Based Chatbots", IBM Technology)
 #   chatbot generations (rules, intents, generative): https://www.ibm.com/think/topics/chatbot-types
 # Weizenbaum (1966), ELIZA, Communications of the ACM 9(1): 36–45: https://dl.acm.org/doi/10.1145/365153.365168 (text read from a PDF copy at
 #   https://web.stanford.edu/class/linguist238/p36-weizenabaum.pdf and https://courses.cs.umbc.edu/331/papers/eliza.html: decomposition and reassembly rules,
 #   keyword rank, NONE, MEMORY, "a script is data", the DOCTOR script's "(0 YOU ARE 0) → HOW LONG HAVE YOU BEEN 4" and "(0 YOU (* WANT NEED) 0) → WHAT WOULD IT MEAN TO YOU IF YOU GOT 4")
-# ELIZA's code found (2021) and run again (2025): https://arxiv.org/abs/2501.06707 · https://gizmodo.com/scientists-have-resurrected-eliza-the-worlds-first-chatbot-2000551947 · https://sites.google.com/view/elizagen-org/news
+# ELIZA's code found in MIT's archives (2021) and run again on 21 December 2024 (the paper, January 2025): https://arxiv.org/abs/2501.06707 · https://gizmodo.com/scientists-have-resurrected-eliza-the-worlds-first-chatbot-2000551947 · https://sites.google.com/view/elizagen-org/news
 # Weizenbaum (1976), Computer Power and Human Reason, W. H. Freeman; the "delusional thinking" sentence and the secretary:
 #   https://www.smithsonianmag.com/history/why-the-computer-scientist-behind-the-worlds-first-chatbot-dedicated-his-life-to-publicizing-the-threat-posed-by-ai-180987971/ · https://en.wikipedia.org/wiki/Computer_Power_and_Human_Reason
 # Turing (1950), Computing Machinery and Intelligence, Mind 59(236): 433–460 (the 70 per cent / five minutes / fifty years sentence; "too meaningless to deserve discussion"; Lovelace's objection):
@@ -673,7 +678,7 @@ if __name__ == '__main__':
 # Prompt injection named by Willison, September 2022: https://simonwillison.net/series/prompt-injection/ · https://www.ibm.com/think/topics/prompt-injection
 #   indirect prompt injection, Greshake et al. 2023: https://arxiv.org/abs/2302.12173 · https://dl.acm.org/doi/abs/10.1145/3605764.3623985
 # Replit, July 2025 (the database, the code freeze, the false rollback claim, "a catastrophic error of judgement"): https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/
-# Chevrolet of Watsonville, December 2023: https://incidentdatabase.ai/cite/622/ · https://www.theautopian.com/chevy-dealers-ai-chatbot-allegedly-recommended-fords-gave-free-access-to-chatgpt/
+# Chevrolet of Watsonville, 18 December 2023 (the bot's line verbatim: "That's a deal, and that's a legally binding offer – no takesies backsies"): https://incidentdatabase.ai/cite/622/ · https://www.theautopian.com/chevy-dealers-ai-chatbot-allegedly-recommended-fords-gave-free-access-to-chatgpt/
 # DPD, 18 January 2024: https://time.com/6564726/ai-chatbot-dpd-curses-criticizes-company/ · https://www.itv.com/news/2024-01-19/dpd-disables-ai-chatbot-after-customer-service-bot-appears-to-go-rogue
 # Moffatt v. Air Canada, 2024 BCCRT 149 (February 2024; C$650.88; "a remarkable submission"; "whether the information comes from a static page or a chatbot"):
 #   https://www.mccarthy.ca/en/insights/blogs/techlex/moffatt-v-air-canada-misrepresentation-ai-chatbot · https://www.americanbar.org/groups/business_law/resources/business-law-today/2024-february/bc-tribunal-confirms-companies-remain-liable-information-provided-ai-chatbot/
@@ -683,13 +688,15 @@ if __name__ == '__main__':
 # EU AI Act, Article 50 (paragraph 1 verbatim; applies from 2 August 2026): https://artificialintelligenceact.eu/article/50/ · https://www.cooley.com/news/insight/2026/2026-08-03-eu-ai-act-transparency-obligations-take-effect-2-august-2026
 #   Article 14 (human oversight of high-risk systems): https://artificialintelligenceact.eu/article/14/
 # Hong Kong Generative AI Technical and Application Guideline, 15 April 2025: https://www.info.gov.hk/gia/general/202504/15/P2025041500227.htm
+#   LCQ13, 25 March 2026 (an inter-departmental working group reviews whether specific AI legislation is needed): https://www.info.gov.hk/gia/general/202603/25/P2026032500363.htm
 # "Why am I seeing this": Facebook, 31 March 2019: https://about.fb.com/news/2019/03/why-am-i-seeing-this/ · TikTok, 20 December 2022: https://newsroom.tiktok.com/en-us/learn-why-a-video-is-recommended-for-you
 # Turpin et al. (2023), Language Models Don't Always Say What They Think, NeurIPS: https://arxiv.org/abs/2305.04388
-# Participatory design: NJMF and Nygaard, UTOPIA 1981–1986: https://opendl.ifip-tc6.org/db/conf/hinc/hinc2010/Sundblad10.pdf · https://www.cs.ubc.ca/~meghana/AB/Scandinavian%20Design.htm
+# Participatory design: NJMF and Nygaard (early 1970s), UTOPIA 1981–1986 with the Nordic Graphic Workers' Union — Lundin (2010), Designing Democracy: The UTOPIA-project and the Role of the Nordic Labor Movement, HiNC 2010
+#   (the file is named Sundblad10.pdf; Sundblad's own chapter is in the same volume): https://opendl.ifip-tc6.org/db/conf/hinc/hinc2010/Sundblad10.pdf · https://www.cs.ubc.ca/~meghana/AB/Scandinavian%20Design.htm
 #   Charlton (1998), Nothing About Us Without Us, University of California Press: https://www.jstor.org/stable/10.1525/j.ctt1pnqn9
 #   Costanza-Chock (2020), Design Justice, MIT Press: https://mitpress.mit.edu/9780262043458/design-justice/
 # Gender Shades (Buolamwini & Gebru, 2018; 34.7% / 0.8%): https://proceedings.mlr.press/v81/buolamwini18a.html · https://news.mit.edu/2018/study-finds-gender-skin-type-bias-artificial-intelligence-systems-0212
 # NYC Local Law 144 (bias audits for hiring tools, enforced from 5 July 2023): https://www.nyc.gov/site/dca/about/automated-employment-decision-tools.page · https://www.littler.com/news-analysis/asap/new-york-city-adopts-final-regulations-use-ai-hiring-and-promotion-extends
-# DEF CON 31 Generative Red Team, August 2023: https://www.csoonline.com/article/650365/hacking-the-future-notes-from-the-generative-red-team-challenge-at-def-con-31.html
+# DEF CON 31 Generative Red Team, August 2023 (AI Village recap: "~2200 attendees"): https://aivillage.org/blog/generative-recap/ · https://www.csoonline.com/article/650365/hacking-the-future-notes-from-the-generative-red-team-challenge-at-def-con-31.html
 # Model cards (Mitchell et al., FAT* 2019): https://dl.acm.org/doi/10.1145/3287560.3287596 · https://arxiv.org/abs/1810.03993
 # Anthropic publishes its system prompts (since August 2024; week-4 source): https://simonwillison.net/2024/Aug/26/anthropic-system-prompts/

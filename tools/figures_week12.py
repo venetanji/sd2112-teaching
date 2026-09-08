@@ -4,8 +4,8 @@ starts with w12_ / w12- (the generated files share one folder). Each figure expl
 
   w12_two_chatbots        the same message through a rules-based chatbot (machine A), an intent bot
                           (B sorts, A answers) and a generative one (machine B), and what each buys
-  w12_eliza_rule          one ELIZA rule, step by step: keyword and rank, decomposition, the pronoun
-                          swap, reassembly; NONE and MEMORY when nothing matches (Weizenbaum 1966)
+  w12_eliza_rule          one ELIZA rule, step by step: keyword and rank, the pronoun swap (during the
+                          scan, as in 1966), decomposition, reassembly; NONE and MEMORY when nothing matches
   w12_agent_loop          the agent loop: goal → plan → tool → observe → … → done; read tools and
                           write tools, the confirmation valve, and the two ways it goes wrong
   w12_transparency_axes   Van Den Eede's two transparencies as two axes, with a hammer, glasses, a
@@ -103,10 +103,10 @@ def w12_eliza_rule(name='w12-eliza-rule', w=1680, h=560):
     c.text(0, 30, 'ELIZA · 1966 · "input sentences are analyzed on the basis of decomposition rules which are triggered by key words"', size=17, color=ORANGE)
     steps = [
         ('1 · THE INPUT', ['"I need a poster', 'for my exhibition."'], WHITE),
-        ('2 · KEYWORD · RANK', ['need  rank 3  ←', 'my    rank 1', 'poster rank 2', 'the highest rank wins'], PAPER),
-        ('3 · DECOMPOSITION', ['(I need) (a poster for', 'my exhibition)', 'part 1 · part 2'], WHITE),
-        ('4 · THE PRONOUN SWAP', ['my → your · I → you', 'me → you · am → are', '"a poster for your', 'exhibition"'], PAPER),
-        ('5 · REASSEMBLY', ['"What should [part 2]', 'do for the people who', 'see it?"'], TINT_ORANGE),
+        ('2 · KEYWORD · RANK', ['the scan finds keywords:', 'need  rank 3  ←', 'my    rank 1', 'poster rank 2', 'the highest rank wins'], PAPER),
+        ('3 · THE PRONOUN SWAP', ['during the scan itself:', 'I → you · my → your', 'me → you · am → are', '"you need a poster for', 'your exhibition"'], WHITE),
+        ('4 · DECOMPOSITION', ['(you need) (a poster for', 'your exhibition)', 'part 1 · part 2', 'his rule, 1966:', '(0 YOU (* WANT NEED) 0)'], PAPER),
+        ('5 · REASSEMBLY', ['"What should [part 2]', 'do for the people who', 'see it?"', 'his: WHAT WOULD IT MEAN', 'TO YOU IF YOU GOT 4'], TINT_ORANGE),
     ]
     bw, bh, y0 = 296, 190, 70
     for i, (label, lines, fill) in enumerate(steps):

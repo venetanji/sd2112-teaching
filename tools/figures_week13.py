@@ -13,8 +13,9 @@ from figures import Canvas, _arrow, INK, ORANGE, MUTED, LINE, TEAL, VIOLET
 PAPER = '#F4F4F2'
 TINT_TEAL, TINT_VIOLET, TINT_ORANGE, TINT_YELLOW, TINT_GRAY, TINT_PINK = '#D3E7E8', '#E5DAEB', '#F9E5D6', '#F8DEB1', '#E9E9E6', '#F7E3E8'
 RED = '#E42519'
-TEAMS = 26                      # the working number; the sketch on the slide can change it on the day
-HALF = (TEAMS + 1) // 2         # teams 1–13 are half A, 14–26 half B
+TEAMS = 26                      # the working number: set it from the Blackboard group list and rebuild (the deck, the
+                                # figures and the fair clock's default all read it); the clock's [ and ] change it on the day
+HALF = (TEAMS + 1) // 2         # teams 1–HALF are half A, the rest half B
 
 
 def _lines(c, x, y, lines, size=18, color=INK, lh=None, anchor='start'):
@@ -32,7 +33,7 @@ def _box(c, x, y, w, h, title, lines, fill=PAPER, stroke=None, title_color=INK, 
 
 # ───────────────────────── the room: boards on three walls, two halves, one screen ─────────────────────────
 def w13_room(name='w13-room', w=1680, h=560):
-    """The fair's room: twenty-six numbered boards along three walls, half A (1–13) and half B (14–26),
+    """The fair's room: TEAMS numbered boards along three walls, half A (1–HALF) and half B (the rest),
     a laptop with the video at every board, the screen with the clock, the desk with the grading sheets."""
     c = Canvas(w, h)
     rx, ry, rw, rh = 200, 80, 1280, 440
@@ -58,21 +59,25 @@ def w13_room(name='w13-room', w=1680, h=560):
             c.rect(x, y, 44, 22, fill=tint, stroke=edge, width=2)
             c.rect(x + 48, y + 8, 14, 8, fill=INK)          # the laptop, beside the board
 
-    # left wall: 1–8, top to bottom
-    for i in range(8):
-        y = ry + 86 + i * 42
+    side = max(1, round(TEAMS * 8 / 26))       # boards on each side wall (8 of 26); the rest along the back wall
+    back = TEAMS - 2 * side
+    step_v = min(42, (rh - 100) / side)        # the spacing gives way when the count grows
+    step_h = min(112, (rw - 250) / max(1, back))
+    # left wall: 1 to side, top to bottom
+    for i in range(side):
+        y = ry + 86 + i * step_v
         board(i + 1, rx + 8, y, True)
         c.text(rx + 40, y + 24, str(i + 1), size=16, color=INK)
-    # back wall: 9–18, left to right
-    for i in range(10):
-        x = rx + 120 + i * 112
-        board(i + 9, x, ry + rh - 30, False)
-        c.text(x + 22, ry + rh - 40, str(i + 9), size=16, color=INK, anchor='middle')
-    # right wall: 19–26, bottom to top
-    for i in range(8):
-        y = ry + 86 + (7 - i) * 42
-        board(i + 19, rx + rw - 30, y, True)
-        c.text(rx + rw - 40, y + 24, str(i + 19), size=16, color=INK, anchor='end')
+    # back wall: the middle of the list, left to right
+    for i in range(back):
+        x = rx + 120 + i * step_h
+        board(side + i + 1, x, ry + rh - 30, False)
+        c.text(x + 22, ry + rh - 40, str(side + i + 1), size=16, color=INK, anchor='middle')
+    # right wall: the last boards, bottom to top
+    for i in range(side):
+        y = ry + 86 + (side - 1 - i) * step_v
+        board(side + back + i + 1, rx + rw - 30, y, True)
+        c.text(rx + rw - 40, y + 24, str(side + back + i + 1), size=16, color=INK, anchor='end')
     # the legend and the flow, in the middle of the room
     c.rect(rx + 300, ry + 110, 22, 22, fill=TINT_TEAL, stroke=TEAL, width=2)
     c.text(rx + 336, ry + 128, f'HALF A · TEAMS 1 – {HALF} · PRESENT IN ROUNDS 1 AND 3', size=17, color=INK)
@@ -85,22 +90,22 @@ def w13_room(name='w13-room', w=1680, h=560):
     _arrow(c, rx + 420, ry + 286, rx + 880, ry + 286, TEAL, 4, 12)
     c.text(rx + 650, ry + 314, 'rounds 2 and 4: A walks to B', size=15, color=MUTED, anchor='middle')
     _lines(c, rx + 300, ry + 350, ['one presenter at the board at all times; the others visit',
-                                   'the graders walk with one sheet per team; the peer wall grows on the screen'], size=15, color=MUTED, lh=22)
-    c.text(20, 34, 'THE ROOM · TWENTY-SIX BOARDS ON THREE WALLS · TWO HALVES', size=18, color=ORANGE)
+                                   'two of us grade every board over the fair, a sheet each; the peer wall grows on the screen'], size=15, color=MUTED, lh=22)
+    c.text(20, 34, f'THE ROOM · {TEAMS} BOARDS ON THREE WALLS · TWO HALVES', size=18, color=ORANGE)
     c.text(w - 20, 34, 'team numbers as on the Blackboard group list · 30 minutes before class: posters up, videos playing', size=15, color=MUTED, anchor='end')
-    c.text(w / 2, 552, 'A plan, not a survey of the room: the TAs tape the numbers to the boards before the doors open.', size=15, color=MUTED, anchor='middle')
+    c.text(w / 2, 552, f'A plan for {TEAMS} teams, not a survey of the room: the TAs tape the real numbers to the boards before the doors open.', size=15, color=MUTED, anchor='middle')
     return c.finish(name)
 
 
 # ───────────────────────── four rounds, two passes ─────────────────────────
 def w13_rotation(name='w13-rotation', w=1680, h=560):
-    """The fair as a timeline: four rounds of twelve minutes, who presents and who visits, the graders' sheets,
-    and the ClassPoint activities that stay open across the rounds."""
+    """The fair as a timeline: four rounds of twelve minutes, who presents and who visits, the two sheets every
+    team gets from two different graders, and the ClassPoint activities that stay open across the rounds."""
     c = Canvas(w, h)
     x0, span = 250, 1370                     # bars from x0; 61 minutes across
     ppm = span / 61
     blocks = [(0, 12, 'r1'), (12, 14, 'swap'), (14, 26, 'r2'), (26, 28, 'swap'), (28, 40, 'r3'), (40, 42, 'swap'), (42, 54, 'r4'), (54, 61, 'prize')]
-    rows = [('TEAMS 1 – 13', 'HALF A'), ('TEAMS 14 – 26', 'HALF B'), ('FIVE GRADERS', 'ONE SHEET PER TEAM'), ('CLASSPOINT', 'ON THE SCREEN')]
+    rows = [(f'TEAMS 1 – {HALF}', 'HALF A'), (f'TEAMS {HALF + 1} – {TEAMS}', 'HALF B'), ('FIVE GRADERS', 'TWO SHEETS PER TEAM'), ('CLASSPOINT', 'ON THE SCREEN')]
     ys = [96, 186, 276, 366]
     bh = 64
     for (label, sub), y in zip(rows, ys):
@@ -113,13 +118,13 @@ def w13_rotation(name='w13-rotation', w=1680, h=560):
         if kind.startswith('r'):
             c.rect(bx, ys[0], bw, bh, fill=TINT_TEAL if a_presents else PAPER)
             c.text(bx + 12, ys[0] + 28, 'present' if a_presents else 'visit', size=17, color=INK)
-            c.text(bx + 12, ys[0] + 50, 'at the board, one talks' if a_presents else 'four to six posters', size=13, color=MUTED)
+            c.text(bx + 12, ys[0] + 50, 'at the board, one talks' if a_presents else 'four posters, three min each', size=13, color=MUTED)
             c.rect(bx, ys[1], bw, bh, fill=PAPER if a_presents else TINT_ORANGE)
             c.text(bx + 12, ys[1] + 28, 'visit' if a_presents else 'present', size=17, color=INK)
-            c.text(bx + 12, ys[1] + 50, 'four to six posters' if a_presents else 'at the board, one talks', size=13, color=MUTED)
+            c.text(bx + 12, ys[1] + 50, 'four posters, three min each' if a_presents else 'at the board, one talks', size=13, color=MUTED)
             c.rect(bx, ys[2], bw, bh, fill=TINT_VIOLET)
-            c.text(bx + 12, ys[2] + 28, ('A' if a_presents else 'B') + "'s sheets", size=17, color=INK)
-            c.text(bx + 12, ys[2] + 50, 'a line per criterion' if r <= 2 else 'finish; second opinions', size=13, color=MUTED)
+            c.text(bx + 12, ys[2] + 28, ('A' if a_presents else 'B') + (': first sheet' if r <= 2 else ': second sheet'), size=17, color=INK)
+            c.text(bx + 12, ys[2] + 50, 'one of us a board, 4 min each' if r <= 2 else 'a different one of us', size=13, color=MUTED)
             c.text(bx + bw / 2, 82, f'ROUND {r} · 12 MIN', size=15, color=ORANGE, anchor='middle')
         elif kind == 'swap':
             for y in ys[:3]:
@@ -128,7 +133,7 @@ def w13_rotation(name='w13-rotation', w=1680, h=560):
         else:
             c.rect(bx, ys[3], bw, bh, fill=TINT_ORANGE)
             c.text(bx + 12, ys[3] + 28, 'the prize', size=17, color=INK)
-            c.text(bx + 12, ys[3] + 50, 'upload · vote', size=13, color=MUTED)
+            c.text(bx + 12, ys[3] + 50, 'upload · cloud · vote', size=13, color=MUTED)
             c.text(bx + bw / 2, 82, 'PRIZE · 7 MIN', size=15, color=ORANGE, anchor='middle')
     # the short answer stays open through the four rounds
     fx, fw = x0, 54 * ppm - 4
@@ -137,8 +142,8 @@ def w13_rotation(name='w13-rotation', w=1680, h=560):
     c.text(fx + 12, ys[3] + 50, 'names hidden · multiple submissions · exported after class for the grading meeting and forwarded to every team', size=13, color=MUTED)
     c.text(40, 34, 'FOUR ROUNDS · TWO PASSES · EVERYONE PRESENTS TWICE AND VISITS TWICE', size=18, color=ORANGE)
     c.text(w - 20, 34, 'twelve minutes a round; the clock on the screen says which half, and rings a drawn bell', size=15, color=MUTED, anchor='end')
-    _lines(c, 40, 470, ['The second pass is not a repeat: visitors go to the posters they missed, presenters swap who talks, and the graders finish their sheets with a second opinion.',
-                        'Between rounds: two minutes. The TAs call the swap when the bell shows; nobody moves before it.'], size=16, color=INK, lh=26)
+    _lines(c, 40, 470, ['The second pass is not a repeat: visitors go to the posters they missed, a different presenter talks, and a different grader comes to every board.',
+                        'Between rounds: two minutes. The TAs call the swap when the bell shows; nobody moves before it. Two sheets per team go to the grading meeting.'], size=16, color=INK, lh=26)
     return c.finish(name)
 
 
@@ -172,8 +177,8 @@ def w13_grading(name='w13-grading', w=1680, h=560):
         c.line(340, ry[i] + 42, 560, cy[j] + 35, LINE, 3, cap='butt')
     # the path
     c.text(1120, 74, 'HOW IT IS DECIDED', size=16, color=MUTED)
-    steps = [('AT THE FAIR', ['five of us, one sheet per team,', 'a line per criterion, a note in the margin']),
-             ('THE GRADING MEETING', ['the five sheets side by side; the video', 'and the brief read again; the peer wall read']),
+    steps = [('AT THE FAIR', ['two of us at every board, a sheet each:', 'a band and a line per criterion, a note']),
+             ('THE GRADING MEETING', ['the two sheets side by side; the video', 'and the brief read again; the peer wall read']),
              ('ON BLACKBOARD', ['the mark, and a paragraph per team:', 'two strengths, one thing to fix'])]
     sy = [92, 236, 380]
     for (t, lines), y in zip(steps, sy):
@@ -190,7 +195,8 @@ def w13_grading(name='w13-grading', w=1680, h=560):
 
 # ───────────────────────── mediation, recapped: four relations, the AI version of each ─────────────────────────
 def w13_mediation(name='w13-mediation', w=1680, h=560):
-    """You – technology – world, and Ihde's four relations with the AI product that builds each and its risk."""
+    """You – technology – world, and Ihde's four relations (the examples are Ihde's classic cases and Verbeek's 2015 ones,
+    as week 5 gave them) with the AI product that builds each and its risk."""
     c = Canvas(w, h)
     y = 78
     c.circle(300, y, 44, fill=TEAL); c.text(300, y + 7, 'YOU', size=18, color=INK, anchor='middle')
@@ -208,13 +214,13 @@ def w13_mediation(name='w13-mediation', w=1680, h=560):
              ['a chatbot, an assistant: you brief', 'it, argue with it, thank it.'], 'a quasi-other for a person', TINT_ORANGE),
             ('BACKGROUND', 'around you', 'you (– tech / world)', 'the heating; a fridge hum',
              ['a filter, a ranking, a default:', 'nobody sees the choice being made.'], 'nobody is accountable', TINT_GRAY)]
-    for i, (t, short, schema, ihde, ai, risk, tint) in enumerate(cols):
+    for i, (t, short, schema, ex, ai, risk, tint) in enumerate(cols):
         x = 40 + i * 410
         c.rect(x, 150, 380, 340, fill=tint)
         c.text(x + 22, 188, t, size=20, color=INK)
         c.text(x + 358, 188, short, size=17, color=ORANGE, anchor='end')
         c.text(x + 22, 222, schema, size=16, color=MUTED)
-        c.text(x + 22, 262, 'IHDE: ' + ihde, size=15, color=INK)
+        c.text(x + 22, 262, 'EXAMPLES: ' + ex, size=15, color=INK)
         c.text(x + 22, 306, 'THE AI VERSION', size=14, color=MUTED)
         _lines(c, x + 22, 334, ai, size=16, color=INK, lh=24)
         c.text(x + 22, 410, 'THE RISK', size=14, color=MUTED)
@@ -237,7 +243,7 @@ def w13_question_map(name='w13-question-map', w=1680, h=560):
               ('WEEK 9 · THE DATA', ['it learns the world it was shown,', 'and whoever labelled it'])]),
             ('YES', TEAL, TINT_TEAL,
              [('TURING · 1950', ['"Machines take me by surprise', 'with great frequency."']),
-              ('WEEK 3 · MOVE 37', ['10 March 2016: a move no human', 'would play, and it won the game']),
+              ('WEEK 3 · MOVE 37', ['10 March 2016: a move most professionals', 'would not have considered — and it won']),
               ('WEEK 1 · WIGGINS · 2006', ['judge the output, not the process:', 'if a person did it, we would call it creative']),
               ('WEEK 2 · THE SPEC', ['it did what you said, not what you', 'meant — and sometimes that was better'])]),
             ('IT DEPENDS WHO CHOSE', ORANGE, TINT_ORANGE,
