@@ -4,10 +4,17 @@ name: Publish site
 # without the ClassPoint buttons, build the syllabus page, and publish _site/ to
 # GitHub Pages. Pages source must be "GitHub Actions" (Settings → Pages).
 # The PowerPoints are built by the separate "Build PowerPoints" workflow.
+#
+# The site also carries the `staging` branch under /staging/, built with that branch's
+# own toolchain pin, so a week can be checked in the browser before it reaches main.
+# A finished "Build staging" run re-runs this workflow (workflow_run), still from main.
 on:
   push:
     branches: [main]
   workflow_dispatch:
+  workflow_run:
+    workflows: [Build staging]
+    types: [completed]
 
 permissions:
   contents: read
@@ -38,6 +45,27 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Build the site (html decks, PDFs, syllabus)
         run: deckgen build --site
+      - name: Is there a staging branch?
+        id: staging
+        run: |
+          if git ls-remote --exit-code --heads origin staging >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.staging.outputs.exists == 'true'
+        with:
+          ref: staging
+          path: staging
+      - name: Build the staging branch under /staging/ (a broken staging never blocks main)
+        if: steps.staging.outputs.exists == 'true'
+        continue-on-error: true
+        run: |
+          python -m venv staging/.venv
+          staging/.venv/bin/pip install -q -r staging/requirements.txt
+          (cd staging && NODE_PATH="$GITHUB_WORKSPACE/node_modules" .venv/bin/deckgen build --site)
+          rm -rf _site/staging && cp -r staging/_site _site/staging
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

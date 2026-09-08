@@ -8,12 +8,17 @@ The repository holds **sources only**. The slide toolchain is not in here either
 shared with [`sd5913/teaching`](https://github.com/sd5913/teaching), so a fix to the PowerPoint
 or ClassPoint plumbing lands in both courses at once.
 
-Two GitHub Actions workflows run on every push to `main` (and on demand):
+Two GitHub Actions workflows run on every push to `main` (and on demand), and a third on every push to `staging`:
 
 | Workflow | What it makes | Where it goes |
 |---|---|---|
 | **Publish site** (`.github/workflows/site.yml`) | The html decks, a PDF of each deck without the ClassPoint buttons, the syllabus page, the landing page. | GitHub Pages: `https://venetanji.github.io/sd2112-teaching/` (Week 1: `/week01/`, PDF: `/week01/SD2112-week01.pdf`). |
 | **Build PowerPoints** (`.github/workflows/pptx.yml`) | `week01.pptx` (plain), `week01-classpoint.pptx` (ait4x master, animations, ClassPoint buttons), the activity manifest, `.docx` of the syllabus and lesson plans, preview sheets. | The `sd2112-powerpoints` artifact of the run (Actions → the run → Artifacts), kept 90 days. Not published. |
+| **Build staging** (`.github/workflows/staging.yml`) | Everything above, from the `staging` branch: html decks, PDFs, PowerPoints, documents, previews. | The `staging-site` and `staging-powerpoints` artifacts of the run, kept 30 days; and *Publish site* re-runs and shows the html under `https://venetanji.github.io/sd2112-teaching/staging/`. |
+
+## Staging: check a week before it reaches main
+
+Push (or merge) to the `staging` branch. **Build staging** builds everything and fails the way `main` would (a text overflow, a sketch with no still); its summary links the two artifacts. When it ends, **Publish site** re-runs from `main` and republishes the Pages site with the staging build under `/staging/`, built with the staging branch's own `requirements.txt`, so a toolchain change can be checked there too. The published decks are untouched. A broken staging build never blocks `main`: the step is allowed to fail, and `/staging/` just stays as it was. When it looks right, merge to `main` (the feature branch, or `staging` itself).
 
 ## Layout
 
