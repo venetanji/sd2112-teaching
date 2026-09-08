@@ -17,7 +17,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import figures as F                                   # noqa: E402
-from deckgen import build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YELLOW, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS, MUTED  # noqa: E402
+from deckgen import attach_reports, build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YELLOW, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS, MUTED  # noqa: E402
 from deckgen.layouts import (title, end, agenda, section, statement, quote, content, cards, question, image_full,   # noqa: E402
                              journey, activity, video, two_col, figure_slide, code_slide, live, finalize)
 from course import SITE, PLAYLIST, GENAI, P5, JOURNEY  # noqa: E402
@@ -614,6 +614,11 @@ S.append(end('See you next week. Learning from examples.',
              'Bring your sketch. Watch AlphaGo and the four short films.',
              f'{SITE} · {PLAYLIST.replace("https://", "")}',
              notes='Next week: the other machine — concepts, neurons, Move 37 — and the first challenge awards. Homework: the sketch on Blackboard, AlphaGo, and Cage, Tinguely, Kaprow and the Illiac Suite on the playlist. The TAs stay for 30 minutes.'))
+
+# After the class: links each question slide to the answers the room gave (README, "After the
+# class: publish the answers"). deck/week02-reports.json is written by classpoint.py's weekly.py
+# once the class has run; until it exists this is a no-op.
+attach_reports(S, Path(__file__).resolve().parent / 'week02-reports.json')
 
 DECK = dict(title='SD2112 · AI in Design · Week 02', slides=finalize(S, FOOTER), pdf='SD2112-week02.pdf')
 
