@@ -19,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import figures as F                                   # noqa: E402
 from deckgen import attach_reports, build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YELLOW, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS, MUTED  # noqa: E402
 from deckgen.layouts import (title, end, agenda, section, statement, quote, content, cards, question, image_full,   # noqa: E402
-                             journey, activity, video, two_col, figure_slide, code_slide, live, finalize)
+                             journey, activity, video, two_col, figure_slide, code_slide, live, finalize, body_paras)
 from course import SITE, PLAYLIST, GENAI, P5, JOURNEY  # noqa: E402
 
 FOOTER = 'SD2112 · AI IN DESIGN · WEEK 02'
@@ -227,6 +227,15 @@ ELIZA = [
     '{violet:DO YOU THINK COMING HERE WILL HELP YOU NOT TO BE UNHAPPY}',
 ]
 
+
+def _markup_panel(s, lines, size):
+    """A two_col mono panel is code since deckgen v0.8.0: verbatim, syntax-coloured or plain. This
+    one is a transcript with ELIZA's lines tagged {violet:...}, so give it the body text's markup."""
+    panel = next(e for e in s.els if getattr(e, 'name', '') == 'code')
+    panel.paras = body_paras(lines, size, INK, lh=1.5, gap=0, font='mono')
+    return s
+
+
 S = []  # the slides, in order
 
 # ───────────────────────── 00 · title ─────────────────────────
@@ -287,13 +296,13 @@ S.append(cards('02 · SIXTY YEARS OF MACHINE A', 'Rules were the first AI.', [
      'MYCIN: about 600 rules diagnose blood infections as well as Stanford\'s specialists. XCON: 10,000 rules configure every computer DEC sells. Then the boom ends: someone has to write, and maintain, every single rule.'),
 ], text_size=22, notes='Three moments. Dartmouth: the name and the bet — everything about intelligence can be described precisely enough for a machine. ELIZA: the first chatbot, and the first proof that people will talk to rules. Expert systems: rules made money, then the knowledge bottleneck: every rule hand-written by an engineer interviewing an expert. Machine B — learning the rules from examples — is the answer to that bottleneck. Week 3.'))
 
-S.append(two_col('02 · ELIZA · 1966', 'A rule that feels like a person.',
+S.append(_markup_panel(two_col('02 · ELIZA · 1966', 'A rule that feels like a person.',
                  ['The script: find a keyword, apply its rule, echo the rest back. No memory, no meaning.',
                   '- **"I am X"** → "How long have you been X?"',
                   '- **"my mother"** → "Tell me more about your family."',
                   'Built to show how shallow this is; people confided in it anyway. Week 12: rule-based versus generative chatbots.'],
                  ELIZA, right_size=24,
-                 notes='The transcript is from Weizenbaum\'s 1966 paper; ELIZA in capitals. Every reply is a rule you can read: "you X" becomes "why do you X". Ask: does it understand? No. Does it behave intelligently, by our week-1 definition? Enough to fool people. Intelligent-like behaviour through computation — and here you can read every line of the computation.'))
+                 notes='The transcript is from Weizenbaum\'s 1966 paper; ELIZA in capitals. Every reply is a rule you can read: "you X" becomes "why do you X". Ask: does it understand? No. Does it behave intelligently, by our week-1 definition? Enough to fool people. Intelligent-like behaviour through computation — and here you can read every line of the computation.'), ELIZA, 24))
 
 S.append(cards('02 · THE DEAL', 'Exact. Explainable. Brittle.', [
     ('EXACT', 'Same input, same output.',
@@ -490,7 +499,7 @@ S.append(activity('LIVE', 6, 'Type it. Run it.',
                   ['Open **editor.p5js.org** and log in. Replace everything in the editor with the twenty lines on the right.',
                    'Press play. You should see ten points and forty-five lines.',
                    'Change **10** to **30**. Play again. Then change one **600** to **200**, and see what breaks.'],
-                  eyebrow_text='06 · HANDS ON', panel=TEN_CODE.splitlines(), panel_size=21,
+                  eyebrow_text='06 · HANDS ON', panel=TEN_CODE.splitlines(), panel_size=21, lang='js',
                   notes='Six minutes; the TAs walk. Typical errors: a missing bracket, Random with a capital R, a stray semicolon. The last step is the point: a rule you can break on purpose is a rule you understand. Anyone finished early: make the lines grey, then make the points bigger than the lines.'))
 
 S.append(question('multiple_choice', 'Did it run?', [
@@ -520,7 +529,7 @@ S.append(two_col('07 · THE TEMPLATE', 'A prompt that is a spec.',
                   '- Rule first, constraints last: models obey the end of a prompt more than the middle.',
                   '- One rule per prompt. Two ideas are two sketches.',
                   'Keep the spec. When the code drifts, paste the spec again — not the code.'],
-                 TEMPLATE, right_size=23, left_size=30,
+                 TEMPLATE, right_size=23, left_size=30, lang=None,  # a prompt, not code
                  notes='The template is on the course site and on Blackboard. Any of the language models on GenAI will do; pick one and stay with it for the session so the errors are consistent. The last bullet matters: the spec is the source, the code is a build.'))
 
 S.append(code_slide('07 · WHAT GOOD LOOKS LIKE', 'Fifty points, all connected, from forty-five words.', LEWITT_CODE, F.lewitt_wall(),
