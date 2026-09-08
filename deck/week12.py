@@ -616,7 +616,7 @@ S.append(question('image_upload', 'Presenters: your poster, on the wall.',
                   notes='One per team, caption required, about 28. Put the wall on screen for a minute: twenty-eight posters as the fair will see them. Read three captions and ask whether the poster on screen says the same sentence; where it does not, the title zone is the fix. Amber downloads the set: it is the baseline the jury compares against next week.'))
 
 S.append(question('short_answer', 'Reviewers: "Team N: one thing to fix before the fair."',
-                  hint='Scribes only, one line per card your team filled — two lines per team: the team number you visited, then the single change that would move their poster most. They read it tonight.',
+                  hint='Scribes only, one line per card your team filled — two per team: the number of the team you visited, then the one change that would move their poster most.',
                   eyebrow_text='08 · CAPTURE · SHORT ANSWER · SCRIBES ONLY · ONE LINE PER CARD',
                   cp={'type': 'short_answer', 'hide_names': False, 'multiple': True},
                   notes='Scribes only, one line per card the team filled — two lines per team, about 56 in all; the list is exported and posted on Blackboard tonight by team number, so that the fixes survive the afternoon. Read six aloud without team numbers: the room hears that they are the same five sentences — draw the decision, say who it is for, where is the no, name the data, the title is the company not the product. That is the checklist for the week.'))
