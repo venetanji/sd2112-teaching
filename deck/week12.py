@@ -563,7 +563,7 @@ S.append(activity('1 — TEAMS · RULES', 8, 'Three messages, five rules.',
 S.append(question('multiple_choice', 'Round 1: which rule fired on M3, the message it must refuse?', [
     'One of the five', 'NONE: nothing matched', 'The handover', 'We had no M3 yet',
 ], eyebrow_text='07 · PULSE · MULTIPLE CHOICE',
-    notes='One minute, one answer per team, before the model round. Usually B: the refusal fell through to NONE, and NONE said "please go on" to a question that needed a no. That gap is the finding the guardrails paragraph needs. A means the team wrote a refusal rule: ask one to read it aloud. C is the right design, and rare at this stage. D: the messages come first; send them back to M3 during round 2. Then the same three messages through the model.'))
+    notes='One minute, one answer per team, before the model round. Usually B: the refusal fell through to NONE, and NONE said "please go on" to a question that needed a no — the hole the guardrails paragraph exists to fill. A means the team wrote a refusal rule: ask one to read it aloud. C is the right design, and rare at this stage. D: the messages come first; send them back to M3 during round 2. Then the same three messages through the model.'))
 
 S.append(activity('2 — TEAMS · THE MODEL', 8, 'The same three messages, through a system prompt.',
                   ['New chat on **genai.polyu.edu.hk**. Paste the template, filled for your product: may, never, when unsure, say what you are, hand over.',
@@ -656,9 +656,9 @@ if __name__ == '__main__':
             print(f'{k}: {v}')
 
 
-# Sources (consulted 5–6 September 2026; every date, number and quotation on the slides was checked against these)
+# Sources (consulted 5–8 September 2026; every date, number and quotation on the slides was checked against these)
 # IBM video title via https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=lZjUS_8btEo&format=json ("Generative vs Rules-Based Chatbots", IBM Technology)
-#   chatbot generations (rules, intents, generative): https://www.ibm.com/think/topics/chatbot-types
+#   chatbot types, including the hybrid ("combines rule-based logic with machine learning capabilities"): https://www.ibm.com/think/topics/chatbot-types
 # Weizenbaum (1966), ELIZA, Communications of the ACM 9(1): 36–45: https://dl.acm.org/doi/10.1145/365153.365168 (text read from a PDF copy at
 #   https://web.stanford.edu/class/linguist238/p36-weizenabaum.pdf and https://courses.cs.umbc.edu/331/papers/eliza.html: decomposition and reassembly rules,
 #   keyword rank, NONE, MEMORY, "a script is data", the DOCTOR script's "(0 YOU ARE 0) → HOW LONG HAVE YOU BEEN 4" and "(0 YOU (* WANT NEED) 0) → WHAT WOULD IT MEAN TO YOU IF YOU GOT 4")
