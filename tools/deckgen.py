@@ -22,6 +22,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 import zipfile
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -524,21 +525,30 @@ def node_playwright_env():
 def snapshot_sketches(deck, name: str, force=False):
     """Screenshot every live sketch of a deck into deck/assets/sketches/<sketch>.png (committed: the pptx and the
     PDF show it where the html deck runs the sketch). Skips the ones that exist unless force. Needs node + playwright;
-    without them the committed snapshots are used and missing ones are reported by the build."""
+    without them the committed snapshots are used and missing ones are reported by the build. A page that makes no
+    canvas (an error before createCanvas) writes no still: the committed one stays and a warning says so."""
     todo = [el for el in sketches_of(deck) if el.twin and (force or not twin_png(el.name).exists())]
     if not todo:
         return []
     env = node_playwright_env()
     if env is None:
         return []
+    # the pages load ../../vendor/p5/p5.min.js from _site/vendor: put it there, a clean checkout has not built the site
+    shutil.copytree(ROOT / 'site' / 'vendor' / 'p5', SITE / 'vendor' / 'p5', dirs_exist_ok=True)
     out_dir = SITE / name
+    SKETCH_DIR.mkdir(parents=True, exist_ok=True)
     args = []
     for el in todo:
         page = write_sketch_page(el, out_dir)
-        SKETCH_DIR.mkdir(parents=True, exist_ok=True)
         args += [str(page), str(twin_png(el.name)), str(el.cw), str(el.ch)]
-    subprocess.run(['node', str(ROOT / 'tools' / 'snap.js'), *args], check=True, env=env)
-    return [twin_png(el.name) for el in todo if twin_png(el.name).exists()]
+    started = time.time()
+    subprocess.run(['node', str(ROOT / 'tools' / 'snap.js'), *args], env=env)   # exit 1 when a page made no canvas
+    made = [twin_png(el.name) for el in todo if twin_png(el.name).exists() and twin_png(el.name).stat().st_mtime >= started]
+    for el in todo:
+        if twin_png(el.name) not in made:
+            kept = 'the old still is kept' if twin_png(el.name).exists() else 'the build will show a placeholder'
+            print(f'WARNING {name}: no snapshot made for "{el.name}" (the page made no canvas: see the node output above); {kept}')
+    return made
 
 
 def copy_asset(src, assets_out):
