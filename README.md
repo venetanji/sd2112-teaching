@@ -18,7 +18,7 @@ Two GitHub Actions workflows run on every push to `main` (and on demand), and a 
 
 ## Staging: check a week before it reaches main
 
-Push (or merge) to the `staging` branch. **Build staging** builds everything and fails the way `main` would (a text overflow, a sketch with no still); its summary links the two artifacts. When it ends, **Publish site** re-runs from `main` and republishes the Pages site with the staging build under `/staging/`, built with the staging branch's own `requirements.txt`, so a toolchain change can be checked there too. The published decks are untouched. A broken staging build never blocks `main`: the step is allowed to fail, and `/staging/` just stays as it was. When it looks right, merge to `main` (the feature branch, or `staging` itself).
+Push (or merge) to the `staging` branch. **Build staging** builds everything and fails the way `main` would (a text overflow, a sketch with no still); its summary links the two artifacts. When it ends, **Publish site** re-runs from `main` and republishes the Pages site with the staging build under `/staging/`, built with the staging branch's own `requirements.txt`, so a toolchain change can be checked there too. The published decks are untouched. A broken staging build never blocks `main`: the step is allowed to fail, and `/staging/` is then restored from the last successful *Build staging* run's `staging-site` artifact (kept 30 days), so the preview does not disappear. When it looks right, merge to `main` (the feature branch, or `staging` itself).
 
 ## Layout
 
