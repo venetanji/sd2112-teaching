@@ -28,7 +28,7 @@ Push (or merge) to the `staging` branch. **Build staging** builds everything and
 | `deck/course.py` | Shared course facts: links, the semester map, the week titles and module colours. |
 | `deck/assets/` | Images the decks use. Drawn figures are generated at build time; `deck/assets/sketches/` holds the stills of live sketches that have no drawn twin (`deckgen snap`, committed). |
 | `syllabus/SD2112-syllabus-2026.md` | The syllabus: team, outcomes, four modules, 13-week plan with examples and readings, assessment and rubrics, policies. Published on the site; a `.docx` is built too. |
-| `lessons/week01-lesson-plan.md`, `week02-lesson-plan.md` | Each week's run of show (three hours), the activity in detail (*Push the machine to the edge*; *One spec, three executors*), the ClassPoint question map, contingencies. For the teaching team: `.docx` and `.html` in the artifact, **not published**. |
+| `lessons/week01-lesson-plan.md`, `week02-lesson-plan.md` | Each week's run of show (three hours), the exercise in detail (*Push the machine to the edge*; *One spec, one twist*), the ClassPoint question map, contingencies. For the teaching team: `.docx` and `.html` in the artifact, **not published**. |
 | `site/` | The site shell: landing page, vendored reveal.js and the ait4x design tokens. |
 | `deckgen.toml` | The course as the generator sees it: code, name, year, footer, which decks, what gets published. |
 | `deck/figures.py` | The drawn illustrations — chairs, typicality, perceptron, two machines, mediation; for week 2 Schotter, Walk-Through-Raster, LeWitt's points, 10 PRINT, the L-system, the spec pipeline. Built on `deckgen.figures.Canvas`. Every p5.js sketch on a slide has its Python twin here, drawing the same rule for the PDF and the PowerPoint. |
@@ -50,7 +50,7 @@ python tools/roster.py ids.csv classpoint/roster-2026-classpoint.csv   # ClassPo
 `deckgen build` **exits non-zero if any text overflows its box**, so a broken slide fails the
 workflow rather than reaching the projector.
 
-The PDF step needs node 18+ and Playwright's Chromium: `npm install --no-save playwright@1.56.1 && npx playwright install chromium` in the repo folder (the workflow does the same). The html deck: arrow keys, `S` speaker notes, `O` overview, `F` full screen. Video slides embed YouTube; the pptx and the PDF carry a thumbnail and a link instead. Previews and a text-overflow check land in `export/preview/`.
+The PDF step needs node 18+ and Playwright's Chromium: `npm install --no-save playwright@1.56.1 && npx playwright install chromium` in the repo folder (the workflow does the same). The html deck: arrow keys, `S` speaker notes, `O` overview, `F` full screen; the code slides with a sketch beside them are editable there (Run re-runs the sketch, Reset brings the slide's code back), and a slider under a sketch is one of the rule's numbers. Video slides embed YouTube; the pptx and the PDF carry a thumbnail and a link instead. Previews and a text-overflow check land in `export/preview/`.
 
 ## Classroom checklist
 

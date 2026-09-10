@@ -1,7 +1,8 @@
 """
 Drawn figures for the SD2112 decks: the chairs, the typicality scale, the perceptron,
-the two machines, the mediation diagram (week 1); if-then, LeWitt's points, Schotter,
-Walk-Through-Raster, 10 PRINT, the L-system, the spec pipeline, the weight ramp (week 2).
+the two machines, the mediation diagram (week 1); the two machines with cups, if-then, LeWitt's
+points, Schotter, Walk-Through-Raster, 10 PRINT, the Koch curve, the L-system, the spec pipeline,
+the weight ramp (week 2).
 Each returns (svg_markup, png_path). A figure that stands in for a live p5.js sketch draws
 the same rule the sketch runs, so the PDF and the PowerPoint show the same picture.
 
@@ -130,6 +131,53 @@ def two_machines(name='two-machines', w=1680, h=520):
         oy = 110 + row * 130
         draw_chair(c, ox, oy, s, seat_h=rnd.uniform(0.38, 0.55), back_h=rnd.uniform(0.4, 0.7), back_angle=rnd.uniform(0, 16), seat_w=rnd.uniform(0.5, 0.75), legs=rnd.choice([2, 4, 4]), stroke='#D3E7E8', width=2)
     c.text(920, 420, '12 000 photos labelled "chair" → a feel for chair-ness', size=20, color='#D3E7E8')
+    c.text(920, 470, 'fuzzy · fluent · cannot say why', size=20, color='#B3B7BE')
+    return c.finish(name)
+
+
+# ───────────────────────── a cup from rules, and cups from examples ─────────────────────────
+def draw_cup(c, ox, oy, size, body_h=0.72, body_w=0.58, taper=0.12, handle=0.26, lip=True, stroke=INK, width=4):
+    """Side-elevation cup from parameters, all ratios of `size`; origin = bottom-left of the drawing box.
+    A body that narrows towards the foot, a lip line, a handle on the right."""
+    h = body_h * size
+    wt = body_w * size                       # width at the rim
+    wb = wt * (1 - 2 * taper)                # width at the foot
+    cx = ox + size * 0.4                     # the body sits left of centre to leave room for the handle
+    top, bottom = oy + size - h, oy + size
+    c.poly([(cx - wt / 2, top), (cx + wt / 2, top), (cx + wb / 2, bottom), (cx - wb / 2, bottom)], stroke=stroke, width=width)
+    if lip:
+        k = 0.12
+        c.line(cx - wt / 2 + (wt - wb) / 2 * k, top + h * k, cx + wt / 2 - (wt - wb) / 2 * k, top + h * k, stroke, max(1.5, width - 2))
+    # the handle: half an ellipse, hung between a third and two thirds of the way down
+    y1, y2 = top + h * 0.3, top + h * 0.72
+    hx = cx + wt / 2 - (wt - wb) / 2 * 0.3
+    rx, ry = handle * size, (y2 - y1) / 2
+    pts = [(hx + rx * math.sin(i / 12 * math.pi), (y1 + y2) / 2 - ry * math.cos(i / 12 * math.pi)) for i in range(13)]
+    for (x1, y1_), (x2, y2_) in zip(pts, pts[1:]):
+        c.line(x1, y1_, x2, y2_, stroke, width)
+
+
+def two_machines_cups(name='two-machines-cups', w=1680, h=520):
+    """Week 2's recap of the week-1 cups: the same two panels as two_machines, with cups."""
+    c = Canvas(w, h)
+    c.rect(0, 0, 800, 520, fill='#F4F4F2')
+    c.text(40, 60, 'MACHINE A · RULES', size=20, color=ORANGE)
+    c.text(40, 130, 'if hollow and a handle and holds a drink:', size=26, color=INK)
+    c.text(40, 172, '    return "cup"', size=26, color=INK)
+    c.text(40, 240, 'definition → verdict', size=20, color=MUTED)
+    draw_cup(c, 520, 220, 220, body_h=0.7, body_w=0.58, taper=0.1, handle=0.26)
+    c.text(40, 470, 'exact · explainable · brittle', size=20, color=MUTED)
+    c.rect(880, 0, 800, 520, fill='#000B1C')
+    c.text(920, 60, 'MACHINE B · EXAMPLES', size=20, color=TEAL)
+    rnd = random.Random(2112)
+    for i in range(12):
+        col, row = i % 6, i // 6
+        s = 84
+        ox = 920 + col * 124
+        oy = 110 + row * 130
+        draw_cup(c, ox, oy, s, body_h=rnd.uniform(0.5, 0.85), body_w=rnd.uniform(0.45, 0.7), taper=rnd.uniform(0, 0.2),
+                 handle=rnd.uniform(0.16, 0.3), lip=rnd.random() < 0.7, stroke='#D3E7E8', width=2)
+    c.text(920, 420, '12 000 photos labelled "cup" → a feel for cup-ness', size=20, color='#D3E7E8')
     c.text(920, 470, 'fuzzy · fluent · cannot say why', size=20, color='#B3B7BE')
     return c.finish(name)
 
@@ -443,6 +491,48 @@ def lsystem_growth(name='lsystem', w=1680, h=560):
         c.text(cx, 546, f'n = {n} · {s.count("F")} lines', size=18, anchor='middle', color=INK)
     c.text(0, 30, 'F → F[+F]F[-F]F', size=22, anchor='start', color=ORANGE)
     c.text(w, 30, 'start with one F · turn 25.7° · rewrite n times', size=18, anchor='end', color=MUTED)
+    return c.finish(name)
+
+
+# ───────────────────────── Koch, 1904: replace every line with four, again ─────────────────────────
+def _koch(p, q, n):
+    """The Koch rule applied n times to the segment p → q: the points of the curve."""
+    if n == 0:
+        return [p, q]
+    (x1, y1), (x2, y2) = p, q
+    dx, dy = (x2 - x1) / 3, (y2 - y1) / 3
+    a, b = (x1 + dx, y1 + dy), (x1 + 2 * dx, y1 + 2 * dy)
+    peak = (a[0] + dx * 0.5 + dy * 0.866, a[1] + dy * 0.5 - dx * 0.866)   # the middle third, turned 60° (up, on screen)
+    pts = []
+    for s, e in ((p, a), (a, peak), (peak, b), (b, q)):
+        pts.extend(_koch(s, e, n - 1)[:-1])
+    pts.append(q)
+    return pts
+
+
+def koch_generations(name='koch', w=1680, h=300):
+    """Five generations of the Koch curve, side by side: the same rule, applied to its own output."""
+    c = Canvas(w, h)
+    gens = 5
+    cw = w / gens
+    for n in range(gens):
+        x0, x1, y = n * cw + 24, (n + 1) * cw - 24, 190
+        pts = _koch((x0, y), (x1, y), n)
+        for (ax, ay), (bx, by) in zip(pts, pts[1:]):
+            c.line(ax, ay, bx, by, INK, max(1.2, 4 - n * 0.6), cap='round')
+        c.text((x0 + x1) / 2, 240, f'n = {n} · {4 ** n} lines', size=18, anchor='middle', color=INK)
+        c.text((x0 + x1) / 2, 270, f'length × {(4 / 3) ** n:.2f}', size=18, anchor='middle', color=MUTED)
+    c.text(w, 30, 'Helge von Koch, 1904 · the same rule, applied to its own output', size=18, anchor='end', color=MUTED)
+    return c.finish(name)
+
+
+def koch_curve(name='koch-4', n=4, w=900, h=300):
+    """One Koch curve, at generation n: the twin of the live sketch on the code slide."""
+    c = Canvas(w, h)
+    pts = _koch((40, 240), (w - 40, 240), n)
+    for (ax, ay), (bx, by) in zip(pts, pts[1:]):
+        c.line(ax, ay, bx, by, INK, 1.6, cap='round')
+    c.text(w - 40, 280, f'n = {n} · {4 ** n} lines · length × {(4 / 3) ** n:.2f}', size=16, anchor='end', color=MUTED)
     return c.finish(name)
 
 
