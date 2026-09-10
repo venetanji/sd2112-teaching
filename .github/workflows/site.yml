@@ -4,15 +4,23 @@ name: Publish site
 # without the ClassPoint buttons, build the syllabus page, and publish _site/ to
 # GitHub Pages. Pages source must be "GitHub Actions" (Settings → Pages).
 # The PowerPoints are built by the separate "Build PowerPoints" workflow.
+#
+# The site also carries the `staging` branch under /staging/, built with that branch's
+# own toolchain pin, so a week can be checked in the browser before it reaches main.
+# A finished "Build staging" run re-runs this workflow (workflow_run), still from main.
 on:
   push:
     branches: [main]
   workflow_dispatch:
+  workflow_run:
+    workflows: [Build staging]
+    types: [completed]
 
 permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read     # to restore the last good staging build when a rebuild fails
 
 concurrency:
   group: pages
@@ -38,6 +46,42 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Build the site (html decks, PDFs, syllabus)
         run: deckgen build --site
+      - name: Is there a staging branch?
+        id: staging
+        run: |
+          if git ls-remote --exit-code --heads origin staging >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.staging.outputs.exists == 'true'
+        with:
+          ref: staging
+          path: staging
+      - name: Build the staging branch under /staging/ (a broken staging never blocks main)
+        id: staging-build
+        if: steps.staging.outputs.exists == 'true'
+        continue-on-error: true
+        run: |
+          python -m venv staging/.venv
+          staging/.venv/bin/pip install -q -r staging/requirements.txt
+          (cd staging && NODE_PATH="$GITHUB_WORKSPACE/node_modules" .venv/bin/deckgen build --site)
+          rm -rf _site/staging && cp -r staging/_site _site/staging
+      - name: A broken staging keeps the last good one
+        # the deployment replaces the whole site, so without this a failed rebuild would
+        # take /staging/ down; the last successful Build staging run still has it as an artifact
+        if: steps.staging.outputs.exists == 'true' && steps.staging-build.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_id=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow staging.yml --branch staging --status success --limit 1 --json databaseId --jq '.[0].databaseId')
+          rm -rf _site/staging
+          if [ -n "$run_id" ] && gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --name staging-site --dir _site/staging; then
+            echo "The staging build failed; /staging/ is the last good one, from Build staging run $run_id." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "The staging build failed and there is no earlier good build to keep: /staging/ is absent until the next good push to staging." >> "$GITHUB_STEP_SUMMARY"
+          fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
