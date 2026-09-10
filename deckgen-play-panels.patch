@@ -1,0 +1,843 @@
+From e77fb6dd3d045809399e5cbf63d456b8e01fb4d7 Mon Sep 17 00:00:00 2001
+From: venetanji <giovanni.lion@gmail.com>
+Date: Thu, 10 Sep 2026 13:56:39 +0000
+Subject: [PATCH] Editable sketches: the code of a live sketch runs in place,
+ and sliders for its numbers
+
+A code_slide with a sketch is editable in the html deck: the code panel is an editor
+(the exercise box, coloured as JavaScript) and Run re-runs the sketch on the right with
+whatever is in it, so a student changes a number and sees the picture change without
+leaving the slide. Reset brings the slide's code back; ctrl+enter runs; what is typed is
+kept in localStorage per deck and re-run when the frame reloads; edit=False keeps the
+panel static. The pptx, the png previews and the PDF keep the static panel and the still.
+
+The deck never evaluates the code itself. The sketch page now runs its code through
+runSketch(), which also takes new code by postMessage: it removes the p5 instance,
+evaluates the code (plus extra) in one function scope so top-level lets can be declared
+again, installs the p5 hooks it defined and starts p5 again; a syntax error, an error in
+setup() or anything thrown later is posted back into the box. The code and the extra
+travel into the page as string literals.
+
+In a sketch page createSlider(min, max, value, step, label) is p5's slider plus a label and
+its value in a bar under the canvas, and moving it redraws a noLoop() sketch; the fifth
+argument is ours and the p5 web editor ignores it.
+
+sketch.test.js types into the editor in a real browser (run, a syntax error, reset,
+the saved code after a reload, the keyboard, print, the slider bar); sketch.test.py
+covers the layout and the markup. The JS builtin list gains the p5 names the sketches use.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01RdFxTgrpAFbL82dNscS9CL
+---
+ README.md                       |  43 ++++++-
+ src/deckgen/__init__.py         |   2 +-
+ src/deckgen/core.py             | 144 +++++++++++++++++++++--
+ src/deckgen/js/sketch-editor.js | 202 ++++++++++++++++++++++++++++++++
+ src/deckgen/layouts.py          |  17 ++-
+ src/deckgen/syntax.py           |   4 +-
+ tests/fixture-sketch/deck/s.py  |  19 ++-
+ tests/sketch.test.js            |  73 +++++++++++-
+ tests/sketch.test.py            |  35 +++++-
+ 9 files changed, 515 insertions(+), 24 deletions(-)
+ create mode 100644 src/deckgen/js/sketch-editor.js
+
+diff --git a/README.md b/README.md
+index 71994d8..124c533 100644
+--- a/README.md
++++ b/README.md
+@@ -227,7 +227,8 @@ it reads the activity ids back out of ClassPoint after class.
+ Any slide can run a p5.js sketch, live, in the html deck: `live(name, code, w, h, hint=…,
+ extra=…, sound=False)` placed with `sketch_slide(…)` (full width), or as the media of
+ `content(…, sketch=)`, `figure_slide(…, sketch=)`, `code_slide(…, sketch=)` and
+-`activity(…, sketch=)`.
++`activity(…, sketch=)`. On a `code_slide` the code is editable and Run re-runs the
++sketch — see *Editable sketches* below.
+ 
+ ```python
+ from deckgen.layouts import code_slide, live
+@@ -265,6 +266,46 @@ code_slide('03 · TEN POINTS', 'Ten points at random', TEN,
+   down to `CODE_SMALL` or 22 px when it does not; a line too wide even then is an error, not a
+   wrap.
+ 
++### Editable sketches
++
++A `code_slide` with a sketch is editable in the html deck: the code panel is an editor
++(the same box as an exercise, coloured as JavaScript), and **Run** re-runs the sketch on
++the right with whatever is in it — a student changes a number and sees the picture change
++without leaving the slide. **Reset** brings the slide's code back. What is typed is kept in
++`localStorage` per deck and re-run when the frame reloads; `ctrl+enter` runs; `edit=False`
++keeps the panel static.
++
++- The deck never evaluates the code itself. The sketch's page gets it by `postMessage`,
++  removes the running p5 instance, evaluates the code (plus `extra`) in one function scope
++  — so its top-level `let`s can be declared again on the next run — and installs the p5
++  hooks it defined. A syntax error, an error in `setup()` or anything thrown later comes
++  back into the box.
++- **Sliders.** In a sketch page `createSlider(min, max, value, step, label)` is p5's own
++  slider plus a label and its value in a bar under the canvas; moving it redraws a
++  `noLoop()` sketch. The fifth argument is deckgen's, and the p5 web editor ignores it, so
++  the code still runs there unchanged.
++
++```python
++SCHOTTER = '''let disorder;
++function setup() {
++  createCanvas(400, 700); noLoop();
++  disorder = createSlider(0, 2, 1, 0.01, 'disorder');   // the number
++}
++function draw() {
++  background(255);
++  for (let r = 0; r < 22; r++) {
++    let k = r / 21 * disorder.value();
++    ...
++  }
++}'''
++code_slide('06 · SCHOTTER', 'One rule. One number.', SCHOTTER, F.schotter(),
++           sketch=live('schotter', SCHOTTER, 400, 700, hint='drag the slider · click = new dice',
++                       extra='function mousePressed() { randomSeed(millis()); redraw(); }'))
++```
++
++The pptx, the png previews and the PDF keep the static panel and the still; the reading
++view keeps the code block and its link to the sketch page.
++
+ ## On a phone
+ 
+ reveal.js fits the 1920×1080 canvas to the viewport, so on a 390px screen the body text
+diff --git a/src/deckgen/__init__.py b/src/deckgen/__init__.py
+index ecba483..8118e47 100644
+--- a/src/deckgen/__init__.py
++++ b/src/deckgen/__init__.py
+@@ -28,7 +28,7 @@ from .project import Project, configure, current, find_config
+ from .reports import attach_reports, activity_url, links as report_links
+ from .core import (
+     # element model
+-    Slide, Run, Para, Text, Rect, Image, Figure, Embed, Sketch, Exercise,
++    Slide, Run, Para, Text, Rect, Image, Figure, Embed, Sketch, Exercise, Editor,
+     # authoring helpers
+     T, P, runs, eyebrow, pil_font, text_height,
+     # geometry, and the one size for code
+diff --git a/src/deckgen/core.py b/src/deckgen/core.py
+index 153b013..d95daa8 100644
+--- a/src/deckgen/core.py
++++ b/src/deckgen/core.py
+@@ -194,6 +194,25 @@ class Exercise:
+     kind: str = 'exercise'
+ 
+ 
++@dataclass
++class Editor:
++    """The code of a live sketch, editable in the html deck: a syntax-coloured box laid over
++    the static code panel, with Run and Reset. Run hands the box's contents to the sketch's
++    page, which swaps the running sketch for it (a syntax error or an exception comes back
++    into the box); Reset brings the slide's code back. What is typed is kept in localStorage
++    per deck, like an exercise's answer, and re-run when the frame reloads. The pptx, the png
++    and the PDF show the static panel underneath, so nothing changes for them."""
++    x: int; y: int; w: int; h: int
++    code: str                       # what starts in the box: the sketch's code as the slide shows it
++    sketch: str                     # name of the Sketch whose frame runs it
++    size: int = CODE
++    lang: str = 'js'
++    hint: str = 'ctrl+enter runs it'
++    eid: str = ''                   # stable id — keys the saved code in localStorage; the sketch's name by default
++    name: str = ''
++    kind: str = 'editor'
++
++
+ @dataclass
+ class Slide:
+     bg: str = WHITE
+@@ -399,6 +418,13 @@ a.cp{position:absolute;border-style:solid;text-decoration:none;cursor:pointer;le
+ .ex-hl,.ex-code,#pyc-log,#pyc-in{font-variant-ligatures:none}
+ .ex-out .err{color:#E42519}
+ .ex-out .msg{color:#00544C}
++/* ── editable sketches (vendor/sketch-editor.js): the exercise box, for the code of a live sketch ── */
++.ex-js .ex-editor{margin:12px 12px 0}
++.ex-js .ex-hl,.ex-js .ex-code{line-height:1.32;padding:14px 16px;tab-size:2}
++.ex-js .ex-bar{padding:8px 12px;gap:10px}
++.ex-js .ex-bar button{font-size:20px;padding:9px 16px}
++.ex-js .ex-status,.ex-js .ex-hint{font-size:18px}
++.ex-js .ex-out{margin:0 12px 10px;max-height:28%;font-size:18px;color:#E42519}
+ 
+ /* the global console: backtick, or the button bottom-left */
+ #pyc{position:fixed;left:0;right:0;bottom:0;height:44vh;background:#000B1C;color:#D3E7E8;z-index:60;
+@@ -420,7 +446,7 @@ a.cp{position:absolute;border-style:solid;text-decoration:none;cursor:pointer;le
+   padding:28px 36px;font:500 24px/1.4 var(--font-m);letter-spacing:.08em;display:none}
+ #pyload.on{display:block}
+ 
+-@media print{.ex-bar,.ex-status,.ex-out,#pyc,#pyc-open,#pyload,.ex-code{display:none!important}
++@media print{.ex-bar,.ex-status,.ex-out,#pyc,#pyc-open,#pyload,.ex-code,.ex-js{display:none!important}
+   .ex-hl{overflow:visible}}
+ 
+ /* ── reading view: the same slides, reflowed, for phones ── */
+@@ -485,6 +511,9 @@ PYODIDE_HTML = '''
+ <script src="../vendor/pyodide-console.js"></script>
+ '''
+ 
++# Injected only when a deck has an editable sketch (an Editor element).
++EDITOR_HTML = '<script src="../vendor/sketch-editor.js"></script>'
++
+ HTML_TMPL = """<!doctype html>
+ <html lang="en">
+ <head>
+@@ -555,33 +584,93 @@ canvas{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display
+ body.top{background:#F4F4F2}
+ #bar{display:none;position:fixed;left:0;right:0;top:0;height:44px;background:#000B1C;color:#fff;font-size:12px;letter-spacing:.14em;text-transform:uppercase;align-items:center;padding:0 16px;gap:16px;z-index:9;white-space:nowrap;overflow:hidden}
+ #bar b{color:#ED6D24;font-weight:500}#bar span{opacity:.6}#bar a{color:#fff;margin-left:auto;text-decoration:none;opacity:.6}
+-body.top #bar{display:flex}body.top canvas{top:calc(50% + 22px)}
++body.top #bar{display:flex}
++#ctl{display:none;position:fixed;left:0;right:0;bottom:0;height:44px;box-sizing:border-box;align-items:center;gap:22px;padding:0 16px;background:#F4F4F2;border-top:1px solid #E1E1DE;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#5C6470;white-space:nowrap;overflow:hidden;z-index:9}
++#ctl.on{display:flex}
++#ctl label{display:flex;align-items:center;gap:10px}
++#ctl input[type=range]{width:150px;margin:0;accent-color:#ED6D24}
++#ctl output{min-width:3.6em;color:#000B1C;font-weight:500}
+ </style>
+ <script src="../../vendor/p5/p5.min.js"></script>
+ @@SOUND@@
+ </head><body>
+ <div id="bar"><b>@@COURSE@@</b> @@NAME@@ <span>@@HINT@@ · R restarts</span><a href="../">← the deck</a></div>
++<div id="ctl"></div>
+ <script>
+-@@CODE@@
+-@@EXTRA@@
+-</script>
+-<script>
++// The sketch as the slide shows it, and the interaction the panel does not show (`extra`).
++// Both go through runSketch(), which is also what the deck's editable panel calls with new code.
++var DECKGEN = {name: @@NAME_JSON@@, code: @@CODE_JSON@@, extra: @@EXTRA_JSON@@, cw: @@CW@@, ch: @@CH@@};
+ (function () {
+   var top = (self === window.top) && !/[?&]snap/.test(location.search);   // on its own: a title bar; ?snap: none (deckgen snap)
+   if (top) document.body.classList.add('top');
+-  var CW = @@CW@@, CH = @@CH@@;
++  var ctl = document.getElementById('ctl');
++  var CW = DECKGEN.cw, CH = DECKGEN.ch;
+   function fit() {                                   // scale by css size, not transform: p5 maps mouseX from scrollWidth
+     var c = document.querySelector('canvas'); if (!c) return;
+-    var pad = top ? 44 : 0, s = Math.min(innerWidth / CW, (innerHeight - pad) / CH);
+-    var w = Math.round(CW * s) + 'px', h = Math.round(CH * s) + 'px';
++    var head = top ? 44 : 0, foot = ctl.classList.contains('on') ? 44 : 0;
++    var s = Math.min(innerWidth / CW, (innerHeight - head - foot) / CH);
++    var w = Math.round(CW * s) + 'px', h = Math.round(CH * s) + 'px', t = 'calc(50% + ' + (head - foot) / 2 + 'px)';
+     if (c.style.width !== w) c.style.width = w;
+     if (c.style.height !== h) c.style.height = h;
++    if (c.style.top !== t) c.style.top = t;
+   }
+   new MutationObserver(fit).observe(document.documentElement, {childList: true, subtree: true, attributes: true, attributeFilter: ['width', 'height', 'style']});
+   addEventListener('resize', fit); fit();
++
++  // createSlider(min, max, value, step, label): p5's own slider, plus a label and its value in
++  // the bar under the canvas. The fifth argument is ours; the p5 web editor ignores it. Moving
++  // the slider redraws a noLoop() sketch, so a rule with a number in it needs no more code.
++  var origSlider = p5.prototype.createSlider;
++  p5.prototype.createSlider = function (min, max, value, step, label) {
++    var inst = this, s = origSlider.call(this, min, max, value, step);
++    var box = document.createElement('label'), name = document.createElement('span'), out = document.createElement('output');
++    name.textContent = label || '';
++    box.appendChild(name); box.appendChild(s.elt); box.appendChild(out);
++    ctl.appendChild(box); ctl.classList.add('on');
++    var dec = (String(step === undefined ? 1 : step).split('.')[1] || '').length;
++    function show() { out.textContent = Number(s.elt.value).toFixed(dec); }
++    s.elt.addEventListener('input', function () { show(); if (!inst._loop) inst.redraw(); });
++    show(); fit();
++    return s;
++  };
++
++  var HOOKS = ['preload', 'setup', 'draw', 'mousePressed', 'mouseReleased', 'mouseClicked', 'mouseMoved', 'mouseDragged',
++               'mouseWheel', 'doubleClicked', 'keyPressed', 'keyReleased', 'keyTyped', 'touchStarted', 'touchMoved',
++               'touchEnded', 'windowResized', 'deviceMoved', 'deviceTurned', 'deviceShaken'];
++  function post(m) { if (self !== window.top) parent.postMessage(m, '*'); }
++
++  // Run `code` (and extra) as the sketch: the previous instance and its controls go; the code
++  // is evaluated in one function scope, so its top-level lets can be declared again on the
++  // next run; the p5 hooks it defines become the globals p5 looks for. A syntax error, or an
++  // error in setup(), goes back to the deck; so does anything thrown later, by the handler below.
++  function runSketch(code) {
++    try { if (window.p5 && p5.instance) p5.instance.remove(); } catch (e) { /* a half-built sketch */ }
++    ctl.textContent = ''; ctl.classList.remove('on');
++    HOOKS.forEach(function (h) { window[h] = undefined; });
++    var hooks;
++    try {
++      hooks = new Function(code + '\\n' + DECKGEN.extra + '\\n;return {' +
++        HOOKS.map(function (h) { return h + ": typeof " + h + " === 'function' ? " + h + " : undefined"; }).join(',') + '};')();
++    } catch (e) { post({deckgen: 'error', name: DECKGEN.name, message: String(e && e.message || e)}); return false; }
++    HOOKS.forEach(function (h) { if (typeof hooks[h] === 'function') window[h] = hooks[h]; });
++    try { new p5(); } catch (e) { post({deckgen: 'error', name: DECKGEN.name, message: String(e && e.message || e)}); return false; }
++    fit();
++    post({deckgen: 'ran', name: DECKGEN.name});
++    return true;
++  }
++  window.runSketch = runSketch;
++  addEventListener('error', function (e) { post({deckgen: 'error', name: DECKGEN.name, message: String(e.message || e)}); });
++  addEventListener('message', function (e) {
++    var d = e.data;
++    if (d && d.deckgen === 'run' && typeof d.code === 'string') runSketch(d.code);
++  });
++  runSketch(DECKGEN.code);                      // p5 is loaded (head); its own load-time start sees the instance and stands down
++  post({deckgen: 'ready', name: DECKGEN.name});
++
+   var NAV = {ArrowLeft: 1, ArrowRight: 1, ArrowUp: 1, ArrowDown: 1, PageUp: 1, PageDown: 1, Home: 1, End: 1, Escape: 1, ' ': 1, s: 1, S: 1, o: 1, O: 1, f: 1, F: 1};
+   addEventListener('keydown', function (e) {
+     if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;   // the sketch used the key (keyPressed returned false)
++    if (e.target && e.target.tagName === 'INPUT') return;                    // a slider has the keys
+     if (e.key === 'r' || e.key === 'R') { location.reload(); return; }
+     if (NAV[e.key] && !top) { parent.postMessage({deckgen: 'key', key: e.key, shift: e.shiftKey}, '*'); e.preventDefault(); }
+   });
+@@ -656,6 +745,8 @@ def html_slide(s, i, out_dir, assets_out, assets_rel):
+             parts.append(f'<div class="fig" style="left:{el.x}px;top:{el.y}px;width:{el.w}px;height:{el.h}px">{el.svg}</div>')
+         elif el.kind == 'exercise':
+             parts.append(html_exercise(el))
++        elif el.kind == 'editor':
++            parts.append(html_editor(el))
+         elif el.kind == 'sketch':
+             write_sketch_page(el, out_dir)
+             hint = ' · ' + esc(el.hint) if el.hint else ''
+@@ -701,6 +792,24 @@ def html_exercise(el):
+             f'<pre class="ex-out"></pre></div>')
+ 
+ 
++def html_editor(el):
++    """The editable code of a live sketch: the exercise's editor (a coloured <pre> under a
++    transparent textarea), Run and Reset in the bar, the sketch's errors below. It lies over
++    the static panel, which print and the reading view keep; vendor/sketch-editor.js wires it
++    to the sketch's frame on the same slide."""
++    from .syntax import html as syntax_html
++    eid = attr(el.eid or el.sketch)
++    hint = f'<span class="ex-hint">{esc(el.hint)}</span>' if el.hint else ''
++    return (f'<div class="ex ex-js" id="ex-{eid}" data-eid="{eid}" data-sketch="{attr(el.sketch)}" '
++            f'style="left:{el.x}px;top:{el.y}px;width:{el.w}px;height:{el.h}px">'
++            f'<div class="ex-editor" style="font-size:{el.size}px"><pre class="ex-hl" aria-hidden="true">{syntax_html(el.code, el.lang)}\n</pre>'
++            f'<textarea class="ex-code" spellcheck="false" autocapitalize="off" autocorrect="off">{esc(el.code)}</textarea></div>'
++            f'<div class="ex-bar"><button class="ex-run" type="button">Run</button>'
++            f'<button class="ex-reset" type="button">Reset</button>'
++            f'<span class="ex-status" aria-live="polite"></span>{hint}</div>'
++            f'<pre class="ex-out"></pre></div>')
++
++
+ # ───────────────────────── handout (the phone view) ─────────────────────────
+ # A 1920x1080 canvas of absolutely-positioned boxes cannot be made readable on a phone
+ # by scaling: reveal fits the slide to the viewport, so on a 390px screen 36px body text
+@@ -887,6 +996,9 @@ def build_html(deck, out_dir: Path):
+     if live:
+         url = deck.get('pyodide_url') or PYODIDE_CDN.format(v=deck.get('pyodide_version', PYODIDE_VERSION))
+         pyodide = PYODIDE_HTML.format(pyodide_url=url)
++    editors = any(el.kind == 'editor' for sl in deck['slides'] for el in sl.els + sl.html_only)
++    if editors:
++        pyodide += '\n' + EDITOR_HTML
+     css = CSS.replace('__CODE__', str(CODE)).replace('__CODE_SMALL__', str(CODE_SMALL))
+     html = HTML_TMPL.format(title=esc(deck['title']), css=css, slides=slides,
+                             handout=handout, pyodide=pyodide)
+@@ -898,6 +1010,8 @@ def build_html(deck, out_dir: Path):
+     if live:
+         for f in ('pyodide-console.js', 'pyodide-runtime.py'):
+             shutil.copy(JS_DIR / f, vendor / f)
++    if editors:
++        shutil.copy(JS_DIR / 'sketch-editor.js', vendor / 'sketch-editor.js')
+     shutil.copy(JS_DIR / 'handout.js', vendor / 'handout.js')   # every deck gets it
+     return out_dir / 'index.html'
+ 
+@@ -1190,14 +1304,22 @@ def contact_sheet(files, out, cols=4, scale=0.5):
+ 
+ 
+ # ───────────────────────── live sketches ─────────────────────────
++def js_str(text):
++    """A string literal for a <script>: JSON, with the one sequence that would end the tag early escaped."""
++    return json.dumps(text or '').replace('</', '<\\/')
++
++
+ def write_sketch_page(el, out_dir: Path):
+-    """The standalone page of a live sketch: <deck>/sketches/<name>.html."""
++    """The standalone page of a live sketch: <deck>/sketches/<name>.html. The code and the extra
++    travel as string literals and run through the page's runSketch(), so the deck's editable
++    panel can run new code the same way."""
+     sk = out_dir / 'sketches'
+     sk.mkdir(parents=True, exist_ok=True)
+     sound = '<script src="../../vendor/p5/p5.sound.min.js"></script>' if el.sound else ''
+     page = (SKETCH_TMPL.replace('@@NAME@@', esc(el.name)).replace('@@COURSE@@', esc(current().code))
+             .replace('@@HINT@@', esc(el.hint or 'live p5.js')).replace('@@SOUND@@', sound)
+-            .replace('@@EXTRA@@', el.extra or '').replace('@@CODE@@', el.code)
++            .replace('@@NAME_JSON@@', js_str(el.name)).replace('@@CODE_JSON@@', js_str(el.code))
++            .replace('@@EXTRA_JSON@@', js_str(el.extra))
+             .replace('@@CW@@', str(el.cw)).replace('@@CH@@', str(el.ch)))
+     path = sk / f'{el.name}.html'
+     path.write_text(page, encoding='utf-8')
+diff --git a/src/deckgen/js/sketch-editor.js b/src/deckgen/js/sketch-editor.js
+new file mode 100644
+index 0000000..b74dfb7
+--- /dev/null
++++ b/src/deckgen/js/sketch-editor.js
+@@ -0,0 +1,202 @@
++// The code of a live sketch, editable in the deck.
++//
++// The editor half is pyodide-console.js's: a coloured <pre> under a transparent textarea,
++// Run, Reset, the code kept in localStorage per deck. The running is done by the sketch's
++// own page (SKETCH_TMPL in deckgen.core), which is handed the code by postMessage and
++// answers ran or error — so the deck never evaluates a line of JavaScript itself, and a
++// sketch that throws every frame cannot take the slides down with it.
++//
++// Injected by deckgen.core.build_html only when the deck has an editable sketch.
++(function () {
++  'use strict';
++
++  var KEY = 'deckgen.play.' + location.pathname;   // one bucket per deck
++
++  function store() {
++    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; }
++  }
++  function save(eid, patch) {
++    try {
++      var all = store();
++      all[eid] = Object.assign(all[eid] || {}, patch);
++      localStorage.setItem(KEY, JSON.stringify(all));
++    } catch (e) { /* private mode, quota — not worth interrupting a class for */ }
++  }
++
++  // Pasted code arrives with whatever the source used; tabs become the two spaces the
++  // sketches are written with, so the box never mixes the two.
++  function clean(text) { return text.replace(/\r\n?/g, '\n').replace(/\t/g, '  '); }
++  function pasteClean(el, e) {
++    var cd = e.clipboardData || window.clipboardData;
++    if (!cd) return false;
++    var text = clean(cd.getData('text') || '');
++    if (!text) return false;
++    e.preventDefault();
++    var st = el.selectionStart, en = el.selectionEnd;
++    el.value = el.value.slice(0, st) + text + el.value.slice(en);
++    el.selectionStart = el.selectionEnd = st + text.length;
++    return true;
++  }
++
++  // ── syntax colours: the JavaScript rules of deckgen/syntax.py, token for token ───────
++  var KW = {};
++  ('function let const var for while do if else return new class this true false null undefined of in break continue switch case default typeof instanceof async await import export from try catch finally throw delete void yield extends static get set').split(' ').forEach(function (k) { KW[k] = 1; });
++  var BI = {};
++  ('createCanvas background fill noFill stroke noStroke strokeWeight rect square circle ellipse line point triangle arc beginShape endShape vertex random randomSeed noise noiseSeed push pop translate rotate scale noLoop loop redraw frameRate map constrain lerp dist floor ceil round abs sin cos atan2 sqrt min max width height mouseX mouseY pmouseX pmouseY mouseIsPressed frameCount PI TWO_PI HALF_PI text textSize textAlign color colorMode rectMode ellipseMode console Math document window setup draw keyPressed mousePressed mouseMoved mouseDragged key keyCode loadImage image createVector millis deltaTime createSlider createButton textFont strokeCap nf radians degrees pow exp log tan atan int str resizeCanvas windowWidth windowHeight keyIsDown lerpColor quad').split(' ').forEach(function (k) { BI[k] = 1; });
++  var LIGHT = { kw: '#943890', bi: '#146AB5', fn: '#146AB5', str: '#00544C', num: '#ED6D24', com: '#5C6470' };
++  var NUM = /^(?:0[xXoObB][0-9a-fA-F_]+|\d[\d_]*(?:\.\d*)?(?:[eE][+-]?\d+)?|\.\d+)/;
++  var NAME = /^[A-Za-z_$][\w$]*/;
++
++  function escHtml(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
++
++  // html of `code`, coloured
++  function hl(code) {
++    var out = [], inBlock = false;   // a /* */ comment carried across lines
++    var lines = code.split('\n');
++    for (var li = 0; li < lines.length; li++) {
++      var line = lines[li], i = 0, n = line.length, html = '', prev = null, m, j;
++      var span = function (kind, t) { html += kind === 'txt' ? escHtml(t) : '<span style="color:' + LIGHT[kind] + '">' + escHtml(t) + '</span>'; };
++      if (inBlock) {
++        j = line.indexOf('*/');
++        if (j < 0) { span('com', line); out.push(html); continue; }
++        span('com', line.slice(0, j + 2)); i = j + 2; inBlock = false;
++      }
++      while (i < n) {
++        var c = line.charAt(i), rest = line.slice(i);
++        if (rest.indexOf('//') === 0) { span('com', rest); break; }
++        if (rest.indexOf('/*') === 0) {
++          j = line.indexOf('*/', i + 2);
++          if (j < 0) { span('com', rest); inBlock = true; break; }
++          span('com', line.slice(i, j + 2)); i = j + 2; prev = null; continue;
++        }
++        if (c === '"' || c === "'" || c === '`') {
++          j = i + 1;
++          while (j < n && line.charAt(j) !== c) j += line.charAt(j) === '\\' ? 2 : 1;
++          span('str', line.slice(i, Math.min(j + 1, n))); i = Math.min(j + 1, n); prev = null; continue;
++        }
++        m = NUM.exec(rest);
++        if (m && (i === 0 || !/\w/.test(line.charAt(i - 1)))) { span('num', m[0]); i += m[0].length; prev = null; continue; }
++        m = NAME.exec(rest);
++        if (m) {
++          var w = m[0], kind = KW[w] ? 'kw' : (prev === 'function' || prev === 'class') ? 'fn' : BI[w] ? 'bi' : 'txt';
++          span(kind, w); prev = w; i += w.length; continue;
++        }
++        m = /^[ \t]+/.exec(rest);
++        if (m) { span('txt', m[0]); i += m[0].length; continue; }
++        span('txt', c); prev = null; i += 1;
++      }
++      out.push(html);
++    }
++    return out.join('\n');
++  }
++
++  // keep a <pre> behind a textarea painted with the textarea's text
++  function mirror(ta, pre) {
++    function paint() { pre.innerHTML = hl(ta.value) + '\n'; }
++    ta.addEventListener('input', paint);
++    ta.addEventListener('scroll', function () { pre.scrollTop = ta.scrollTop; pre.scrollLeft = ta.scrollLeft; });
++    paint();
++    return paint;
++  }
++
++  // ── the editors ──────────────────────────────────────────────────────────────────
++  var boxes = [];
++
++  // the frame of this editor's sketch: on the same slide, by the page it loads
++  function frameOf(ex) {
++    var section = ex.closest('section');
++    return section && section.querySelector('iframe[data-src="sketches/' + ex.dataset.sketch + '.html"]');
++  }
++
++  function wire(ex) {
++    var eid = ex.dataset.eid;
++    var ta = ex.querySelector('.ex-code');
++    var out = ex.querySelector('.ex-out');
++    var status = ex.querySelector('.ex-status');
++    var runBtn = ex.querySelector('.ex-run');
++    var resetBtn = ex.querySelector('.ex-reset');
++    var original = ta.value;
++    var saved = store()[eid];
++    if (saved && typeof saved.code === 'string') ta.value = saved.code;
++    var paint = mirror(ta, ex.querySelector('.ex-hl'));
++
++    function setStatus(cls, text) {
++      ex.classList.remove('fail', 'busy');
++      if (cls) ex.classList.add(cls);
++      if (status) status.textContent = text || '';
++    }
++    function send(code) {
++      var f = frameOf(ex);
++      if (!f || !f.contentWindow) { setStatus('fail', 'no sketch on this slide'); return; }
++      out.textContent = '';
++      setStatus('busy', 'running…');
++      f.contentWindow.postMessage({ deckgen: 'run', code: code }, '*');
++    }
++
++    boxes.push({
++      ex: ex,
++      ready: function () { if (ta.value !== original) send(ta.value); },      // a reload, or a return to the slide: the edited sketch again
++      ran: function () { setStatus('', ta.value === original ? '' : 'ran'); },
++      error: function (msg) { out.textContent = msg; setStatus('fail', 'error'); },
++    });
++
++    runBtn.addEventListener('click', function () { save(eid, { code: ta.value }); send(ta.value); });
++    resetBtn.addEventListener('click', function () {
++      ta.value = original;
++      paint();
++      save(eid, { code: original });
++      send(original);
++    });
++
++    // ctrl/cmd+enter runs; tab indents instead of leaving the box
++    ta.addEventListener('keydown', function (e) {
++      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); runBtn.click(); return; }
++      if (e.key === 'Tab') {
++        e.preventDefault();
++        var st = ta.selectionStart, en = ta.selectionEnd;
++        ta.value = ta.value.slice(0, st) + '  ' + ta.value.slice(en);
++        ta.selectionStart = ta.selectionEnd = st + 2;
++        paint();
++      }
++    });
++    ta.addEventListener('input', function () { save(eid, { code: ta.value }); });
++    ta.addEventListener('paste', function (e) {
++      if (pasteClean(ta, e)) { paint(); save(eid, { code: ta.value }); }
++    });
++  }
++
++  // what the sketch pages say: ready (loaded), ran, error — matched to the editor whose frame spoke
++  addEventListener('message', function (e) {
++    var d = e.data;
++    if (!d || !d.deckgen || (d.deckgen !== 'ready' && d.deckgen !== 'ran' && d.deckgen !== 'error')) return;
++    for (var i = 0; i < boxes.length; i++) {
++      var f = frameOf(boxes[i].ex);
++      if (!f || f.contentWindow !== e.source) continue;
++      if (d.deckgen === 'ready') boxes[i].ready();
++      else if (d.deckgen === 'ran') boxes[i].ran();
++      else boxes[i].error(String(d.message || 'error'));
++    }
++  });
++
++  // reveal.js owns the arrow keys and space; while a student is typing, it must not.
++  function releaseKeyboard() {
++    function typing(el) { return el && el.tagName === 'TEXTAREA' && el.classList.contains('ex-code'); }
++    document.addEventListener('focusin', function (e) {
++      if (typing(e.target) && window.Reveal) Reveal.configure({ keyboard: false });
++    });
++    document.addEventListener('focusout', function (e) {
++      if (typing(e.target) && window.Reveal) Reveal.configure({ keyboard: true });
++    });
++  }
++
++  var inited = false;
++  function init() {
++    if (inited) return;
++    inited = true;
++    Array.prototype.forEach.call(document.querySelectorAll('.ex-js'), wire);
++    releaseKeyboard();
++  }
++
++  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
++  else init();
++})();
+diff --git a/src/deckgen/layouts.py b/src/deckgen/layouts.py
+index 9401dfe..cb6a594 100644
+--- a/src/deckgen/layouts.py
++++ b/src/deckgen/layouts.py
+@@ -15,7 +15,7 @@ from __future__ import annotations
+ import re
+ from pathlib import Path
+ 
+-from .core import (Slide, Text, Para, Run, Rect, Image, Figure, Embed, Sketch, Exercise, T, P, runs, eyebrow, CODE, CODE_SMALL,
++from .core import (Slide, Text, Para, Run, Rect, Image, Figure, Embed, Sketch, Exercise, Editor, T, P, runs, eyebrow, CODE, CODE_SMALL,
+                      text_height, run_width, twin_png,
+                      INK, WHITE, PAPER, GRAY, TEAL, TXT, MUTED, LINE, LINE_STRONG, ORANGE, VIOLET, PINK, YELLOW, GREEN, BLUE,
+                      MUTED_ON_INK, LIGHT_ON_INK, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS)
+@@ -465,10 +465,12 @@ def _code_size(lines, width, height, lh=1.32):
+     raise ValueError(f'code does not fit a {width} x {height} px panel even at 22px ({len(lines)} lines; widest: {wide!r})')
+ 
+ 
+-def code_slide(eyebrow_text, title_text, code, figure=None, notes='', bg=WHITE, caption=None, code_size=None, sketch=None, title_size=64, cp=None, lang=None):
++def code_slide(eyebrow_text, title_text, code, figure=None, notes='', bg=WHITE, caption=None, code_size=None, sketch=None, title_size=64, cp=None, lang=None, edit=True, hint=None):
+     """Code on the left (a paper panel), the picture it makes on the right.
+     sketch: live(...) or (name, js, canvas_w, canvas_h): in the html deck a live p5.js run of the code covers the
+     figure; with no figure, the still made by `deckgen snap` stands in for it in the pptx and the PDF.
++    edit: with a sketch, the html deck lays an editor over the panel — Run re-runs the sketch with what is in the
++    box, Reset brings the slide's code back; edit=False keeps the panel static. hint: the editor's bar text.
+     code_size: CODE when the code fits the half-width panel, else the largest of CODE_SMALL and 22 that does.
+     lang: 'py' or 'js' for the colours; by default the code of a live sketch is JavaScript and anything else Python."""
+     t, b, m = palette(bg)
+@@ -476,12 +478,19 @@ def code_slide(eyebrow_text, title_text, code, figure=None, notes='', bg=WHITE,
+     s.els += [eyebrow(M, 96, eyebrow_text, m), T(M, TITLE_Y, CW, 100, title_text, 'xbold', title_size, t, lh=0.95, spc=-0.03)]
+     top = 296
+     lines = code.splitlines() if isinstance(code, str) else list(code)
+-    code_size = code_size or _code_size(lines, 744, 980 - top - 48)
++    editable = bool(sketch) and edit
++    # the editor's bar takes 60 px of the panel, so editable code is sized for what is left
++    code_size = code_size or _code_size(lines, 744, 980 - top - (108 if editable else 48))
++    lang = lang or ('js' if sketch else 'py')
+     s.els += [Rect(M, top, 800, 980 - top, PAPER),
+-              Text(M + 28, top + 24, 744, 980 - top - 48, code_paras(lines, code_size, lang=lang or ('js' if sketch else 'py')), 't', name='code')]
++              Text(M + 28, top + 24, 744, 980 - top - 48, code_paras(lines, code_size, lang=lang), 't', name='code')]
+     box = (1000, top, 800, (896 if caption else 980) - top)
+     if sketch:
+         place_sketch(s, sketch, box, figure)
++        if editable:
++            sk = s.html_only[-1]          # place_sketch appended it
++            s.html_only.append(Editor(M, top, 800, 980 - top, '\n'.join(lines), sk.name, size=code_size, lang=lang,
++                                      hint='ctrl+enter runs it' if hint is None else hint, eid=sk.name))
+     else:
+         svg, png = figure
+         s.els.append(_fit_figure(box, svg, png))
+diff --git a/src/deckgen/syntax.py b/src/deckgen/syntax.py
+index 82aa0bc..8435837 100644
+--- a/src/deckgen/syntax.py
++++ b/src/deckgen/syntax.py
+@@ -45,7 +45,9 @@ JS_BI = {'createCanvas', 'background', 'fill', 'noFill', 'stroke', 'noStroke', '
+          'mouseY', 'pmouseX', 'pmouseY', 'mouseIsPressed', 'frameCount', 'PI', 'TWO_PI', 'HALF_PI',
+          'text', 'textSize', 'textAlign', 'color', 'colorMode', 'rectMode', 'ellipseMode', 'console',
+          'Math', 'document', 'window', 'setup', 'draw', 'keyPressed', 'mousePressed', 'mouseMoved',
+-         'mouseDragged', 'key', 'keyCode', 'loadImage', 'image', 'createVector', 'millis', 'deltaTime'}
++         'mouseDragged', 'key', 'keyCode', 'loadImage', 'image', 'createVector', 'millis', 'deltaTime',
++         'createSlider', 'createButton', 'textFont', 'strokeCap', 'nf', 'radians', 'degrees', 'pow', 'exp', 'log',
++         'tan', 'atan', 'int', 'str', 'resizeCanvas', 'windowWidth', 'windowHeight', 'keyIsDown', 'lerpColor', 'quad'}
+ 
+ LANGS = {
+     'py': dict(kw=PY_KW, bi=PY_BI, defs={'def', 'class'}, line_comment='#', block=None,
+diff --git a/tests/fixture-sketch/deck/s.py b/tests/fixture-sketch/deck/s.py
+index a028fec..4cbc81b 100644
+--- a/tests/fixture-sketch/deck/s.py
++++ b/tests/fixture-sketch/deck/s.py
+@@ -1,5 +1,6 @@
+-# One live p5.js sketch on each layout that can carry one. Three of them have no figure, so
+-# the build has to make their stills; the fourth sits over a drawn figure and needs none.
++# One live p5.js sketch on each layout that can carry one. Four of them have no figure, so
++# the build has to make their stills; the one over a drawn figure needs none. The code slides
++# are editable (sketch.test.js types into them); the last one has a slider in its code.
+ from deckgen.layouts import title, sketch_slide, code_slide, content, activity, live, end
+ from deckgen.figures import Canvas, ORANGE
+ 
+@@ -13,6 +14,19 @@ function draw() {
+ }'''
+ 
+ 
++SLIDER = '''let size;
++function setup() {
++  createCanvas(400, 300);
++  // a number on a slider, labelled
++  size = createSlider(10, 100, 40, 1, 'size');
++  noLoop();
++}
++function draw() {
++  background(255, 0, 0);
++  circle(200, 150, size.value());
++}'''
++
++
+ def box(name='box', w=400, h=300):
+     c = Canvas(w, h)
+     c.rect(20, 20, w - 40, h - 40, fill=ORANGE)
+@@ -25,5 +39,6 @@ DECK = {'title': 'sketch fixture', 'pdf': 's.pdf', 'slides': [
+     code_slide('02 · CODE', 'The code beside it', DOT, sketch=live('s-dot-code', DOT, 400, 300)),
+     content('03 · CONTENT', 'Over a figure', ['The figure is the twin.'], figure=box(), sketch=live('s-dot-fig', DOT, 400, 300)),
+     activity('1 / 1', 3, 'Play with it', ['Move the mouse.'], sketch=live('s-dot-act', DOT, 400, 300)),
++    code_slide('05 · SLIDER', 'A number on a slider', SLIDER, sketch=live('s-slider', SLIDER, 400, 300, hint='drag the slider')),
+     end('done', 'ok', 'example.org'),
+ ]}
+diff --git a/tests/sketch.test.js b/tests/sketch.test.js
+index a7832c7..fc2019f 100644
+--- a/tests/sketch.test.js
++++ b/tests/sketch.test.js
+@@ -26,7 +26,7 @@ const last = (r) => (r.stdout + r.stderr).trim().split('\n').filter(Boolean).pop
+   const build = spawnSync('deckgen', ['build', '--site', '--no-pdf'], { cwd: FIX, encoding: 'utf8' });
+   check('the build exits 0 (stills made, no warning)', build.status === 0, last(build));
+   const stills = fs.existsSync(STILLS) ? fs.readdirSync(STILLS).sort() : [];
+-  check('a still for each sketch without a figure', JSON.stringify(stills) === JSON.stringify(['s-dot-act.png', 's-dot-code.png', 's-dot.png']), stills.join(','));
++  check('a still for each sketch without a figure', JSON.stringify(stills) === JSON.stringify(['s-dot-act.png', 's-dot-code.png', 's-dot.png', 's-slider.png']), stills.join(','));
+   const size = stills.includes('s-dot.png') ? fs.statSync(path.join(STILLS, 's-dot.png')).size : 0;
+   check('a still has pixels in it', size > 3000, size + ' bytes');
+   check('the sketch pages are written', fs.existsSync(path.join(FIX, '_site/s/sketches/s-dot.html')));
+@@ -34,6 +34,8 @@ const last = (r) => (r.stdout + r.stderr).trim().split('\n').filter(Boolean).pop
+   const html = fs.readFileSync(path.join(FIX, '_site/s/index.html'), 'utf8');
+   check('the deck embeds the page with a chip', html.includes('data-src="sketches/s-dot.html"') && html.includes('Live · move the mouse'));
+   check('the reading view links the page', html.includes('sketches/s-dot.html">Open the live sketch'));
++  check('the code slides carry an editor over the panel', html.includes('data-sketch="s-dot-code"') && html.includes('data-sketch="s-slider"') && html.includes('vendor/sketch-editor.js'));
++  check('the editor runtime is staged', fs.existsSync(path.join(FIX, '_site/vendor/sketch-editor.js')));
+ 
+   const root = path.join(FIX, '_site');
+   const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.ttf': 'font/ttf', '.png': 'image/png', '.jpg': 'image/jpeg' };
+@@ -81,6 +83,75 @@ const last = (r) => (r.stdout + r.stderr).trim().split('\n').filter(Boolean).pop
+   check('print shows the still under it', await page.$eval('section.present .img img', el => getComputedStyle(el).display !== 'none' && el.getAttribute('src').includes('s-dot')));
+   await page.emulateMedia({ media: 'screen' });
+ 
++  // ── the editable panel: slide 3 is code_slide with the dot sketch ──
++  const pixel = (fr, x, y) => fr.evaluate(([x, y]) => { const c = document.querySelector('canvas'); return c ? Array.from(c.getContext('2d').getImageData(x, y, 1, 1).data).join(',') : 'no canvas'; }, [x, y]);
++  const frameOn = async () => { const el = await page.waitForSelector('section.present iframe'); const fr = await el.contentFrame(); await fr.waitForSelector('canvas', { state: 'visible', timeout: 8000 }); return fr; };
++  const goSlide = async (n) => { await page.evaluate(n => Reveal.slide(n), n); await page.waitForSelector(`section.present[data-slide="${n + 1}"]`); };
++  await goSlide(2);
++  let fr = await frameOn();
++  const ex = await page.waitForSelector('section.present .ex-js');
++  check('the editor is on the slide, with the code in the box', !!ex && (await page.$eval('section.present .ex-code', el => el.value)).includes('circle(mouseX, mouseY, 60)'));
++  check('the box is coloured like the panel', await page.$eval('section.present .ex-hl span', el => el.textContent) === 'function');
++  await fr.waitForFunction(() => document.querySelector('canvas').getContext('2d').getImageData(390, 290, 1, 1).data[0] === 240, null, { timeout: 4000 }).catch(() => null);
++  check('the sketch drew its grey background (read away from the dot on the mouse)', await pixel(fr, 390, 290) === '240,240,240,255', await pixel(fr, 390, 290));
++  // edit and run: the frame swaps the sketch for the new code
++  await page.$eval('section.present .ex-code', el => { el.value = el.value.replace('background(240)', 'background(0, 0, 255)'); el.dispatchEvent(new Event('input')); });
++  await page.click('section.present .ex-run');
++  await page.waitForFunction(() => document.querySelector('section.present .ex-status').textContent === 'ran', null, { timeout: 8000 });
++  await fr.waitForFunction(() => { const c = document.querySelector('canvas'); return c && c.getContext('2d').getImageData(390, 290, 1, 1).data[2] === 255; }, null, { timeout: 4000 }).catch(() => null);
++  check('Run re-runs the sketch with the edited code (blue background)', await pixel(fr, 390, 290) === '0,0,255,255', await pixel(fr, 390, 290));
++  check('one canvas, not two', await fr.evaluate(() => document.querySelectorAll('canvas').length) === 1);
++  check('the mirror follows the edit', (await page.$eval('section.present .ex-hl', el => el.textContent)).includes('background(0, 0, 255)'));
++  // a syntax error comes back into the box
++  await page.$eval('section.present .ex-code', el => { el.value = 'function setup() {\n  createCanvas(400, 300;\n}'; el.dispatchEvent(new Event('input')); });
++  await page.keyboard.press('Control+Enter');   // the textarea does not have focus: click Run instead
++  await page.click('section.present .ex-run');
++  await page.waitForFunction(() => document.querySelector('section.present .ex-js').classList.contains('fail'), null, { timeout: 8000 });
++  const err = await page.$eval('section.present .ex-out', el => el.textContent);
++  check('a syntax error is shown under the box', /SyntaxError|Unexpected|missing/.test(err), err.slice(0, 60));
++  check('and the old canvas is gone, not left running', await fr.evaluate(() => document.querySelectorAll('canvas').length) === 0);
++  // the edited code survives a reload and runs again on its own
++  await page.$eval('section.present .ex-code', el => { el.value = el.value.replace('(400, 300;', '(400, 300);\n  background(0, 0, 255);'); el.dispatchEvent(new Event('input')); });
++  await page.click('section.present .ex-run');
++  await page.waitForFunction(() => document.querySelector('section.present .ex-status').textContent === 'ran', null, { timeout: 8000 });
++  await page.reload({ waitUntil: 'load' });
++  await page.waitForFunction(() => window.Reveal && Reveal.isReady());
++  await page.waitForSelector('section.present[data-slide="3"]');
++  fr = await frameOn();
++  await fr.waitForFunction(() => { const c = document.querySelector('canvas'); return c && c.getContext('2d').getImageData(390, 290, 1, 1).data[2] === 255; }, null, { timeout: 8000 }).catch(() => null);
++  check('after a reload the saved code is back in the box and running', (await page.$eval('section.present .ex-code', el => el.value)).includes('background(0, 0, 255)') && await pixel(fr, 390, 290) === '0,0,255,255', await pixel(fr, 390, 290));
++  check('the status says it is the edited sketch', await page.$eval('section.present .ex-status', el => el.textContent) === 'ran');
++  // Reset: the slide's code, run again
++  await page.click('section.present .ex-reset');
++  await page.waitForFunction(() => document.querySelector('section.present .ex-status').textContent === '', null, { timeout: 8000 });
++  await fr.waitForFunction(() => { const c = document.querySelector('canvas'); return c && c.getContext('2d').getImageData(390, 290, 1, 1).data[0] === 240; }, null, { timeout: 4000 }).catch(() => null);
++  check('Reset brings the slide\'s code back and runs it', (await page.$eval('section.present .ex-code', el => el.value)).includes('background(240)') && await pixel(fr, 390, 290) === '240,240,240,255', await pixel(fr, 390, 290));
++  // typing in the box does not move the deck
++  await page.click('section.present .ex-code');
++  await page.keyboard.press('ArrowRight');
++  await page.waitForTimeout(300);
++  check('the arrows stay in the box while typing', await page.evaluate(() => Reveal.getIndices().h) === 2);
++  await page.keyboard.press('Tab');
++  check('tab indents two spaces instead of leaving the box', (await page.$eval('section.present .ex-code', el => el.value)).includes('  ') && await page.evaluate(() => document.activeElement.classList.contains('ex-code')));
++  await page.click('section.present .ex-reset');
++  await page.waitForTimeout(300);
++  await page.emulateMedia({ media: 'print' });
++  check('print hides the editor and shows the static panel', await page.$eval('section.present .ex-js', el => getComputedStyle(el).display === 'none') && await page.$$eval('section.present .el', els => els.some(el => el.textContent.includes('createCanvas(400, 300)'))));
++  await page.emulateMedia({ media: 'screen' });
++
++  // ── a slider in the code: slide 6 ──
++  await goSlide(5);
++  fr = await frameOn();
++  await fr.waitForSelector('#ctl.on label', { timeout: 8000 });
++  check('createSlider with a label puts a labelled slider in the bar', await fr.$eval('#ctl label', el => el.textContent.trim()) === 'size40' || await fr.$eval('#ctl label', el => el.textContent.replace(/\s+/g, '')) === 'size40', await fr.$eval('#ctl label', el => el.textContent));
++  check('the canvas makes room for the bar', await fr.evaluate(() => document.querySelector('canvas').style.top.includes('calc')) && await fr.evaluate(() => { const c = document.querySelector('canvas').getBoundingClientRect(); return c.bottom <= innerHeight - 44 + 1; }));
++  check('the circle is at its starting size (red outside a 20 px radius)', await pixel(fr, 200 - 45, 150) === '255,0,0,255', await pixel(fr, 155, 150));
++  await fr.evaluate(() => { const s = document.querySelector('#ctl input'); s.value = 100; s.dispatchEvent(new Event('input', { bubbles: true })); });
++  await page.waitForTimeout(200);
++  check('moving the slider redraws the noLoop sketch (white inside a 50 px radius)', await pixel(fr, 155, 150) === '255,255,255,255', await pixel(fr, 155, 150));
++  check('and the bar shows the value', await fr.$eval('#ctl output', el => el.textContent) === '100');
++  check('no page errors so far', errors.length === 0, errors.join(' | '));
++
+   await page.goto(`http://127.0.0.1:${PORT}/s/sketches/s-dot.html`, { waitUntil: 'load' });
+   await page.waitForSelector('canvas', { state: 'visible' });
+   check('the standalone page shows its title bar', await page.evaluate(() => document.body.classList.contains('top') && getComputedStyle(document.getElementById('bar')).display === 'flex'));
+diff --git a/tests/sketch.test.py b/tests/sketch.test.py
+index 2e4ae10..e53ddc0 100644
+--- a/tests/sketch.test.py
++++ b/tests/sketch.test.py
+@@ -8,7 +8,8 @@ import pathlib
+ import sys
+ import tempfile
+ 
+-from deckgen import Project, configure, Sketch, Image, Figure, CODE, CODE_SMALL, build_html, build_png, build_pptx
++from deckgen import Project, configure, Sketch, Image, Figure, Editor, CODE, CODE_SMALL, build_html, build_png, build_pptx
++from deckgen.core import js_str
+ from deckgen.layouts import live, place_sketch, sketch_slide, code_slide, content, activity, figure_slide, finalize, _slide
+ from deckgen.figures import Canvas, ORANGE
+ 
+@@ -50,7 +51,8 @@ long = short + '\n' + wide
+ tall = '\n'.join(f'line{i}' for i in range(17))                    # 17 lines: 673 px tall at 30, 583 at 26
+ check('short code at CODE', code_slide('E', 't', short, sketch=live('a', short)).els[3].paras[0].runs[0].size == CODE)
+ check('a 55-char line steps down to 22', code_slide('E', 't', long, sketch=live('b', long)).els[3].paras[0].runs[0].size == 22)
+-check('seventeen lines step down to CODE_SMALL', code_slide('E', 't', tall, sketch=live('c', tall)).els[3].paras[0].runs[0].size == CODE_SMALL)
++check('seventeen lines step down to CODE_SMALL on a static panel', code_slide('E', 't', tall, sketch=live('c', tall), edit=False).els[3].paras[0].runs[0].size == CODE_SMALL)
++check('and to 22 when the editor bar takes its 60 px', code_slide('E', 't', tall, sketch=live('c2', tall)).els[3].paras[0].runs[0].size == 22)
+ try:
+     code_slide('E', 't', 'x' * 80, sketch=live('d', 'x'))
+     check('a line too wide even at 22 raises', False)
+@@ -58,6 +60,20 @@ except ValueError as e:
+     check('a line too wide even at 22 raises', 'too' in str(e) or 'fit' in str(e))
+ check('code_size can be forced', code_slide('E', 't', long, code_size=CODE, sketch=live('e', long)).els[3].paras[0].runs[0].size == CODE)
+ 
++# the editable panel
++ed = code_slide('E', 't', short, sketch=live('ed', short, 400, 300), caption='c')
++editor = [e for e in ed.html_only if e.kind == 'editor']
++check('code_slide with a sketch adds an Editor to the html-only elements', len(editor) == 1 and isinstance(editor[0], Editor))
++check('the editor covers the paper panel and carries the code, the sketch and the size',
++      editor and (editor[0].x, editor[0].y, editor[0].w, editor[0].h) == (120, 296, 800, 684) and editor[0].code == short
++      and editor[0].sketch == 'ed' and editor[0].size == ed.els[3].paras[0].runs[0].size and editor[0].lang == 'js' and editor[0].eid == 'ed')
++check('edit=False keeps the panel static', not any(e.kind == 'editor' for e in code_slide('E', 't', short, sketch=live('ed2', short), edit=False).html_only))
++check('a code_slide with a figure and no sketch has nothing to run', not any(e.kind == 'editor' for e in code_slide('E', 't', short, figure=fig).html_only))
++check('the static panel is still there for the pptx and the reading view', any(getattr(e, 'name', '') == 'code' for e in ed.els))
++hint = code_slide('E', 't', short, sketch=live('ed3', short), hint='try a number')
++check('the hint is the bar text; an empty one drops it', [e for e in hint.html_only if e.kind == 'editor'][0].hint == 'try a number'
++      and [e for e in code_slide('E', 't', short, sketch=live('ed4', short), hint='').html_only if e.kind == 'editor'][0].hint == '')
++
+ # the layouts that take a sketch
+ for name, sl in [('sketch_slide', sketch_slide('E', 't', live('f', DOT, 400, 300), body=['one line'])),
+                  ('content', content('E', 't', ['body'], sketch=live('g', DOT, 400, 300))),
+@@ -75,10 +91,23 @@ check('pptx builds with a labelled box instead', pptx.exists() and pptx.stat().s
+ index = build_html(deck, tmp / '_site' / 'd')
+ html = index.read_text()
+ page = tmp / '_site' / 'd' / 'sketches' / 'nostill.html'
+-check('the sketch page is written with the code and the course', page.exists() and DOT in page.read_text() and '<b>T</b>' in page.read_text())
++check('the sketch page is written with the code as a literal and the course', page.exists() and 'code: ' + js_str(DOT) in page.read_text() and '<b>T</b>' in page.read_text())
++check('the page runs the code through runSketch and answers the deck', 'runSketch(DECKGEN.code)' in page.read_text() and "deckgen: 'ready'" in page.read_text())
++check('a </script> in the code cannot end the tag', '<\\/script>' in js_str('a</script>b') and '</' not in js_str('a</script>b'))
+ check('the deck embeds the page and shows the hint', 'data-src="sketches/nostill.html"' in html and 'Live · hover' in html)
+ check('the missing still is a labelled box on screen, not an image', 'nostill · live in the html deck' in html and 'assets/nostill' not in html)
+ check('the reading view links the sketch', 'sketches/nostill.html">Open the live sketch' in html)
++check('a deck without an editable sketch does not ship the editor runtime', '<script src="../vendor/sketch-editor.js">' not in html and not (tmp / '_site' / 'vendor' / 'sketch-editor.js').exists())
++
++# a build with an editable sketch
++deck2 = {'title': 'e', 'pdf': 'e.pdf', 'slides': finalize([code_slide('E', 'editable', short, sketch=live('edit-me', short, 400, 300))], 'T')}
++html2 = build_html(deck2, tmp / '_site' / 'e').read_text()
++check('the deck carries the editor over the panel, wired to its sketch',
++      '<div class="ex ex-js" id="ex-edit-me" data-eid="edit-me" data-sketch="edit-me" style="left:120px;top:296px;width:800px;height:684px">' in html2
++      and '<textarea class="ex-code"' in html2 and 'createCanvas(400, 300)' in html2 and 'class="ex-run"' in html2 and 'ctrl+enter runs it' in html2)
++check('and ships the runtime', '<script src="../vendor/sketch-editor.js">' in html2 and (tmp / '_site' / 'vendor' / 'sketch-editor.js').exists())
++check('the static code stays for print and the reading view', html2.count('createCanvas') >= 3)   # the panel, the editor, its mirror
++
+ 
+ print(f'\n{len(fails)} FAILED' if fails else f'\nall {len(fails) or 0} failures — sketch checks passed'.replace('all 0 failures — ', 'all '))
+ sys.exit(1 if fails else 0)
+-- 
+2.43.0
+
