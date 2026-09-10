@@ -687,7 +687,7 @@ S.append(section('08', 'One spec. One twist.', f'30 minutes · in pairs · {P5} 
                  notes='The one exercise of the day, in pairs, one laptop per pair. LeWitt\'s forty-five words, cut to ten points, executed by a language model; then a twist of your own, iterated until the picture is the one you meant; then one upload per pair with the spec as the caption. Nicolò keeps time; the other three TAs walk.'))
 
 S.append(activity('1 — THE SPEC', 8, 'Let the machine execute it.',
-                  ['Put the spec on the right into a language model on **genai.polyu.edu.hk**. Paste the code into **editor.p5js.org**. Run it.',
+                  ['Put the spec on the right into a language model on **genai.polyu.edu.hk**, then paste the code into **editor.p5js.org** and run it.',
                    'If it fails, paste the error back, word for word. Then read the code: **what did the machine decide that the words left open?**'],
                   panel=SPEC_FILLED, panel_size=22, bg=YELLOWS[0],
                   notes='Eight minutes. Expect all four failure modes: added colour, an invented function, a dropped seed, and the random-versus-evenly decision made silently. The TAs help with pasting errors back. The reading question is the point; make every pair answer it out loud to each other. Most pairs run first time; a fifth need one error pasted back.'))
