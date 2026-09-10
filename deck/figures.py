@@ -451,8 +451,8 @@ def walk_breakdown(name='walk-breakdown', w=1680, h=560):
     grid(x4)
     _walk_draw(c, _walk_cells(g, 0.8, 1966), g, x4, y0, s, width=3, tint='#E3F1F4')
     _arrow(c, x4 + 10, y0 + g * s - 10, x4 + g * s - 10, y0 + 10, ORANGE, 4, 14)
-    c.text(xs[3], 470, 'the empty space flows up and right', size=18, anchor='start', color=INK)
-    c.text(xs[3], 500, 'so a field of caps always has gaps', size=18, anchor='start', color=MUTED)
+    c.text(xs[3], 470, 'empty space flows up and right', size=18, anchor='start', color=INK)
+    c.text(xs[3], 500, 'so fields of caps have gaps', size=18, anchor='start', color=MUTED)
     return c.finish(name)
 
 
