@@ -280,13 +280,15 @@ const rules = [
   ["you (.*)",           "We were discussing you, not me."],
   ["(computer|machine)", "Do computers worry you?"],
   ["(yes|no)",           "I see. Why do you say $1?"],
-  ["(.*)",               "Please go on.", "What does that suggest to you?"],
+  ["(.*)",               "Please go on.",
+                         "What does that suggest to you?"],
 ];
 function reply(text) {           // the whole program
   let t = text.toLowerCase().replace(/[.,!?]/g, "");
   for (let [pattern, ...says] of rules) {
     let m = t.match(new RegExp(pattern));
-    if (m) return pick(says).replace(/\$(\d)/g, (_, i) => reflect(m[i]));
+    if (m) return pick(says)
+      .replace(/\$(\d)/g, (_, i) => reflect(m[i]));
   }
 }
 function setup() { noCanvas(); chat(reply); }   // the screen"""
@@ -482,7 +484,7 @@ S.append(cards('02 · SIXTY YEARS OF MACHINE A', 'Rules were the first AI.', [
 
 S.append(code_slide('02 · ELIZA · 1966', 'A rule that feels like a person.', ELIZA_RULES, F.eliza_transcript(ELIZA),
                     caption='Weizenbaum\'s script: find a keyword, apply its rule, send the rest back. No memory, no meaning. Talk to it; then add a rule of your own and press Run' + _live() + '.',
-                    code_size=19, hint='add a rule, then Run', sketch=live('eliza', ELIZA_RULES, 600, 600, hint='type, then enter', extra=ELIZA_SCREEN),
+                    code_size=18, hint='add a rule, then Run', sketch=live('eliza', ELIZA_RULES, 600, 600, hint='type, then enter', extra=ELIZA_SCREEN),
                     notes='In the html deck the right side is a chat: type "I am sad" and read the rule that answers. The still is the 1966 transcript from Weizenbaum\'s paper, ELIZA in capitals. Every reply is a rule you can read: "you X" becomes "we were discussing you". Ask: does it understand? No. Does it behave intelligently, by our week-1 definition? Enough to fool people. Let someone add a rule: ["i hate (.*)", "Why do you hate $1?"], Run, try it. Intelligent-like behaviour through computation, and here you can read every line of the computation. Built to show how shallow this is; people confided in it anyway. Week 12: rule-based versus generative chatbots.'))
 
 S.append(cards('02 · THE DEAL', 'Exact. Explainable. Brittle.', [
