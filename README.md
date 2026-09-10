@@ -60,6 +60,40 @@ The PDF step needs node 18+ and Playwright's Chromium: `npm install --no-save pl
 4. Import the roster as the saved class. Students join with the last four digits and the letter of their ID (e.g. `3456A`).
 5. Keep the html deck or the PDF open on a laptop as backup.
 
+## After the class: publish the answers
+
+ClassPoint keeps every activity on a **public** page at
+`app.classpoint.io/activity/<activityId>` — no login, all the responses on it. Once a week
+those links go into the deck, so a student can find their own work again in week 12.
+
+1. Open [the ClassPoint activities dashboard](https://app.classpoint.io/cp/reports/activities).
+   It is behind the login and has no API, so save the page: devtools → copy the cards
+   element → paste into a file.
+2. Run the routine from [`classpoint.py`](https://github.com/venetanji/classpoint.py):
+
+   ```bash
+   python3 weekly.py --repo ~/dev/sd2112-teaching --week weekNN \
+           --on YYYY-MM-DD --from-html ~/Downloads/activities.html
+   ```
+
+   `--on` is the date the class ran, and it matters: it is what separates this course's
+   activities from the other one's. The runner fetches each activity, reads
+   `deck/weekNN.py` with `ast` to get the question text, and writes
+   `deck/weekNN-reports.json` and [`ANSWERS.md`](ANSWERS.md). Both are rewritten in place.
+3. `deckgen build` — the eyebrow of every question slide gains a **YOUR ANSWERS** link, and
+   the build fails if the deck and the mapping have drifted apart.
+4. Commit both files and open a PR.
+
+Each `deck/weekNN.py` calls `attach_reports(S, …)` just before `DECK = …`. It is a no-op
+until the mapping file exists, so a week authored today picks its links up the week it is
+taught, with no edit.
+
+**Activities run with names hidden are not linked.** ClassPoint's page honours
+`isNamesHidden`, but the payload behind it still carries `participantName` for every
+response — so linking one would hand out a way to undo the anonymity the room was
+promised. `weekly.py` records those with a null id and no link, and `ANSWERS.md` says so.
+Week 1's *One hope and one worry* is the current example.
+
 ## Keeping the repository public
 
 Nothing in the sources identifies a student. Keep it that way:
@@ -68,6 +102,8 @@ Nothing in the sources identifies a student. Keep it that way:
 - Grades, gradebooks and submissions never enter the repository, not even in a branch: the history is public too.
 - Workflow artifacts on a public repository are downloadable by anyone with a GitHub account: the PowerPoint artifact is fine, a roster would not be.
 - Examples of IDs in docs and slides are made up (`3456A`).
+- ClassPoint report links are public by design and go in `ANSWERS.md` — but never link an
+  activity that was run with names hidden. See **After the class** above.
 
 ## Design system
 

@@ -14,7 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import figures as F                                   # noqa: E402
-from deckgen import build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YELLOW, GREEN, BLUE, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS, MUTED  # noqa: E402
+from deckgen import attach_reports, build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YELLOW, GREEN, BLUE, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS, MUTED  # noqa: E402
 from deckgen.layouts import (title, end, agenda, section, statement, quote, content, cards, question, image_full, timeline,   # noqa: E402
                      journey, activity, video, assessment, team, team_band, two_col, figure_slide, finalize)
 
@@ -385,6 +385,10 @@ S.append(content('08 · WHAT JUST HAPPENED', 'You wrote the rules. The machine h
                   '**The machine made every image. You decided which one was still a cup. That was you.**'],
                  body_size=32,
                  notes='Mirror of the whole course. Prompts are rules, models are examples, and neither decides what ships. Labov\'s cups: in 1973 he showed people drawings shading from cup to bowl, and the boundary moved with what was in them — context is part of the concept. Week 5 shows how to push a model off the prototype properly: references, ControlNet, your own fine-tuning. Say the last line slowly.'))
+
+# Delivered 2026-09-04. Links each question slide to the answers the room gave;
+# the file is written by classpoint.py's weekly.py and is a no-op until it exists.
+attach_reports(S, Path(__file__).resolve().parent / 'week01-reports.json')
 
 DECK = dict(title='SD2112 · AI in Design · Week 01', slides=finalize(S, FOOTER), pdf='SD2112-week01.pdf')
 
