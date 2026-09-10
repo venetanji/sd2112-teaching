@@ -503,6 +503,17 @@ def lsystem_growth(name='lsystem', w=1680, h=560):
     return c.finish(name)
 
 
+# ───────────────────────── the exercise's own canvas: what the pptx and the PDF show ─────────────────────────
+def sketch_placeholder(name='your-sketch', w=600, h=600):
+    """The still for the 'your sketch' slide: an empty canvas that says where the sketch runs."""
+    c = Canvas(w, h)
+    c.rect(1, 1, w - 2, h - 2, fill='#FFFFFF', stroke=LINE, width=2)
+    c.line(0, 0, w, h, LINE, 2)
+    c.text(w / 2, h / 2 - 12, 'your sketch runs here', size=22, anchor='middle', color=MUTED)
+    c.text(w / 2, h / 2 + 24, 'in the html deck: paste, then Run', size=18, anchor='middle', color=MUTED)
+    return c.finish(name)
+
+
 # ───────────────────────── Koch, 1904: replace every line with four, again ─────────────────────────
 def _koch(p, q, n):
     """The Koch rule applied n times to the segment p → q: the points of the curve."""
