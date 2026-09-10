@@ -1,0 +1,66 @@
+[
+  {
+    "activity": "sa20260904033646383JAAW",
+    "question": "Why is AI relevant for design?",
+    "type": "Short Answer",
+    "ran": "2026-09-04T03:36:46.383000Z",
+    "responses": 86
+  },
+  {
+    "activity": "mc20260904034846877ZUKC",
+    "question": "Which are you closest to?",
+    "type": "Multiple Choice",
+    "ran": "2026-09-04T03:48:46.877000Z",
+    "responses": 85
+  },
+  {
+    "activity": "mc20260904035020637PDTR",
+    "question": "How much have you used AI in your design work?",
+    "type": "Multiple Choice",
+    "ran": "2026-09-04T03:50:20.637000Z",
+    "responses": 90
+  },
+  {
+    "activity": null,
+    "question": "One hope and one worry.",
+    "type": "Short Answer",
+    "ran": "2026-09-04T04:02:57.832000Z",
+    "responses": 95,
+    "withheld": "names hidden — the public payload still carries participantName"
+  },
+  {
+    "activity": "sa20260904040721572EHMU",
+    "question": "What is AI? One sentence, your own words.",
+    "type": "Short Answer",
+    "ran": "2026-09-04T04:07:21.572000Z",
+    "responses": 87
+  },
+  {
+    "activity": "mc20260904043922212ZXSV",
+    "question": "Which of these is a chair?",
+    "type": "Multiple Choice",
+    "ran": "2026-09-04T04:39:22.212000Z",
+    "responses": 86
+  },
+  {
+    "activity": "sa20260904045054213UQHL",
+    "question": "Where did AI touch your design work this week?",
+    "type": "Short Answer",
+    "ran": "2026-09-04T04:50:54.213000Z",
+    "responses": 88
+  },
+  {
+    "activity": "iu20260904050713405GVXV",
+    "question": "Everyone: upload your first cup.",
+    "type": "Image Upload",
+    "ran": "2026-09-04T05:07:13.405000Z",
+    "responses": 87
+  },
+  {
+    "activity": "iu20260904051708753BGDB",
+    "question": "Scribes only. The cup that ships.",
+    "type": "Image Upload",
+    "ran": "2026-09-04T05:17:08.753000Z",
+    "responses": 60
+  }
+]

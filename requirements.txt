@@ -1,3 +1,4 @@
 # The slide toolchain, shared with sd5913/teaching. Pinned by tag so a rebuild months
 # from now produces the same deck.
-deckgen @ git+https://github.com/ait4x/deckgen@v0.8.0
+# v0.11.0 (editable sketches, sliders) by its merge commit until the tag is pushed: bb21f9f = ait4x/deckgen#9 on main
+deckgen @ git+https://github.com/ait4x/deckgen@bb21f9f9b87627f79de699b59923dbbcaa40189f
