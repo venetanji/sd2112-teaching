@@ -235,6 +235,25 @@ function restart() {
   text('1 · THE RASTER · 30 x 30', x0, y0 - 14);
 }"""
 
+TEN_PRINT = """const s = 40;                    // the cell: 40 px
+let heads;                       // the coin: a slider
+function setup() {
+  createCanvas(800, 480); noLoop();
+  heads = createSlider(0, 1, 0.5, 0.05, 'heads');
+}
+function draw() {
+  background(255); stroke(0); strokeWeight(3);
+  for (let y = 0; y < height; y += s)   // row by row
+    for (let x = 0; x < width; x += s) { // cell by cell
+      if (random() < heads.value())   // the coin toss
+        line(x, y, x + s, y + s);     // heads: ╲
+      else
+        line(x + s, y, x, y + s);     // tails: ╱
+    }
+}"""
+
+TEN_PRINT_EXTRA = """function mousePressed() { randomSeed(floor(random(1e6))); redraw(); }"""
+
 KOCH_CODE = """let times;                          // how many times
 function setup() {
   createCanvas(900, 300); noLoop();
@@ -510,13 +529,18 @@ S.append(content('04 · GEORG NEES · SCHOTTER · c. 1968', 'One rule. One rando
                  body_size=28,
                  notes='Say the rule in one breath: a grid; each square shifts and turns by a random amount that grows down the page. Watch it draw: the label under the picture says how far a square may move and turn on that row. Drag disorder to zero: the grid. To two: gravel from the third row. Ask: where is the design decision? In the rule and in the rate of decay, not in any square. After the break you get the twenty lines of code, editable.'))
 
+S.append(code_slide('04 · 1982 · 10 PRINT CHR$(205.5+RND(1)); : GOTO 10', 'One coin toss. Two states. No memory.', TEN_PRINT, F.ten_print(cols=20, rows=12),
+                    caption='One line of Commodore 64 BASIC, 1982: one of two diagonals, chosen by a coin toss, forever. Every cell is a fresh toss; none knows about the others. The slider loads the coin.',
+                    sketch=live('ten-print', TEN_PRINT, 800, 480, hint='click = new dice', extra=TEN_PRINT_EXTRA),
+                    notes='The smallest generative program there is, and the floor for the challenge: one rule, one random number, and it is already a picture. Two states per cell, heads or tails, and nothing carried from one cell to the next. Drag the coin: at 0.5 the maze; at 0.9 nearly all one diagonal, with the odd break. Everyone can hold the whole program in their head. Then Nake: two more states, and one thing remembered from the cell above. Thirty years later 10 PRINT got a book (Montfort et al., MIT Press, 2013).'))
+
 S.append(image_full('nake-walk-through-raster-1966.jpg', '04 · FRIEDER NAKE · WALK-THROUGH-RASTER · SERIES 2, 1–4 · 1966',
                     'Look first. What repeats? What never happens? Four prints from one program: ALGOL 60 on a Zuse Graphomat Z64. Victoria and Albert Museum, E.955-2008.',
                     fit='contain', bg=WHITE,
-                    notes='Ninety seconds of looking before any explanation. Ask the room: what repeats? (vertical bars, horizontal caps, fields of each; a dense band along the diagonal). What never happens? (a cap directly under a drawn cell: every field of caps has gaps). Then the rule, in four steps. Nake finished a PhD in probability theory the year after he made these.'))
+                    notes='Ninety seconds of looking before any explanation. 10 PRINT had two states and no memory; ask what is different here. Then: what repeats? (vertical bars, horizontal caps, fields of each; a dense band along the diagonal). What never happens? (a cap directly under a drawn cell: every field of caps has gaps). Then the rule, in four steps. Nake finished a PhD in probability theory the year after he made these.'))
 
 S.append(figure_slide('04 · WALK-THROUGH-RASTER · THE RULE IN FOUR STEPS', 'Four states. The cell above decides.', F.walk_breakdown(),
-                      body=['A grid, drawn column by column, top to bottom. Every cell is one of four things: empty, a bar, a cap, or both. Two rules decide: a bar is more likely near the diagonal, and a cap can only be drawn under an empty cell. So the empty space flows up and to the right, and every field of caps has gaps.'],
+                      body=['A grid, drawn column by column, top to bottom. Every cell is one of four things: empty, a bar, a cap, or both (10 PRINT had two). Two rules decide: a bar is more likely near the diagonal, and a cap can only be drawn under an empty cell, so a cell remembers one thing about the one above it. The empty space flows up and to the right, and every field of caps has gaps.'],
                       caption='Nake, Walk-Through-Raster, series 2.1–4, 1966. Our reading of his rule: two yes/no decisions per cell, and one fact carried from the cell above.',
                       notes='Break it down slowly; this is the model for every generative piece. One: the raster is the stage, and the order of the walk matters: down each column, then the next. Two: four states, from two yes/no decisions. Three: the rule. The bar is chance, weighted by the distance to the diagonal. The cap depends on the cell above: only under an empty one. That one dependency is the whole texture. Four: because a cap needs an empty cell above it, and the walk goes down and then right, the empty space cannot be closed off: it flows from the bottom left to the top right, and the thick fields of caps along the diagonal always open up. Look back at the print with that in mind.'))
 
@@ -536,11 +560,6 @@ S.append(video('04 · HILLER & ISAACSON · UNIVERSITY OF ILLINOIS · 1957', 'A c
                 '- On the playlist. Sixteen minutes, four experiments, one machine.'],
                thumb='yt/n0njBFLQSk8.jpg',
                notes='Rules make music too. The generate-and-test loop, propose at random and reject what breaks a rule, is the engine of a great deal of rule-based AI, and of most generative art. Week 6 comes back to sound with machine B. Cut if behind.'))
-
-S.append(figure_slide('04 · 1982 · 10 PRINT CHR$(205.5+RND(1)); : GOTO 10', 'One line of code. One coin toss. A maze.', F.ten_print(),
-                      body=['The smallest generative program there is: print one of two diagonals, chosen by a coin toss, forever. Its rule fits in a text message, its chance is a single random number, and it never draws the same maze twice.'],
-                      caption='One line of Commodore 64 BASIC, from the machine\'s user guide. Thirty years later it got a book (Montfort et al., 10 PRINT, MIT Press, 2013).',
-                      notes='If Schotter is too much, this is the floor: one rule, one random number, and it is already a picture. Everyone in the room can hold this whole program in their head. That is the size of rule to start from in the challenge.'))
 
 # ───────────────────────── 05 · rules that grow ─────────────────────────
 S.append(section('05', 'Rules that grow', 'fractals · L-systems · parameters', bg=ORANGES[0],
