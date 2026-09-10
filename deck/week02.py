@@ -51,18 +51,19 @@ CUPS_URL = _week1_answers('Everyone: upload your first cup.')
 # show. createSlider's fifth argument is a label the sketch page shows; the p5 editor ignores it.
 
 TEN_CODE = """let pts = [];                        // the points
-
 function setup() {
   createCanvas(600, 600);
-  background(255);
   noLoop();                          // draw once
-  for (let i = 0; i < 10; i++) {     // the rule: ten
+  roll();
+}
+function roll() {                    // the rule: ten points
+  pts = [];
+  for (let i = 0; i < 10; i++) {
     pts.push([random(600), random(600)]);    // chance
   }
 }
-
 function draw() {
-  stroke(0);
+  background(255); stroke(0);
   for (let a of pts) {               // every pair
     for (let b of pts) {
       line(a[0], a[1], b[0], b[1]);
@@ -71,11 +72,7 @@ function draw() {
   fill(0); for (let p of pts) circle(p[0], p[1], 6);
 }"""
 
-TEN_EXTRA = """function mousePressed() {            // new dice, same rule
-  pts.length = 0;
-  for (let i = 0; i < 10; i++) pts.push([random(600), random(600)]);
-  background(255); redraw();
-}"""
+TEN_EXTRA = """function mousePressed() { roll(); redraw(); }   // new dice, the same rule (as edited)"""
 
 SCHOTTER_CODE = """const cols = 12, rows = 22, s = 30;  // Nees's numbers
 let disorder, seed = 1968;           // the one number: a slider
@@ -165,6 +162,7 @@ function setup() {
   createCanvas(1200, 600); frameRate(30);
   capChance = createSlider(0, 1, 0.8, 0.05, 'cap chance');
   speed = createSlider(1, 40, 6, 1, 'cells per frame');
+  capChance.input(restart);                // a new chance: the same dice, from the top
   restart();
 }
 
@@ -271,36 +269,29 @@ window._kochTimer = setInterval(function () {
 
 LEWITT_CODE = """const n = 50;                          // fifty points
 let pts = [];
-
 function setup() {
   createCanvas(800, 500);              // a wall
-  background(255); stroke(0); noLoop();
+  stroke(0); noLoop();
   randomSeed(118);
-  // evenly distributed: one point per cell
-  // of a 10 x 5 grid, at random inside it
-  let cols = 10, rows = 5;
-  let w = width / cols, h = height / rows;
+  roll();
+}
+function roll() {                      // evenly distributed:
+  pts = [];                            // one point per cell of
+  let cols = 10, rows = 5;             // a 10 x 5 grid, at
+  let w = width / cols, h = height / rows;   // random inside it
   for (let i = 0; i < n; i++) {
     let c = i % cols, r = floor(i / cols);
     pts.push([c * w + random(w), r * h + random(h)]);
   }
 }
-
 function draw() {
+  background(255);
   for (let a of pts)                   // all connected
     for (let b of pts)
       line(a[0], a[1], b[0], b[1]);
 }"""
 
-LEWITT_EXTRA = """function mousePressed() {            // the same words, new dice
-  pts.length = 0;
-  let cols = 10, rows = 5, w = width / cols, h = height / rows;
-  for (let i = 0; i < n; i++) {
-    let c = i % cols, r = floor(i / cols);
-    pts.push([c * w + random(w), r * h + random(h)]);
-  }
-  background(255); redraw();
-}"""
+LEWITT_EXTRA = """function mousePressed() { roll(); redraw(); }   // the same words, new dice"""
 
 TEMPLATE = [
     'Write a p5.js sketch for the web editor.',
@@ -606,8 +597,8 @@ S.append(content('06 · PROCESSING → P5.JS', 'Code as a sketchbook.',
 
 S.append(code_slide('06 · ANATOMY', 'setup() runs once. draw() runs the rule.', TEN_CODE, F.lewitt_ten(seed=7),
                     caption='(0,0) is the top-left corner; y grows downwards; random(600) is a number between 0 and 600. On your laptop: change 10 to 30, press Run. Then change one 600 to 200 and see what breaks.',
-                    code_size=21, sketch=live('ten-points', TEN_CODE, 600, 600, hint='click = new dice', extra=TEN_EXTRA),
-                    notes='Read it top to bottom. setup: make a canvas, paint it white, say "once", then the rule: ten times, push a point at a random place. draw: for every pair, a line; then a dot on every point. Ten words: createCanvas, background, noLoop, for, random, push, stroke, line, fill, circle. Then everyone on their laptop: 10 → 30, Run. One 600 → 200, Run: the points crowd the left. Six minutes, the TAs walk. A rule you can break on purpose is a rule you understand.'))
+                    code_size=20, sketch=live('ten-points', TEN_CODE, 600, 600, hint='click = new dice', extra=TEN_EXTRA),
+                    notes='Read it top to bottom. setup: make a canvas, say "once", roll the dice. roll: the rule: ten times, push a point at a random place. draw: paint it white, then for every pair a line, then a dot on every point. Ten words: createCanvas, noLoop, for, random, push, background, stroke, line, fill, circle. Then everyone on their laptop: 10 → 30, Run. One 600 → 200, Run: the points crowd the left. Six minutes, the TAs walk. A rule you can break on purpose is a rule you understand.'))
 
 S.append(figure_slide('06 · RANDOM() · RANDOMSEED()', 'Same rule, three seeds.', F.lewitt_seeds(),
                       body=['random(600) is a number between 0 and 600, different every run. randomSeed(1) loads the die: the same picture every run, on every machine. Where you call random() is where the rule lets go; everything else is the rule.'],
