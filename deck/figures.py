@@ -356,94 +356,103 @@ def schotter_variations(name='schotter-variations', w=1680, h=640):
 # Nake, 1966: a repertoire of signs; a chain of signs, each chosen from the previous one by a
 # probability table (a Markov chain); the chain mapped into the raster cell by cell from the top left.
 # Our repertoire (five signs) and our table are ours; the procedure is his.
-WALK_DRIFT = [1, 3, 3, 4, 2]            # each sign's neighbour in the repertoire
+def _walk_cells(n, cap_chance, seed):
+    """The rule of Walk-Through-Raster as we execute it (after Nake, and after the 2025 pfad script):
+    column by column, top to bottom. A cell is one of four things: empty, a bar |, a cap ¯, or both.
+    A bar is likelier the nearer the cell is to the diagonal; a cap is drawn only under an empty cell
+    (the top of a column counts as empty above). Returns {(w, h): (bar, cap)}."""
+    rnd = random.Random(seed)
+    cells = {}
+    for w in range(n):
+        above = True
+        for h in range(n):
+            bar = rnd.uniform(0, n - 1) >= abs(w - h)
+            cap = above and rnd.random() < cap_chance
+            cells[(w, h)] = (bar, cap)
+            above = not bar and not cap
+    return cells
 
 
-def _walk_next(last, rnd):
-    p = rnd.random()
-    if p < 0.6:
-        return last                     # stay
-    if p < 0.85:
-        return WALK_DRIFT[last]         # drift
-    return rnd.randrange(5)             # jump
+def _walk_draw(c, cells, n, x0, y0, g, width=1.6, tint=None):
+    """Paint the cells of _walk_cells at (x0, y0), g px each; tint: a fill for the empty cells."""
+    for (w, h), (bar, cap) in cells.items():
+        x, y = x0 + w * g, y0 + h * g
+        if tint and not bar and not cap:
+            c.rect(x, y, g, g, fill=tint)
+        if bar:
+            c.line(x, y, x, y + g, INK, width, cap='butt')
+        if cap:
+            c.line(x, y, x + g, y, INK, width, cap='butt')
 
 
-def _walk_sign(c, k, x, y, s=28, color=INK, width=2):
-    if k in (1, 3):
-        c.line(x + s * 0.15, y + s / 2, x + s * 0.85, y + s / 2, color, width, cap='butt')
-    if k in (2, 3):
-        c.line(x + s / 2, y + s * 0.15, x + s / 2, y + s * 0.85, color, width, cap='butt')
-    if k == 4:
-        c.rect(x + s * 0.28, y + s * 0.28, s * 0.44, s * 0.44, stroke=color, width=width)
-
-
-def _walk_chain(length, seed):
-    rnd, last, out = random.Random(seed), 0, []
-    for _ in range(length):
-        last = _walk_next(last, rnd)
-        out.append(last)
-    return out
-
-
-def walk_through_raster(name='walk-through-raster', n=20, s=28, seed=1966, margin=20):
-    w = n * s + 2 * margin
-    c = Canvas(w, w)
-    c.rect(1, 1, w - 2, w - 2, fill='#FFFFFF', stroke=LINE, width=2)
-    for i, k in enumerate(_walk_chain(n * n, seed)):
-        r, col = divmod(i, n)
-        _walk_sign(c, k, margin + col * s, margin + r * s, s)
+def walk_through_raster(name='walk-through-raster', n=30, size=600, cap_chance=0.8, seed=1966):
+    c = Canvas(size, size)
+    c.rect(1, 1, size - 2, size - 2, fill='#FFFFFF', stroke=LINE, width=2)
+    g = size / (n + 2)
+    _walk_draw(c, _walk_cells(n, cap_chance, seed), n, g, g, g)
     return c.finish(name)
 
 
 def walk_breakdown(name='walk-breakdown', w=1680, h=560):
-    """Four steps: the raster, the repertoire, the chain, the mapping."""
+    """Four panels: the raster and the order of the walk, the four states of a cell, the rule (the cell
+    above decides), and the flow of the empty space that the rule guarantees."""
     c = Canvas(w, h)
     xs = (0, 440, 880, 1320)
     g, s, y0 = 12, 28, 76
-    for x, t in zip(xs, ('1 · THE RASTER', '2 · THE REPERTOIRE', '3 · THE CHAIN', '4 · THE MAPPING')):
+    for x, t in zip(xs, ('1 · THE RASTER', '2 · FOUR STATES', '3 · THE RULE', '4 · THE FLOW')):
         c.text(x, 34, t, size=18, anchor='start', color=ORANGE)
 
-    def grid(x0):
-        for i in range(g + 1):
-            c.line(x0, y0 + i * s, x0 + g * s, y0 + i * s, LINE, 2, cap='butt')
-            c.line(x0 + i * s, y0, x0 + i * s, y0 + g * s, LINE, 2, cap='butt')
+    def grid(x0, cells=g, size=s, y=y0):
+        for i in range(cells + 1):
+            c.line(x0, y + i * size, x0 + cells * size, y + i * size, LINE, 2, cap='butt')
+            c.line(x0 + i * size, y, x0 + i * size, y + cells * size, LINE, 2, cap='butt')
 
-    # 1 · the raster
-    grid(xs[0] + 12)
-    c.text(xs[0], 470, 'a grid of empty cells', size=18, anchor='start', color=INK)
-    c.text(xs[0], 500, 'Nake’s: about 20 × 20', size=18, anchor='start', color=MUTED)
-    # 2 · the repertoire
-    for k in range(5):
-        bx, by = xs[1] + 12 + k * 68, 104
-        c.rect(bx, by, 56, 56, stroke=LINE, width=2)
-        _walk_sign(c, k, bx, by, 56, width=3)
-        c.text(bx + 28, 192, str(k), size=18, anchor='middle', color=MUTED)
-    c.text(xs[1], 250, 'and a table of probabilities:', size=18, anchor='start', color=INK)
-    c.text(xs[1], 284, 'stay 60% · drift 25% · jump 15%', size=18, anchor='start', color=INK)
-    c.text(xs[1], 470, 'five signs, numbered 0 to 4', size=18, anchor='start', color=INK)
-    c.text(xs[1], 500, 'ours; Nake’s were his own', size=18, anchor='start', color=MUTED)
-    # 3 · the chain
-    chain = _walk_chain(g * g, 1966)
-    for i, k in enumerate(chain[:16]):
-        r, col = divmod(i, 8)
-        bx, by = xs[2] + 12 + col * 42, 104 + r * 58
-        c.rect(bx, by, 36, 36, stroke=LINE, width=1)
-        _walk_sign(c, k, bx, by, 36, width=2)
-        if col < 7:
-            c.text(bx + 39, by + 24, '›', size=16, anchor='middle', color=MUTED)
-    c.text(xs[2], 250, 'sign i+1 = f(sign i, a random number)', size=18, anchor='start', color=INK)
-    c.text(xs[2], 284, 'a Markov chain: stay, drift or jump', size=18, anchor='start', color=INK)
-    c.text(xs[2], 470, 'a long chain: one sign per cell', size=18, anchor='start', color=INK)
-    c.text(xs[2], 500, 'new dice, same table: new chain', size=18, anchor='start', color=MUTED)
-    # 4 · the mapping
-    x0 = xs[3] + 12
+    # 1 · the raster, and the order of the walk: down the first column, then the next
+    x0 = xs[0] + 12
     grid(x0)
-    for i, k in enumerate(chain[:30]):
-        r, col = divmod(i, g)
-        _walk_sign(c, k, x0 + col * s, y0 + r * s, s, width=2)
+    _arrow(c, x0 + s / 2, y0 + 8, x0 + s / 2, y0 + g * s - 8, ORANGE, 3, 10)
+    _arrow(c, x0 + s * 1.5, y0 + 8, x0 + s * 1.5, y0 + g * s - 8, ORANGE, 2, 8)
     _arrow(c, x0 + 6, y0 + g * s + 22, x0 + g * s - 6, y0 + g * s + 22, ORANGE, 3, 10)
-    c.text(xs[3], 470, 'poured in cell by cell, top left first', size=18, anchor='start', color=INK)
-    c.text(xs[3], 500, 'runs of a sign become fields', size=18, anchor='start', color=MUTED)
+    c.text(xs[0], 470, 'a grid of cells, 30 × 30', size=18, anchor='start', color=INK)
+    c.text(xs[0], 500, 'drawn column by column, top to bottom', size=18, anchor='start', color=MUTED)
+    # 2 · the four states of a cell
+    for k, (bar, cap, label) in enumerate([(False, False, 'empty'), (True, False, 'a bar'), (False, True, 'a cap'), (True, True, 'both')]):
+        bx, by, sz = xs[1] + 12 + k * 104, 104, 72
+        c.rect(bx, by, sz, sz, fill='#E3F1F4' if not (bar or cap) else None, stroke=LINE, width=2)
+        if bar:
+            c.line(bx, by, bx, by + sz, INK, 5, cap='butt')
+        if cap:
+            c.line(bx, by, bx + sz, by, INK, 5, cap='butt')
+        c.text(bx + sz / 2, 206, label, size=18, anchor='middle', color=INK)
+    c.text(xs[1], 250, 'every cell is one of these four', size=18, anchor='start', color=INK)
+    c.text(xs[1], 284, 'a bar | on its left, a cap ¯ on its top', size=18, anchor='start', color=INK)
+    c.text(xs[1], 470, 'two yes/no decisions per cell', size=18, anchor='start', color=INK)
+    c.text(xs[1], 500, 'Nake\'s were his own; these are ours', size=18, anchor='start', color=MUTED)
+    # 3 · the rule: the cell above decides; a bar is likelier near the diagonal
+    x3 = xs[2] + 12
+    c.rect(x3, 104, 72, 72, fill='#E3F1F4', stroke=LINE, width=2)
+    c.text(x3 + 84, 132, 'the cell above: empty', size=18, anchor='start', color=INK)
+    c.rect(x3, 176, 72, 72, stroke=LINE, width=2)
+    c.line(x3, 176, x3 + 72, 176, INK, 5, cap='butt')
+    c.text(x3 + 84, 204, 'so this one may get a cap', size=18, anchor='start', color=INK)
+    c.text(x3 + 84, 232, 'under a bar or a cap: never', size=18, anchor='start', color=MUTED)
+    mini, ms = 7, 24
+    my = 290
+    grid(x3, mini, ms, my)
+    for ww in range(mini):
+        for hh in range(mini):
+            if abs(ww - hh) <= 1 or (abs(ww - hh) == 2 and (ww + hh) % 2 == 0):
+                c.line(x3 + ww * ms, my + hh * ms, x3 + ww * ms, my + (hh + 1) * ms, INK, 3, cap='butt')
+    c.text(x3 + mini * ms + 16, my + 60, 'a bar: likelier', size=18, anchor='start', color=INK)
+    c.text(x3 + mini * ms + 16, my + 88, 'near the diagonal', size=18, anchor='start', color=INK)
+    c.text(xs[2], 500, 'one fact carried from cell to cell', size=18, anchor='start', color=MUTED)
+    # 4 · the flow: a small raster executed by the rule, the empty cells tinted
+    x4 = xs[3] + 12
+    grid(x4)
+    _walk_draw(c, _walk_cells(g, 0.8, 1966), g, x4, y0, s, width=3, tint='#E3F1F4')
+    _arrow(c, x4 + 10, y0 + g * s - 10, x4 + g * s - 10, y0 + 10, ORANGE, 4, 14)
+    c.text(xs[3], 470, 'the empty space flows up and right', size=18, anchor='start', color=INK)
+    c.text(xs[3], 500, 'so a field of caps always has gaps', size=18, anchor='start', color=MUTED)
     return c.finish(name)
 
 

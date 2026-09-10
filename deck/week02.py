@@ -131,111 +131,110 @@ function draw() {
 function restart() { randomSeed(seed); background(255); r = 0; }
 function mousePressed() { seed = floor(random(1e6)); restart(); }"""
 
-WALK_CODE = """const n = 20, s = 28, drift = [1, 3, 3, 4, 2];   // raster, drift
-let last = 0, stay;                  // the sign before this one
-function next() {                    // the chain: one step
-  let p = random();                  // one throw of the die
-  if (p < stay.value()) return last; // stay
-  if (p < 0.85) return drift[last];  // drift: the neighbour
-  return floor(random(5));           // jump: any sign
-}
-function sign(k, x, y) {             // the repertoire: five signs
-  if (k == 1 || k == 3) line(x + 4, y + 14, x + 24, y + 14);
-  if (k == 2 || k == 3) line(x + 14, y + 4, x + 14, y + 24);
-  if (k == 4) square(x + 8, y + 8, 12);
-}
+WALK_CODE = """const n = 30;                        // the raster: 30 x 30
+let capChance;                       // a slider
 function setup() {
   createCanvas(600, 600); noLoop();
-  stay = createSlider(0, 0.85, 0.6, 0.05, 'stay');
+  capChance = createSlider(0, 1, 0.8, 0.05, 'cap chance');
 }
-function draw() {                    // the walk
-  background(255); stroke(0); noFill();
-  for (let r = 0; r < n; r++)        // row by row
-    for (let c = 0; c < n; c++)      // cell by cell
-      sign(last = next(), 20 + c * s, 20 + r * s);
+function draw() {
+  background(255); stroke(0); strokeWeight(1.6);
+  let g = width / (n + 2);
+  for (let w = 0; w < n; w++) {      // column by column
+    let above = true;                // was the cell above empty?
+    for (let h = 0; h < n; h++) {    // top to bottom
+      let x = (w + 1) * g, y = (h + 1) * g;
+      let bar = random(n - 1) >= abs(w - h);  // the diagonal
+      let cap = above && random() < capChance.value();
+      if (bar) line(x, y, x, y + g);            // a bar: |
+      if (cap) line(x, y, x + g, y);            // a cap: ¯
+      above = !bar && !cap;          // what the cell below sees
+    }
+  }
 }"""
 
 WALK_EXTRA = """function mousePressed() { randomSeed(floor(random(1e6))); redraw(); }"""
 
-# The walk, watched: the chain is written into the raster cell by cell, with the repertoire, the
-# table and the counts beside it. Not editable; the code slide after it is.
-WALK_WATCH = """const n = 20, s = 26, x0 = 40, y0 = 40;   // the raster: 20 x 20 cells
-const drift = [1, 3, 3, 4, 2];            // each sign's neighbour
-let last = 0, i = 0, cells = [], counts = [0, 0, 0], stay, speed, seed = 1966;
+# The walk, watched: the raster filling column by column, the four states and their counts, the rule
+# in words. The empty cells are tinted, so the flow of the empty space shows. Not editable; the code
+# slide after it is.
+WALK_WATCH = """const n = 30, x0 = 40, y0 = 60, g = 16;    // the raster: 30 x 30 cells
+let capChance, speed, i = 0, cells = [], counts = [0, 0, 0, 0], above = true, seed = 1966;
 
 function setup() {
   createCanvas(1200, 600); frameRate(30);
-  stay = createSlider(0, 0.85, 0.6, 0.05, 'stay');
-  speed = createSlider(1, 30, 3, 1, 'cells per frame');
+  capChance = createSlider(0, 1, 0.8, 0.05, 'cap chance');
+  speed = createSlider(1, 40, 6, 1, 'cells per frame');
   restart();
 }
 
-function next() {                          // the chain: one throw of the die
-  let p = random();
-  if (p < stay.value()) { counts[0]++; return last; }
-  if (p < 0.85) { counts[1]++; return drift[last]; }
-  counts[2]++; return floor(random(5));
+function state(j) {                        // the rule, for cell j: column by column, top to bottom
+  let w = floor(j / n), h = j % n;
+  if (h == 0) above = true;                // the top of a column: nothing above
+  let bar = random(n - 1) >= abs(w - h);   // likelier near the diagonal
+  let cap = above && random() < capChance.value();   // only under an empty cell
+  above = !bar && !cap;
+  return (bar ? 1 : 0) + (cap ? 2 : 0);    // 0 empty · 1 bar · 2 cap · 3 both
 }
 
-function sign(k, x, y, g) {                // the repertoire, in a cell of size g
-  if (k == 1 || k == 3) line(x + g * .15, y + g / 2, x + g * .85, y + g / 2);
-  if (k == 2 || k == 3) line(x + g / 2, y + g * .15, x + g / 2, y + g * .85);
-  if (k == 4) square(x + g * .28, y + g * .28, g * .44);
-}
-
-function cell(j, k, hi) {                  // paint cell j with sign k
-  let r = floor(j / n), c = j % n, x = x0 + c * s, y = y0 + r * s;
-  stroke(225); strokeWeight(1); fill(hi ? '#FDE3D3' : 255); square(x, y, s);
-  stroke(0); strokeWeight(1.6); noFill(); sign(k, x, y, s);
+function cell(j, k, hi) {                  // paint cell j in state k
+  let w = floor(j / n), h = j % n, x = x0 + w * g, y = y0 + h * g;
+  noStroke(); fill(hi ? '#FDE3D3' : k == 0 ? '#E3F1F4' : 255); rect(x, y, g, g);
+  stroke(225); strokeWeight(1); noFill(); rect(x, y, g, g);
+  stroke(0); strokeWeight(1.6);
+  if (k & 1) line(x, y, x, y + g);
+  if (k & 2) line(x, y, x + g, y);
 }
 
 function draw() {
   for (let t = 0; t < speed.value() && i < n * n; t++) {
     if (i > 0) cell(i - 1, cells[i - 1], false);
-    last = next(); cells[i] = last;
-    cell(i, last, true); i++;
+    cells[i] = state(i); counts[cells[i]]++;
+    cell(i, cells[i], true); i++;
   }
   panel();
   if (i >= n * n && frameCount % 150 == 0) { seed = floor(random(1e6)); restart(); }
 }
 
-function panel() {                         // the right side: the repertoire, the table, the counts
-  noStroke(); fill(255); rect(610, 0, 590, 600);
+function panel() {                         // the right side: the four states, the rule, the walk
+  noStroke(); fill(255); rect(600, 0, 600, 600);
   textFont('JetBrains Mono'); textSize(14); textAlign(LEFT, BASELINE);
-  fill(0); text('2 · THE REPERTOIRE · five signs, 0 to 4', 640, 60);
-  for (let k = 0; k < 5; k++) {
-    let x = 640 + k * 84, y = 78;
-    noStroke(); fill(k == last ? '#FDE3D3' : 245); square(x, y, 64);
-    stroke(k == last ? '#ED6D24' : 0); strokeWeight(2); noFill(); sign(k, x, y, 64);
-    noStroke(); fill(110); text(k, x + 28, y + 86);
+  fill(0); text('2 · FOUR STATES · what a cell can be', 640, 60);
+  let names = ['empty', 'a bar', 'a cap', 'both'];
+  for (let k = 0; k < 4; k++) {
+    let x = 640 + k * 110, y = 78, cur = i > 0 && cells[i - 1] == k;
+    noStroke(); fill(cur ? '#FDE3D3' : k == 0 ? '#E3F1F4' : 245); rect(x, y, 64, 64);
+    stroke(cur ? '#ED6D24' : 0); strokeWeight(3);
+    if (k & 1) line(x, y, x, y + 64);
+    if (k & 2) line(x, y, x + 64, y);
+    noStroke(); fill(0); text(names[k], x, y + 86); fill(110); text('so far: ' + counts[k], x, y + 106);
   }
-  fill(0); text('3 · THE TABLE · the next sign depends on the last one', 640, 228);
-  let names = ['stay ', 'drift', 'jump '], p = [stay.value(), max(0, 0.85 - stay.value()), 0.15];
-  for (let k = 0; k < 3; k++) {
-    let y = 250 + k * 38;
-    noStroke(); fill(['#00544C', '#146AB5', '#943890'][k]);
-    rect(640, y, 300 * p[k], 22);
-    fill(0); text(names[k] + ' ' + nf(round(p[k] * 100), 2) + '%   so far: ' + counts[k], 958, y + 16);
-  }
-  fill(110); text('stay: the same sign · drift: its neighbour · jump: any sign', 640, 386);
-  text('neighbours: 0→1, 1→3, 2→3, 3→4, 4→2', 640, 408);
-  fill(0); text('4 · THE WALK · cell ' + i + ' of ' + (n * n) + (i >= n * n ? ' · done, new dice soon' : ''), 640, 450);
-  fill(110); text('the orange cell is the one just written · click = new dice', 640, 478);
-  text('runs of one sign become fields: drag stay, and watch', 640, 504);
+  fill(0); text('3 · THE RULE · the cell above decides', 640, 230);
+  fill(110);
+  text('a cap ¯ is drawn only under an empty cell', 640, 256);
+  text('a bar | is more likely near the diagonal', 640, 278);
+  text('the top of a column counts as empty above', 640, 300);
+  fill(0); text('4 · THE WALK · column by column, top to bottom', 640, 350);
+  fill(110);
+  text('cell ' + i + ' of ' + (n * n) + (i >= n * n ? ' · done, new dice soon' : ''), 640, 376);
+  text('empty cells are tinted: watch the empty space flow', 640, 398);
+  text('from the bottom left to the top right', 640, 420);
+  text('the orange cell is the one just drawn · click = new dice', 640, 442);
+  text('cap chance 0: bars only · 1: a cap under every empty cell', 640, 464);
 }
 
-function mousePressed() { if (mouseY < height) { seed = floor(random(1e6)); restart(); } }
+function mousePressed() { seed = floor(random(1e6)); restart(); }
 
 function restart() {
-  randomSeed(seed); i = 0; last = 0; cells = []; counts = [0, 0, 0];
+  randomSeed(seed); i = 0; cells = []; counts = [0, 0, 0, 0]; above = true;
   background(255);
   stroke(225); strokeWeight(1); noFill();
   for (let j = 0; j <= n; j++) {
-    line(x0 + j * s, y0, x0 + j * s, y0 + n * s);
-    line(x0, y0 + j * s, x0 + n * s, y0 + j * s);
+    line(x0 + j * g, y0, x0 + j * g, y0 + n * g);
+    line(x0, y0 + j * g, x0 + n * g, y0 + j * g);
   }
   noStroke(); fill(0); textFont('JetBrains Mono'); textSize(14);
-  text('1 · THE RASTER · 20 x 20', x0, y0 - 14);
+  text('1 · THE RASTER · 30 x 30', x0, y0 - 14);
 }"""
 
 KOCH_CODE = """let times;                          // how many times
@@ -523,26 +522,26 @@ S.append(content('04 · GEORG NEES · SCHOTTER · c. 1968', 'One rule. One rando
 S.append(image_full('nake-walk-through-raster-1966.jpg', '04 · FRIEDER NAKE · WALK-THROUGH-RASTER · SERIES 2, 1–4 · 1966',
                     'Look first. What repeats? What never happens? Four prints from one program: ALGOL 60 on a Zuse Graphomat Z64. Victoria and Albert Museum, E.955-2008.',
                     fit='contain', bg=WHITE,
-                    notes='Ninety seconds of looking before any explanation. Ask the room: what repeats? (fields of the same sign). What never happens? (a sign far from its neighbours appears alone only rarely). Then the four steps. Nake finished a PhD in probability theory the year after he made these.'))
+                    notes='Ninety seconds of looking before any explanation. Ask the room: what repeats? (vertical bars, horizontal caps, fields of each; a dense band along the diagonal). What never happens? (a cap directly under a drawn cell: every field of caps has gaps). Then the rule, in four steps. Nake finished a PhD in probability theory the year after he made these.'))
 
-S.append(figure_slide('04 · WALK-THROUGH-RASTER · THE RULE IN FOUR STEPS', 'A raster, a repertoire, a chain, a walk.', F.walk_breakdown(),
-                      body=['Four steps. A grid of cells. A small set of signs. A chain of signs, each one chosen from the one before it by a table of probabilities (a Markov chain). Then the chain is poured into the grid, cell by cell, from the top left.'],
-                      caption='Nake, Walk-Through-Raster, series 2.1–4, 1966. Our signs are five; Nake\'s were his own.',
-                      notes='Break it down slowly; this is the model for every generative piece. One: the raster is the stage. Two: the repertoire is the vocabulary. Three: the chain is where the aesthetic lives: the next sign depends on the last one, so runs of the same sign appear and fields form; change the table and the whole texture changes. Four: the walk writes the chain into the cells in order. The random numbers only ever choose from the table.'))
+S.append(figure_slide('04 · WALK-THROUGH-RASTER · THE RULE IN FOUR STEPS', 'Four states. The cell above decides.', F.walk_breakdown(),
+                      body=['A grid, drawn column by column, top to bottom. Every cell is one of four things: empty, a bar, a cap, or both. Two rules decide: a bar is more likely near the diagonal, and a cap can only be drawn under an empty cell. So the empty space flows up and to the right, and every field of caps has gaps.'],
+                      caption='Nake, Walk-Through-Raster, series 2.1–4, 1966. Our reading of his rule: two yes/no decisions per cell, and one fact carried from the cell above.',
+                      notes='Break it down slowly; this is the model for every generative piece. One: the raster is the stage, and the order of the walk matters: down each column, then the next. Two: four states, from two yes/no decisions. Three: the rule. The bar is chance, weighted by the distance to the diagonal. The cap depends on the cell above: only under an empty one. That one dependency is the whole texture. Four: because a cap needs an empty cell above it, and the walk goes down and then right, the empty space cannot be closed off: it flows from the bottom left to the top right, and the thick fields of caps along the diagonal always open up. Look back at the print with that in mind.'))
 
-S.append(sketch_slide('04 · WALK-THROUGH-RASTER · WATCH THE WALK', 'The chain is written into the raster, cell by cell.',
+S.append(sketch_slide('04 · WALK-THROUGH-RASTER · WATCH THE WALK', 'The raster fills up, column by column.',
                       live('walk-watch', WALK_WATCH, 1200, 600, hint='click = new dice'),
-                      body=['Left: the raster filling up. Right: the five signs, the table, and how often each throw of the die said stay, drift or jump. Drag "stay" to the right and the fields grow; to the left and the picture turns to noise.'],
-                      notes='Let it run for one full walk (about ten seconds at the default speed), then click for new dice. Point at the orange cell: that is the one being written now, and its sign was chosen from the one before it. Then move stay: at 85% the picture is stripes and blocks; at 0 every cell is a fresh throw and no fields form. That single slider is the difference between texture and noise. In the pptx this is a still; the html deck runs it.'))
+                      body=['Left: the raster filling up, top to bottom, then the next column. Empty cells are tinted: watch the empty space flow up and to the right. Right: the four states and how many of each so far. Drag the cap chance: at 0 only bars; at 1, a cap under every empty cell.'],
+                      notes='Let it run for one full walk (about five seconds at the default speed), then click for new dice. Point at the orange cell: the one just drawn. Its cap was allowed only because the cell above it was empty. Then slow it down with the speed slider and watch a field of caps form along the diagonal: every cap sits on an empty cell, so the field is full of gaps, and the tinted empty space climbs through it to the top right. Cap chance at 1: the maximum; still gaps. That is the rule guaranteeing something about the picture. In the pptx this is a still; the html deck runs it.'))
 
-S.append(code_slide('04 · WALK-THROUGH-RASTER · THE RULE, IN TWENTY LINES', 'The die, the repertoire, the walk.', WALK_CODE, F.walk_through_raster(),
-                    caption='Our execution, after Nake. The table is three lines: stay, drift, jump. In the html deck: change the signs in sign(), press Run; drag stay; click for new dice.',
-                    code_size=18, sketch=live('walk-through-raster', WALK_CODE, 600, 600, hint='click = new dice', extra=WALK_EXTRA),
-                    notes='Read it top to bottom with the room. next(): one throw of the die, three outcomes, and the outcome depends on last. sign(): five signs, drawn from lines and a square. draw(): two loops walk the raster, and at every cell the chain advances one step. On your laptop: change the square in sign() to a circle, press Run. Change 0.85 to 0.99: no more jumps. This is the shape of every generative rule: a vocabulary, a table, a walk.'))
+S.append(code_slide('04 · WALK-THROUGH-RASTER · THE RULE, IN TWENTY LINES', 'Two loops, two decisions, one fact carried down.', WALK_CODE, F.walk_through_raster(),
+                    caption='Our execution, after Nake. "above" carries one fact from cell to cell: was the cell above empty? That line is the whole texture. Change n, the diagonal test or the cap chance; Run.',
+                    code_size=19, sketch=live('walk-through-raster', WALK_CODE, 600, 600, hint='click = new dice', extra=WALK_EXTRA),
+                    notes='Read it top to bottom with the room. Two loops: columns, then rows, so the walk goes down each column. Two decisions per cell: bar, from a die weighted by the distance to the diagonal; cap, only if above is true. Then above is set for the next cell. On your laptop: abs(w - h) → w - h, Run: half the picture turns solid (the fault from the sd5913 deck). Remove "above &&", Run: caps everywhere, no gaps, the flow is gone. This is the shape of every generative rule: a walk, a few decisions, and what one cell remembers about the last.'))
 
 S.append(video('04 · HILLER & ISAACSON · UNIVERSITY OF ILLINOIS · 1957', 'A computer writes a string quartet.', 'n0njBFLQSk8',
                ['The Illiac Suite: the ILLIAC makes random notes and keeps the ones that pass the rules of counterpoint. Generate and test: the oldest move in symbolic AI.',
-                '- The fourth movement chooses notes with a Markov chain: the next note depends on the last. Nake\'s signs, nine years earlier, in sound.',
+                '- The fourth movement chooses each note from the one before it: a chain. Nake\'s cells, nine years later, each decided by the one above.',
                 '- On the playlist. Sixteen minutes, four experiments, one machine.'],
                thumb='yt/n0njBFLQSk8.jpg',
                notes='Rules make music too. The generate-and-test loop, propose at random and reject what breaks a rule, is the engine of a great deal of rule-based AI, and of most generative art. Week 6 comes back to sound with machine B. Cut if behind.'))
