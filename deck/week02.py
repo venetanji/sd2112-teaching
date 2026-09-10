@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import figures as F                                   # noqa: E402
 from deckgen import attach_reports, activity_url, build_all, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, PINK, YELLOW, YELLOWS, VIOLETS, TEALS, ORANGES, PINKS, MUTED  # noqa: E402
 from deckgen.layouts import (title, end, agenda, section, statement, quote, content, cards, question, image_full,   # noqa: E402
-                             journey, activity, video, two_col, figure_slide, code_slide, sketch_slide, live, finalize, body_paras)
+                             journey, activity, video, two_col, figure_slide, code_slide, sketch_slide, live, finalize)
 from course import SITE, PLAYLIST, GENAI, JOURNEY  # noqa: E402
 
 FOOTER = 'SD2112 · AI IN DESIGN · WEEK 02'
@@ -138,11 +138,11 @@ function draw() {
   background(255); stroke(0); strokeWeight(1.6);
   let g = width / (n + 2);
   for (let w = 0; w < n; w++) {      // column by column
-    let above = true;                // was the cell above empty?
+    let above = false;               // was the cell above empty?
     for (let h = 0; h < n; h++) {    // top to bottom
       let x = (w + 1) * g, y = (h + 1) * g;
       let bar = random(n - 1) >= abs(w - h);  // the diagonal
-      let cap = above && random() < capChance.value();
+      let cap = h > 0 && above && random() < capChance.value();
       if (bar) line(x, y, x, y + g);            // a bar: |
       if (cap) line(x, y, x + g, y);            // a cap: ¯
       above = !bar && !cap;          // what the cell below sees
@@ -168,9 +168,9 @@ function setup() {
 
 function state(j) {                        // the rule, for cell j: column by column, top to bottom
   let w = floor(j / n), h = j % n;
-  if (h == 0) above = true;                // the top of a column: nothing above
+  if (h == 0) above = false;               // the top row: nothing above, so no cap
   let bar = random(n - 1) >= abs(w - h);   // likelier near the diagonal
-  let cap = above && random() < capChance.value();   // only under an empty cell
+  let cap = h > 0 && above && random() < capChance.value();   // only under an empty cell
   above = !bar && !cap;
   return (bar ? 1 : 0) + (cap ? 2 : 0);    // 0 empty · 1 bar · 2 cap · 3 both
 }
@@ -211,7 +211,7 @@ function panel() {                         // the right side: the four states, t
   fill(110);
   text('a cap ¯ is drawn only under an empty cell', 640, 256);
   text('a bar | is more likely near the diagonal', 640, 278);
-  text('the top of a column counts as empty above', 640, 300);
+  text('never in the top row: there is nothing above it', 640, 300);
   fill(0); text('4 · THE WALK · column by column, top to bottom', 640, 350);
   fill(110);
   text('cell ' + i + ' of ' + (n * n) + (i >= n * n ? ' · done, new dice soon' : ''), 640, 376);
@@ -224,7 +224,7 @@ function panel() {                         // the right side: the four states, t
 function mousePressed() { seed = floor(random(1e6)); restart(); }
 
 function restart() {
-  randomSeed(seed); i = 0; cells = []; counts = [0, 0, 0, 0]; above = true;
+  randomSeed(seed); i = 0; cells = []; counts = [0, 0, 0, 0]; above = false;
   background(255);
   stroke(225); strokeWeight(1); noFill();
   for (let j = 0; j <= n; j++) {
@@ -265,6 +265,55 @@ function setup() {
 function draw() {
   stroke(0);
   line(0, 0, width, height);   // until you paste
+}"""
+
+ELIZA_RULES = r"""// ELIZA, 1966. A rule: what to look for, what to say back.
+const rules = [
+  ["i am (.*)",          "How long have you been $1?"],
+  ["i feel (.*)",        "Tell me more about feeling $1."],
+  ["i (want|need) (.*)", "Why do you $1 $2?"],
+  ["my (mother|father|family|boyfriend|girlfriend)",
+                         "Tell me more about your $1."],
+  ["because (.*)",       "Is that the real reason?"],
+  ["(always|never|everyone|nobody)",
+                         "Can you think of a specific example?"],
+  ["you (.*)",           "We were discussing you, not me."],
+  ["(computer|machine)", "Do computers worry you?"],
+  ["(yes|no)",           "I see. Why do you say $1?"],
+  ["(.*)",               "Please go on.", "What does that suggest to you?"],
+];
+function reply(text) {           // the whole program
+  let t = text.toLowerCase().replace(/[.,!?]/g, "");
+  for (let [pattern, ...says] of rules) {
+    let m = t.match(new RegExp(pattern));
+    if (m) return pick(says).replace(/\$(\d)/g, (_, i) => reflect(m[i]));
+  }
+}
+function setup() { noCanvas(); chat(reply); }   // the screen"""
+
+# The screen, and the two helpers the rules lean on: pick cycles through a rule's replies, reflect turns
+# "my" into "your" and "i" into "you" in what is echoed back. Only in the sketch page.
+ELIZA_SCREEN = r"""const SWAP = {i: "you", me: "you", my: "your", am: "are", you: "I", your: "my", are: "am", mine: "yours"};
+function reflect(s) { return (s || "").split(" ").map(w => SWAP[w] || w).join(" "); }
+const turn = {};
+function pick(says) { let k = says[0]; turn[k] = ((turn[k] || 0) + 1) % says.length; return says[turn[k]]; }
+function chat(reply) {
+  let old = document.getElementById("eliza"); if (old) old.remove();
+  const css = document.createElement("style");
+  css.textContent = "#eliza{position:absolute;inset:0;display:flex;flex-direction:column;background:#F4F4F2;font:15px/1.55 'JetBrains Mono',Menlo,Consolas,monospace;color:#000B1C}#log{flex:1;overflow:auto;padding:18px 22px}#log p{margin:0 0 10px;white-space:pre-wrap}#log p.eliza{color:#943890}#log p.you:before{content:'> ';color:#5C6470}#ask{padding:12px 22px;border-top:1px solid #E1E1DE;background:#fff}#in{width:100%;border:0;outline:0;font:inherit;background:transparent;color:#000B1C}";
+  document.head.appendChild(css);
+  const box = document.createElement("div"); box.id = "eliza";
+  box.innerHTML = '<div id="log"></div><form id="ask"><input id="in" autocomplete="off" placeholder="Say something, then press enter"></form>';
+  document.body.appendChild(box);
+  const log = box.querySelector("#log"), inp = box.querySelector("#in");
+  const say = (who, s) => { const p = document.createElement("p"); p.className = who; p.textContent = s; log.appendChild(p); log.scrollTop = log.scrollHeight; };
+  say("eliza", "HOW DO YOU DO. PLEASE TELL ME YOUR PROBLEM.");
+  box.querySelector("#ask").addEventListener("submit", e => {
+    e.preventDefault();
+    const s = inp.value.trim(); if (!s) return;
+    say("you", s); say("eliza", (reply(s) || "Please go on.").toUpperCase()); inp.value = "";
+  });
+  if (self !== top) inp.focus();
 }"""
 
 KOCH_CODE = """let times;                          // how many times
@@ -339,20 +388,11 @@ TEMPLATE = [
     'OUTPUT: the whole sketch.js and nothing else. Then, in one sentence, the rule the code follows.',
 ]
 
-SPEC_FILLED = [
+SPEC_TWIST = [
     'Write a p5.js sketch.', ' ',
-    'RULE: place ten points at random; the points', 'should be evenly distributed over the canvas;', 'all of the points should be connected by', 'straight lines.', ' ',
-    'CHANCE: the position of each point.', ' ',
-    'NUMBERS: canvas 600 x 600, white background,', 'black stroke 1 px.', ' ',
-    'CONSTRAINTS: plain p5.js, no libraries, draw', 'once (noLoop), randomSeed(1), nothing else.', ' ',
-    'OUTPUT: the whole sketch.js, nothing else.',
-]
-
-TWISTS = [
-    'THE SPEC, PLUS ONE TWIST', ' ',
-    'RULE: ten points at random, evenly', 'distributed, all connected by straight', 'lines — and one change of your own:', ' ',
-    '· the points sit on a circle', '· each line is as thick as it is long', '· lines are curves, bent by chance', '· thirty points; each joins its three', '  nearest neighbours only', '· the lines are coloured by their angle', '· the drawing repeats, smaller, in a corner', ' ',
-    'Write the change as a sentence a stranger', 'could execute. Then ask the model again.',
+    'RULE: place ten points at random; the points', 'should be evenly distributed over the canvas;', 'all of the points should be connected by', 'straight lines — and one twist of your own:', ' ',
+    '· the points sit on a circle', '· each line is as thick as it is long', '· lines are curves, bent by chance', '· thirty points; each joins its three', '  nearest neighbours only', '· the lines are coloured by their angle', ' ',
+    'CHANCE, NUMBERS, CONSTRAINTS, OUTPUT:', 'as in the template (slide 51).',
 ]
 
 ELIZA = [
@@ -367,14 +407,6 @@ ELIZA = [
     "It's true. I am unhappy.",
     '{violet:DO YOU THINK COMING HERE WILL HELP YOU NOT TO BE UNHAPPY}',
 ]
-
-
-def _markup_panel(s, lines, size):
-    """A two_col mono panel is code since deckgen v0.8.0: verbatim, syntax-coloured or plain. This
-    one is a transcript with ELIZA's lines tagged {violet:...}, so give it the body text's markup."""
-    panel = next(e for e in s.els if getattr(e, 'name', '') == 'code')
-    panel.paras = body_paras(lines, size, INK, lh=1.5, gap=0, font='mono')
-    return s
 
 
 def _live():
@@ -422,6 +454,11 @@ S.append(figure_slide(_linked('01 · THE CUPS', 'THE WALL', CUPS_URL), 'Your pro
                       caption='Machine A: write the rule. Machine B: show the examples. This week is the left half; next week the right.',
                       notes='Open the cup wall from the link in the eyebrow (the week-1 image upload). The average cup was the dataset\'s, not Hong Kong\'s. Then: today we stay on the left. No model learns anything today, except in the last hour, where a language model writes machine A for you.'))
 
+S.append(image_full('cups-wall.jpg', '01 · THE WALL · 87 FIRST CUPS, THEN THE 60 THAT SHIPPED',
+                    'Every cup the room uploaded last week. The top rows are the average: white, ceramic, a handle, a wooden table, and nobody asked for any of it. The bottom rows are what a prompt with a rule in it does.',
+                    fit='contain', bg=WHITE,
+                    notes='Both uploads from week 1, in order: the 87 first cups, then the 60 that shipped. Let the room look for ten seconds. Ask: who typed "wooden table"? Nobody. That is the model\'s middle. Then the bottom rows: once the prompt carried a rule (a material, a use, a mood), the pictures spread out. The picture is made by tools/classpoint/collage.py from the public activity pages, images only.'))
+
 S.append(journey('01 · THE SEMESTER', 'Where we are', JOURNEY, here=(0, 1),
                  notes='Week 2 of module one. Next week, examples; then the three tool weeks. Challenge 1 starts today; awards next week.'))
 
@@ -443,13 +480,10 @@ S.append(cards('02 · SIXTY YEARS OF MACHINE A', 'Rules were the first AI.', [
      'MYCIN: about 600 rules diagnose blood infections as well as Stanford\'s specialists. XCON: 10,000 rules configure every computer DEC sells. Then it ends: someone has to write, and maintain, every single rule.'),
 ], text_size=22, notes='Three moments. Dartmouth: the name and the bet: everything about intelligence can be described precisely enough for a machine. ELIZA: the first chatbot, and the first proof that people will talk to rules. Expert systems: rules made money, then hit the knowledge bottleneck: every rule hand-written by an engineer interviewing an expert. Machine B, learning the rules from examples, is the answer to that bottleneck. Week 3.'))
 
-S.append(_markup_panel(two_col('02 · ELIZA · 1966', 'A rule that feels like a person.',
-                 ['The script: find a keyword, apply its rule, send the rest back. No memory, no meaning.',
-                  '- **"I am X"** → "How long have you been X?"',
-                  '- **"my mother"** → "Tell me more about your family."',
-                  'Built to show how shallow this is; people confided in it anyway. Week 12: rule-based versus generative chatbots.'],
-                 ELIZA, right_size=24,
-                 notes='The transcript is from Weizenbaum\'s 1966 paper; ELIZA in capitals. Every reply is a rule you can read: "you X" becomes "why do you X". Ask: does it understand? No. Does it behave intelligently, by our week-1 definition? Enough to fool people. Intelligent-like behaviour through computation, and here you can read every line of the computation.'), ELIZA, 24))
+S.append(code_slide('02 · ELIZA · 1966', 'A rule that feels like a person.', ELIZA_RULES, F.eliza_transcript(ELIZA),
+                    caption='Weizenbaum\'s script: find a keyword, apply its rule, send the rest back. No memory, no meaning. Talk to it; then add a rule of your own and press Run' + _live() + '.',
+                    code_size=19, hint='add a rule, then Run', sketch=live('eliza', ELIZA_RULES, 600, 600, hint='type, then enter', extra=ELIZA_SCREEN),
+                    notes='In the html deck the right side is a chat: type "I am sad" and read the rule that answers. The still is the 1966 transcript from Weizenbaum\'s paper, ELIZA in capitals. Every reply is a rule you can read: "you X" becomes "we were discussing you". Ask: does it understand? No. Does it behave intelligently, by our week-1 definition? Enough to fool people. Let someone add a rule: ["i hate (.*)", "Why do you hate $1?"], Run, try it. Intelligent-like behaviour through computation, and here you can read every line of the computation. Built to show how shallow this is; people confided in it anyway. Week 12: rule-based versus generative chatbots.'))
 
 S.append(cards('02 · THE DEAL', 'Exact. Explainable. Brittle.', [
     ('EXACT', 'Same input, same output.',
@@ -571,7 +605,7 @@ S.append(sketch_slide('04 · WALK-THROUGH-RASTER · WATCH THE WALK', 'The raster
 S.append(code_slide('04 · WALK-THROUGH-RASTER · THE RULE, IN TWENTY LINES', 'Two loops, two decisions, one fact carried down.', WALK_CODE, F.walk_through_raster(),
                     caption='Our execution, after Nake. "above" carries one fact from cell to cell: was the cell above empty? That line is the whole texture' + _live() + '.',
                     code_size=19, sketch=live('walk-through-raster', WALK_CODE, 600, 600, hint='click = new dice', extra=WALK_EXTRA),
-                    notes='Read it top to bottom with the room. Two loops: columns, then rows, so the walk goes down each column. Two decisions per cell: bar, from a die weighted by the distance to the diagonal; cap, only if above is true. Then above is set for the next cell. On your laptop: abs(w - h) → w - h, Run: half the picture turns solid (the fault from the sd5913 deck). Remove "above &&", Run: caps everywhere, no gaps, the flow is gone. This is the shape of every generative rule: a walk, a few decisions, and what one cell remembers about the last.'))
+                    notes='Read it top to bottom with the room. Two loops: columns, then rows, so the walk goes down each column. Two decisions per cell: bar, from a die weighted by the distance to the diagonal; cap, only below the top row and only if above is true. Then above is set for the next cell. Point at h > 0: the top row never gets a cap, because nothing is above it; look for that in the print. On your laptop: abs(w - h) → w - h, Run: half the picture turns solid (the fault from the sd5913 deck). Remove "above &&", Run: caps everywhere, no gaps, the flow is gone. This is the shape of every generative rule: a walk, a few decisions, and what one cell remembers about the last.'))
 
 S.append(video('04 · HILLER & ISAACSON · UNIVERSITY OF ILLINOIS · 1957', 'A computer writes a string quartet.', 'n0njBFLQSk8',
                ['The Illiac Suite: the ILLIAC makes random notes and keeps the ones that pass the rules of counterpoint. Generate and test: the oldest move in symbolic AI.',
@@ -671,7 +705,7 @@ S.append(cards('07 · ANATOMY OF A SPEC', 'Five things a rule must say.', [
 ], text_size=21, notes='Five headings. They are also the five things the room\'s house rules left out. Show how LeWitt\'s forty-five words cover the first three and leave the last two to the wall. A spec for a machine needs all five.'))
 
 S.append(two_col('07 · THE TEMPLATE', 'A prompt that is a spec.',
-                 ['Copy it, fill the brackets, paste it into a language model on **genai.polyu.edu.hk**. Paste what comes back into the editor on the **sketch slide** (58) and press Run.',
+                 ['Copy it, fill the brackets, paste it into a language model on **genai.polyu.edu.hk**. Paste what comes back into the editor on the **sketch slide** (59) and press Run.',
                   '- Rule first, constraints last: models obey the end of a prompt more than the middle.',
                   '- One rule per prompt. Two ideas are two sketches.',
                   'Keep the spec. When the code drifts, paste the spec again, not the code.'],
@@ -713,41 +747,41 @@ S.append(content('07 · ITERATE LIKE A DESIGNER', 'One change per prompt. Keep t
 
 # ───────────────────────── 08 · the exercise: one spec, one twist ─────────────────────────
 S.append(section('08', 'One spec. One twist.', f'30 minutes · in pairs · the sketch slide · {GENAI}', bg=YELLOWS[0],
-                 notes='The one exercise of the day, in pairs, one laptop per pair. LeWitt\'s forty-five words, cut to ten points, executed by a language model; then a twist of your own, iterated until the picture is the one you meant; then one upload per pair with the spec as the caption. Nicolò keeps time; the other three TAs walk.'))
+                 notes='The one exercise of the day, in pairs, one laptop per pair. Step 1: LeWitt\'s forty-five words, cut to ten points, plus a twist of the pair\'s own, executed by a language model on the sketch slide. Step 2: a rule and a spec entirely their own, iterated until the picture is the one they meant; one upload per pair with the spec as the caption. Nicolò keeps time; the other three TAs walk.'))
 
-S.append(activity('1 — THE SPEC', 8, 'Let the machine execute it.',
-                  ['Put the spec on the right into a language model on **genai.polyu.edu.hk**, then paste the code into the editor on the **next slide** and press Run.',
+S.append(activity('1 — LEWITT, WITH A TWIST', 10, 'Let the machine execute it.',
+                  ['Put the spec on the right into a language model on **genai.polyu.edu.hk**, with **one twist of your own**: pick one, or invent one. Paste the code into the editor on the **next slide** and press Run.',
                    'If it fails, paste the error back, word for word. Then read the code: **what did the machine decide that the words left open?**'],
-                  panel=SPEC_FILLED, panel_size=22, bg=YELLOWS[0],
-                  notes='Eight minutes. Expect all four failure modes: added colour, an invented function, a dropped seed, and the random-versus-evenly decision made silently. The TAs help with pasting errors back. The reading question is the point; make every pair answer it out loud to each other. Most pairs run first time; a fifth need one error pasted back.'))
+                  panel=SPEC_TWIST, panel_size=22, bg=YELLOWS[0],
+                  notes='Ten minutes, like last week\'s cups: the same words for everyone, plus one sentence each, so the wall does not look alike. Expect all four failure modes: added colour, an invented function, a dropped seed, and the random-versus-evenly decision made silently. The TAs help with pasting errors back. The reading question is the point; make every pair answer it out loud to each other.'))
 
 S.append(code_slide('08 · YOUR SKETCH', 'Paste the code here. Run it.', YOUR_SKETCH, F.sketch_placeholder(),
                     caption='The editor keeps what you paste, even after a reload. An error shows under the box: paste it back to the model, word for word. Come back here for every version' + _live() + '.',
                     hint='ctrl+enter runs it · Reset = the starter', sketch=live('your-sketch', YOUR_SKETCH, 600, 600, hint='your sketch'),
                     notes='The pair\'s workbench for the rest of the class: the model\'s code goes in the box, Run draws it, the errors show under the box. Nothing to install and nothing to log into; the code survives a reload. From the pptx or the PDF the caption links to this slide in the html deck. The TAs: a pair whose box shows red text pastes that text back to the model.'))
 
-S.append(activity('2 — THE TWIST', 12, 'Change one thing. Iterate.',
-                  ['LeWitt executed exactly is a boring picture, and every pair has the same one. Add **one twist** to the rule: pick from the right, or invent your own. Write it as a sentence. Ask the model again.',
-                   'Run it on the sketch slide. Look. Fix the **spec**, not the code, until the picture is the one you meant. Keep v1, v2, v3.'],
-                  panel=TWISTS, panel_size=22, bg=YELLOWS[1],
-                  notes='Twelve minutes. The twist is where the room stops looking alike: push every pair to a different one. One change per prompt; if the code drifts, paste the spec again. Push for precision on the chance: "a random amount" is not a spec; "up to 20 px" is. When a pair is happy, they write the whole spec, twist included, as the caption of their upload. This is the start of Challenge 1.'))
+S.append(activity('2 — YOUR OWN RULE', 12, 'Your rule. Your spec. From scratch.',
+                  ['Now a rule that is entirely yours: **one rule, one random number**, in the template on the right, in words a stranger could execute. Not Schotter, not LeWitt.',
+                   'Ask the model, run it on the sketch slide, look. Fix the **spec**, not the code, until the picture is the one you meant. Keep v1, v2, v3.'],
+                  panel=TEMPLATE, panel_size=21, bg=YELLOWS[1],
+                  notes='Twelve minutes. The blank template: five lines to fill, and the words are the deliverable. One change per prompt; if the code drifts, paste the spec again. Push for precision on the chance: "a random amount" is not a spec; "up to 20 px" is. When a pair is happy, the whole spec becomes the caption of their upload. This is the start of Challenge 1.'))
 
-S.append(question('image_upload', 'One per pair. The picture, and the words that made it.',
-                  hint='Caption: the spec, twist included, word for word.',
+S.append(question('image_upload', 'One per pair. Your rule: the picture, and the words that made it.',
+                  hint='Caption: your spec, word for word.',
                   eyebrow_text='08 · CAPTURE · IMAGE UPLOAD · ONE PER PAIR',
                   cp={'type': 'image_upload', 'hide_names': False, 'caption_required': True},
-                  notes='One image per pair, about 55. Put the wall on screen: the same forty-five words, plus one sentence each, and no two pictures alike. Read two captions aloud and ask the room to guess the picture before showing it. Where the guess fails, the spec failed. Download the submissions: the specs come back in week 4 as the first briefs.'))
+                  notes='One image per pair, about 55: the pair\'s own rule. Put the wall on screen: fifty-five rules, no two alike. Read two captions aloud and ask the room to guess the picture before showing it. Where the guess fails, the spec failed. Download the submissions: the specs come back in week 4 as the first briefs.'))
 
 S.append(content('08 · WHAT JUST HAPPENED', 'You wrote the rule. The machine executed it.',
                  ['The model: it did what you said, not what you meant. Machine B translated your words into machine A, and machine A has no judgement to add.',
                   'The code: exact, repeatable with a seed, and readable. You could point at the line that decided. Next week: the machine that cannot say why.',
-                  'The twist: one sentence changed the whole wall. The design was in the words, and the words were yours.',
+                  'The twist, then your own rule: one sentence changed the wall, and then the wall was yours. The design was in the words.',
                   '**The machine drew every line. You wrote the rule. That was the design.**'],
                  body_size=32,
                  notes='Mirror of the whole class. One spec, one executor that is a machine that writes machines, and the design was in the words every time. Say the last line slowly; it is last week\'s last line with one word changed.'))
 
 S.append(cards('08 · CHALLENGE 1 · DUE BEFORE WEEK 3', 'A picture from rules.', [
-    ('THE RULE', 'One rule, one random number.', 'Your own picture: not Schotter, not LeWitt. Start from today\'s twist, or from scratch.'),
+    ('THE RULE', 'One rule, one random number.', 'Your own picture: not Schotter, not LeWitt. Start from the rule your pair wrote today, or from scratch.'),
     ('THE SPEC', 'Words first.', 'A stranger, or a model, could execute it. Keep it: it is the caption today and evidence in your reflection.'),
     ('THE SKETCH', 'p5.js, in the slide or anywhere.', 'Written by you, by a model, or both: say which. The code as a text file plus a screenshot, on Blackboard.'),
     ('THE VOTE', 'Bring it next week.', 'The room votes; the winners get shown and a participation star. The TAs help 30 minutes before and after class.'),

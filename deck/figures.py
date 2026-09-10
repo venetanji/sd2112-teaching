@@ -359,12 +359,12 @@ def schotter_variations(name='schotter-variations', w=1680, h=640):
 def _walk_cells(n, cap_chance, seed):
     """The rule of Walk-Through-Raster as we execute it (after Nake, and after the 2025 pfad script):
     column by column, top to bottom. A cell is one of four things: empty, a bar |, a cap ¯, or both.
-    A bar is likelier the nearer the cell is to the diagonal; a cap is drawn only under an empty cell
-    (the top of a column counts as empty above). Returns {(w, h): (bar, cap)}."""
+    A bar is likelier the nearer the cell is to the diagonal; a cap is drawn only under an empty cell,
+    so never in the top row, which has nothing above it. Returns {(w, h): (bar, cap)}."""
     rnd = random.Random(seed)
     cells = {}
     for w in range(n):
-        above = True
+        above = False
         for h in range(n):
             bar = rnd.uniform(0, n - 1) >= abs(w - h)
             cap = above and rnd.random() < cap_chance
@@ -500,6 +500,24 @@ def lsystem_growth(name='lsystem', w=1680, h=560):
         c.text(cx, 546, f'n = {n} · {s.count("F")} lines', size=18, anchor='middle', color=INK)
     c.text(0, 30, 'F → F[+F]F[-F]F', size=22, anchor='start', color=ORANGE)
     c.text(w, 30, 'start with one F · turn 25.7° · rewrite n times', size=18, anchor='end', color=MUTED)
+    return c.finish(name)
+
+
+# ───────────────────────── ELIZA's 1966 transcript: the still of the live chat ─────────────────────────
+def eliza_transcript(lines, name='eliza', w=600, h=600):
+    """The conversation from Weizenbaum's paper, drawn like the chat in the html deck: ELIZA's lines
+    (tagged {violet:...} in the deck) in violet capitals, the patient's after a prompt."""
+    import re, textwrap
+    c = Canvas(w, h, bg='#F4F4F2')
+    y = 40
+    for line in lines:
+        m = re.fullmatch(r'\{violet:(.*)\}', line)
+        eliza = bool(m)
+        text = m.group(1) if m else '> ' + line
+        for part in textwrap.wrap(text, 46, subsequent_indent='  ' if not eliza else ''):
+            c.text(24, y, part, size=17, anchor='start', color=VIOLET if eliza else INK)
+            y += 26
+        y += 8
     return c.finish(name)
 
 
