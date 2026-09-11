@@ -15,6 +15,7 @@ editable there: change a number, press Run, see the picture change.
 import json
 import sys
 from pathlib import Path
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -267,39 +268,30 @@ function draw() {
   line(0, 0, width, height);   // until you paste
 }"""
 
-ELIZA_RULES = r"""// ELIZA, 1966. A rule: what to look for, what to say back.
+ELIZA_RULES = r"""// ELIZA, 1966: Weizenbaum's DOCTOR script, running as he wrote it.
+// A rule: a keyword, its rank, then for each shape of sentence the
+// answers. * matches anything; (2) says what the second * matched.
 const rules = [
-  ["i am (.*)",          "How long have you been $1?"],
-  ["i feel (.*)",        "Tell me more about feeling $1."],
-  ["i (want|need) (.*)", "Why do you $1 $2?"],
-  ["my (mother|father|family|boyfriend|girlfriend)",
-                         "Tell me more about your $1."],
-  ["because (.*)",       "Is that the real reason?"],
-  ["(always|never|everyone|nobody)",
-                         "Can you think of a specific example?"],
-  ["you (.*)",           "We were discussing you, not me."],
-  ["(computer|machine)", "Do computers worry you?"],
-  ["(yes|no)",           "I see. Why do you say $1?"],
-  ["(.*)",               "Please go on.",
-                         "What does that suggest to you?"],
+  ["remember", 5, [
+    ["* i remember *", ["Do you often think of (2) ?",
+                        "Why do you remember (2) just now ?"]],
+    ["* do you remember *", ["Did you think I would forget (2) ?",
+                             "What about (2) ?"]]]],
+  ["computer", 50, [
+    ["*", ["Do computers worry you ?",
+           "Why do you mention computers ?"]]]],
+  ["xnone", 0, [                      // when nothing else matches
+    ["*", ["I'm not sure I understand you fully.",
+           "Please go on."]]]],
 ];
-function reply(text) {           // the whole program
-  let t = text.toLowerCase().replace(/[.,!?]/g, "");
-  for (let [pattern, ...says] of rules) {
-    let m = t.match(new RegExp(pattern));
-    if (m) return pick(says)
-      .replace(/\$(\d)/g, (_, i) => reflect(m[i]));
-  }
-}
-function setup() { noCanvas(); chat(reply); }   // the screen"""
+function setup() {
+  noCanvas();
+  elizaKeywords.unshift(...rules);   // yours go first
+  chat(new ElizaBot());             // the screen on the right
+}"""
 
-# The screen, and the two helpers the rules lean on: pick cycles through a rule's replies, reflect turns
-# "my" into "your" and "i" into "you" in what is echoed back. Only in the sketch page.
-ELIZA_SCREEN = r"""const SWAP = {i: "you", me: "you", my: "your", am: "are", you: "I", your: "my", are: "am", mine: "yours"};
-function reflect(s) { return (s || "").split(" ").map(w => SWAP[w] || w).join(" "); }
-const turn = {};
-function pick(says) { let k = says[0]; turn[k] = ((turn[k] || 0) + 1) % says.length; return says[turn[k]]; }
-function chat(reply) {
+# The screen: a log and one line to type in; the bot is elizabot's. Only in the sketch page.
+ELIZA_SCREEN = r"""function chat(bot) {
   let old = document.getElementById("eliza"); if (old) old.remove();
   const css = document.createElement("style");
   css.textContent = "#eliza{position:absolute;inset:0;display:flex;flex-direction:column;background:#F4F4F2;font:15px/1.55 'JetBrains Mono',Menlo,Consolas,monospace;color:#000B1C}#log{flex:1;overflow:auto;padding:18px 22px}#log p{margin:0 0 10px;white-space:pre-wrap}#log p.eliza{color:#943890}#log p.you:before{content:'> ';color:#5C6470}#ask{padding:12px 22px;border-top:1px solid #E1E1DE;background:#fff}#in{width:100%;border:0;outline:0;font:inherit;background:transparent;color:#000B1C}";
@@ -309,14 +301,24 @@ function chat(reply) {
   document.body.appendChild(box);
   const log = box.querySelector("#log"), inp = box.querySelector("#in");
   const say = (who, s) => { const p = document.createElement("p"); p.className = who; p.textContent = s; log.appendChild(p); log.scrollTop = log.scrollHeight; };
-  say("eliza", "HOW DO YOU DO. PLEASE TELL ME YOUR PROBLEM.");
+  say("eliza", bot.getInitial().toUpperCase());
   box.querySelector("#ask").addEventListener("submit", e => {
     e.preventDefault();
     const s = inp.value.trim(); if (!s) return;
-    say("you", s); say("eliza", (reply(s) || "Please go on.").toUpperCase()); inp.value = "";
+    say("you", s); say("eliza", bot.transform(s).toUpperCase()); inp.value = "";
+    if (bot.quit) { inp.disabled = true; inp.placeholder = "It said goodbye. Run starts it again."; }
   });
   if (self !== top) inp.focus();
 }"""
+
+# Weizenbaum's script, whole: elizabot.js, Norbert Landsteiner's 2005 port of the 1966 rules (free software,
+# provided as is; the files, header and all, in deck/vendor/elizabot/). It runs in the sketch page, under the
+# panel's rules, which go first.
+_VENDOR = Path(__file__).resolve().parent / 'vendor' / 'elizabot'
+# elizabot looks for its tables on the window; the sketch keeps them in its own scope, so the window is pointed at them.
+ELIZA_GLUE = "Object.assign(self, {elizaInitials, elizaFinals, elizaQuits, elizaPres, elizaPosts, elizaSynons, elizaKeywords, elizaPostTransforms});"
+ELIZA_EXTRA = '\n'.join([(_VENDOR / 'elizabot.js').read_text(encoding='utf-8'),
+                         (_VENDOR / 'elizadata.js').read_text(encoding='utf-8'), ELIZA_GLUE, ELIZA_SCREEN])
 
 KOCH_CODE = """let times;                          // how many times
 function setup() {
@@ -349,6 +351,37 @@ window._kochTimer = setInterval(function () {
   times.value((times.value() + 1) % 7);
   times.elt.dispatchEvent(new Event('input'));   // the bar's label, and a redraw
 }, 1100);"""
+
+MANDEL_CODE = """let steps;                          // how long we wait: a slider
+let cx = -0.6, cy = 0, w = 3;       // the window: centre, width
+function setup() {
+  createCanvas(600, 400); pixelDensity(1); noLoop();
+  steps = createSlider(10, 400, 60, 10, 'steps');
+}
+function draw() {
+  let n = steps.value(); loadPixels();
+  for (let px = 0; px < width; px++)
+    for (let py = 0; py < height; py++) {
+      let a = cx + (px - width / 2) * w / width;   // the point c
+      let b = cy + (py - height / 2) * w / width;
+      let x = 0, y = 0, k = 0;                     // z starts at 0
+      while (x * x + y * y < 4 && k < n) {         // z = z² + c
+        let t = x * x - y * y + a; y = 2 * x * y + b; x = t; k++;
+      }
+      let v = k == n ? 0 : 255 * sqrt(k / n);   // how soon it left
+      let i = 4 * (px + py * width);
+      pixels[i] = v * .3; pixels[i+1] = v * .6; pixels[i+2] = v;
+      pixels[i+3] = 255;
+    }
+  updatePixels();
+}"""
+
+# A click zooms in on the point under the mouse: the same rule, twice as close.
+MANDEL_EXTRA = """function mousePressed() {
+  cx += (mouseX - width / 2) * w / width;      // the centre moves to the click
+  cy += (mouseY - height / 2) * w / width;
+  w /= 2; redraw();                            // and we look twice as close
+}"""
 
 LEWITT_CODE = """const n = 50;                          // fifty points
 let pts = [];
@@ -473,6 +506,24 @@ S.append(figure_slide('02 · A RULE', 'If this, then that. Nothing else.', F.dec
                       caption='Symbolic AI: knowledge written down as rules, applied by a program. Exact, explainable, and it has never heard of the Tulip chair.',
                       notes='Three questions in a row decide "chair". Walk the room through it. Then the pedestal chair: one leg, and the rule says no. You can add a rule for it, and then a beanbag arrives. Every fix is another rule written by hand. Hold that thought until the expert systems.'))
 
+S.append(content('02 · IMMANUEL KANT · 1781 · ANALYTIC, SYNTHETIC', 'Two kinds of true.',
+                 ['Kant, 1781: an **analytic** judgement is true by the meaning of its words. "A brother is a male sibling." Nothing new is learned.',
+                  'A **synthetic** one adds what the words did not contain. "Kevin and Bob are brothers." You have to go and look.',
+                  'Machine A is analytic through and through: it unpacks what its rules already contain, faster than we can, and nothing else.',
+                  'Analytic or synthetic? All bachelors are unmarried. All bachelors are wealthy. All mammals are animals. If it is cloudy it might rain. 2 + 2 = 4.'],
+                 image='kant-becker-1768.jpg', fit='cover', body_size=27,
+                 caption='Immanuel Kant, by Johann Gottlieb Becker, 1768. Public domain, Wikimedia Commons.',
+                 notes='Back from the 2025 deck. Read the two definitions, then run the five sentences with the room: unmarried bachelors, analytic; wealthy bachelors, synthetic; mammals are animals, analytic; cloudy and rain, synthetic; 2 + 2 = 4 is the trap: Kant himself called arithmetic synthetic a priori, 4 is not hidden inside "2 + 2", you have to construct it. Let them argue for a minute. Then the point for the course: a rule-based machine only ever unpacks its rules; a designer\'s judgement about a chair or a cup adds something the brief did not contain. Machine B, next week, is the attempt to get the synthetic from data.'))
+
+S.append(content('02 · ALAN TURING · 1950 · THE IMITATION GAME', 'Can machines think? Ask a better question.',
+                 ['"I propose to consider the question, Can machines think?" Turing, 1950. Thinking is too vague to test, so he swaps the question for a game.',
+                  '- An interrogator types questions to two hidden players, a person and a machine. If the interrogator cannot tell which is which, the machine has done well.',
+                  '- The test looks at behaviour, never at the insides. It is our week-1 definition of intelligence turned into an experiment.',
+                  '- ELIZA, sixteen years later, is the first program people mistook for a person. Two slides on, its insides.'],
+                 figure=F.imitation_game(), body_size=28,
+                 caption='A. M. Turing, "Computing Machinery and Intelligence", Mind 59 (236), October 1950. doi:10.1093/mind/LIX.236.433',
+                 notes='Back from the 2025 deck. Turing, 1936: the machine that follows rules exactly. Turing, 1950: the question of thinking replaced by the imitation game, because "thinking" cannot be defined and behaviour can be judged. The same paper answers Lady Lovelace\'s objection from week 1 ("the machine can only do what we tell it"): a machine can surprise its programmer, and we rarely know all that we told it. Ask the room: would you know? Then ELIZA, which no one designed to pass the test, and which people talked to as a person anyway. Nobody has settled whether the test measures the machine or the judge.'))
+
 S.append(cards('02 · SIXTY YEARS OF MACHINE A', 'Rules were the first AI.', [
     ('1956 · DARTMOUTH', 'AI gets its name.',
      'McCarthy, Minsky, Shannon and Rochester spend a summer on "making machines use language, form abstractions and concepts". Newell and Simon bring the Logic Theorist: a program that proves theorems.'),
@@ -482,10 +533,10 @@ S.append(cards('02 · SIXTY YEARS OF MACHINE A', 'Rules were the first AI.', [
      'MYCIN: about 600 rules diagnose blood infections as well as Stanford\'s specialists. XCON: 10,000 rules configure every computer DEC sells. Then it ends: someone has to write, and maintain, every single rule.'),
 ], text_size=22, notes='Three moments. Dartmouth: the name and the bet: everything about intelligence can be described precisely enough for a machine. ELIZA: the first chatbot, and the first proof that people will talk to rules. Expert systems: rules made money, then hit the knowledge bottleneck: every rule hand-written by an engineer interviewing an expert. Machine B, learning the rules from examples, is the answer to that bottleneck. Week 3.'))
 
-S.append(code_slide('02 · ELIZA · 1966', 'A rule that feels like a person.', ELIZA_RULES, F.eliza_transcript(ELIZA),
-                    caption='Weizenbaum\'s script: find a keyword, apply its rule, send the rest back. No memory, no meaning. Talk to it; then add a rule of your own and press Run' + _live() + '.',
-                    code_size=18, hint='add a rule, then Run', sketch=live('eliza', ELIZA_RULES, 600, 600, hint='type, then enter', extra=ELIZA_SCREEN),
-                    notes='In the html deck the right side is a chat: type "I am sad" and read the rule that answers. The still is the 1966 transcript from Weizenbaum\'s paper, ELIZA in capitals. Every reply is a rule you can read: "you X" becomes "we were discussing you". Ask: does it understand? No. Does it behave intelligently, by our week-1 definition? Enough to fool people. Let someone add a rule: ["i hate (.*)", "Why do you hate $1?"], Run, try it. Intelligent-like behaviour through computation, and here you can read every line of the computation. Built to show how shallow this is; people confided in it anyway. Week 12: rule-based versus generative chatbots.'))
+S.append(code_slide('02 · ELIZA · 1966 · ELIZABOT.JS BY N. LANDSTEINER, 2005', 'A rule that feels like a person.', ELIZA_RULES, F.eliza_transcript(ELIZA),
+                    caption='Weizenbaum\'s script, whole: the strongest keyword wins, the sentence is taken apart and put back in an answer. Talk to it, add a rule, press Run' + _live() + '.',
+                    code_size=18, hint='add a rule, then Run', sketch=live('eliza', ELIZA_RULES, 600, 600, hint='type, then enter', extra=ELIZA_EXTRA),
+                    notes='In the html deck the right side is a chat running Weizenbaum\'s whole DOCTOR script (elizabot.js, Landsteiner\'s port of the rules in the 1966 paper): type "I am sad", then "my mother hates me", and watch it remember. The still is the 1966 transcript from the paper, ELIZA in capitals. The left side shows three of the rules as the script writes them: a keyword, a rank (the strongest keyword in the sentence wins), and for each shape of sentence the answers; (2) puts back what the second star matched; "goto" borrows another keyword\'s answers. Ask: does it understand? No. Does it behave intelligently, by our week-1 definition? Enough that people confided in it, which is why Weizenbaum wrote the book against it. Let someone add a rule at the top of the list: ["mondays", 9, [["*", ["Why do you hate mondays ?"]]]], Run, then say "I hate mondays". Intelligent-like behaviour through computation, and here you can read every line of it. Week 12: rule-based versus generative chatbots.'))
 
 S.append(cards('02 · THE DEAL', 'Exact. Explainable. Brittle.', [
     ('EXACT', 'Same input, same output.',
@@ -541,6 +592,15 @@ S.append(video('03 · KAPROW · 1967 · PASADENA 2008 · BERLIN 2015', 'Instruct
 S.append(quote('"The idea becomes a machine that makes the art."',
                'Sol LeWitt, Paragraphs on Conceptual Art, Artforum, June 1967', size=96,
                notes='The full sentence: "When an artist uses a conceptual form of art, it means that all of the planning and decisions are made beforehand and the execution is a perfunctory affair. The idea becomes a machine that makes the art." Machine A, in a sentence, from an artist who never touched a computer.'))
+
+S.append(image_full('lewitt-splat-caixaforum-2001.jpg', '03 · SOL LEWITT · SPLAT · 2001 · CAIXAFORUM BARCELONA',
+                    'A wall drawing: LeWitt wrote the instruction and signed a certificate; assistants drew it on this wall, and can draw it again on any other. Photo: Ardfern, 2014, CC BY-SA 3.0, Wikimedia Commons.',
+                    notes='Two real walls before the sentence. LeWitt did not paint this: he wrote the rule, chose the colours and the wall, and a crew of drafters executed it, as crews did for more than 1,200 wall drawings from 1968 on. The work is the instruction and a certificate; the wall can be painted over and the drawing made again somewhere else. That is what "the idea becomes a machine that makes the art" means in practice.'))
+
+S.append(image_full('lewitt-wall-drawing-pompidou-metz-2012.jpg', '03 · SOL LEWITT · WALL DRAWINGS · CENTRE POMPIDOU-METZ · 2012',
+                    'Lines on a black wall, drawn by hand from a written rule five years after his death: the drawing needs the rule, not the artist. Photo: Jean-Pierre Dalbéra, CC BY 2.0, Wikimedia Commons.',
+                    fit='contain',
+                    notes='The Metz retrospective, 2012: every wall drawing in it was executed after LeWitt died in 2007, by drafters working from his instructions and diagrams. Point at the reader with the notebook: the rule is on the label, the execution on the wall. Next slide: one of these rules, word for word.'))
 
 S.append(statement('On a wall surface, any continuous stretch of wall, using a hard pencil, place fifty points at random. The points should be evenly distributed over the area of the wall. All of the points should be connected by straight lines.',
                    eyebrow_text='03 · SOL LEWITT · WALL DRAWING 118 · 1971 · THE WHOLE WORK', size=68, bg=PAPER,
@@ -629,6 +689,16 @@ S.append(code_slide('05 · KOCH · IN P5.JS', 'A rule that calls itself.', KOCH_
                     caption='koch() draws a line, or replaces it with four shorter koch()s. The slider is how many times; it plays by itself until you touch it. Try turning 60° into 90°' + _live() + '.',
                     code_size=20, sketch=live('koch', KOCH_CODE, 900, 300, hint='plays on its own', extra=KOCH_EXTRA),
                     notes='Recursion in ten lines: the function calls itself with n − 1 until n is 0, when it draws a line. Let it play: 0, 1, 2 … 6 times. On your laptop: change .866 to 1 (a taller peak), or dx / 2 to dx (the peak leans). Every fractal, every procedural tree in a game, every Houdini setup is this: a rule that runs on its own result.'))
+
+S.append(image_full('mandelbrot-zoom.gif', '05 · BENOÎT MANDELBROT · 1980 · THE SAME RULE AT EVERY SCALE',
+                    'A zoom into the Mandelbrot set. One rule per point, z → z² + c, and a colour for how long it holds. Nobody had seen this before a computer drew it. Animation: Wikimedia Commons, public domain.',
+                    fit='contain',
+                    notes='The gif from the 2025 deck, back. Let it run while you talk: the same picture keeps coming back, smaller, without end. Mandelbrot at IBM, 1980, made the first pictures; his 1982 book named the fractals of the Koch slide. The rule is on the next slide, and it is shorter than Koch\'s. Nobody could draw this by hand at any depth: a rule only a machine can execute is still a design.'))
+
+S.append(code_slide('05 · MANDELBROT · IN P5.JS', 'One rule per pixel. Count how long it holds.', MANDEL_CODE,
+                    caption='For every pixel, c is the point and z starts at 0: z = z² + c, again and again. Black: it never leaves. Blue: how soon it left. Click to zoom in, twice as close each time' + _live() + '.',
+                    code_size=18, sketch=live('mandelbrot', MANDEL_CODE, 600, 400, hint='click = zoom in', extra=MANDEL_EXTRA),
+                    notes='Koch was a rule on a line; this is a rule on a number, run for every pixel. Read the while loop with the room: square z, add c, count until it escapes the circle of radius 2. The colour is that count. Click into the seam between the two big bulbs: each click halves the window, and the zoom of the gif is about thirty of these. The steps slider: deeper zooms need more of them, and the edge sharpens. After forty clicks the numbers run out of digits, the one limit of the machine here.'))
 
 S.append(figure_slide('05 · LINDENMAYER · 1968', 'The same trick grows a plant.', F.lsystem_growth(),
                       body=['Rewrite every F with the rule, then rewrite the result, and again: four generations from one line. Lindenmayer, a biologist, wrote it for algae. The brackets are branches.'],
