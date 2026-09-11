@@ -574,6 +574,29 @@ def koch_curve(name='koch-4', n=4, w=900, h=300):
     return c.finish(name)
 
 
+# ───────────────────────── Turing's imitation game, 1950 ─────────────────────────
+def imitation_game(name='imitation-game', w=800, h=520):
+    """An interrogator, a wall, a machine and a person; only typed text crosses the wall."""
+    c = Canvas(w, h)
+    c.text(400, 26, 'WHICH ONE IS THE MACHINE?', size=16, anchor='middle', color=INK, weight=700)
+    c.rect(40, 170, 250, 180, fill=None, stroke=INK, width=4)
+    c.text(165, 252, 'C', size=64, color=INK, anchor='middle', weight=800, mono=False)
+    c.text(165, 300, 'THE INTERROGATOR', size=15, anchor='middle', color=MUTED)
+    c.line(400, 50, 400, 480, INK, 10)
+    c.text(400, 506, 'A WALL · ONLY TYPED TEXT CROSSES IT', size=14, anchor='middle', color=MUTED)
+    c.rect(510, 60, 250, 170, fill=None, stroke=ORANGE, width=4)
+    c.text(635, 137, 'A', size=64, color=ORANGE, anchor='middle', weight=800, mono=False)
+    c.text(635, 185, 'A MACHINE', size=15, anchor='middle', color=MUTED)
+    c.rect(510, 290, 250, 170, fill=None, stroke=TEAL, width=4)
+    c.text(635, 367, 'B', size=64, color=TEAL, anchor='middle', weight=800, mono=False)
+    c.text(635, 415, 'A PERSON', size=15, anchor='middle', color=MUTED)
+    _arrow(c, 300, 230, 500, 135, INK, 3)      # questions, typed
+    _arrow(c, 300, 290, 500, 385, INK, 3)
+    _arrow(c, 500, 165, 300, 250, MUTED, 3)    # answers, typed
+    _arrow(c, 500, 355, 300, 270, MUTED, 3)
+    return c.finish(name)
+
+
 # ───────────────────────── a variable font: one letter, one number ─────────────────────────
 def weight_ramp(name='weight-ramp', w=1680, h=300):
     from PIL import ImageFont
