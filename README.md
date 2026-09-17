@@ -24,14 +24,14 @@ Push (or merge) to the `staging` branch. **Build staging** builds everything and
 
 | Path | What |
 |---|---|
-| `deck/week01.py`, `deck/week02.py` | **The slides of each week as one Python spec**: text, speaker notes, ClassPoint activities, live p5.js sketches, in the order the class runs. Edit here; every output updates. |
+| `deck/week01.py`, `deck/week02.py`, `deck/week03.py` | **The slides of each week as one Python spec**: text, speaker notes, ClassPoint activities, live p5.js sketches, in the order the class runs. Edit here; every output updates. |
 | `deck/course.py` | Shared course facts: links, the semester map, the week titles and module colours. |
 | `deck/assets/` | Images the decks use. Drawn figures are generated at build time; `deck/assets/sketches/` holds the stills of live sketches that have no drawn twin (`deckgen snap`, committed). |
 | `syllabus/SD2112-syllabus-2026.md` | The syllabus: team, outcomes, four modules, 13-week plan with examples and readings, assessment and rubrics, policies. Published on the site; a `.docx` is built too. |
-| `lessons/week01-lesson-plan.md`, `week02-lesson-plan.md` | Each week's run of show (three hours), the exercise in detail (*Push the machine to the edge*; *One spec, one twist*), the ClassPoint question map, contingencies. For the teaching team: `.docx` and `.html` in the artifact, **not published**. |
+| `lessons/week01-lesson-plan.md`, `week02-lesson-plan.md`, `week03-lesson-plan.md` | Each week's run of show (three hours), the exercise in detail (*Push the machine to the edge*; *One spec, one twist*; *The blend*), the ClassPoint question map, contingencies. For the teaching team: `.docx` and `.html` in the artifact, **not published**. |
 | `site/` | The site shell: landing page, vendored reveal.js and the ait4x design tokens. |
 | `deckgen.toml` | The course as the generator sees it: code, name, year, footer, which decks, what gets published. |
-| `deck/figures.py` | The drawn illustrations — chairs, typicality, perceptron, two machines, mediation; for week 2 Schotter, Walk-Through-Raster, LeWitt's points, 10 PRINT, the L-system, the spec pipeline. Built on `deckgen.figures.Canvas`. Every p5.js sketch on a slide has its Python twin here, drawing the same rule for the PDF and the PowerPoint. |
+| `deck/figures.py` | The drawn illustrations — chairs, typicality, perceptron, two machines, mediation; for week 2 Schotter, Walk-Through-Raster, LeWitt's points, 10 PRINT, the L-system, the spec pipeline; for week 3 Wittgenstein's games, Rosch's fruit, one neuron, the XOR limit, backpropagation, AlexNet's layers, the two theories, conceptual blending. Built on `deckgen.figures.Canvas`. A p5.js sketch on a slide has either a Python twin here, drawing the same rule for the PDF and the PowerPoint, or a still in `deck/assets/sketches/`. |
 | `tools/roster.py` | ClassPoint saved class from a local ID list. |
 
 Generated and git-ignored: `_site/` (the site), `export/` (pptx, manifest, docx, previews), `deck/assets/generated/`, `node_modules/`, `classpoint/*.csv`, `ids.csv`.

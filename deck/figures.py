@@ -2,7 +2,9 @@
 Drawn figures for the SD2112 decks: the chairs, the typicality scale, the perceptron,
 the two machines, the mediation diagram (week 1); the two machines with cups, if-then, LeWitt's
 points, Schotter, Walk-Through-Raster, 10 PRINT, the Koch curve, the L-system, the spec pipeline,
-the weight ramp (week 2).
+the weight ramp (week 2); Wittgenstein's games, Rosch's fruit, one neuron, the XOR limit,
+backpropagation, AlexNet's layers, the two theories and the two machines, conceptual blending,
+serial and parallel (week 3).
 Each returns (svg_markup, png_path). A figure that stands in for a live p5.js sketch draws
 the same rule the sketch runs, so the PDF and the PowerPoint show the same picture.
 
@@ -664,11 +666,462 @@ def molnar_desordres(name='molnar', n=6, s=100, margin=20, seed=1976, p=0.06):
     return c.finish(name)
 
 
+# ═════════════════════════ week 3 · learning from examples ═════════════════════════
+# Concepts as definitions and as prototypes; one neuron, the perceptron's limit, backpropagation,
+# the layers of AlexNet; serial versus parallel; and concept blending, for the activity.
+
+PAPER = '#F4F4F2'
+TEAL_TINT = '#D3E7E8'
+ORANGE_TINT = '#FBE2D3'
+VIOLET_TINT = '#E9D9EA'
+
+
+def _dashed(c, x1, y1, x2, y2, color=MUTED, width=2, dash=10, gap=8):
+    dx, dy = x2 - x1, y2 - y1
+    length = math.hypot(dx, dy)
+    if length == 0:
+        return
+    ux, uy = dx / length, dy / length
+    t = 0.0
+    while t < length:
+        e = min(t + dash, length)
+        c.line(x1 + ux * t, y1 + uy * t, x1 + ux * e, y1 + uy * e, color, width, cap='butt')
+        t = e + gap
+
+
+def _triangle(c, x, y, r, fill=None, stroke=None, width=2):
+    c.poly([(x, y - r), (x + r * 0.9, y + r * 0.7), (x - r * 0.9, y + r * 0.7)], fill=fill, stroke=stroke, width=width)
+
+
+def _lines(c, x, y, lines, size=17, gap=25, color=INK, mono=True, anchor='start'):
+    for k, t in enumerate(lines):
+        c.text(x, y + k * gap, t, size=size, color=color, mono=mono, anchor=anchor)
+
+
+# ───────────────────────── Wittgenstein: no feature runs through all the games ─────────────────────────
+GAMES = [
+    ('chess', ('board', 'winning', 'skill', 'players')),
+    ('football', ('ball', 'winning', 'skill', 'players')),
+    ('poker', ('cards', 'winning', 'luck', 'skill', 'players')),
+    ('patience', ('cards', 'winning', 'luck', 'skill')),
+    ('tennis', ('ball', 'winning', 'skill', 'players')),
+    ('ring-a-ring-a-roses', ('players',)),
+]
+FEATURES = ['board', 'ball', 'cards', 'winning', 'luck', 'skill', 'players']
+
+
+def family_resemblance(name='family-resemblance', w=1680, h=560):
+    """Wittgenstein's games as a tick matrix in which no column is full. A definition needs a full column."""
+    c = Canvas(w, h)
+    x0, col_w, y0, row_h = 330, 144, 128, 62
+    c.text(0, 40, 'WITTGENSTEIN, 1953, §66 · "CONSIDER FOR EXAMPLE THE PROCEEDINGS THAT WE CALL GAMES"', size=18, color=ORANGE)
+    for j, f in enumerate(FEATURES):
+        c.text(x0 + j * col_w + col_w / 2, 100, f, size=19, anchor='middle', color=INK)
+    for i, (game, feats) in enumerate(GAMES):
+        y = y0 + i * row_h
+        c.line(0, y + row_h - 8, x0 + len(FEATURES) * col_w, y + row_h - 8, LINE, 2, cap='butt')
+        c.text(0, y + 36, game, size=21, color=INK)
+        for j, f in enumerate(FEATURES):
+            cx = x0 + j * col_w + col_w / 2
+            if f in feats:
+                c.circle(cx, y + 28, 13, fill=ORANGE)
+            else:
+                c.circle(cx, y + 28, 5, fill=LINE)
+    y = y0 + len(GAMES) * row_h + 14
+    c.text(0, y + 28, 'in all of them?', size=19, color=MUTED)
+    for j in range(len(FEATURES)):
+        c.text(x0 + j * col_w + col_w / 2, y + 28, 'no', size=19, anchor='middle', color=MUTED)
+    c.rect(1400, 128, 280, 300, fill=PAPER)
+    _lines(c, 1424, 168, ['No column is full:', 'no feature runs', 'through every game.', ' ', 'A definition needs', 'a full column.', ' ', 'The resemblances', 'overlap and', 'criss-cross instead.'], size=18, gap=27, mono=False)
+    return c.finish(name)
+
+
+# ───────────────────────── Rosch, 1975: fruit, from the best example to the worst ─────────────────────────
+# Rank order of Rosch's goodness-of-example ratings for fruit (1 = a very good example, 7 = a very poor one),
+# a subset of her 51 items; the positions along the scale are approximate, the order is hers.
+FRUIT = [('orange', 1.07), ('apple', 1.08), ('banana', 1.15), ('pear', 1.18), ('plum', 1.37), ('strawberry', 1.61),
+         ('pineapple', 1.94), ('lemon', 2.16), ('honeydew', 2.74), ('date', 2.87), ('coconut', 3.19), ('tomato', 5.58), ('olive', 6.21)]
+
+
+def fruit_typicality(name='fruit-typicality', w=800, h=720):
+    c = Canvas(w, h)
+    x0, x1 = 230, 760
+    c.text(0, 30, 'ROSCH, 1975 · "HOW GOOD AN EXAMPLE OF A FRUIT IS THIS?"', size=15, color=ORANGE)
+    c.text(x0, 66, '1 · a very good example', size=14, color=INK)
+    c.text(x1, 66, '7 · a very poor one', size=14, color=MUTED, anchor='end')
+    for k in range(1, 8):
+        x = x0 + (k - 1) / 6 * (x1 - x0)
+        c.line(x, 78, x, 690, LINE, 1, cap='butt')
+        c.text(x, 706, str(k), size=13, anchor='middle', color=MUTED)
+    row = 46
+    for i, (fruit, r) in enumerate(FRUIT):
+        y = 106 + i * row
+        x = x0 + (r - 1) / 6 * (x1 - x0)
+        col = ORANGE if r < 1.5 else TEAL if r < 3.5 else MUTED
+        c.text(30, y + 6, f'{i + 1:2d}', size=15, color=MUTED)
+        c.text(70, y + 6, fruit, size=19, color=INK, mono=False)
+        c.line(x0, y, x, y, col, 6, cap='butt')
+        c.circle(x, y, 9, fill=col)
+    return c.finish(name)
+
+
+# ───────────────────────── one neuron: a weighted vote ─────────────────────────
+def neuron(name='neuron', w=1680, h=520):
+    c = Canvas(w, h)
+    x1, x2 = 1.1, 0.4
+    w1, w2, b = 1.6, -0.8, -1.2
+    s = x1 * w1 + x2 * w2 + b
+    ins = [(230, 150, 'height ÷ width', x1), (230, 370, 'size', x2)]
+    sx, sy = 820, 260
+    ox, oy = 1300, 260
+    c.text(0, 40, 'ONE NEURON · ROSENBLATT, 1958', size=18, color=ORANGE)
+    for (px, py, label, val), wt in zip(ins, (w1, w2)):
+        c.line(px + 40, py, sx - 62, sy, INK, 4)
+        mx, my = (px + 40 + sx - 62) / 2, (py + sy) / 2
+        c.rect(mx - 58, my - 24, 116, 48, fill=ORANGE)
+        c.text(mx, my + 8, f'× {wt:+.1f}', size=20, anchor='middle', color=INK)
+        c.circle(px, py, 40, fill=TEAL)
+        c.text(px, py + 8, f'{val:.1f}', size=22, anchor='middle', color=INK)
+        c.text(px - 60, py + 8, label, size=18, anchor='end', color=INK)
+    c.text(230, 76, 'INPUTS · THE OBJECT', size=16, anchor='middle')
+    c.circle(sx, sy, 62, fill=VIOLET)
+    c.text(sx, sy + 9, 'Σ + b', size=24, anchor='middle', color='#FFFFFF')
+    c.text(sx, sy + 110, f'b = {b:+.1f}', size=20, anchor='middle', color=INK)
+    c.text(sx, sy + 140, f'{x1:.1f}×{w1:+.1f} + {x2:.1f}×{w2:+.1f} {b:+.1f} = {s:+.2f}', size=18, anchor='middle', color=MUTED)
+    c.text(sx, 76, 'WEIGHTS · THE KNOWLEDGE', size=16, anchor='middle')
+    _arrow(c, sx + 64, sy, ox - 66, oy, INK, 4)
+    c.text((sx + ox) / 2, sy - 22, 'above 0?', size=18, anchor='middle', color=INK)
+    c.circle(ox, oy, 62, fill=ORANGE)
+    c.text(ox, oy + 9, '1', size=30, anchor='middle', color=INK)
+    c.text(ox, 76, 'GUESS', size=16, anchor='middle')
+    c.text(ox + 90, oy - 6, f'{s:+.2f} > 0', size=20, color=INK)
+    c.text(ox + 90, oy + 26, 'so: "cup"', size=20, color=INK)
+    c.text(0, 496, 'three numbers decide. learning = changing them when the guess is wrong', size=20, color=INK)
+    return c.finish(name)
+
+
+# ───────────────────────── one line cannot; two layers can ─────────────────────────
+def _xor_points(seed=11, n=9):
+    rnd = random.Random(seed)
+    out = []
+    for cx, cy, t in ((0.25, 0.25, 'A'), (0.75, 0.75, 'A'), (0.25, 0.75, 'B'), (0.75, 0.25, 'B')):
+        for _ in range(n):
+            out.append((cx + rnd.gauss(0, 0.07), cy + rnd.gauss(0, 0.07), t))
+    return out
+
+
+def _xor_panel(c, x0, y0, size, pts, lines=False):
+    c.rect(x0, y0, size, size, fill='#FFFFFF', stroke=LINE, width=2)
+
+    def sx(v):
+        return x0 + v * size
+
+    def sy(v):
+        return y0 + (1 - v) * size
+
+    if lines:
+        band = [(0, 0.35), (0.65, 1), (1, 1), (1, 0.65), (0.35, 0), (0, 0)]
+        c.poly([(sx(x), sy(y)) for x, y in band], fill=ORANGE_TINT)
+        c.line(sx(0), sy(0.35), sx(0.65), sy(1), INK, 3)
+        c.line(sx(0.35), sy(0), sx(1), sy(0.65), INK, 3)
+    for x, y, t in pts:
+        x, y = min(max(x, 0.03), 0.97), min(max(y, 0.03), 0.97)
+        if t == 'A':
+            c.circle(sx(x), sy(y), 7, fill=ORANGE)
+        else:
+            _triangle(c, sx(x), sy(y), 9, fill=TEAL)
+
+
+def xor_limit(name='xor-limit', w=1680, h=560):
+    c = Canvas(w, h)
+    pts = _xor_points()
+    size = 400
+    _xor_panel(c, 0, 70, size, pts)
+    _dashed(c, 0, 70 + size / 2, size, 70 + size / 2, MUTED, 3)
+    _dashed(c, size / 2, 70, size / 2, 70 + size, MUTED, 3)
+    _dashed(c, 0, 70 + size, size, 70, MUTED, 3)
+    c.text(0, 40, '1969 · MINSKY & PAPERT · ONE LINE CANNOT', size=18, color=ORANGE)
+    c.text(0, 520, 'A on one diagonal, B on the other: no line gets all of them right', size=17, color=INK)
+    mx = 640
+    c.text(mx, 40, '1986 · A HIDDEN LAYER, TRAINED BY BACKPROPAGATION', size=18, color=ORANGE)
+    ins = [(mx + 40, 190), (mx + 40, 350)]
+    hid = [(mx + 200, 190), (mx + 200, 350)]
+    out = (mx + 360, 270)
+    for a in ins:
+        for bnode in hid:
+            c.line(a[0], a[1], bnode[0], bnode[1], LINE, 4)
+    for bnode in hid:
+        c.line(bnode[0], bnode[1], out[0], out[1], LINE, 4)
+    for x, y in ins:
+        c.circle(x, y, 26, fill=TEAL)
+    for x, y in hid:
+        c.circle(x, y, 26, fill=VIOLET)
+    c.circle(out[0], out[1], 30, fill=ORANGE)
+    c.text(ins[0][0], 130, 'x, y', size=16, anchor='middle')
+    c.text(hid[0][0], 130, 'two lines', size=16, anchor='middle')
+    c.text(out[0], 130, 'A or B', size=16, anchor='middle')
+    _lines(c, mx, 412, ['each hidden unit is one neuron, one line each;', 'the output unit votes on their two verdicts.', 'wrong guess: the error travels backwards', 'and every weight moves a little.'], size=17, gap=24)
+    c.text(mx, 412 + 4 * 24, '(9 weights here; 60 million in AlexNet)', size=17, color=MUTED)
+    _xor_panel(c, 1280, 70, size, pts, lines=True)
+    c.text(1280, 40, 'TWO LINES · A IN THE BAND, B OUTSIDE', size=18, color=ORANGE)
+    c.text(1280, 520, 'a rule nobody wrote: "A is in the band"', size=17, color=INK)
+    return c.finish(name)
+
+
+# ───────────────────────── backpropagation: the guess goes forward, the error comes back ─────────────────────────
+def backprop(name='backprop', w=1680, h=560):
+    c = Canvas(w, h)
+    layers = [[(200, 150 + i * 110) for i in range(4)], [(560, 120 + i * 88) for i in range(5)], [(920, 205 + i * 110) for i in range(3)], [(1220, 260 + i * 110) for i in range(2)]]
+    names = ['PIXELS IN', 'HIDDEN', 'HIDDEN', 'GUESS OUT']
+    for a, b_ in zip(layers, layers[1:]):
+        for x1, y1 in a:
+            for x2, y2 in b_:
+                c.line(x1, y1, x2, y2, LINE, 2)
+    fills = [TEAL, VIOLET, VIOLET, ORANGE]
+    for layer, fill, label in zip(layers, fills, names):
+        for x, y in layer:
+            c.circle(x, y, 22, fill=fill)
+        c.text(layer[0][0], 82, label, size=15, anchor='middle')
+    c.text(1300, 266, 'chair  0.35', size=20, color=INK)
+    c.text(1300, 376, 'cup    0.65', size=20, color=INK)
+    c.rect(1420, 230, 260, 190, fill=PAPER)
+    _lines(c, 1440, 266, ['THE TRUTH: a chair', ' ', 'chair should be 1.00', 'it said 0.35', ' ', 'error: 0.65'], size=16, gap=26)
+    _arrow(c, 160, 520, 1250, 520, INK, 4)
+    c.text(700, 552, 'FORWARD · every unit sums its inputs and passes a number on · the guess comes out at the end', size=16, anchor='middle', color=INK)
+    _arrow(c, 1250, 40, 160, 40, ORANGE, 4)
+    c.text(700, 26, 'BACKWARD · the error is shared out along the same connections · every weight moves a little, in proportion to its share', size=16, anchor='middle', color=ORANGE)
+    return c.finish(name)
+
+
+# ───────────────────────── deep: the features are learned too, layer by layer ─────────────────────────
+def alexnet_layers(name='alexnet-layers', w=1680, h=560):
+    c = Canvas(w, h)
+    rnd = random.Random(2012)
+    stages = ['PIXELS', 'EDGES', 'PARTS', 'OBJECTS', 'A LABEL']
+    xs = [0, 340, 680, 1020, 1360]
+    bw, by, bh = 300, 90, 300
+    for x, t in zip(xs, stages):
+        c.text(x, 50, t, size=18, color=ORANGE)
+        c.rect(x, by, bw, bh, fill='#FFFFFF', stroke=LINE, width=2)
+    for i in range(len(xs) - 1):
+        _arrow(c, xs[i] + bw + 6, by + bh / 2, xs[i + 1] - 8, by + bh / 2, INK, 3, 10)
+    n, cell = 10, 26
+    gx, gy = xs[0] + (bw - n * cell) / 2, by + (bh - n * cell) / 2
+    for r in range(n):
+        for k in range(n):
+            g = rnd.randint(150, 235)
+            c.rect(gx + k * cell, gy + r * cell, cell - 2, cell - 2, fill=f'#{g:02x}{g:02x}{g:02x}')
+    for r in range(3):
+        for k in range(4):
+            cx, cy = xs[1] + 45 + k * 70, by + 55 + r * 95
+            a = rnd.choice((0, math.pi / 4, math.pi / 2, 3 * math.pi / 4))
+            dx, dy = 22 * math.cos(a), 22 * math.sin(a)
+            c.line(cx - dx, cy - dy, cx + dx, cy + dy, INK, 5)
+    px = xs[2]
+    c.line(px + 50, by + 60, px + 50, by + 240, INK, 6)
+    c.line(px + 40, by + 250, px + 60, by + 250, INK, 5)
+    c.rect(px + 100, by + 130, 120, 14, fill=INK)
+    c.line(px + 250, by + 240, px + 268, by + 60, INK, 7)
+    c.line(px + 238, by + 68, px + 268, by + 60, INK, 5)
+    c.text(px + 50, by + 280, 'leg', size=15, anchor='middle')
+    c.text(px + 160, by + 280, 'seat', size=15, anchor='middle')
+    c.text(px + 258, by + 280, 'back', size=15, anchor='middle')
+    draw_chair(c, xs[3] + 50, by + 40, 200, seat_h=0.45, back_h=0.6, back_angle=8, seat_w=0.62, legs=4, width=5)
+    lx = xs[4]
+    for k, (lab, p) in enumerate((('chair', 0.93), ('stool', 0.05), ('table', 0.02))):
+        y = by + 70 + k * 80
+        c.text(lx + 24, y + 6, lab, size=20, color=INK)
+        c.rect(lx + 110, y - 14, 120, 28, fill=PAPER)
+        c.rect(lx + 110, y - 14, 120 * p, 28, fill=ORANGE if k == 0 else TEAL)
+        c.text(lx + 280, y + 6, f'{p:.2f}', size=16, anchor='end', color=MUTED)
+    c.text(xs[0], 440, 'input: the pixels', size=16, color=MUTED)
+    c.text(xs[1], 440, 'layer 1 (convolutional)', size=16, color=MUTED)
+    c.text(xs[2], 440, 'layers 2 – 5 (convolutional)', size=16, color=MUTED)
+    c.text(xs[3], 440, 'layers 6 – 8 (fully connected)', size=16, color=MUTED)
+    c.text(xs[4], 440, 'output: 1,000 scores', size=16, color=MUTED)
+    c.text(0, 500, 'AlexNet, 2012: 8 layers, 60 million weights, all found from 1.2 million labelled photos.', size=20, color=INK)
+    c.text(0, 532, 'nobody wrote a rule for "edge" or "leg"; the layers became those detectors because it lowered the error', size=18, color=MUTED)
+    return c.finish(name)
+
+
+# ───────────────────────── two theories of concepts, two kinds of machine ─────────────────────────
+def theories_machines(name='theories-machines', w=1680, h=560):
+    """The 2 x 2 at 1680 x 560, so it fits a figure_slide with a caption at full scale (its box is 576 px tall)."""
+    c = Canvas(w, h)
+    x0, cw, gap = 300, 660, 24
+    y0, rh, pad = 66, 196, 30                  # two 660 x 196 cells per row, 30 px of padding inside each
+    c.text(x0 + cw / 2, 44, 'HUMANS + CONCEPTS', size=26, anchor='middle', color=INK, weight=700)
+    c.text(x0 + cw + gap + cw / 2, 44, 'MACHINES + CONCEPTS', size=26, anchor='middle', color=INK, weight=700)
+    rows = [
+        ('RULE-BASED', PAPER, ORANGE,
+         ['CLASSICAL THEORY', 'a concept is a definition:', 'necessary and sufficient conditions', 'Aristotle · Kant · the dictionary'],
+         ['GOFAI · SYMBOLIC AI', 'knowledge written down as rules,', 'applied by a program', 'Dartmouth 1956 · ELIZA · expert systems']),
+        ('ADAPTIVE', TEAL_TINT, TEAL,
+         ['PROTOTYPE THEORY', 'a concept is its best examples,', 'membership a matter of degree', 'Wittgenstein 1953 · Rosch 1975'],
+         ['CONNECTIONISM · MACHINE LEARNING', 'the knowledge is in the weights,', 'found from examples', 'Rosenblatt 1958 · Hinton 1986 · 2012 · today']),
+    ]
+    for i, (label, fill, col, left, right) in enumerate(rows):
+        y = y0 + i * (rh + gap)
+        c.text(0, y + rh / 2 + 9, label, size=26, color=col, weight=700)
+        for j, lines in enumerate((left, right)):
+            x = x0 + j * (cw + gap)
+            c.rect(x, y, cw, rh, fill=fill)
+            c.text(x + pad, y + 46, lines[0], size=24, color=col, weight=700)
+            _lines(c, x + pad, y + 90, lines[1:3], size=28, gap=36, mono=False)
+            c.text(x + pad, y + 170, lines[3], size=18, color=MUTED)
+    c.text(0, 530, 'the same two ideas, in a mind and in a machine: a rule you can read, or examples you cannot', size=22, color=INK)
+    return c.finish(name)
+
+
+# ───────────────────────── Fauconnier & Turner: two inputs, one blended space ─────────────────────────
+def blend_spaces(name='blend-spaces', w=800, h=640):
+    c = Canvas(w, h)
+    g, a, b_, bl = (400, 104), (160, 300), (640, 300), (400, 510)
+    for p, q in ((g, a), (g, b_), (a, bl), (b_, bl), (a, b_)):
+        _dashed(c, p[0], p[1], q[0], q[1], MUTED, 2)
+    c.circle(*g, 76, fill=PAPER, stroke=MUTED, width=2)
+    c.circle(*a, 104, fill=TEAL_TINT, stroke=TEAL, width=3)
+    c.circle(*b_, 104, fill=ORANGE_TINT, stroke=ORANGE, width=3)
+    c.circle(*bl, 112, fill=VIOLET_TINT, stroke=VIOLET, width=3)
+    c.text(g[0], g[1] - 8, 'GENERIC', size=16, anchor='middle', color=MUTED)
+    c.text(g[0], g[1] + 18, 'what both share', size=17, anchor='middle', color=MUTED, mono=False)
+    c.text(a[0], a[1] - 30, 'INPUT 1', size=16, anchor='middle', color=TEAL)
+    c.text(a[0], a[1] + 8, 'house', size=32, anchor='middle', color=INK, mono=False, weight=700)
+    c.text(a[0], a[1] + 40, 'lived in · stays put', size=16, anchor='middle', color=INK, mono=False)
+    c.text(b_[0], b_[1] - 30, 'INPUT 2', size=16, anchor='middle', color=ORANGE)
+    c.text(b_[0], b_[1] + 8, 'boat', size=32, anchor='middle', color=INK, mono=False, weight=700)
+    c.text(b_[0], b_[1] + 40, 'floats · moves · a crew', size=16, anchor='middle', color=INK, mono=False)
+    c.text(bl[0], bl[1] - 36, 'THE BLEND', size=16, anchor='middle', color=VIOLET)
+    c.text(bl[0], bl[1] + 6, 'houseboat', size=34, anchor='middle', color=INK, mono=False, weight=700)
+    c.text(bl[0], bl[1] + 40, 'lived in, and it floats', size=17, anchor='middle', color=INK, mono=False)
+    c.text(400, 634, 'after Fauconnier & Turner, The Way We Think, 2002', size=14, anchor='middle', color=MUTED)
+    return c.finish(name)
+
+
+# ───────────────────────── what an image model does with two concepts ─────────────────────────
+def blend_outcomes(name='blend-outcomes', w=1680, h=520):
+    c = Canvas(w, h)
+    panels = [(0, 'A COLLAGE', 'cup and chair, side by side', 'a rule can do this: both conditions, nothing new'),
+              (580, 'A BLEND', 'one thing with properties of both', 'no definition can do this; a prototype machine can'),
+              (1160, 'ONE WINS', 'the stronger prototype eats the other', 'watch for it: the middle pulls, always')]
+    for x, head, sub, foot in panels:
+        c.rect(x, 70, 520, 330, fill='#FFFFFF', stroke=LINE, width=2)
+        c.text(x, 40, head, size=18, color=ORANGE)
+        c.text(x, 440, sub, size=20, color=INK, mono=False)
+        c.text(x, 474, foot, size=16, color=MUTED)
+    # left: a cup beside a chair, both standing on the same floor line (the chair's feet and the cup's foot at y = 370)
+    draw_chair(c, 110, 130, 240, seat_h=0.5, back_h=0.6, back_angle=8, seat_w=0.62, legs=4, width=5)
+    draw_cup(c, 300, 240, 130, body_h=0.7, body_w=0.58, taper=0.1, handle=0.26, width=4)
+    # middle: a cup with legs and a back: one object, sized to stay inside the panel:
+    # the top rail reaches y = 90, the feet stand at y = 380 (the panel runs from 70 to 400)
+    size = 204
+    ox, oy = 736, 322 - size                 # the cup's foot at y = 322; the legs hang below it
+    draw_cup(c, ox, oy, size, body_h=0.62, body_w=0.62, taper=0.1, handle=0.24, width=5)
+    foot = oy + size
+    cx = ox + size * 0.4
+    wb = size * 0.62 * 0.8
+    for lx in (cx - wb / 2 + 8, cx - wb / 6, cx + wb / 6, cx + wb / 2 - 8):
+        c.line(lx, foot, lx, foot + 58, INK, 5)
+    top = foot - 0.62 * size
+    bx = cx + size * 0.31
+    c.line(bx, top, bx + 10, top - 96, INK, 6)
+    c.line(bx + 10, top - 96, bx - 40, top - 104, INK, 5)
+    # right: a chair, the cup a faint outline behind it
+    draw_cup(c, 1300, 130, 200, body_h=0.7, body_w=0.58, taper=0.1, handle=0.26, stroke=LINE, width=3)
+    draw_chair(c, 1290, 130, 240, seat_h=0.5, back_h=0.6, back_angle=8, seat_w=0.62, legs=4, width=5)
+    return c.finish(name)
+
+
+# ───────────────────────── one step at a time, or every unit at once ─────────────────────────
+def serial_parallel(name='serial-parallel', w=1680, h=520):
+    c = Canvas(w, h)
+    c.text(0, 40, 'A TURING MACHINE · ONE STEP AT A TIME', size=18, color=ORANGE)
+    for i in range(10):
+        x = i * 78
+        c.rect(x, 90, 56, 56, fill=PAPER, stroke=INK, width=2)
+        c.text(x + 28, 126, str(i + 1), size=18, anchor='middle', color=INK)
+        if i < 9:
+            _arrow(c, x + 58, 118, x + 76, 118, INK, 3, 9)
+    c.rect(0, 190, 760, 70, fill='#FFFFFF', stroke=INK, width=2)
+    for i in range(1, 14):
+        c.line(i * 54, 190, i * 54, 260, LINE, 2)
+    for i, ch in enumerate('1 0 1 1 0 0 1 0 1 1 0 1 0 0'.split()):
+        c.text(27 + i * 54, 234, ch, size=22, anchor='middle', color=INK)
+    c.text(0, 300, 'one head, one tape: the whole state is in one place, and you can read it', size=17, color=INK)
+    c.text(0, 330, 'the next step waits for this one · rules, applied in order', size=17, color=MUTED)
+    c.text(0, 400, 'exact · explainable · one thing at a time', size=18, color=INK)
+    x0 = 900
+    c.text(x0, 40, 'A NETWORK · EVERY UNIT AT ONCE', size=18, color=ORANGE)
+    rnd = random.Random(1958)
+    for r in range(4):
+        for k in range(8):
+            cx, cy = x0 + 40 + k * 100, 110 + r * 76
+            for dx in (-16, 0, 16):
+                c.line(cx + dx, cy - 44, cx + dx * 0.4, cy - 22, LINE, 2)
+            c.circle(cx, cy, 20, fill=(VIOLET, TEAL, ORANGE)[rnd.randint(0, 2)])
+            c.text(cx, cy + 6, 'Σ', size=15, anchor='middle', color='#FFFFFF')
+    c.text(x0, 420, 'thirty-two sums at once, none of them waiting: one tick for all', size=17, color=INK)
+    c.text(x0, 450, 'no state in one place, nothing to read · examples, not rules', size=17, color=MUTED)
+    c.text(x0, 500, 'fast, with thousands of small processors · opaque either way', size=18, color=INK)
+    c.text(0, 440, 'AlexNet: about 700 million multiply-adds per picture; a GPU does thousands at a time', size=15, color=MUTED)
+    return c.finish(name)
+
+# ───────────────────────── how many numbers a model holds, 1958 to today ─────────────────────────
+MODELS = [  # (year, weights, name, the count as said aloud, kind) · from the papers and model cards
+    (1958, 3, 'one neuron', '3', 'net'),
+    (1998, 6e4, 'LeNet-5', '60 thousand', 'net'),
+    (2012, 6e7, 'AlexNet', '60 million', 'net'),
+    (2019, 1.5e9, 'GPT-2', '1.5 billion', 'net'),
+    (2020, 1.75e11, 'GPT-3', '175 billion', 'net'),
+    (2022, 8.6e8, 'Stable Diffusion', '0.9 billion', 'image'),
+    (2024, 1.2e10, 'FLUX.1', '12 billion', 'image'),
+    (2024, 4.05e11, 'Llama 3.1', '405 billion', 'net'),
+    (2025, 2e10, 'Qwen-Image', '20 billion', 'image'),
+    (2026, 2e12, 'the largest', 'trillions', 'est'),
+]
+
+
+def parameter_scale(name='parameter-scale', w=1680, h=576):
+    """Ten models on a log axis: every gridline is ten times more numbers. The last dot is an estimate."""
+    c = Canvas(w, h)
+    x0, x1, y0, y1 = 220, 1660, 60, 460
+    per = (y1 - y0) / 13.0
+
+    def Y(v):
+        return y1 - math.log10(v) * per
+
+    names = {0: '1', 3: 'a thousand', 6: 'a million', 9: 'a billion', 12: 'a trillion'}
+    for k in range(0, 13):
+        y = Y(10 ** k)
+        c.line(x0, y, x1, y, LINE, 2 if k in names else 1, cap='butt')
+        if k in names:
+            c.text(x0 - 14, y + 6, names[k], size=15, anchor='end', color=MUTED)
+    c.text(0, 30, 'HOW MANY NUMBERS A MODEL HOLDS · EVERY LINE UP IS TEN TIMES MORE', size=18, color=ORANGE)
+    c.circle(1290, 26, 7, fill=TEAL)
+    c.text(1306, 32, 'language and vision', size=15, color=INK)
+    c.circle(1520, 26, 7, fill=ORANGE)
+    c.text(1536, 32, 'image models', size=15, color=INK)
+    slot = (x1 - x0) / len(MODELS)
+    for i, (year, v, nm, count, kind) in enumerate(MODELS):
+        x, y = x0 + slot * (i + 0.5), Y(v)
+        _dashed(c, x, y1, x, y + 12, LINE, 2, 5, 6)
+        if kind == 'est':
+            c.circle(x, y, 10, fill='#FFFFFF', stroke=INK, width=3)
+        else:
+            c.circle(x, y, 10, fill=TEAL if kind == 'net' else ORANGE)
+        c.text(x, y - 20, count, size=17, anchor='middle', color=INK)
+        c.text(x, y1 + 34, nm, size=17, anchor='middle', color=INK, mono=False, weight=600)
+        c.text(x, y1 + 58, str(year) if kind != 'est' else '2026, not published', size=15, anchor='middle', color=MUTED)
+    c.text(0, 556, 'counts from the papers and model cards; the last one is an estimate: the labs no longer say', size=15, color=MUTED)
+    return c.finish(name)
+
+
 if __name__ == '__main__':
     from deckgen import configure
     configure()
     for fn in (parametric_chairs, typicality_scale, perceptron, two_machines, mediation,
                decision_tree, lewitt_118, lewitt_random_vs_even, lewitt_seeds, lewitt_ten, lewitt_wall, lsystem_growth,
-               molnar_desordres, schotter, schotter_variations, spec_pipeline, ten_print, walk_breakdown, walk_through_raster, weight_ramp):
+               molnar_desordres, schotter, schotter_variations, spec_pipeline, ten_print, walk_breakdown, walk_through_raster, weight_ramp,
+               family_resemblance, fruit_typicality, neuron, xor_limit, backprop, alexnet_layers, theories_machines, blend_spaces, blend_outcomes, serial_parallel, parameter_scale):
         svg, png = fn()
         print(png, len(svg))
