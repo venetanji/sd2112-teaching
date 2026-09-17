@@ -11,7 +11,8 @@ backpropagation, parallel calculation and the GPUs that made 2012 possible, mode
 timeline, concept blending, and the activity: a concept as a picture, then two concepts blended in
 pairs, then four in fours, with the image editors on PolyU GenAI that take reference images. Two
 editable p5.js sketches: a perceptron that finds its own line, and the same rule painted pixel by
-pixel with one "core" or four thousand.
+pixel with one "core" or four thousand. And one that is not editable: the neuron of the figure, learning one
+example at a time.
 """
 import json
 import sys
@@ -126,6 +127,119 @@ function draw() {
 }"""
 
 PARALLEL_EXTRA = """function mousePressed() { restart(); }   // from the top, same rule"""
+
+# The neuron of the figure, learning: the week-1 objects one at a time, 12 cups and 12 bowls, a wrong guess moving
+# the three numbers a little towards the example. Not editable: it runs over the drawn figure in the html deck;
+# the pptx and the PDF keep the figure.
+NEURON_LEARN = """// The figure, live: one neuron meets the week-1 objects one at a time, 12 cups and 12 bowls.
+// Right guess: nothing happens. Wrong guess: the three numbers move a little towards the example.
+const INK = '#000B1C', ORANGE = '#ED6D24', TEAL = '#64C2C3', VIOLET = '#943890', MUTED = '#5C6470', TINT = '#FBE2D3';
+const IN = [[230, 150], [230, 370]], SUM = [820, 260], OUT = [1300, 260];   // where the figure puts things
+const LR = 0.2, START = [0.2, 0.6, 0], SEED = 47;                            // the nudge; the three numbers at first
+const P = v => (v < 0 ? '−' : '') + nf(abs(v), 1, 2), F = v => (v < 0 ? '−' : '+') + nf(abs(v), 1, 2);
+const word = t => t > 0 ? 'cup' : 'bowl';
+let pts = [], w = [], from = [], delta = [], marks = [];   // examples; the numbers, before the nudge, the nudge; seen
+let k = 0, pass = 1, wrong = 0, settled = false, ex, sum, guess, right;
+let secs, t0 = 0, running = true, pausedAt = 0;
+
+function setup() {
+  createCanvas(1680, 520); textFont('JetBrains Mono');
+  secs = createSlider(0.3, 3, 1.5, 0.1, 'seconds per example');
+  new FontFace('JetBrains Mono', 'url(../../vendor/fonts/JetBrainsMono-Variable.ttf)').load()   // the sketch page
+    .then(f => document.fonts.add(f)).catch(() => {});                                            // loads no fonts
+  restart();
+}
+function restart() {                                   // the same 24 examples, the numbers as they began
+  randomSeed(SEED); pts = [];
+  for (let i = 0; i < 12; i++) {                       // height ÷ width, size, truth: cup +1, bowl −1
+    pts.push([round(randomGaussian(1.1, 0.08), 1), round(randomGaussian(0.4, 0.06), 1), 1]);
+    pts.push([round(randomGaussian(0.5, 0.08), 1), round(randomGaussian(0.6, 0.06), 1), -1]);
+  }
+  pts = shuffle(pts); w = START.slice(); k = -1; pass = 1; wrong = 0; settled = false; marks = [];
+  next();
+}
+function next() {                                      // the next example: the vote, the verdict, the nudge if wrong
+  if (++k == 24) { k = 0; pass++; wrong = 0; marks = []; }
+  ex = pts[k]; from = w.slice(); t0 = millis();
+  sum = ex[0] * w[0] + ex[1] * w[1] + w[2]; guess = sum > 0 ? 1 : -1;
+  right = guess == ex[2]; marks[k] = right;
+  delta = right ? [0, 0, 0] : [LR * ex[2] * ex[0], LR * ex[2] * ex[1], LR * ex[2]];
+  if (!right) { wrong++; w = w.map((v, i) => v + delta[i]); }
+  if (k == 23 && wrong == 0) settled = true;           // a whole pass with no wrong guess: it will not move again
+}
+function draw() {
+  let T = secs.value() * 1000, t = (running ? millis() : pausedAt) - t0;
+  if (running && t >= T) { next(); t = 0; }
+  let u = constrain((t - 0.25 * T) / min(600, 0.6 * T), 0, 1);   // the nudge: a quarter of the way in, 0.6 s long
+  u = u * u * (3 - 2 * u);
+  let hot = !right && u > 0 && u < 1, shown = from.map((v, i) => v + delta[i] * u);
+  background(255); noStroke(); textAlign(LEFT, CENTER); textSize(18); fill(ORANGE);
+  text('ONE NEURON · ROSENBLATT, 1958 · LEARNING, ONE EXAMPLE AT A TIME', 0, 40);
+  fill(MUTED); textAlign(RIGHT, CENTER);
+  let where = settled ? 'settled: every example on its side · pass ' + pass
+                      : 'example ' + (k + 1) + ' of 24 · pass ' + pass + ' · wrong so far this pass ' + wrong;
+  text(where + (running ? '' : ' · paused'), 1680, 40);
+  fill(INK); textSize(16); textAlign(CENTER, CENTER);
+  text('INPUTS · THE OBJECT', 230, 76); text('WEIGHTS · THE KNOWLEDGE', 820, 76); text('GUESS', 1300, 76);
+  // the object, drawn from its two numbers and nothing else: an open vessel, height ÷ width and size
+  let vw = 50 + 80 * ex[1], vh = vw * ex[0];
+  noFill(); stroke(INK); strokeWeight(3); beginShape();
+  vertex(230 - vw / 2, 260 - vh / 2); vertex(230 - vw * 0.35, 260 + vh / 2);
+  vertex(230 + vw * 0.35, 260 + vh / 2); vertex(230 + vw / 2, 260 - vh / 2); endShape();
+  // the two inputs, each on a connection with its weight
+  strokeWeight(4);
+  for (let i = 0; i < 2; i++) line(IN[i][0] + 40, IN[i][1], SUM[0] - 62, SUM[1]);
+  noStroke();
+  for (let i = 0; i < 2; i++) {
+    let [x, y] = IN[i];
+    fill(TEAL); circle(x, y, 80); fill(INK); textSize(22); text(nf(ex[i], 1, 1), x, y);
+    textSize(18); textAlign(RIGHT, CENTER); text(['height ÷ width', 'size'][i], x - 60, y);
+    box((x + 40 + SUM[0] - 62) / 2, (y + SUM[1]) / 2, '× ' + F(shown[i]), hot, delta[i]);
+  }
+  // the sum and the bias, and the vote written out; after a nudge, the same example with the new numbers
+  fill(VIOLET); circle(SUM[0], SUM[1], 124); fill(255); textSize(24); text('Σ + b', SUM[0], SUM[1]);
+  box(SUM[0], SUM[1] + 110, 'b = ' + P(shown[2]), hot, delta[2]);
+  fill(MUTED); textSize(18);
+  text(nf(ex[0], 1, 1) + ' × ' + P(shown[0]) + ' + ' + nf(ex[1], 1, 1) + ' × ' + P(shown[1])
+       + (shown[2] < 0 ? ' − ' : ' + ') + nf(abs(shown[2]), 1, 2)
+       + ' = ' + P(ex[0] * shown[0] + ex[1] * shown[1] + shown[2]), SUM[0], SUM[1] + 155);
+  // above zero? the guess, the truth, the verdict
+  stroke(INK); strokeWeight(4); line(SUM[0] + 64, SUM[1], OUT[0] - 72, OUT[1]); noStroke(); fill(INK);
+  triangle(OUT[0] - 66, OUT[1], OUT[0] - 86, OUT[1] - 10, OUT[0] - 86, OUT[1] + 10);
+  textSize(18); text('above 0?', (SUM[0] + OUT[0]) / 2, SUM[1] - 26);
+  textSize(20); text(P(sum) + (sum > 0 ? ' · yes' : ' · no'), (SUM[0] + OUT[0]) / 2, SUM[1] + 28);
+  fill(guess > 0 ? ORANGE : TEAL); circle(OUT[0], OUT[1], 124);
+  fill(INK); textSize(30); text(guess > 0 ? '+1' : '−1', OUT[0], OUT[1]);
+  textAlign(LEFT, CENTER); textSize(20);
+  text('guess: ' + word(guess), OUT[0] + 90, OUT[1] - 24); text('truth: ' + word(ex[2]), OUT[0] + 90, OUT[1] + 4);
+  fill(right ? TEAL : ORANGE); textSize(24); textStyle(BOLD); text(right ? 'right' : 'wrong', OUT[0] + 90, OUT[1] + 42);
+  textStyle(NORMAL);
+  // the strip: the 24 examples in the order they come, ticked or crossed once seen this pass
+  for (let i = 0; i < 24; i++) {
+    fill(pts[i][2] > 0 ? ORANGE : TEAL); circle(14 + i * 27, 446, i == k ? 18 : 12);
+    if (marks[i] !== undefined) mark(14 + i * 27, 470, marks[i]);
+  }
+  let what = (right ? 'right: ' : 'wrong: ') + word(ex[2]) + ' called ' + word(guess) + ' · ';
+  what += right ? 'the three numbers stay' : 'w1 ' + F(delta[0]) + ', w2 ' + F(delta[1]) + ', b ' + F(delta[2]);
+  fill(INK); textSize(20); text(what, 0, 496);
+}
+function box(x, y, label, hot, d) {                    // a weight or the bias: pale at rest, orange while it moves
+  fill(hot ? ORANGE : TINT); rect(x - 58, y - 24, 116, 48, 6);
+  fill(INK); textSize(20); textAlign(CENTER, CENTER); text(label, x, y);
+  if (hot) { fill(ORANGE); textSize(18); text(F(d), x - 100, y); }   // the nudge, beside the box
+}
+function mark(x, y, ok) {                              // a teal tick or an orange cross
+  stroke(ok ? TEAL : ORANGE); strokeWeight(3);
+  if (ok) { line(x - 6, y + 1, x - 2, y + 6); line(x - 2, y + 6, x + 7, y - 5); }
+  else { line(x - 5, y - 5, x + 5, y + 5); line(x - 5, y + 5, x + 5, y - 5); }
+  noStroke();
+}
+function mousePressed() {                              // a click on the picture: pause; another: go on
+  if (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height) return;
+  if (running) pausedAt = millis(); else t0 += millis() - pausedAt;
+  running = !running;
+}
+function keyPressed() { if (key == 'c' || key == 'C') { running = true; restart(); } }   // C: from the start"""
 
 BLEND_PROMPT = [
     'Blend the two concepts into ONE thing.', ' ',
@@ -352,8 +466,9 @@ S.append(image_full('mark-i-perceptron-1960.jpg', '04 · THE MARK I PERCEPTRON �
 
 S.append(figure_slide('04 · ONE NEURON', 'A neuron is a weighted vote.', F.neuron(),
                       body=['Two inputs, two weights, a bias, a threshold. Multiply, add, compare with zero: that is the whole unit. Three numbers hold everything it knows. Rosenblatt, 1958, called it a perceptron; the shape and the size are the week-1 cup.'],
-                      caption='Rosenblatt, "The perceptron: a probabilistic model for information storage and organization in the brain", Psychological Review 65, 1958.',
-                      notes='Read it left to right with the numbers: shape 1.1 times 1.6, size 0.4 times minus 0.8, minus 1.2, equals 0.24, above zero, so "cup". Now the important sentence: nobody typed 1.6. The three numbers were found. Change them and the neuron holds a different concept. Learning is changing them when the guess is wrong; the next slide says what the code does, and the one after runs it live.'))
+                      caption='Rosenblatt, "The perceptron: a probabilistic model for information storage and organization in the brain", Psychological Review 65, 1958. In the html deck the neuron learns live, one example at a time.',
+                      sketch=live('neuron-learning', NEURON_LEARN, 1680, 520, hint='click = pause · C = start again'),
+                      notes='Read it left to right with the numbers: shape 1.1 times 1.6, size 0.4 times minus 0.8, minus 1.2, equals 0.24, above zero, so "cup". Now the important sentence: nobody typed 1.6. The three numbers were found. Change them and the neuron holds a different concept. Learning is changing them when the guess is wrong. In the html deck the figure does it in front of the room: the neuron starts from three guessed numbers and meets the week-1 cups and bowls one at a time; a wrong guess flashes the boxes and moves the numbers, and the strip fills with ticks until a whole pass is right. The slider is the pace; click to pause on a wrong guess and read the line at the bottom; C starts again. The next slide says what the code does, and the one after runs the same rule as code.'))
 
 S.append(cards('04 · THE PERCEPTRON · WHAT THE CODE DOES', 'Twenty-four dots, one line, and a nudge.', [
     ('THE EXAMPLES', 'Twenty-four points, two classes.',
