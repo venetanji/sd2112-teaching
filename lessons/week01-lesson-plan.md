@@ -24,7 +24,7 @@ For students, by the end of the class they can:
 | Who | Task |
 |---|---|
 | Nicolò | Open ClassPoint on the classroom PC; open `week01-classpoint.pptx`; join code on screen from slide 1. Import the roster as the saved class (build it locally with `tools/roster.py` from the ID list; names are the last four digits + letter of the student ID; the file never goes on GitHub). Fire the slide-4 word cloud once as a test and reset it. Check the two Image Upload buttons on slides 51 and 54 open in the add-in (54 has *caption required* on). |
-| Amber | Check `genai.polyu.edu.hk` on a phone with a student login: pick an image model (Flux or Qwen), run "a cup", time it. Seating that allows pairs and fours. Blackboard: post the deck link, the PDF, the playlist and the homework. |
+| Amber | Check `genai.polyu.edu.hk` on a phone with a student login: pick an image model (Flux or Qwen), run "a cup", time it. Seating that allows pairs and fours. Canvas: post the deck link, the PDF, the playlist and the homework. |
 | WU Zhao, MA Jie | Help people join ClassPoint at the door; during the activity walk the room, help with GenAI logins, note the best prompts. |
 | Gio | Fonts on the classroom PC: install `tools/fonts/Inter-Variable.ttf` and `JetBrainsMono-Variable.ttf`, restart PowerPoint, check slide 1 shows Inter Black without a substitution warning. Fallback: Arial. Backup: the html deck on a laptop (press `S` for speaker notes) or the PDF. |
 
@@ -36,7 +36,7 @@ For students, by the end of the class they can:
 | 0:04 | 3–5 | Why are we here | Section, then the word cloud *why is AI relevant for design?*, then tools, products, job. | Word cloud (1 submission) | Screenshot the cloud for the week-2 recap. |
 | 0:12 | 6–10 | Who are we | Gio's background; the three AI avatars; the team card (email, four TAs 30 min before and after, Zhibin for the class as a whole). Two multiple-choice questions: closest field, AI use. | 2 × multiple choice | This is the level check. Note the splits; they steer weeks 2, 4 and 5. Say the absence rule out loud: let us know before, not after. |
 | 0:22 | 11–12 | The journey | The semester map, you are here; week 13 is poster fair plus final quiz. | | |
-| 0:28 | 13–19 | How this course works | Five components; reflection; group project; weekly challenges; three rules; then the anonymous hope and worry. | Short answer (names hidden) | Point at Blackboard for the rubrics. Read two worries aloud, keep the rest for week 2. |
+| 0:28 | 13–19 | How this course works | Five components; reflection; group project; weekly challenges; three rules; then the anonymous hope and worry. | Short answer (names hidden) | Point at Canvas for the rubrics. Read two worries aloud, keep the rest for week 2. |
 | 0:42 | 20–25 | What is AI | Short answer in their own words (90 s); read four that disagree; the working definition; Babbage's engine; Lovelace's objection; intelligent vs creative (Wiggins, Turing). | Short answer | The course question lives in the Lovelace slide now: can a machine originate a design? |
 | 0:56 | 26–32 | Two machines | Write the rule or show the examples; twelve parametric chairs (A); four generated chairs (B); Rosch's middle and edge; "ask for the edge, get the middle"; *which of these is a chair?* | Multiple choice | Slides 28–31 are the core of the class. The MC split is the point; there is no correct answer. |
 | 1:12 | 33–38 | How we got here | Photoshop's three fills; the timeline; Nake 1965; how a network learns; Move 37 (play the chapter, 5 min); Belamy. | | Cut 35–36 if behind. |
@@ -83,7 +83,7 @@ After class, export the ClassPoint results and keep them in a private folder (th
 ## Contingencies
 
 - **GenAI down or slow.** Any image tool students already have (Bing Image Creator, Firefly, Midjourney); or run prompts from the lecturer's machine on the projector, taking prompts from the room, and skip capture 1.
-- **ClassPoint image upload fails.** Students AirDrop or email the image to a TA, or post it in a Blackboard discussion thread; the wall becomes a quick scroll on the projector.
+- **ClassPoint image upload fails.** Students AirDrop or email the image to a TA, or post it in a Canvas discussion thread; the wall becomes a quick scroll on the projector.
 - **ClassPoint fails altogether.** Word cloud becomes hands up; short answers become paper, collected by the TAs.
 - **Projector or PC fails.** The html deck runs from any laptop or phone browser; speaker notes with `S`, overview with `O`. The PDF works anywhere.
 - **Fonts missing.** PowerPoint substitutes Arial automatically; the deck still reads. Install the two variable fonts from `tools/fonts/` for the next class.
@@ -92,8 +92,8 @@ After class, export the ClassPoint results and keep them in a private folder (th
 
 ## After class
 
-- TAs stay 30 minutes: accounts, laptops, the setup items (ClassPoint name, Blackboard, the p5.js editor, GenAI login).
-- Post on Blackboard: the deck link and PDF, the playlist, the homework (AlphaGo and the four short art films before week 3; bring a laptop).
+- TAs stay 30 minutes: accounts, laptops, the setup items (ClassPoint name, Canvas login, the p5.js editor, GenAI login).
+- Post on Canvas: the deck link and PDF, the playlist, the homework (AlphaGo and the four short art films before week 3; bring a laptop).
 - Download both image-upload sets and the ClassPoint exports; file them privately for weeks 2, 3, 5 and 9.
 - Note the two level-check splits and adjust the week-2 exercise.
 
