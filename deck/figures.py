@@ -945,12 +945,13 @@ def alexnet_layers(name='alexnet-layers', w=1680, h=560):
 
 
 # ───────────────────────── two theories of concepts, two kinds of machine ─────────────────────────
-def theories_machines(name='theories-machines', w=1680, h=640):
+def theories_machines(name='theories-machines', w=1680, h=560):
+    """The 2 x 2 at 1680 x 560, so it fits a figure_slide with a caption at full scale (its box is 576 px tall)."""
     c = Canvas(w, h)
     x0, cw, gap = 300, 660, 24
-    y0, rh, pad = 100, 220, 30                 # two 660 x 220 cells per row, 30 px of padding inside each
-    c.text(x0 + cw / 2, 70, 'HUMANS + CONCEPTS', size=26, anchor='middle', color=INK, weight=700)
-    c.text(x0 + cw + gap + cw / 2, 70, 'MACHINES + CONCEPTS', size=26, anchor='middle', color=INK, weight=700)
+    y0, rh, pad = 66, 196, 30                  # two 660 x 196 cells per row, 30 px of padding inside each
+    c.text(x0 + cw / 2, 44, 'HUMANS + CONCEPTS', size=26, anchor='middle', color=INK, weight=700)
+    c.text(x0 + cw + gap + cw / 2, 44, 'MACHINES + CONCEPTS', size=26, anchor='middle', color=INK, weight=700)
     rows = [
         ('RULE-BASED', PAPER, ORANGE,
          ['CLASSICAL THEORY', 'a concept is a definition:', 'necessary and sufficient conditions', 'Aristotle · Kant · the dictionary'],
@@ -965,36 +966,35 @@ def theories_machines(name='theories-machines', w=1680, h=640):
         for j, lines in enumerate((left, right)):
             x = x0 + j * (cw + gap)
             c.rect(x, y, cw, rh, fill=fill)
-            c.text(x + pad, y + 52, lines[0], size=24, color=col, weight=700)
-            _lines(c, x + pad, y + 98, lines[1:3], size=28, gap=38, mono=False)
-            c.text(x + pad, y + 182, lines[3], size=18, color=MUTED)
-    c.text(0, 614, 'the same two ideas, in a mind and in a machine: a rule you can read, or examples you cannot', size=22, color=INK)
+            c.text(x + pad, y + 46, lines[0], size=24, color=col, weight=700)
+            _lines(c, x + pad, y + 90, lines[1:3], size=28, gap=36, mono=False)
+            c.text(x + pad, y + 170, lines[3], size=18, color=MUTED)
+    c.text(0, 530, 'the same two ideas, in a mind and in a machine: a rule you can read, or examples you cannot', size=22, color=INK)
     return c.finish(name)
 
 
 # ───────────────────────── Fauconnier & Turner: two inputs, one blended space ─────────────────────────
 def blend_spaces(name='blend-spaces', w=800, h=640):
     c = Canvas(w, h)
-    g, a, b_, bl = (400, 110), (170, 300), (630, 300), (400, 500)
+    g, a, b_, bl = (400, 104), (160, 300), (640, 300), (400, 510)
     for p, q in ((g, a), (g, b_), (a, bl), (b_, bl), (a, b_)):
         _dashed(c, p[0], p[1], q[0], q[1], MUTED, 2)
-    c.circle(*g, 72, fill=PAPER, stroke=MUTED, width=2)
-    c.circle(*a, 92, fill=TEAL_TINT, stroke=TEAL, width=3)
-    c.circle(*b_, 92, fill=ORANGE_TINT, stroke=ORANGE, width=3)
-    c.circle(*bl, 100, fill=VIOLET_TINT, stroke=VIOLET, width=3)
-    c.text(g[0], g[1] - 8, 'GENERIC', size=14, anchor='middle', color=MUTED)
-    c.text(g[0], g[1] + 14, 'what both share', size=13, anchor='middle', color=MUTED, mono=False)
-    c.text(a[0], a[1] - 22, 'INPUT 1', size=14, anchor='middle', color=TEAL)
-    c.text(a[0], a[1] + 6, 'house', size=24, anchor='middle', color=INK, mono=False, weight=700)
-    c.text(a[0], a[1] + 32, 'lived in · stays put', size=13, anchor='middle', color=INK, mono=False)
-    c.text(b_[0], b_[1] - 22, 'INPUT 2', size=14, anchor='middle', color=ORANGE)
-    c.text(b_[0], b_[1] + 6, 'boat', size=24, anchor='middle', color=INK, mono=False, weight=700)
-    c.text(b_[0], b_[1] + 32, 'floats · moves · a crew', size=13, anchor='middle', color=INK, mono=False)
-    c.text(bl[0], bl[1] - 30, 'THE BLEND', size=14, anchor='middle', color=VIOLET)
-    c.text(bl[0], bl[1] + 2, 'houseboat', size=26, anchor='middle', color=INK, mono=False, weight=700)
-    c.text(bl[0], bl[1] + 30, 'lived in, and it floats', size=13, anchor='middle', color=INK, mono=False)
-    c.text(bl[0], bl[1] + 52, 'new: a mooring, a licence, a view that changes', size=12, anchor='middle', color=MUTED, mono=False)
-    c.text(400, 628, 'after Fauconnier & Turner, The Way We Think, 2002', size=13, anchor='middle', color=MUTED)
+    c.circle(*g, 76, fill=PAPER, stroke=MUTED, width=2)
+    c.circle(*a, 104, fill=TEAL_TINT, stroke=TEAL, width=3)
+    c.circle(*b_, 104, fill=ORANGE_TINT, stroke=ORANGE, width=3)
+    c.circle(*bl, 112, fill=VIOLET_TINT, stroke=VIOLET, width=3)
+    c.text(g[0], g[1] - 8, 'GENERIC', size=16, anchor='middle', color=MUTED)
+    c.text(g[0], g[1] + 18, 'what both share', size=17, anchor='middle', color=MUTED, mono=False)
+    c.text(a[0], a[1] - 30, 'INPUT 1', size=16, anchor='middle', color=TEAL)
+    c.text(a[0], a[1] + 8, 'house', size=32, anchor='middle', color=INK, mono=False, weight=700)
+    c.text(a[0], a[1] + 40, 'lived in · stays put', size=16, anchor='middle', color=INK, mono=False)
+    c.text(b_[0], b_[1] - 30, 'INPUT 2', size=16, anchor='middle', color=ORANGE)
+    c.text(b_[0], b_[1] + 8, 'boat', size=32, anchor='middle', color=INK, mono=False, weight=700)
+    c.text(b_[0], b_[1] + 40, 'floats · moves · a crew', size=16, anchor='middle', color=INK, mono=False)
+    c.text(bl[0], bl[1] - 36, 'THE BLEND', size=16, anchor='middle', color=VIOLET)
+    c.text(bl[0], bl[1] + 6, 'houseboat', size=34, anchor='middle', color=INK, mono=False, weight=700)
+    c.text(bl[0], bl[1] + 40, 'lived in, and it floats', size=17, anchor='middle', color=INK, mono=False)
+    c.text(400, 634, 'after Fauconnier & Turner, The Way We Think, 2002', size=14, anchor='middle', color=MUTED)
     return c.finish(name)
 
 
