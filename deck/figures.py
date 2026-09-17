@@ -1060,10 +1060,59 @@ def serial_parallel(name='serial-parallel', w=1680, h=520):
                 c.line(cx + dx, cy - 44, cx + dx * 0.4, cy - 22, LINE, 2)
             c.circle(cx, cy, 20, fill=(VIOLET, TEAL, ORANGE)[rnd.randint(0, 2)])
             c.text(cx, cy + 6, 'Σ', size=15, anchor='middle', color='#FFFFFF')
-    c.text(x0, 420, 'thirty-two sums at the same time, none of them waiting: the same tick for all', size=17, color=INK)
+    c.text(x0, 420, 'thirty-two sums at once, none of them waiting: one tick for all', size=17, color=INK)
     c.text(x0, 450, 'no state in one place, nothing to read · examples, not rules', size=17, color=MUTED)
-    c.text(x0, 500, 'fast, if you have thousands of small processors · opaque, whatever you have', size=18, color=INK)
-    c.text(0, 440, 'AlexNet\'s forward pass is about 700 million multiply-adds; a GPU does them a few thousand at a time', size=15, color=MUTED)
+    c.text(x0, 500, 'fast, with thousands of small processors · opaque either way', size=18, color=INK)
+    c.text(0, 440, 'AlexNet: about 700 million multiply-adds per picture; a GPU does thousands at a time', size=15, color=MUTED)
+    return c.finish(name)
+
+# ───────────────────────── how many numbers a model holds, 1958 to today ─────────────────────────
+MODELS = [  # (year, weights, name, the count as said aloud, kind) · from the papers and model cards
+    (1958, 3, 'one neuron', '3', 'net'),
+    (1998, 6e4, 'LeNet-5', '60 thousand', 'net'),
+    (2012, 6e7, 'AlexNet', '60 million', 'net'),
+    (2019, 1.5e9, 'GPT-2', '1.5 billion', 'net'),
+    (2020, 1.75e11, 'GPT-3', '175 billion', 'net'),
+    (2022, 8.6e8, 'Stable Diffusion', '0.9 billion', 'image'),
+    (2024, 1.2e10, 'FLUX.1', '12 billion', 'image'),
+    (2024, 4.05e11, 'Llama 3.1', '405 billion', 'net'),
+    (2025, 2e10, 'Qwen-Image', '20 billion', 'image'),
+    (2026, 2e12, 'the largest', 'trillions', 'est'),
+]
+
+
+def parameter_scale(name='parameter-scale', w=1680, h=576):
+    """Ten models on a log axis: every gridline is ten times more numbers. The last dot is an estimate."""
+    c = Canvas(w, h)
+    x0, x1, y0, y1 = 220, 1660, 60, 460
+    per = (y1 - y0) / 13.0
+
+    def Y(v):
+        return y1 - math.log10(v) * per
+
+    names = {0: '1', 3: 'a thousand', 6: 'a million', 9: 'a billion', 12: 'a trillion'}
+    for k in range(0, 13):
+        y = Y(10 ** k)
+        c.line(x0, y, x1, y, LINE, 2 if k in names else 1, cap='butt')
+        if k in names:
+            c.text(x0 - 14, y + 6, names[k], size=15, anchor='end', color=MUTED)
+    c.text(0, 30, 'HOW MANY NUMBERS A MODEL HOLDS · EVERY LINE UP IS TEN TIMES MORE', size=18, color=ORANGE)
+    c.circle(1290, 26, 7, fill=TEAL)
+    c.text(1306, 32, 'language and vision', size=15, color=INK)
+    c.circle(1520, 26, 7, fill=ORANGE)
+    c.text(1536, 32, 'image models', size=15, color=INK)
+    slot = (x1 - x0) / len(MODELS)
+    for i, (year, v, nm, count, kind) in enumerate(MODELS):
+        x, y = x0 + slot * (i + 0.5), Y(v)
+        _dashed(c, x, y1, x, y + 12, LINE, 2, 5, 6)
+        if kind == 'est':
+            c.circle(x, y, 10, fill='#FFFFFF', stroke=INK, width=3)
+        else:
+            c.circle(x, y, 10, fill=TEAL if kind == 'net' else ORANGE)
+        c.text(x, y - 20, count, size=17, anchor='middle', color=INK)
+        c.text(x, y1 + 34, nm, size=17, anchor='middle', color=INK, mono=False, weight=600)
+        c.text(x, y1 + 58, str(year) if kind != 'est' else '2026, not published', size=15, anchor='middle', color=MUTED)
+    c.text(0, 556, 'counts from the papers and model cards; the last one is an estimate: the labs no longer say', size=15, color=MUTED)
     return c.finish(name)
 
 
@@ -1073,6 +1122,6 @@ if __name__ == '__main__':
     for fn in (parametric_chairs, typicality_scale, perceptron, two_machines, mediation,
                decision_tree, lewitt_118, lewitt_random_vs_even, lewitt_seeds, lewitt_ten, lewitt_wall, lsystem_growth,
                molnar_desordres, schotter, schotter_variations, spec_pipeline, ten_print, walk_breakdown, walk_through_raster, weight_ramp,
-               family_resemblance, fruit_typicality, neuron, xor_limit, backprop, alexnet_layers, theories_machines, blend_spaces, blend_outcomes, serial_parallel):
+               family_resemblance, fruit_typicality, neuron, xor_limit, backprop, alexnet_layers, theories_machines, blend_spaces, blend_outcomes, serial_parallel, parameter_scale):
         svg, png = fn()
         print(png, len(svg))
