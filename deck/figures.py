@@ -945,12 +945,12 @@ def alexnet_layers(name='alexnet-layers', w=1680, h=560):
 
 
 # ───────────────────────── two theories of concepts, two kinds of machine ─────────────────────────
-def theories_machines(name='theories-machines', w=1680, h=520):
+def theories_machines(name='theories-machines', w=1680, h=640):
     c = Canvas(w, h)
     x0, cw, gap = 300, 660, 24
-    y0, rh = 104, 170
-    c.text(x0 + cw / 2, 66, 'HUMANS + CONCEPTS', size=20, anchor='middle', color=INK, weight=700)
-    c.text(x0 + cw + gap + cw / 2, 66, 'MACHINES + CONCEPTS', size=20, anchor='middle', color=INK, weight=700)
+    y0, rh, pad = 100, 220, 30                 # two 660 x 220 cells per row, 30 px of padding inside each
+    c.text(x0 + cw / 2, 70, 'HUMANS + CONCEPTS', size=26, anchor='middle', color=INK, weight=700)
+    c.text(x0 + cw + gap + cw / 2, 70, 'MACHINES + CONCEPTS', size=26, anchor='middle', color=INK, weight=700)
     rows = [
         ('RULE-BASED', PAPER, ORANGE,
          ['CLASSICAL THEORY', 'a concept is a definition:', 'necessary and sufficient conditions', 'Aristotle · Kant · the dictionary'],
@@ -961,14 +961,14 @@ def theories_machines(name='theories-machines', w=1680, h=520):
     ]
     for i, (label, fill, col, left, right) in enumerate(rows):
         y = y0 + i * (rh + gap)
-        c.text(0, y + rh / 2 + 8, label, size=22, color=col, weight=700)
+        c.text(0, y + rh / 2 + 9, label, size=26, color=col, weight=700)
         for j, lines in enumerate((left, right)):
             x = x0 + j * (cw + gap)
             c.rect(x, y, cw, rh, fill=fill)
-            c.text(x + 30, y + 46, lines[0], size=18, color=col, weight=700)
-            _lines(c, x + 30, y + 84, lines[1:3], size=20, gap=30, mono=False)
-            c.text(x + 30, y + 152, lines[3], size=15, color=MUTED)
-    c.text(0, 500, 'the same two ideas, in a mind and in a machine: a rule you can read, or examples you cannot', size=18, color=INK)
+            c.text(x + pad, y + 52, lines[0], size=24, color=col, weight=700)
+            _lines(c, x + pad, y + 98, lines[1:3], size=28, gap=38, mono=False)
+            c.text(x + pad, y + 182, lines[3], size=18, color=MUTED)
+    c.text(0, 614, 'the same two ideas, in a mind and in a machine: a rule you can read, or examples you cannot', size=22, color=INK)
     return c.finish(name)
 
 
@@ -1009,20 +1009,23 @@ def blend_outcomes(name='blend-outcomes', w=1680, h=520):
         c.text(x, 40, head, size=18, color=ORANGE)
         c.text(x, 440, sub, size=20, color=INK, mono=False)
         c.text(x, 474, foot, size=16, color=MUTED)
-    # left: a cup on a chair
+    # left: a cup beside a chair, both standing on the same floor line (the chair's feet and the cup's foot at y = 370)
     draw_chair(c, 110, 130, 240, seat_h=0.5, back_h=0.6, back_angle=8, seat_w=0.62, legs=4, width=5)
-    draw_cup(c, 300, 110, 130, body_h=0.7, body_w=0.58, taper=0.1, handle=0.26, width=4)
-    # middle: a cup with legs and a back: one object
-    ox, oy, size = 700, 110, 240
+    draw_cup(c, 300, 240, 130, body_h=0.7, body_w=0.58, taper=0.1, handle=0.26, width=4)
+    # middle: a cup with legs and a back: one object, sized to stay inside the panel:
+    # the top rail reaches y = 90, the feet stand at y = 380 (the panel runs from 70 to 400)
+    size = 204
+    ox, oy = 736, 322 - size                 # the cup's foot at y = 322; the legs hang below it
     draw_cup(c, ox, oy, size, body_h=0.62, body_w=0.62, taper=0.1, handle=0.24, width=5)
     foot = oy + size
     cx = ox + size * 0.4
     wb = size * 0.62 * 0.8
     for lx in (cx - wb / 2 + 8, cx - wb / 6, cx + wb / 6, cx + wb / 2 - 8):
-        c.line(lx, foot, lx, foot + 70, INK, 5)
-    top = oy + size - 0.62 * size
-    c.line(cx + size * 0.31, top, cx + size * 0.31 + 10, top - 110, INK, 6)
-    c.line(cx + size * 0.31 + 10, top - 110, cx + size * 0.31 - 40, top - 118, INK, 5)
+        c.line(lx, foot, lx, foot + 58, INK, 5)
+    top = foot - 0.62 * size
+    bx = cx + size * 0.31
+    c.line(bx, top, bx + 10, top - 96, INK, 6)
+    c.line(bx + 10, top - 96, bx - 40, top - 104, INK, 5)
     # right: a chair, the cup a faint outline behind it
     draw_cup(c, 1300, 130, 200, body_h=0.7, body_w=0.58, taper=0.1, handle=0.26, stroke=LINE, width=3)
     draw_chair(c, 1290, 130, 240, seat_h=0.5, back_h=0.6, back_angle=8, seat_w=0.62, legs=4, width=5)
