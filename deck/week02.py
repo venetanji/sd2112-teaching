@@ -782,7 +782,7 @@ S.append(two_col('07 · THE TEMPLATE', 'A prompt that is a spec.',
                   '- One rule per prompt. Two ideas are two sketches.',
                   'Keep the spec. When the code drifts, paste the spec again, not the code.'],
                  TEMPLATE, right_size=23, left_size=30, lang=None,  # a prompt, not code
-                 notes='The template is on the course site and on Blackboard. Any of the language models on GenAI will do; pick one and stay with it for the session so the errors are consistent. The last bullet matters: the spec is the source, the code is a build.'))
+                 notes='The template is on the course site and on the Canvas course page. Any of the language models on GenAI will do; pick one and stay with it for the session so the errors are consistent. The last bullet matters: the spec is the source, the code is a build.'))
 
 S.append(code_slide('07 · WHAT GOOD LOOKS LIKE', 'Fifty points, all connected, from forty-five words.', LEWITT_CODE, F.lewitt_wall(),
                     caption='LeWitt\'s spec as twenty-two lines a model can write in seconds. Read it: where is the rule, where is the chance, where are the numbers? Then give it a twist' + _live() + '.',
@@ -855,14 +855,14 @@ S.append(content('08 · WHAT JUST HAPPENED', 'You wrote the rule. The machine ex
 S.append(cards('08 · CHALLENGE 1 · DUE BEFORE WEEK 3', 'A picture from rules.', [
     ('THE RULE', 'One rule, one random number.', 'Your own picture: not Schotter, not LeWitt. Start from the rule your pair wrote today, or from scratch.'),
     ('THE SPEC', 'Words first.', 'A stranger, or a model, could execute it. Keep it: it is the caption today and evidence in your reflection.'),
-    ('THE SKETCH', 'p5.js, in the slide or anywhere.', 'Written by you, by a model, or both: say which. The code as a text file plus a screenshot, on Blackboard.'),
+    ('THE SKETCH', 'p5.js, in the slide or anywhere.', 'Written by you, by a model, or both: say which. The code as a text file plus a screenshot, submitted on Canvas.'),
     ('THE VOTE', 'Bring it next week.', 'The room votes; the winners get shown and a participation star. The TAs help 30 minutes before and after class.'),
-], notes='Three things on Blackboard before next class: the spec, the code as a text file, one screenshot. The model is allowed and must be named. Next week the room votes; the winners get shown and a star.'))
+], notes='Three things on Canvas before next class: the spec, the code as a text file, one screenshot. The model is allowed and must be named. Next week the room votes; the winners get shown and a star.'))
 
 S.append(end('See you next week. Learning from examples.',
              'Bring your sketch. Watch AlphaGo and the four films.',
              f'{SITE} · {PLAYLIST.replace("https://", "")}',
-             notes='Next week: the other machine, concepts, neurons, Move 37, and the first challenge awards. Homework: the sketch on Blackboard, AlphaGo, and Cage, Tinguely, Kaprow and the Illiac Suite on the playlist. The TAs stay for 30 minutes.'))
+             notes='Next week: the other machine, concepts, neurons, Move 37, and the first challenge awards. Homework: the sketch on the Canvas course page, AlphaGo, and Cage, Tinguely, Kaprow and the Illiac Suite on the playlist. The TAs stay for 30 minutes.'))
 
 # After the class: links each question slide to the answers the room gave (README, "After the
 # class: publish the answers"). deck/week02-reports.json is written by classpoint.py's weekly.py

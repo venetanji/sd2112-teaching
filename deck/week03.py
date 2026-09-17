@@ -11,7 +11,8 @@ backpropagation, parallel calculation and the GPUs that made 2012 possible, mode
 timeline, concept blending, and the activity: a concept as a picture, then two concepts blended in
 pairs, then four in fours, with the image editors on PolyU GenAI that take reference images. Two
 editable p5.js sketches: a perceptron that finds its own line, and the same rule painted pixel by
-pixel with one "core" or four thousand.
+pixel with one "core" or four thousand. And one that is not editable: the neuron of the figure, learning one
+example at a time.
 """
 import json
 import sys
@@ -127,13 +128,118 @@ function draw() {
 
 PARALLEL_EXTRA = """function mousePressed() { restart(); }   // from the top, same rule"""
 
-VOTE_ENTRIES = [   # placeholders: the TAs paste the five shortlisted specs here before the deck is built (the spec only, no names)
-    '(the first shortlisted rule goes here: the spec, no names)',
-    '(the second shortlisted rule)',
-    '(the third shortlisted rule)',
-    '(the fourth shortlisted rule)',
-    '(the fifth shortlisted rule)',
-]
+# The neuron of the figure, learning: the week-1 objects one at a time, 12 cups and 12 bowls, a wrong guess moving
+# the three numbers a little towards the example. Not editable: it runs over the drawn figure in the html deck;
+# the pptx and the PDF keep the figure.
+NEURON_LEARN = """// The figure, live: one neuron meets the week-1 objects one at a time, 12 cups and 12 bowls.
+// Right guess: nothing happens. Wrong guess: the three numbers move a little towards the example.
+const INK = '#000B1C', ORANGE = '#ED6D24', TEAL = '#64C2C3', VIOLET = '#943890', MUTED = '#5C6470', TINT = '#FBE2D3';
+const IN = [[230, 150], [230, 370]], SUM = [820, 260], OUT = [1300, 260];   // where the figure puts things
+const LR = 0.2, START = [0.2, 0.6, 0], SEED = 47;                            // the nudge; the three numbers at first
+const P = v => (v < 0 ? '−' : '') + nf(abs(v), 1, 2), F = v => (v < 0 ? '−' : '+') + nf(abs(v), 1, 2);
+const word = t => t > 0 ? 'cup' : 'bowl';
+let pts = [], w = [], from = [], delta = [], marks = [];   // examples; the numbers, before the nudge, the nudge; seen
+let k = 0, pass = 1, wrong = 0, settled = false, ex, sum, guess, right;
+let secs, t0 = 0, running = true, pausedAt = 0;
+
+function setup() {
+  createCanvas(1680, 520); textFont('JetBrains Mono');
+  secs = createSlider(0.3, 3, 1.5, 0.1, 'seconds per example');
+  new FontFace('JetBrains Mono', 'url(../../vendor/fonts/JetBrainsMono-Variable.ttf)').load()   // the sketch page
+    .then(f => document.fonts.add(f)).catch(() => {});                                            // loads no fonts
+  restart();
+}
+function restart() {                                   // the same 24 examples, the numbers as they began
+  randomSeed(SEED); pts = [];
+  for (let i = 0; i < 12; i++) {                       // height ÷ width, size, truth: cup +1, bowl −1
+    pts.push([round(randomGaussian(1.1, 0.08), 1), round(randomGaussian(0.4, 0.06), 1), 1]);
+    pts.push([round(randomGaussian(0.5, 0.08), 1), round(randomGaussian(0.6, 0.06), 1), -1]);
+  }
+  pts = shuffle(pts); w = START.slice(); k = -1; pass = 1; wrong = 0; settled = false; marks = [];
+  next();
+}
+function next() {                                      // the next example: the vote, the verdict, the nudge if wrong
+  if (++k == 24) { k = 0; pass++; wrong = 0; marks = []; }
+  ex = pts[k]; from = w.slice(); t0 = millis();
+  sum = ex[0] * w[0] + ex[1] * w[1] + w[2]; guess = sum > 0 ? 1 : -1;
+  right = guess == ex[2]; marks[k] = right;
+  delta = right ? [0, 0, 0] : [LR * ex[2] * ex[0], LR * ex[2] * ex[1], LR * ex[2]];
+  if (!right) { wrong++; w = w.map((v, i) => v + delta[i]); }
+  if (k == 23 && wrong == 0) settled = true;           // a whole pass with no wrong guess: it will not move again
+}
+function draw() {
+  let T = secs.value() * 1000, t = (running ? millis() : pausedAt) - t0;
+  if (running && t >= T) { next(); t = 0; }
+  let u = constrain((t - 0.25 * T) / min(600, 0.6 * T), 0, 1);   // the nudge: a quarter of the way in, 0.6 s long
+  u = u * u * (3 - 2 * u);
+  let hot = !right && u > 0 && u < 1, shown = from.map((v, i) => v + delta[i] * u);
+  background(255); noStroke(); textAlign(LEFT, CENTER); textSize(18); fill(ORANGE);
+  text('ONE NEURON · ROSENBLATT, 1958 · LEARNING, ONE EXAMPLE AT A TIME', 0, 40);
+  fill(MUTED); textAlign(RIGHT, CENTER);
+  let where = settled ? 'settled: every example on its side · pass ' + pass
+                      : 'example ' + (k + 1) + ' of 24 · pass ' + pass + ' · wrong so far this pass ' + wrong;
+  text(where + (running ? '' : ' · paused'), 1680, 40);
+  fill(INK); textSize(16); textAlign(CENTER, CENTER);
+  text('INPUTS · THE OBJECT', 230, 76); text('WEIGHTS · THE KNOWLEDGE', 820, 76); text('GUESS', 1300, 76);
+  // the object, drawn from its two numbers and nothing else: an open vessel, height ÷ width and size
+  let vw = 50 + 80 * ex[1], vh = vw * ex[0];
+  noFill(); stroke(INK); strokeWeight(3); beginShape();
+  vertex(230 - vw / 2, 260 - vh / 2); vertex(230 - vw * 0.35, 260 + vh / 2);
+  vertex(230 + vw * 0.35, 260 + vh / 2); vertex(230 + vw / 2, 260 - vh / 2); endShape();
+  // the two inputs, each on a connection with its weight
+  strokeWeight(4);
+  for (let i = 0; i < 2; i++) line(IN[i][0] + 40, IN[i][1], SUM[0] - 62, SUM[1]);
+  noStroke();
+  for (let i = 0; i < 2; i++) {
+    let [x, y] = IN[i];
+    fill(TEAL); circle(x, y, 80); fill(INK); textSize(22); text(nf(ex[i], 1, 1), x, y);
+    textSize(18); textAlign(RIGHT, CENTER); text(['height ÷ width', 'size'][i], x - 60, y);
+    box((x + 40 + SUM[0] - 62) / 2, (y + SUM[1]) / 2, '× ' + F(shown[i]), hot, delta[i]);
+  }
+  // the sum and the bias, and the vote written out; after a nudge, the same example with the new numbers
+  fill(VIOLET); circle(SUM[0], SUM[1], 124); fill(255); textSize(24); text('Σ + b', SUM[0], SUM[1]);
+  box(SUM[0], SUM[1] + 110, 'b = ' + P(shown[2]), hot, delta[2]);
+  fill(MUTED); textSize(18);
+  text(nf(ex[0], 1, 1) + ' × ' + P(shown[0]) + ' + ' + nf(ex[1], 1, 1) + ' × ' + P(shown[1])
+       + (shown[2] < 0 ? ' − ' : ' + ') + nf(abs(shown[2]), 1, 2)
+       + ' = ' + P(ex[0] * shown[0] + ex[1] * shown[1] + shown[2]), SUM[0], SUM[1] + 155);
+  // above zero? the guess, the truth, the verdict
+  stroke(INK); strokeWeight(4); line(SUM[0] + 64, SUM[1], OUT[0] - 72, OUT[1]); noStroke(); fill(INK);
+  triangle(OUT[0] - 66, OUT[1], OUT[0] - 86, OUT[1] - 10, OUT[0] - 86, OUT[1] + 10);
+  textSize(18); text('above 0?', (SUM[0] + OUT[0]) / 2, SUM[1] - 26);
+  textSize(20); text(P(sum) + (sum > 0 ? ' · yes' : ' · no'), (SUM[0] + OUT[0]) / 2, SUM[1] + 28);
+  fill(guess > 0 ? ORANGE : TEAL); circle(OUT[0], OUT[1], 124);
+  fill(INK); textSize(30); text(guess > 0 ? '+1' : '−1', OUT[0], OUT[1]);
+  textAlign(LEFT, CENTER); textSize(20);
+  text('guess: ' + word(guess), OUT[0] + 90, OUT[1] - 24); text('truth: ' + word(ex[2]), OUT[0] + 90, OUT[1] + 4);
+  fill(right ? TEAL : ORANGE); textSize(24); textStyle(BOLD); text(right ? 'right' : 'wrong', OUT[0] + 90, OUT[1] + 42);
+  textStyle(NORMAL);
+  // the strip: the 24 examples in the order they come, ticked or crossed once seen this pass
+  for (let i = 0; i < 24; i++) {
+    fill(pts[i][2] > 0 ? ORANGE : TEAL); circle(14 + i * 27, 446, i == k ? 18 : 12);
+    if (marks[i] !== undefined) mark(14 + i * 27, 470, marks[i]);
+  }
+  let what = (right ? 'right: ' : 'wrong: ') + word(ex[2]) + ' called ' + word(guess) + ' · ';
+  what += right ? 'the three numbers stay' : 'w1 ' + F(delta[0]) + ', w2 ' + F(delta[1]) + ', b ' + F(delta[2]);
+  fill(INK); textSize(20); text(what, 0, 496);
+}
+function box(x, y, label, hot, d) {                    // a weight or the bias: pale at rest, orange while it moves
+  fill(hot ? ORANGE : TINT); rect(x - 58, y - 24, 116, 48, 6);
+  fill(INK); textSize(20); textAlign(CENTER, CENTER); text(label, x, y);
+  if (hot) { fill(ORANGE); textSize(18); text(F(d), x - 100, y); }   // the nudge, beside the box
+}
+function mark(x, y, ok) {                              // a teal tick or an orange cross
+  stroke(ok ? TEAL : ORANGE); strokeWeight(3);
+  if (ok) { line(x - 6, y + 1, x - 2, y + 6); line(x - 2, y + 6, x + 7, y - 5); }
+  else { line(x - 5, y - 5, x + 5, y + 5); line(x - 5, y + 5, x + 5, y - 5); }
+  noStroke();
+}
+function mousePressed() {                              // a click on the picture: pause; another: go on
+  if (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height) return;
+  if (running) pausedAt = millis(); else t0 += millis() - pausedAt;
+  running = !running;
+}
+function keyPressed() { if (key == 'c' || key == 'C') { running = true; restart(); } }   // C: from the start"""
 
 BLEND_PROMPT = [
     'Blend the two concepts into ONE thing.', ' ',
@@ -188,7 +294,7 @@ S = []  # the slides, in order
 S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 03 · LECTURE + WORKSHOP',
                'Learning from examples.',
                'Week 3 — concepts, neurons, GPUs, and a picture that blends two ideas.',
-               notes='Join code on screen from 30 minutes before. Phones or laptops out from the start: the second half runs on genai.polyu.edu.hk, like week 1, with the image editors that take reference images. Challenge 1 is on Blackboard; the TAs have shortlisted five entries for the vote.'))
+               notes='Join code on screen from 30 minutes before. Phones or laptops out from the start: the second half runs on genai.polyu.edu.hk, like week 1, with the image editors that take reference images; anyone without a login sorts it out with a TA before the break. Challenge 1 is on Canvas; the TAs have shortlisted five entries to show, and the room picks the star by a show of hands.'))
 
 S.append(agenda('SD2112 · WEEK 03', [
     'Last week, in your words', 'What is a concept?', 'Prototypes: Rosch, 1975', 'The birth of AI, twice',
@@ -197,12 +303,7 @@ S.append(agenda('SD2112 · WEEK 03', [
 
 # ───────────────────────── 01 · last week, in your words ─────────────────────────
 S.append(section('01', 'Last week, in your words', 'the film · the wall · the awards',
-                 notes='Fifteen minutes of recap: logistics, the film you watched, what week 2 left on the wall, and the first challenge awards.'))
-
-S.append(question('multiple_choice', 'Before we start: where will you run GenAI today?', [
-    'A laptop, logged in', 'A phone, logged in', 'A device, but no login yet', 'Nothing with me today',
-], eyebrow_text='01 · LOGISTICS · MULTIPLE CHOICE',
-    notes='ClassPoint. The activity in the second half needs genai.polyu.edu.hk on at least one device per pair, with the image editor that takes reference images. Phones are fine. Cs sort out the login with a TA now, not at the break; Ds sit next to an A or a B. The TAs reseat people while the next slides run.'))
+                 notes='Fifteen minutes of recap: the film you watched, what week 2 left on the wall, and the first challenge awards. Phones or laptops out now: the activity after the break runs on genai.polyu.edu.hk, one device per pair at least, and the TAs sort out any missing login during these slides, not at the break.'))
 
 S.append(question('word_cloud', 'AlphaGo. One word.',
                   hint='You watched the film. The first word that comes to mind.',
@@ -213,22 +314,18 @@ S.append(cards(_linked('01 · WEEK 2 · WHAT THE WALL SAID', 'THE WALL', SPECS_U
     ('THE SPEC', 'Words a stranger could execute.',
      'Every pair wrote a rule and one random number, and a language model turned it into p5.js. Where the words were vague, the model decided silently: "at random" or "evenly", it picked one.'),
     ('THE MODEL', 'It did what you said, not what you meant.',
-     'Machine B wrote machine A. The code it gave you was exact, repeatable with a seed, and you could read the line that decided. Today we meet the machine that cannot be read.'),
+     'Machine B wrote machine A. The code it gave you was exact, repeatable with a seed, and you could read the line that decided.'),
     ('THE CONCEPT', 'Nobody defined "a picture".',
-     'Fifty-five rules, no two alike, and every one of them was a picture. You never agreed on a definition; you did not need one. Hold that thought: it is the whole of today.'),
+     'Fifty-five rules, no two alike, and every one of them was a picture. You never agreed on a definition; you did not need one.'),
 ], text_size=22, notes='Open the wall from last week (the link in the eyebrow, once deck/week02-reports.json carries the id of the upload activity) and read two captions with the room; guess the picture before it appears. Then the sentence to carry into today: machine A is a rule you wrote. In an hour you will have the other half, and it starts with a question about concepts.'))
 
-S.append(question('multiple_choice', 'Challenge 1. Which rule made the best picture?', VOTE_ENTRIES,
-                  eyebrow_text='01 · CHALLENGE 1 · THE AWARDS · MULTIPLE CHOICE',
-                  notes='Replace the five entries with the ones the TAs shortlisted (VOTE_ENTRIES in deck/week03.py, then rebuild): the spec only, no names, no pictures yet. Read each spec aloud and let the room imagine the picture before voting. Then show the five sketches from Blackboard, in the same order, and count the surprise: where the picture is better than the spec suggested, the executor did the work. Winners get a star; anyone who submitted gets the participation mark.'))
-
-S.append(content('01 · CHALLENGE 1 · THE WINNERS', 'Shown from Blackboard. Read the spec first.',
-                 ['Five rules, five random numbers, five pictures: shown live from the submissions, the spec read aloud before each picture appears.',
-                  '- The vote decides the star. The TAs choose one more: the spec a stranger could execute best.',
+S.append(content('01 · CHALLENGE 1 · THE WINNERS', 'Shown from Canvas. Read the spec first.',
+                 ['Five rules, five random numbers, five pictures: the TAs\' shortlist, shown live from the submissions on Canvas, the spec read aloud before each picture appears.',
+                  '- A show of hands picks the star. The TAs pick one more: the spec a stranger could execute best.',
                   '- Every submission is evidence for your reflection: keep the spec, the code and the screenshot together.',
                   'What to look for: where does chance enter, and how much is it allowed to move?'],
                  body_size=32,
-                 notes='Open Blackboard on the second screen. Show the five in the vote order; for each, ask the room where the die is thrown. Add the TA pick: the best-written spec, which is not always the best picture, and say why that matters: a spec a stranger can execute is a rule you actually understand. Two minutes, then the map.'))
+                 notes='Open Canvas on the second screen. Five shortlisted entries, in the TAs\' order, no names until the end. For each: read the spec aloud, let the room imagine the picture, then show it, and count the surprise: where the picture is better than the spec suggested, the executor did the work. Ask where the die is thrown. Then hands up, one vote each, for the star. Add the TA pick: the best-written spec, which is not always the best picture, and say why that matters: a spec a stranger can execute is a rule you actually understand. Anyone who submitted gets the participation mark. Three minutes, then the map.'))
 
 S.append(journey('01 · THE SEMESTER', 'Where we are', JOURNEY, here=(0, 2),
                  notes='Week 3 closes module one. Week 1 gave you both machines in a chair; week 2 was the rules side; today is the examples side. Next week the tools begin: language machines, then images, then sound, each with a challenge.'))
@@ -237,14 +334,14 @@ S.append(journey('01 · THE SEMESTER', 'Where we are', JOURNEY, here=(0, 2),
 S.append(section('02', 'What is a concept?', 'ideas · definitions · Plato · Wittgenstein', bg=INK,
                  notes='Chapter two: before the neurons, the thing they will have to hold. What is an idea? Two answers, two and a half thousand years apart, and they map onto the two machines exactly.'))
 
-S.append(content('02 · THE CLASSICAL THEORY · ARISTOTLE TO KANT', 'A concept is a definition.',
+S.append(content('02 · THE CLASSICAL THEORY · ARISTOTLE TO THE DICTIONARY', 'A concept is a definition.',
                  ['A definition is a list of properties a thing must have to belong: necessary, and together sufficient. Bachelor = man + unmarried.',
                   '- Categorising is then trivial: check each property, apply the concept. X is a bachelor if X is a man and X is unmarried. A machine can do that.',
-                  '- New ideas by assembly: put definitions together and you have a new one. Kant, last week: analytic, all in the words.',
-                  'Plato pointing up: the idea is real, above the things. Aristotle pointing down: look at the things, and sort them by their properties.'],
+                  '- New ideas by assembly: put definitions together and you have a new one. Kant: analytic, all in the words.',
+                  'Aristotle, pointing down at the things, is this theory: sort them by the properties they share and keep the ones that are necessary. Plato, pointing up, disagrees.'],
                  image='plato-aristotle-raphael.jpg', fit='cover', body_size=27,
                  caption='Plato and Aristotle, detail of Raphael\'s The School of Athens, 1509–1511. Public domain, Wikimedia Commons.',
-                 notes='The classical theory, so called because it goes back to Aristotle: a concept is a definition, a definition is a list of necessary and sufficient conditions, and membership is a verdict. Its virtue is that the check is mechanical: for every property, present or absent, then in or out. Say what it buys: exact verdicts, and new concepts by combination. Then the question for the room: can you write the list? Next slide.'))
+                 notes='The classical theory, so called because it goes back to Aristotle: a concept is a definition, a definition is a list of necessary and sufficient conditions, and membership is a verdict. In the fresco he points down at the things: look at them, sort them by the properties they share, keep the necessary ones. Plato, pointing up, is not on this side: he is the counter-voice, and the Meno makes his case once the room has tried to write a definition. Its virtue is that the check is mechanical: for every property, present or absent, then in or out. Say what it buys: exact verdicts, and new concepts by combination. Then the question for the room: can you write the list? Next slide.'))
 
 S.append(cards('02 · SOUNDS EASY · TRY THESE', 'Write the definition.', [
     ('A PRIME NUMBER', 'Easy.', 'Divisible only by one and by itself. Every number is in or out, no argument. Mathematics is where the classical theory lives.'),
@@ -266,8 +363,7 @@ S.append(quote('"But in what way will you look for it, Socrates, this thing that
 S.append(content('02 · PLATO · MENO · WHERE IDEAS COME FROM', 'Ideas are real. Definitions are not their essence.',
                  ['Socrates calls it a debater\'s trick: you cannot seek what you know, because you know it, nor what you don\'t know, because you don\'t know what to look for.',
                   '- His answer: learning is remembering. The soul has seen the ideas; the world is a copy; to learn is to recognise. He shows it with a slave boy who "finds" geometry he was never taught.',
-                  '- Whatever you think of the soul, the lesson holds: we have ideas without definitions. The definition is not the essence of a concept.',
-                  'Hold that. The machine after the break holds a concept of "chair" with no definition anywhere in it.'],
+                  'Whatever you think of the soul, the lesson holds: we have ideas without definitions. The definition is not the essence of a concept.'],
                  image='socrates-louvre.jpg', fit='cover', body_size=27,
                  caption='Socrates, Roman marble after a Greek original, 1st century, Louvre. Photo: Eric Gaba, CC BY-SA 2.5, Wikimedia Commons.',
                  notes='From the 2025 deck: are ideas real? Plato says yes, and that learning is remembering them. Keep the metaphysics light and the design point sharp: we recognise cups without a definition of cup, so a definition cannot be what a concept is. Then Wittgenstein, who two thousand years later says the same thing about games and gives it a name.'))
@@ -278,16 +374,16 @@ S.append(quote('"Don\'t think, but look!"',
 
 S.append(figure_slide('02 · WITTGENSTEIN · 1953 · FAMILY RESEMBLANCE', 'No feature runs through all of them.', F.family_resemblance(),
                       body=['Six games, seven features. A definition would need a full column; there is none. Chess and ring-a-ring-a-roses share almost nothing, yet both are games, because a chain of resemblances links them: overlapping and criss-crossing, like the resemblances in a family.'],
-                      caption='After Philosophical Investigations §66–67. The features are ours; the argument is his. Rosch borrowed the term for her experiments twenty years later.',
+                      caption='After Philosophical Investigations §66–67. The features are ours; the argument is his.',
                       notes='Walk one column: "winning": ring-a-ring-a-roses has no winner. "players": patience has one. No column is full, so no definition exists, and yet nobody in this room is confused about what a game is. Hold this table: in forty minutes the perceptron will be doing the same thing with numbers instead of dots.'))
 
 S.append(cards('02 · THE CLASSICAL THEORY · WHERE IT LEAVES US', 'Easy to check. Impossible to write.', [
     ('THE BENEFIT', 'Categorising is trivial.',
-     'Set formal requirements and the check is mechanical: every property, present or absent. That is why a rule-based machine can hold a concept at all: a definition is a rule, and week 2 was about rules.'),
+     'Set formal requirements and the check is mechanical: every property, present or absent. That is why a rule-based machine can hold a concept at all: a definition is a rule.'),
     ('NEW IDEAS', 'By assembly.',
-     'Put two definitions together and you have a third: unmarried + man. Later today: which properties survive when you combine "pet" and "fish"? Assembly is exactly where definitions start to fail.'),
+     'Put two definitions together and you have a third: unmarried + man. Which properties survive when you combine "pet" and "fish"? Assembly is exactly where definitions start to fail.'),
     ('THE PROBLEM', 'Most concepts have no definition.',
-     'Outside mathematics and law, almost nothing you design has one, and you use those concepts all day without it. So what is a concept, if not a definition? A psychologist in Berkeley asked people about fruit.'),
+     'Outside mathematics and law, almost nothing you design has one, and you use those concepts all day without it. So what is a concept, if not a definition?'),
 ], text_size=22, notes='The classical theory is machine A applied to meaning: a definition is a rule, membership is a verdict. It works for primes and for contracts and fails for almost everything a designer makes. The bridge to the next chapter is the last card: if not a definition, then what? Rosch went and measured.'))
 
 # ───────────────────────── 03 · prototypes: Rosch ─────────────────────────
@@ -331,7 +427,7 @@ S.append(cards('03 · PROTOTYPE THEORY', 'A concept is its best examples.', [
     ('THE GAIN', 'Only similarity is needed.',
      'No definition to write: you judge a new thing by how much it resembles what you have seen. That is learning from examples, and it is why a machine can hold "chair" with no rule for it.'),
     ('THE COST', 'Outliers, and combinations.',
-     'Exceptions are hard: there are fewer examples at the edge, so the edge is unsure. And combining concepts is a puzzle: which properties of "pet" and "fish" does "pet fish" keep? After the break we make a machine do exactly that.'),
+     'Exceptions are hard: there are fewer examples at the edge, so the edge is unsure. And combining concepts is a puzzle: which properties of "pet" and "fish" does "pet fish" keep?'),
 ], text_size=22, notes='Prototype theory, Rosch\'s name for it. Say the two costs slowly, because they are the second half of today. Outliers: a prototype machine is unsure at the edge, and the edge is where designers work. Combinations: nobody knows the rule for combining two prototypes, and the activity at the end is that problem given to an image model. Quick check next.'))
 
 S.append(question('multiple_choice', 'Which sentence is prototype theory?', [
@@ -350,7 +446,7 @@ S.append(content('04 · DARTMOUTH · SUMMER 1956', 'AI gets its name, and a bet.
                  ['31 August 1955: McCarthy, Minsky, Rochester and Shannon propose a summer study "on the basis of the conjecture that every aspect of learning or any other feature of intelligence can in principle be so precisely described that a machine can be made to simulate it."',
                   '- Summer 1956, Dartmouth: the field gets its name. Turing\'s intelligence as computation becomes a programme.',
                   '- Intelligence = analytical reasoning. Symbols, rules, search: the classical theory of concepts, built.',
-                  'Haugeland named it GOFAI in 1985: good old-fashioned AI, the AI of week 2.'],
+                  'Haugeland named it GOFAI in 1985: good old-fashioned AI.'],
                  image='dartmouth-proposal-1955.jpg', fit='contain', body_size=26,
                  caption='The first page of the proposal, 31 August 1955. Public domain, Wikimedia Commons.',
                  notes='The founding document, first page. Read the conjecture aloud: precisely described, therefore simulable. It is Kant\'s analytic judgement as a research programme: if intelligence can be written down, a machine can run it. This school gave us rules, expert systems, and the knowledge bottleneck from week 2. Two years later, a hundred miles away, a psychologist made the opposite bet.'))
@@ -362,7 +458,7 @@ S.append(content('04 · THE OTHER BIRTH · ROSENBLATT · 1958', 'A machine model
                   'No definition of "A" anywhere. The knowledge is in the weights, and the weights come from the examples.'],
                  image='rosenblatt-brain-perceptron-1958.jpg', fit='contain', body_size=26,
                  caption='Rosenblatt, "The design of an intelligent automaton", 1958, figures 1 and 2. Public domain, Wikimedia Commons.',
-                 notes='The second birth. Rosenblatt was a psychologist, and his diagram says it all: top a brain, bottom the machine, the same boxes. The bet is Rosch\'s theory before Rosch: no definition, a feel for the typical "A" built up from examples. Say the learning rule in one sentence, wrong guess, nudge the connections, and note that this is exactly the sentence we will read in code in three slides.'))
+                 notes='The second birth. Rosenblatt was a psychologist, and his diagram says it all: top a brain, bottom the machine, the same boxes. The bet is Rosch\'s theory before Rosch: no definition, a feel for the typical "A" built up from examples. Say the learning rule in one sentence, wrong guess, nudge the connections, and note that this is exactly the sentence we will read in code in four slides.'))
 
 S.append(image_full('mark-i-perceptron-1960.jpg', '04 · THE MARK I PERCEPTRON · 1960 · PHOTO: US NAVY, PUBLIC DOMAIN',
                     '400 photocells look at a letter; motors turn the potentiometers that hold the weights when a guess is wrong. The New York Times, July 1958: the Navy expects it "will be able to walk, talk, see, write, reproduce itself and be conscious of its existence".',
@@ -370,11 +466,23 @@ S.append(image_full('mark-i-perceptron-1960.jpg', '04 · THE MARK I PERCEPTRON �
 
 S.append(figure_slide('04 · ONE NEURON', 'A neuron is a weighted vote.', F.neuron(),
                       body=['Two inputs, two weights, a bias, a threshold. Multiply, add, compare with zero: that is the whole unit. Three numbers hold everything it knows. Rosenblatt, 1958, called it a perceptron; the shape and the size are the week-1 cup.'],
-                      caption='Rosenblatt, "The perceptron: a probabilistic model for information storage and organization in the brain", Psychological Review 65, 1958.',
-                      notes='Read it left to right with the numbers: shape 1.1 times 1.6, size 0.4 times minus 0.8, minus 1.2, equals 0.24, above zero, so "cup". Now the important sentence: nobody typed 1.6. The three numbers were found. Change them and the neuron holds a different concept. Learning is changing them when the guess is wrong, and the next slide does that live.'))
+                      caption='Rosenblatt, "The perceptron: a probabilistic model for information storage and organization in the brain", Psychological Review 65, 1958. In the html deck the neuron learns live, one example at a time.',
+                      sketch=live('neuron-learning', NEURON_LEARN, 1680, 520, hint='click = pause · C = start again'),
+                      notes='Read it left to right with the numbers: shape 1.1 times 1.6, size 0.4 times minus 0.8, minus 1.2, equals 0.24, above zero, so "cup". Now the important sentence: nobody typed 1.6. The three numbers were found. Change them and the neuron holds a different concept. Learning is changing them when the guess is wrong. In the html deck the figure does it in front of the room: the neuron starts from three guessed numbers and meets the week-1 cups and bowls one at a time; a wrong guess flashes the boxes and moves the numbers, and the strip fills with ticks until a whole pass is right. The slider is the pace; click to pause on a wrong guess and read the line at the bottom; C starts again. The next slide says what the code does, and the one after runs the same rule as code.'))
+
+S.append(cards('04 · THE PERCEPTRON · WHAT THE CODE DOES', 'Twenty-four dots, one line, and a nudge.', [
+    ('THE EXAMPLES', 'Twenty-four points, two classes.',
+     'Twelve orange A and twelve teal B, placed with a bell-curve die: most land near the middle of their group, a few stray. These dots are all the machine ever sees.'),
+    ('THE RULE', 'Three numbers draw one line.',
+     'w1, w2 and b are one straight line across the canvas. The rule guesses A on one side of it and B on the other. Where the line starts is arbitrary; it begins wrong.'),
+    ('THE NUDGE', 'Wrong? Move a little.',
+     'Every frame is one pass over the examples. Where the guess is wrong, the three numbers move a little towards that example, so the line turns. When nothing is wrong, it stops: "wrong: 0".'),
+    ('ADD POINTS', 'Click, and it has to move again.',
+     'A click adds an A where you click; shift-click adds a B. Put an A among the Bs and it never settles: one line cannot. C starts again.'),
+], text_size=22, notes='Read the four cards before the code, so the room knows what to watch for. The examples are the material; the rule is three numbers, which is one line; the nudge is the learning; the clicks are how you break it. Nobody types the line: it comes out of the examples. Then the code, live, on the next slide.'))
 
 S.append(code_slide('04 · THE PERCEPTRON · 1958 · IN P5.JS', 'Wrong? Nudge the three numbers. Again.', PERCEPTRON_CODE,
-                    caption='Each frame is one pass: where a guess is wrong, the three numbers move a little towards the example, and the line settles. Click: add an example; shift-click: a B' + _live() + '.',
+                    caption='One pass per frame; a wrong guess moves the three numbers a little. "wrong: 0": every example is on its side, the line has settled. Click adds an A, shift-click a B' + _live() + '.',
                     code_size=18, sketch=live('perceptron', PERCEPTRON_CODE, 600, 600, hint='click = add an A · shift-click = a B · C = again', extra=PERCEPTRON_EXTRA),
                     notes='The whole of machine learning in twenty-four lines. guess() is the rule applied; draw() looks at every example and, where the guess is wrong, moves each number a little towards the example. lr is how big a step. Watch it once from a reload: the line starts wrong, swings, settles; "wrong: 0". Nobody wrote that line; it came out of the examples. Then click: add an A among the Bs and it never settles: one line cannot, which is the 1969 objection on the slide after next. Press C to start again. On your laptop: lr 0.05 → 0.5, Run: it overshoots. Say what is not here: no definition of A or B, no if-then about anything. Compare with week 2\'s code: there the rule was the code; here the code is a rule for finding rules.'))
 
@@ -411,9 +519,8 @@ S.append(figure_slide('05 · BACKPROPAGATION · 1986', 'Send the error backwards
                       notes='The perceptron could only nudge weights that touched the output. Backpropagation works out, for a weight three layers deep, how much of the final error was its fault, and nudges it by that much. That is the whole trick: the chain rule from calculus, applied backwards through the network. The design point: nobody tells the hidden units what to detect; they become edge detectors or leg detectors because that lowers the error. Deep learning is this with more layers, more examples, and faster chips.'))
 
 S.append(figure_slide('05 · HUMANS + CONCEPTS · MACHINES + CONCEPTS', 'Two theories. Two machines.', F.theories_machines(),
-                      body=['The classical theory of concepts and GOFAI are one idea: a concept is a definition, a definition is a rule, and a machine can apply it. Prototype theory and connectionism are the other: a concept is its examples, the knowledge is in the weights, and nobody can read it.'],
-                      caption='Rule-based: classical theory + symbolic AI. Adaptive: prototype theory + connectionism. This is the distinction your reflection is about.',
-                      notes='From the 2025 deck, and the bridge of the whole module. Every AI in this course holds concepts one of these two ways. Ask: which theory did your week-1 cup prompt meet? The second. Which one did your week-2 spec meet? The first: the code is a definition. For the reflection: rule-based versus adaptive, with this table as the map.'))
+                      caption='Rule-based: classical theory + GOFAI, a definition a machine applies. Adaptive: prototype theory + connectionism, examples held in weights nobody can read. Your reflection is about this distinction.',
+                      notes='From the 2025 deck, and the bridge of the whole module. Say the two columns as one sentence each. The classical theory of concepts and GOFAI are one idea: a concept is a definition, a definition is a rule, and a machine can apply it. Prototype theory and connectionism are the other: a concept is its examples, the knowledge is in the weights, and nobody can read it. Every AI in this course holds concepts one of these two ways. Ask: which theory did your week-1 cup prompt meet? The second. Which one did your week-2 spec meet? The first: the code is a definition. For the reflection: rule-based versus adaptive, with this table as the map.'))
 
 S.append(cards('05 · THE DEAL', 'Fluent. Fuzzy. Opaque.', [
     ('FLUENT', 'It handles the case nobody wrote.',
@@ -448,7 +555,7 @@ S.append(content('06 · GPUS · NOT ONLY FOR GAMING', 'The chips made for games.
                  ['A graphics processing unit does the same small calculation on millions of pixels at once: textures, shading, vertices, physics. Games needed that, and paid for twenty years of it.',
                   '- 2007: CUDA. NVIDIA opens the chip to any calculation that has the same shape: many small identical jobs, no waiting.',
                   '- A neural network is exactly that shape: multiply, add, everywhere, at once. What a CPU did in weeks, a graphics card did in days.',
-                  '2012: two of these, a GeForce GTX 580 each, trained AlexNet in about a week. The other school of AI finally had its engine.'],
+                  'The other school of AI finally had its engine.'],
                  image='gtx580-card.jpg', fit='cover', body_size=27,
                  caption='An NVIDIA GeForce GTX 580, late 2010: the card AlexNet was trained on, two of them. Photo: TheStriker, CC BY-SA 4.0, Wikimedia Commons.',
                  notes='From the 2025 deck: not only for gaming. The story in one line: the machine that learns is parallel by nature, and the only cheap parallel chips on Earth were made for games. CUDA in 2007 let researchers use them for anything; Krizhevsky wrote the network to run on two of them. Say the design consequence: the AI you use is shaped by what gaming hardware could do, and the companies that made it are now the largest on the planet.'))
@@ -459,27 +566,26 @@ S.append(image_full('gtx580-die.jpg', '06 · INSIDE THE GTX 580 · THE GF110 DIE
 
 S.append(figure_slide('06 · 2012 · ALEXNET', 'Deep: the features are learned too.', F.alexnet_layers(),
                       body=['30 September 2012: Krizhevsky, Sutskever and Hinton win the ImageNet challenge with an eight-layer network: 15.3% error against 26.2% for the runner-up, trained on 1.2 million labelled photos in about a week on two GTX 580s. The other entries ran on hand-crafted features; AlexNet grew its own from the pixels.'],
-                      caption='ImageNet: Fei-Fei Li, from 2006; 14 million images labelled by 49,000 Mechanical Turk workers in 167 countries. Who chose the examples, and who labelled them, is week 9.',
+                      caption='ImageNet: Fei-Fei Li, from 2006; 14 million images labelled by 49,000 Mechanical Turk workers in 167 countries.',
                       notes='The picture is a story of layers: the first layers become edge detectors, the middle ones parts, the last ones objects, and nobody programmed any of that; the layers became those detectors because it lowered the error. AlexNet is the 1986 idea with a million examples and a graphics card. Say the two enablers plainly: the web gave the examples, gaming gave the chips. And then the design point in the caption: 49,000 people labelled the photos for pennies. The examples are the material, and someone chose them.'))
 
 S.append(video('06 · 2016 · ALPHAGO · MOVE 37', 'A move outside the human middle.', 'WXuK6gekU1Y',
-               ['Seoul, 10 March 2016, game two: AlphaGo plays a move the commentators call a mistake. Humans would have played it, DeepMind said, one time in ten thousand.',
-                '- Trained first on human games: the prototype of a good move. Then on millions of games against itself: examples no human had ever produced.',
-                '- Move 37 came from the second set. It sits far from the human prototype, and it was right.',
-                'Your word cloud from the start of the class was the room\'s verdict. Creative, alien, or just a very large set of examples? Week 11 comes back to it.'],
-               thumb='yt/WXuK6gekU1Y.jpg', body_size=26,
+               ['Seoul, 10 March 2016, game two, move 37. The commentators call it a mistake. Humans play it, said DeepMind, one time in ten thousand.',
+                'Trained on human games first, then on millions of games against itself. Move 37 came from the second set, and it was right.',
+                'Your word cloud at the start of class was the verdict. Creative, alien, or more examples?'],
+               thumb='yt/WXuK6gekU1Y.jpg', body_size=30,
                notes='The film you watched, in one slide, with today\'s vocabulary. A model trained on human games plays the human middle. Self-play gave it a dataset nobody had curated, and move 37 lives there: a move humans rated one in ten thousand is, by definition, far from the prototype of good play. Put the word cloud back up. The question of whether that is creativity is the course question; we take it up properly in week 11, with authorship. Now the rest of the story, fast.'))
 
 S.append(timeline('06 · MODERN AI · 2012 – 2026', 'The same loop, a billion times bigger.', [
     ('2012', 'AlexNet', '60 million weights, two gaming GPUs, a week. The examples school wins at seeing.'),
     ('2014', 'GANs', 'Two networks, one forging, one judging. Edmond de Belamy, 2018, was one of these.'),
-    ('2017', 'The transformer', '"Attention is all you need": the architecture inside every chatbot since. Week 4.'),
+    ('2017', 'The transformer', '"Attention is all you need": the architecture inside every chatbot since.'),
     ('2020', 'GPT-3', '175 billion weights, trained on the web. Scale as the strategy.'),
     ('2022', 'Diffusion · ChatGPT', 'Stable Diffusion, then ChatGPT: machine B reaches everyone through a text box.'),
     ('2024', 'Two Nobel Prizes', 'Physics: Hopfield and Hinton, the networks. Chemistry: Hassabis and Jumper, AlphaFold.'),
     ('2025', 'Editors that take references', 'Flux Kontext, Qwen-Image-Edit, FLUX.2: show the model pictures, not only words.'),
     ('2026', 'You', 'Both machines in every tool. The designer decides which, and when, and with which examples.'),
-], notes='Fourteen years in eight stops, and every stop is the same loop: examples in, a guess, an error, every weight nudged; only bigger. 2012 needed two graphics cards; 2020 needed thousands; today\'s models are trained on tens of thousands, and the chips are still the descendants of the ones made for games. The last two stops are today: the editors that take reference images are what you use in an hour, and the designer\'s job is choosing the examples. Which is the next chapter: what happens when you give one of these machines two concepts at once.'))
+], notes='Fourteen years in eight stops, and every stop is the same loop: examples in, a guess, an error, every weight nudged; only bigger. 2012 needed two graphics cards; 2020 needed thousands; today\'s models are trained on tens of thousands, and the chips are still the descendants of the ones made for games. The last two stops are today: the editors that take reference images are what you use in an hour, and the designer\'s job is choosing the examples. Next: two concepts at once.'))
 
 # ───────────────────────── 07 · blending concepts ─────────────────────────
 S.append(section('07', 'Blending concepts', 'pet fish · houseboat · a picture from two ideas', bg=PINKS[0],
@@ -495,17 +601,24 @@ S.append(cards('07 · COMBINING CONCEPTS', 'Bachelor was easy. Pet fish is not.'
 ], text_size=22, notes='The second cost of prototype theory, from the Rosch chapter, now in full. The classical theory combines by conjunction and produces nonsense at the edges. Prototype theory cannot combine at all: the pet fish is the standard counter-example. Conceptual blending is the best account we have of what people actually do: a new space with emergent properties, made without a rule. Koestler called it bisociation in 1964; Boden calls it combinational creativity. Next slide: the diagram.'))
 
 S.append(content('07 · FAUCONNIER & TURNER · 2002', 'Two inputs. One new space.',
-                 ['Two input spaces: a house and a boat. A generic space of what they share: a structure, a place, people. And the blend: a houseboat, with what it took from each and what neither had, a mooring fee, a bathroom on deck, a view that changes.',
-                  '- Selective projection: not every property comes across. The house\'s foundations stay behind; so does the boat\'s cargo.',
-                  '- Emergent structure: the blend has properties no input had. That is where the new idea lives.',
-                  'Every metaphor, every product mash-up, every "what if a chair were a cup" is one of these. Now let a machine do it.'],
-                 figure=F.blend_spaces(), body_size=26,
+                 ['Two input spaces: a house and a boat. A generic space of what they share: a structure, a place, people who use it.',
+                  'The blend: a houseboat. It took the rooms from the house and the hull from the boat, and it is one thing, not two.'],
+                 figure=F.blend_spaces(), body_size=32,
                  caption='After Fauconnier & Turner, The Way We Think: Conceptual Blending and the Mind\'s Hidden Complexities, 2002.',
-                 notes='The four-space diagram. Walk it with the houseboat: what each input contributes, what is left behind, what appears only in the blend. Then ask the room for one: a computer virus (biology + software), a desk lamp, a mermaid. The design point: blending is how new concepts are made, and nobody can write the rule for which properties come across. Which is exactly the situation of a machine that has no rules: the activity tests whether examples are enough.'))
+                 notes='The four-space diagram. Walk it with the houseboat: the two inputs, the generic space of what they share, and the blend, with what it took from each: the rooms from the house, the hull from the boat. Say "one thing, not two" now, because the activity turns on it. Next slide: what stays behind, and what appears only in the blend.'))
+
+S.append(cards('07 · FAUCONNIER & TURNER · WHAT A BLEND DOES', 'Some stays behind. Some is new.', [
+    ('SELECTIVE PROJECTION', 'Not every property comes across.',
+     'The house\'s foundations stay behind; so does the boat\'s cargo. The blend takes what it needs from each input and leaves the rest.'),
+    ('EMERGENT STRUCTURE', 'The blend has what no input had.',
+     'A mooring fee, a bathroom on deck, a view that changes. None of it was in the house or the boat. That is where the new idea lives.'),
+    ('EVERY MASH-UP', 'A computer virus. A desk lamp. A mermaid.',
+     'Every metaphor, every product mash-up, every "what if a chair were a cup" is one of these.'),
+], notes='What stays behind: foundations, cargo. What appears only in the blend: the mooring fee, the bathroom on deck, the view that changes. Then ask the room for one: a computer virus (biology + software), a desk lamp, a mermaid. The design point: blending is how new concepts are made, and nobody can write the rule for which properties come across. Which is exactly the situation of a machine that has no rules: the activity tests whether examples are enough.'))
 
 S.append(figure_slide('07 · A MACHINE THAT BLENDS', 'Show it two pictures. Ask for one.', F.blend_outcomes(),
                       body=['An image editor that takes references has the examples; a reference image is one more example, placed in front. Give it two and a sentence and one of three things comes back: a collage, both things side by side, which is what a rule would do; a blend, one thing with properties of both, which no definition could do; or the stronger prototype eats the other, which is the middle pulling, as always.'],
-                      caption='Cup and chair, three outcomes. In the activity, name which one you got; the caption says what came from where. Making the model blend rather than collage is a prompt-writing skill, and a design skill.',
+                      caption='Cup and chair, three outcomes. Making the model blend rather than collage is a prompt-writing skill, and a design skill.',
                       notes='The three outcomes to expect in the next hour, drawn with the week-1 cup and the week-1 chair. The collage is the classical conjunction: both, side by side, nothing new. The blend is the interesting case: properties of both in one object; it can only come from a machine that has no definitions. One wins: the prototype effect from the Rosch chapter, on the picture level: the stronger concept swallows the weaker. Say the skill: getting a blend instead of a collage is in the words, "one thing, not two", and in which pictures you show it.'))
 
 S.append(cards('07 · ON GENAI · IMAGE TO IMAGE', 'Four moves.', [
@@ -517,7 +630,7 @@ S.append(cards('07 · ON GENAI · IMAGE TO IMAGE', 'Four moves.', [
      '"Blend image 1 and image 2 into one thing: the shape of the first, the material of the second." Say "one thing, not two". A reference cannot forbid; the sentence can ask.'),
     ('4 · ITERATE', 'One change per run.',
      'Swap a reference, or change one phrase, never both: then you know which machine answered. Keep every prompt with its picture; the caption is the prompt and the references.'),
-], text_size=22, notes='Four moves, and the discipline from week 2 applies: one change per run so you know what caused what. The TAs checked which editor on GenAI accepts several reference images and how many; say the name aloud. Phone browsers work. If uploads are slow, one laptop per pair. The template is on the next slide and on Blackboard.'))
+], text_size=22, notes='Four moves, and the discipline from week 2 applies: one change per run so you know what caused what. The TAs checked which editor on GenAI accepts several reference images and how many; say the name aloud. Phone browsers work. If uploads are slow, one laptop per pair. The template is on the next slide and on Canvas.'))
 
 S.append(two_col('07 · A PROMPT FOR A BLEND', 'Say what comes from where.',
                  ['Fill the brackets. Attach the images in the order the prompt names them. Run once, look, change one line.',
@@ -525,7 +638,7 @@ S.append(two_col('07 · A PROMPT FOR A BLEND', 'Say what comes from where.',
                   '- Say what each image gives. Left open, the model averages, and the stronger prototype wins.',
                   'Ask for the line back: what it took from each. If it cannot say, look harder at the picture.'],
                  BLEND_PROMPT, right_size=23, left_size=30, lang=None,
-                 notes='The template for rounds 2 and 4, on Blackboard as well. The three sentences that matter: one thing not two, what from each image, nothing I did not ask for. The last line, asking what it took from each, is the reflection\'s argument in miniature: the machine made the image; you decided the examples and what each was for. Then the activity.'))
+                 notes='The template for rounds 2 and 4, on Canvas as well. The three sentences that matter: one thing not two, what from each image, nothing I did not ask for. The last line, asking what it took from each, is the reflection\'s argument in miniature: the machine made the image; you decided the examples and what each was for. Then the activity.'))
 
 # ───────────────────────── 08 · the activity: the blend ─────────────────────────
 S.append(section('08', 'The blend.', f'50 minutes · alone, in pairs, in fours · {GENAI}', bg=YELLOWS[0],
@@ -583,11 +696,11 @@ S.append(cards('08 · CHALLENGE 2 · DUE BEFORE WEEK 4', 'A picture from text an
      'Your own, not today\'s. Say each in a line: what it is, and what a picture of it must have.'),
     ('THE REFERENCES', 'One to three images, yours.',
      'Your photographs, your drawings, your round-1 picture: not other people\'s work. Say what each one is for.'),
-    ('THE RESULT', 'One image, on Blackboard.',
+    ('THE RESULT', 'One image, on Canvas.',
      'The image, the prompt word for word, the references, and one sentence: what came from where, and what got lost. Name the model.'),
     ('THE VOTE', 'Bring it next week.',
      'The room votes in week 4; the winners get shown and a participation star. Evidence for your reflection: your second experiment of five.'),
-], notes='Four things on Blackboard before next class: the image, the prompt, the references, one sentence. Own pictures only for the references; the model must be named. Next week the room votes. The one sentence is the reflection in miniature; tell them to write it while the difference between a blend and a collage is still fresh.'))
+], notes='Four things on Canvas before week 4: the image, the prompt, the references, one sentence. Own pictures only for the references; the model must be named. Next week the room votes. The one sentence is the reflection in miniature; tell them to write it while the difference between a blend and a collage is still fresh.'))
 
 S.append(video('08 · HOMEWORK · WATCH BEFORE WEEK 4', 'Next week: language machines.', 'LPZh9BOjkQs',
                ['3Blue1Brown, "Large Language Models explained briefly": eight minutes on tokens, embeddings and transformers, the machine B that writes.',
@@ -598,9 +711,9 @@ S.append(video('08 · HOMEWORK · WATCH BEFORE WEEK 4', 'Next week: language mac
                notes='One video, short, on the playlist. Next week is the language model as a tool: tokens, embeddings, what a transformer does, hallucination and sycophancy, and prompting as briefing. The week-2 specs come back as briefs. Challenge 2 due before class; the TAs stay 30 minutes now.'))
 
 S.append(end('See you next week. Language machines.',
-             'Challenge 2 on Blackboard. Watch the 3Blue1Brown video. Bring a laptop.',
+             'Challenge 2 on Canvas. Watch the 3Blue1Brown video. Bring a laptop.',
              f'{SITE} · {PLAYLIST.replace("https://", "")}',
-             notes='Module one is done: two ways to teach a machine, and you have used both. Next week the tools begin with language. Homework in one line: the picture from text and references on Blackboard, the video, a laptop. The TAs stay for 30 minutes.'))
+             notes='Module one is done: two ways to teach a machine, and you have used both. Next week the tools begin with language. Homework in one line: the picture from text and references on Canvas before week 4, the video, a laptop. The TAs stay for 30 minutes.'))
 
 # After the class: links each question slide to the answers the room gave (README, "After the
 # class: publish the answers"). deck/week03-reports.json is written by classpoint.py's weekly.py

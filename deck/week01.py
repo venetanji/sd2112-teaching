@@ -115,10 +115,10 @@ S.append(assessment('04 · ASSESSMENT', 'Five components.', [
 
 S.append(content('04 · INDIVIDUAL REFLECTION · 20% · DUE WEEK 7', 'Use AI in your own process for six weeks. Then argue.',
                  ['**Topic:** the role of AI in your creative process — with particular attention to the difference between rule-based and adaptive systems.',
-                  '- About 1000 words, submitted on Blackboard.',
+                  '- About 1000 words, submitted on Canvas.',
                   '- Evidence: at least three of your own experiments from the weekly challenges, with images.',
                   '- A short **process note** at the end: how you used AI to make the reflection itself. Allowed, expected, disclosed.',
-                  'Graded on understanding (30), argument (30), evidence (20), clarity (10), originality (10). Rubric on Blackboard.'],
+                  'Graded on understanding (30), argument (30), evidence (20), clarity (10), originality (10). Rubric on Canvas.'],
                  body_size=32,
                  notes='The reflection is the course question in your own practice. The two machines are the lens: which of your tools are rules, which are learned, and what did each do to your process. Three experiments minimum — the weekly challenges give you five. AI use in writing it is fine and must be disclosed.'))
 
