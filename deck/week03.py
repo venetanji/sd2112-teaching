@@ -11,8 +11,8 @@ backpropagation, parallel calculation and the GPUs that made 2012 possible, mode
 timeline, concept blending, and the activity: a concept as a picture, then two concepts blended in
 pairs, with the image editors on PolyU GenAI that take reference images. Two
 editable p5.js sketches: a perceptron that finds its own line, and the same rule painted pixel by
-pixel with one "core" or four thousand. And one that is not editable: the neuron of the figure, learning one
-example at a time.
+pixel with one "core" or four thousand. And two that are not editable: the neuron of the figure, learning one
+example at a time, and a small network learning by backpropagation.
 """
 import json
 import sys
@@ -228,6 +228,138 @@ function box(x, y, label, hot, d) {                    // a weight or the bias: 
   fill(hot ? ORANGE : TINT); rect(x - 58, y - 24, 116, 48, 6);
   fill(INK); textSize(20); textAlign(CENTER, CENTER); text(label, x, y);
   if (hot) { fill(ORANGE); textSize(18); text(F(d), x - 100, y); }   // the nudge, beside the box
+}
+function mark(x, y, ok) {                              // a teal tick or an orange cross
+  stroke(ok ? TEAL : ORANGE); strokeWeight(3);
+  if (ok) { line(x - 6, y + 1, x - 2, y + 6); line(x - 2, y + 6, x + 7, y - 5); }
+  else { line(x - 5, y - 5, x + 5, y + 5); line(x - 5, y + 5, x + 5, y - 5); }
+  noStroke();
+}
+function mousePressed() {                              // a click on the picture: pause; another: go on
+  if (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height) return;
+  if (running) pausedAt = millis(); else t0 += millis() - pausedAt;
+  running = !running;
+}
+function keyPressed() { if (key == 'c' || key == 'C') { running = true; restart(); } }   // C: from the start"""
+
+# Backpropagation on a small network: nine pixels in, five and three hidden units, two out. The same loop as the
+# neuron, with the error shared backwards through units that never see the answer. Not editable: the figure, live.
+BACKPROP_LEARN = """// The figure, live: a small network (9 pixels in, 5 and 3 hidden units, 2 out) learns to tell a chair
+// from a cup, one example at a time. Forward: the guess travels left to right. Backward: the error
+// travels right to left, and every weight moves a little, the ones most responsible the most.
+const INK = '#000B1C', ORANGE = '#ED6D24', TEAL = '#64C2C3', VIOLET = '#943890', MUTED = '#5C6470', PAPER = '#F4F4F2', LINE = '#C9CDD2';
+const XS = [200, 560, 920, 1220], N = [9, 5, 3, 2], R = [16, 22, 22, 22], COL = [TEAL, VIOLET, VIOLET, ORANGE];
+const YS = [[...Array(9)].map((_, i) => 110 + 45 * i), [...Array(5)].map((_, i) => 120 + 88 * i), [205, 315, 425], [260, 370]];
+const CUP = [1, 0, 1, 1, 0, 1, 1, 1, 1], CHAIR = [1, 0, 0, 1, 1, 1, 1, 0, 1];   // 3 x 3 pixels: a U, and a chair from the side
+const LR = 1.5, SEED = 1986;                             // the nudge; the random numbers, the same each time
+const P = v => nf(v, 1, 2), F = v => (v < 0 ? '−' : '+') + nf(abs(v), 1, 3);
+let W = [], B = [], from = [], delta = [], act = [];    // the weights and biases; before the nudge; the nudge; what each unit fired
+let ex, truth, out, said, big = 0, k = 0, marks = [], secs, t0 = 0, running = true, pausedAt = 0;
+
+function setup() {
+  createCanvas(1680, 560); textFont('JetBrains Mono');
+  secs = createSlider(0.5, 4, 1.5, 0.1, 'seconds per example');
+  new FontFace('JetBrains Mono', 'url(../../vendor/fonts/JetBrainsMono-Variable.ttf)').load()   // the sketch page
+    .then(f => document.fonts.add(f)).catch(() => {});                                            // loads no fonts
+  restart();
+}
+function restart() {                                   // every weight a small random number, the same ones each time
+  randomSeed(SEED); W = []; B = [];
+  for (let l = 0; l < 3; l++) {
+    W.push([...Array(N[l + 1])].map(() => [...Array(N[l])].map(() => random(-1, 1))));
+    B.push([...Array(N[l + 1])].map(() => random(-1, 1)));
+  }
+  k = 0; marks = []; next();
+}
+const sig = z => 1 / (1 + exp(-z));
+function forward(x) {                                   // what every unit fires, from the pixels to the guess
+  let a = [x];
+  for (let l = 0; l < 3; l++) a.push(W[l].map((row, j) => sig(row.reduce((s, w, i) => s + w * a[l][i], B[l][j]))));
+  return a;
+}
+function next() {                                       // an example: the guess, the error, the nudge to every weight
+  truth = random() < 0.5 ? 1 : 0;                        // 1: a chair, 0: a cup
+  ex = (truth ? CHAIR : CUP).map(v => constrain((v ? 0.85 : 0.12) + randomGaussian(0, 0.1), 0, 1));
+  if (random() < 0.2) { let i = floor(random(9)); ex[i] = constrain(ex[i] + random(-0.5, 0.5), 0, 1); }
+  act = forward(ex.map(v => 2 * v - 1)); out = act[3]; said = truth ? out[0] : out[1];   // a pixel goes in as −1 (white) to +1 (black)
+  marks.push((out[0] > out[1]) == (truth == 1)); if (marks.length > 20) marks.shift();
+  let want = [truth, 1 - truth], d = out.map((o, j) => o - want[j]);   // the error at the end: the guess minus the truth
+  from = W.map(m => m.map(r => r.slice())); delta = []; big = 0;
+  for (let l = 2; l >= 0; l--) {                       // backwards, layer by layer: each unit's share, then the nudge
+    delta[l] = W[l].map((row, j) => row.map((w, i) => -LR * d[j] * act[l][i]));
+    let dprev = act[l].map((a, i) => W[l].reduce((s, row, j) => s + row[i] * d[j], 0) * a * (1 - a));
+    W[l].forEach((row, j) => {
+      row.forEach((w, i) => { row[i] = w + delta[l][j][i]; if (abs(delta[l][j][i]) > abs(big)) big = delta[l][j][i]; });
+      B[l][j] -= LR * d[j];
+    });
+    d = dprev;
+  }
+  k++; t0 = millis();
+}
+function draw() {
+  let T = secs.value() * 1000, t = (running ? millis() : pausedAt) - t0;
+  if (running && t >= T) { next(); t = 0; }
+  let p = t / T;                                         // where this example is: forward, the truth, backward
+  let fw = constrain(p / 0.42 * 3, 0, 3), bw = constrain((p - 0.55) / 0.4 * 3, 0, 3);   // in layers travelled
+  let fwd = fw > 0 && fw < 3, back = bw > 0 && bw < 3;
+  background(255);
+  arrow(160, 520, 1250, 520, fwd ? INK : LINE, 'FORWARD · every unit sums its inputs and passes a number on · the guess comes out at the end', 552, fwd ? INK : MUTED);
+  arrow(1250, 40, 160, 40, back ? ORANGE : LINE, 'BACKWARD · the error is shared out along the same connections · every weight moves a little, in proportion to its share', 26, back ? ORANGE : MUTED);
+  // the example: nine pixels, and the nine numbers they become, row by row
+  stroke(LINE); strokeWeight(1);
+  for (let i = 0; i < 9; i++) line(130, 256 + 34 * floor(i / 3), XS[0] - R[0], YS[0][i]);
+  for (let i = 0; i < 9; i++) { fill(lerpColor(color(255), color(INK), ex[i])); rect(28 + 34 * (i % 3), 239 + 34 * floor(i / 3), 34, 34); }
+  // the connections: thicker for a bigger weight, dashed when it pushes down; orange while it moves
+  for (let l = 0; l < 3; l++) {
+    let u = constrain(bw - (2 - l), 0, 1), mx = 1e-6;   // this layer's share of the backward pass: 0 before, 1 after
+    for (const row of delta[l]) for (const v of row) mx = max(mx, abs(v));
+    for (let j = 0; j < N[l + 1]; j++) for (let i = 0; i < N[l]; i++) {
+      let w = from[l][j][i] + delta[l][j][i] * u, s = min(abs(w), 2) / 2;
+      let hot = u > 0 && u < 1 ? abs(delta[l][j][i]) / mx : 0;
+      stroke(lerpColor(lerpColor(color(LINE), color(INK), s), color(ORANGE), hot)); strokeWeight(1 + 4 * s);
+      drawingContext.setLineDash(w < 0 ? [6, 6] : []);
+      line(XS[l] + R[l], YS[l][i], XS[l + 1] - R[l + 1], YS[l + 1][j]);
+    }
+  }
+  drawingContext.setLineDash([]); noStroke();
+  // the pulses: the guess on its way forward, the error on its way back
+  if (fwd) {
+    let l = floor(fw), u = fw - l; fill(INK);
+    for (let j = 0; j < N[l + 1]; j++) for (let i = 0; i < N[l]; i++)
+      circle(lerp(XS[l] + R[l], XS[l + 1] - R[l + 1], u), lerp(YS[l][i], YS[l + 1][j], u), 7);
+  }
+  if (back) {
+    let l = 2 - floor(bw), u = bw - floor(bw); fill(ORANGE);
+    for (let j = 0; j < N[l + 1]; j++) for (let i = 0; i < N[l]; i++)
+      circle(lerp(XS[l + 1] - R[l + 1], XS[l] + R[l], u), lerp(YS[l + 1][j], YS[l][i], u), 7);
+  }
+  // the units, filled by how much they fire once the guess has reached them
+  for (let l = 0; l < 4; l++) for (let j = 0; j < N[l]; j++) {
+    let lit = l == 0 || fw >= l, a = l == 0 ? ex[j] : act[l][j];
+    stroke(LINE); strokeWeight(2); fill(lit ? lerpColor(color(255), color(COL[l]), a) : color(255));
+    circle(XS[l], YS[l][j], 2 * R[l]);
+    if (l > 0 && lit) { noStroke(); fill(a > 0.55 ? 255 : INK); textSize(12); textAlign(CENTER, CENTER); text(P(a), XS[l], YS[l][j]); }
+  }
+  noStroke(); fill(INK); textSize(15); textAlign(CENTER, CENTER);
+  text('THE EXAMPLE', 79, 82); text('PIXELS IN', 200, 82); text('HIDDEN', 560, 82); text('HIDDEN', 920, 82); text('GUESS OUT', 1220, 82);
+  // the guess, then the truth and the error; top right: how it is doing, and the last twenty, ticked or crossed
+  textAlign(LEFT, CENTER); textSize(20);
+  if (fw >= 3) { text('chair ' + P(out[0]), 1300, YS[3][0]); text('cup   ' + P(out[1]), 1300, YS[3][1]); }
+  if (p >= 0.45) {
+    fill(PAPER); rect(1440, 220, 240, 210); fill(INK); textSize(16);
+    let name = truth ? 'chair' : 'cup';
+    ['THE TRUTH: a ' + name, ' ', name + ' should be 1.00', 'it said ' + P(said), 'error: ' + P(1 - said), ' ',
+     'biggest nudge: ' + F(big)].forEach((s, i) => text(s, 1456, 254 + 26 * i));
+  }
+  fill(MUTED); textSize(16); textAlign(RIGHT, CENTER);
+  text('example ' + k + ' · right in the last 20: ' + marks.filter(Boolean).length + ' of ' + marks.length + (running ? '' : ' · paused'), 1680, 60);
+  for (let i = 0; i < marks.length; i++) mark(1420 + 13 * i, 86, marks[i]);
+}
+function arrow(x1, y1, x2, y2, col, label, ly, lcol) {   // a long arrow and its label; dark while it is working
+  stroke(col); strokeWeight(4); line(x1, y1, x2, y2);
+  let dx = x2 > x1 ? 1 : -1; noStroke(); fill(col);
+  triangle(x2, y2, x2 - dx * 20, y2 - 10, x2 - dx * 20, y2 + 10);
+  fill(lcol); textAlign(CENTER, CENTER); textSize(16); text(label, (x1 + x2) / 2, ly);
 }
 function mark(x, y, ok) {                              // a teal tick or an orange cross
   stroke(ok ? TEAL : ORANGE); strokeWeight(3);
@@ -504,9 +636,10 @@ S.append(content('05 · BACKPROPAGATION · 1986', 'Send the error backwards. Nud
                  body_size=38,
                  notes='The perceptron could only nudge weights that touched the output. Backpropagation works out, for a weight three layers deep, how much of the final error was its fault, and nudges it by that much. That is the whole trick: the chain rule from calculus, applied backwards through the network. The design point: nobody tells the hidden units what to detect; they become edge detectors or leg detectors because that lowers the error. Deep learning is this with more layers, more examples, and faster chips. Next slide: the picture.'))
 
-S.append(figure_slide('05 · BACKPROPAGATION · 1986 · THE PICTURE', 'The guess goes forward. The error comes back.', F.backprop(),
-                      caption='Rumelhart, Hinton & Williams, "Learning representations by back-propagating errors", Nature 323, 533–536, 9 October 1986.',
-                      notes='Read it left to right, then right to left. Forward: the pixels go in, every unit sums what reaches it, weighted, and passes a number on; two numbers come out, chair 0.35, cup 0.65. The truth was a chair, so the error is 0.65. Backward: that error travels back along the same connections, and every weight moves a little, the ones most responsible the most. Then the next example. Nobody tells the hidden units what to detect.'))
+S.append(figure_slide('05 · BACKPROPAGATION · 1986 · THE PICTURE, LIVE', 'The guess goes forward. The error comes back.', F.backprop(),
+                      caption='Nine pixels in, five and three hidden units, two out: nineteen units, 66 weights. Rumelhart, Hinton & Williams, "Learning representations by back-propagating errors", Nature 323, 1986.',
+                      sketch=live('backprop-learning', BACKPROP_LEARN, 1680, 560, hint='click = pause · C = start again'),
+                      notes='In the html deck the figure runs: a network of nineteen units learns to tell a chair from a cup, one example every second and a half (the slider under it changes the pace; a click pauses; C starts again from the same random weights). Read one example with the room. Forward: the nine pixels go in, every unit sums what reaches it, weighted, and passes a number on; the dots are the numbers travelling; two numbers come out, say chair 0.35 and cup 0.65. Then the truth: it was a chair, so the error is 0.65. Backward: the orange dots carry that error back along the same connections, and every line flashes as its weight moves, the most responsible the most; solid lines push up, dashed lines push down, thicker is bigger. Then the next example. Top right: how many of the last twenty it got right. Watch the crosses turn into ticks within a minute or two, and say it: nobody tells the hidden units what to detect; they become whatever lowers the error.'))
 
 S.append(figure_slide('05 · HUMANS + CONCEPTS · MACHINES + CONCEPTS', 'Two theories. Two machines.', F.theories_machines(),
                       caption='Rule-based: classical theory + GOFAI, a definition a machine applies. Adaptive: prototype theory + connectionism, examples held in weights nobody can read. Your reflection is about this distinction.',
