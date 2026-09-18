@@ -1,0 +1,28 @@
+[
+  {
+    "activity": null,
+    "question": "Before we start: what do you have with you?",
+    "type": "Multiple Choice",
+    "withheld": "not run in class"
+  },
+  {
+    "activity": "sa20260911035734299ABDS",
+    "question": "Write a rule for drawing a house.",
+    "type": "Short Answer",
+    "ran": "2026-09-11T03:57:34.299000Z",
+    "responses": 80
+  },
+  {
+    "activity": "iu20260911050950363DCFN",
+    "question": "One per pair. Your rule: the picture, and the words that made it.",
+    "type": "Image Upload",
+    "ran": "2026-09-11T05:09:50.363000Z",
+    "responses": 67,
+    "also": {
+      "activity": "iu20260911045813391VYCY",
+      "ran": "2026-09-11T04:58:13.391000Z",
+      "responses": 58,
+      "note": "the same upload run twice, the twist round first; both runs are on the wall (deck/assets/specs-wall.jpg)"
+    }
+  }
+]
