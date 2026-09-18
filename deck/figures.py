@@ -841,7 +841,7 @@ def xor_limit(name='xor-limit', w=1680, h=560):
     _dashed(c, size / 2, 70, size / 2, 70 + size, MUTED, 3)
     _dashed(c, 0, 70 + size, size, 70, MUTED, 3)
     c.text(0, 40, '1969 · MINSKY & PAPERT · ONE LINE CANNOT', size=18, color=ORANGE)
-    c.text(0, 520, 'A on one diagonal, B on the other: no line gets all of them right', size=17, color=INK)
+    _lines(c, 0, 500, ['A on one diagonal, B on the other:', 'no line gets all of them right'], size=17, gap=24)
     mx = 640
     c.text(mx, 40, '1986 · A HIDDEN LAYER, TRAINED BY BACKPROPAGATION', size=18, color=ORANGE)
     ins = [(mx + 40, 190), (mx + 40, 350)]
@@ -864,7 +864,7 @@ def xor_limit(name='xor-limit', w=1680, h=560):
     c.text(mx, 412 + 4 * 24, '(9 weights here; 60 million in AlexNet)', size=17, color=MUTED)
     _xor_panel(c, 1280, 70, size, pts, lines=True)
     c.text(1280, 40, 'TWO LINES · A IN THE BAND, B OUTSIDE', size=18, color=ORANGE)
-    c.text(1280, 520, 'a rule nobody wrote: "A is in the band"', size=17, color=INK)
+    c.text(1280, 500, 'a rule nobody wrote: "A is in the band"', size=17, color=INK)
     return c.finish(name)
 
 
@@ -967,7 +967,7 @@ def theories_machines(name='theories-machines', w=1680, h=560):
             x = x0 + j * (cw + gap)
             c.rect(x, y, cw, rh, fill=fill)
             c.text(x + pad, y + 46, lines[0], size=24, color=col, weight=700)
-            _lines(c, x + pad, y + 90, lines[1:3], size=28, gap=36, mono=False)
+            _lines(c, x + pad, y + 90, lines[1:3], size=26, gap=36)
             c.text(x + pad, y + 170, lines[3], size=18, color=MUTED)
     c.text(0, 530, 'the same two ideas, in a mind and in a machine: a rule you can read, or examples you cannot', size=22, color=INK)
     return c.finish(name)
@@ -1082,16 +1082,16 @@ MODELS = [  # (year, weights, name, the count as said aloud, kind) · from the p
 
 
 def parameter_scale(name='parameter-scale', w=1680, h=576):
-    """Ten models on a log axis: every gridline is ten times more numbers. The last dot is an estimate."""
+    """Ten models on a log axis, one to a hundred trillion: every gridline is ten times more numbers. The last dot is an estimate."""
     c = Canvas(w, h)
     x0, x1, y0, y1 = 220, 1660, 60, 460
-    per = (y1 - y0) / 13.0
+    per = (y1 - y0) / 14.0
 
     def Y(v):
         return y1 - math.log10(v) * per
 
     names = {0: '1', 3: 'a thousand', 6: 'a million', 9: 'a billion', 12: 'a trillion'}
-    for k in range(0, 13):
+    for k in range(0, 15):
         y = Y(10 ** k)
         c.line(x0, y, x1, y, LINE, 2 if k in names else 1, cap='butt')
         if k in names:
