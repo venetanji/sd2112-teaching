@@ -3,8 +3,8 @@ name: Build staging
 # On every push to `staging` (or by hand): build everything the way the two main workflows
 # do — html decks, PDFs, the published markdown, the PowerPoints, the ClassPoint manifest,
 # the documents, the previews — and keep it all as artifacts of the run, to check before it
-# goes to main. Nothing is published from here: the Publish site workflow on main picks this
-# run up and shows the html under /staging/ of the Pages site.
+# goes to main. Nothing is published from here: the Publish site workflow on main picks the
+# `staging-site` artifact of the last good run up and shows it under /staging/ of the Pages site.
 on:
   push:
     branches: [staging]
@@ -41,7 +41,7 @@ jobs:
         with:
           name: staging-site
           path: _site
-          retention-days: 30
+          retention-days: 90
       - uses: actions/upload-artifact@v4
         with:
           name: staging-powerpoints
