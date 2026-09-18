@@ -722,7 +722,7 @@ S.append(cards('07 · COMBINING CONCEPTS', 'Bachelor was easy. Pet fish is not.'
     ('THE CLASSICAL WAY', 'Add the conditions.',
      'Man + unmarried. A rule combines any two definitions: everything from both, nothing new. It also gives you "fake gun" (a gun?) and "small elephant" (small?). Assembly is where lists show their seams.'),
     ('THE PROTOTYPE PROBLEM', 'Typicality does not multiply.',
-     'A goldfish is a poor example of a pet and a poor example of a fish, and a very good pet fish (Osherson & Smith, 1981). Which properties survive the combination? Nobody has found the rule (Hampton, 1988).'),
+     'Picture a pet: not a goldfish. Picture a fish: not a goldfish. Picture a pet fish: a goldfish (Osherson & Smith, 1981, who used a guppy). Which properties survive the combination? Nobody has found the rule (Hampton, 1988).'),
     ('THE BLEND', 'Two inputs, one new space.',
      'Fauconnier & Turner, 2002: we build a blended space that takes some structure from each input and grows structure of its own. A houseboat, a computer virus, a desk lamp. We do it all day; we cannot say how.'),
 ], text_size=22, notes='The second cost of prototype theory, from the Rosch chapter, now in full. The classical theory combines by conjunction and produces nonsense at the edges. Prototype theory cannot combine at all: the pet fish is the standard counter-example. Conceptual blending is the best account we have of what people actually do: a new space with emergent properties, made without a rule. Koestler called it bisociation in 1964; Boden calls it combinational creativity. Next slide: the diagram.'))
@@ -765,7 +765,7 @@ S.append(two_col('07 · A PROMPT FOR A BLEND', 'Say what comes from where.',
                   '- Say what each image gives. Left open, the model averages, and the stronger prototype wins.',
                   'Ask for the line back: what it took from each. If it cannot say, look harder at the picture.'],
                  BLEND_PROMPT, right_size=23, left_size=30, lang=None,
-                 notes='The template for rounds 2 and 4, on Canvas as well. The three sentences that matter: one thing not two, what from each image, nothing I did not ask for. The last line, asking what it took from each, is the reflection\'s argument in miniature: the machine made the image; you decided the examples and what each was for. Then the activity.'))
+                 notes='The template for round 2, on Canvas as well. The three sentences that matter: one thing not two, what from each image, nothing I did not ask for. The last line, asking what it took from each, is the reflection\'s argument in miniature: the machine made the image; you decided the examples and what each was for. Then the activity.'))
 
 # ───────────────────────── 08 · the activity: the blend ─────────────────────────
 S.append(section('08', 'The blend.', f'30 minutes · alone, then in pairs · {GENAI}', bg=YELLOWS[0],
