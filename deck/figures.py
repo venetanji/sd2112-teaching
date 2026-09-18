@@ -841,7 +841,7 @@ def xor_limit(name='xor-limit', w=1680, h=560):
     _dashed(c, size / 2, 70, size / 2, 70 + size, MUTED, 3)
     _dashed(c, 0, 70 + size, size, 70, MUTED, 3)
     c.text(0, 40, '1969 · MINSKY & PAPERT · ONE LINE CANNOT', size=18, color=ORANGE)
-    c.text(0, 520, 'A on one diagonal, B on the other: no line gets all of them right', size=17, color=INK)
+    _lines(c, 0, 500, ['A on one diagonal, B on the other:', 'no line gets all of them right'], size=17, gap=24)
     mx = 640
     c.text(mx, 40, '1986 · A HIDDEN LAYER, TRAINED BY BACKPROPAGATION', size=18, color=ORANGE)
     ins = [(mx + 40, 190), (mx + 40, 350)]
@@ -864,32 +864,40 @@ def xor_limit(name='xor-limit', w=1680, h=560):
     c.text(mx, 412 + 4 * 24, '(9 weights here; 60 million in AlexNet)', size=17, color=MUTED)
     _xor_panel(c, 1280, 70, size, pts, lines=True)
     c.text(1280, 40, 'TWO LINES · A IN THE BAND, B OUTSIDE', size=18, color=ORANGE)
-    c.text(1280, 520, 'a rule nobody wrote: "A is in the band"', size=17, color=INK)
+    c.text(1280, 500, 'a rule nobody wrote: "A is in the band"', size=17, color=INK)
     return c.finish(name)
 
 
 # ───────────────────────── backpropagation: the guess goes forward, the error comes back ─────────────────────────
 def backprop(name='backprop', w=1680, h=560):
+    """A 9-5-3-2 network at the moment the guess is out: the frame the live sketch draws (week03.py, BACKPROP_LEARN)."""
     c = Canvas(w, h)
-    layers = [[(200, 150 + i * 110) for i in range(4)], [(560, 120 + i * 88) for i in range(5)], [(920, 205 + i * 110) for i in range(3)], [(1220, 260 + i * 110) for i in range(2)]]
-    names = ['PIXELS IN', 'HIDDEN', 'HIDDEN', 'GUESS OUT']
-    for a, b_ in zip(layers, layers[1:]):
-        for x1, y1 in a:
-            for x2, y2 in b_:
-                c.line(x1, y1, x2, y2, LINE, 2)
+    xs, sizes, rad = [200, 560, 920, 1220], [9, 5, 3, 2], [16, 22, 22, 22]
+    ys = [[110 + 45 * i for i in range(9)], [120 + 88 * i for i in range(5)], [205, 315, 425], [260, 370]]
+    chair = [1, 0, 0, 1, 1, 1, 1, 0, 1]                  # 3 x 3 pixels: a chair from the side
+    for i, v in enumerate(chair):                        # the example, and the nine numbers it becomes, row by row
+        c.line(130, 256 + 34 * (i // 3), xs[0] - rad[0], ys[0][i], LINE, 1)
+    for i, v in enumerate(chair):
+        c.rect(28 + 34 * (i % 3), 239 + 34 * (i // 3), 34, 34, fill=INK if v else '#FFFFFF', stroke=LINE, width=1)
+    for l in range(3):
+        for i in range(sizes[l]):
+            for j in range(sizes[l + 1]):
+                c.line(xs[l] + rad[l], ys[l][i], xs[l + 1] - rad[l + 1], ys[l + 1][j], LINE, 2)
     fills = [TEAL, VIOLET, VIOLET, ORANGE]
-    for layer, fill, label in zip(layers, fills, names):
-        for x, y in layer:
-            c.circle(x, y, 22, fill=fill)
-        c.text(layer[0][0], 82, label, size=15, anchor='middle')
-    c.text(1300, 266, 'chair  0.35', size=20, color=INK)
-    c.text(1300, 376, 'cup    0.65', size=20, color=INK)
-    c.rect(1420, 230, 260, 190, fill=PAPER)
-    _lines(c, 1440, 266, ['THE TRUTH: a chair', ' ', 'chair should be 1.00', 'it said 0.35', ' ', 'error: 0.65'], size=16, gap=26)
+    for l in range(4):
+        for j in range(sizes[l]):
+            on = chair[j] if l == 0 else 1
+            c.circle(xs[l], ys[l][j], rad[l], fill=fills[l] if on else '#FFFFFF', stroke=LINE, width=2)
+    for x, label in zip([79] + xs, ['THE EXAMPLE', 'PIXELS IN', 'HIDDEN', 'HIDDEN', 'GUESS OUT']):
+        c.text(x, 87, label, size=15, anchor='middle', color=INK)
+    c.text(1300, 266, 'chair 0.35', size=20, color=INK)
+    c.text(1300, 376, 'cup   0.65', size=20, color=INK)
+    c.rect(1440, 220, 240, 210, fill=PAPER)
+    _lines(c, 1456, 259, ['THE TRUTH: a chair', ' ', 'chair should be 1.00', 'it said 0.35', 'error: 0.65', ' ', 'then: every weight moves'], size=16, gap=26, color=INK)
     _arrow(c, 160, 520, 1250, 520, INK, 4)
-    c.text(700, 552, 'FORWARD · every unit sums its inputs and passes a number on · the guess comes out at the end', size=16, anchor='middle', color=INK)
+    c.text(705, 557, 'FORWARD · every unit sums its inputs and passes a number on · the guess comes out at the end', size=16, anchor='middle', color=INK)
     _arrow(c, 1250, 40, 160, 40, ORANGE, 4)
-    c.text(700, 26, 'BACKWARD · the error is shared out along the same connections · every weight moves a little, in proportion to its share', size=16, anchor='middle', color=ORANGE)
+    c.text(705, 31, 'BACKWARD · the error is shared out along the same connections · every weight moves a little, in proportion to its share', size=16, anchor='middle', color=ORANGE)
     return c.finish(name)
 
 
@@ -967,7 +975,7 @@ def theories_machines(name='theories-machines', w=1680, h=560):
             x = x0 + j * (cw + gap)
             c.rect(x, y, cw, rh, fill=fill)
             c.text(x + pad, y + 46, lines[0], size=24, color=col, weight=700)
-            _lines(c, x + pad, y + 90, lines[1:3], size=28, gap=36, mono=False)
+            _lines(c, x + pad, y + 90, lines[1:3], size=26, gap=36)
             c.text(x + pad, y + 170, lines[3], size=18, color=MUTED)
     c.text(0, 530, 'the same two ideas, in a mind and in a machine: a rule you can read, or examples you cannot', size=22, color=INK)
     return c.finish(name)
@@ -1082,16 +1090,16 @@ MODELS = [  # (year, weights, name, the count as said aloud, kind) · from the p
 
 
 def parameter_scale(name='parameter-scale', w=1680, h=576):
-    """Ten models on a log axis: every gridline is ten times more numbers. The last dot is an estimate."""
+    """Ten models on a log axis, one to a hundred trillion: every gridline is ten times more numbers. The last dot is an estimate."""
     c = Canvas(w, h)
     x0, x1, y0, y1 = 220, 1660, 60, 460
-    per = (y1 - y0) / 13.0
+    per = (y1 - y0) / 14.0
 
     def Y(v):
         return y1 - math.log10(v) * per
 
     names = {0: '1', 3: 'a thousand', 6: 'a million', 9: 'a billion', 12: 'a trillion'}
-    for k in range(0, 13):
+    for k in range(0, 15):
         y = Y(10 ** k)
         c.line(x0, y, x1, y, LINE, 2 if k in names else 1, cap='butt')
         if k in names:
