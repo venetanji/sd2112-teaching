@@ -12,17 +12,23 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import figures as F                                  # noqa: E402
 import week04_figures as W4                          # noqa: E402
 from deckgen import attach_reports, build_all, INK, PAPER, VIOLET, YELLOWS  # noqa: E402
 from deckgen.layouts import (title, end, agenda, section, statement, content, cards, question,
-                             journey, activity, two_col, figure_slide, finalize)
+                             journey, activity, two_col, image_full, finalize)
 from course import SITE, PLAYLIST, JOURNEY, footer     # noqa: E402
 
 
 FOOTER = footer(4)
 HERE = Path(__file__).resolve().parent
 S = []
+
+
+def full_diagram(eyebrow_text, caption, figure, notes=''):
+    """Give a code-drawn diagram a full-slide image area and a short footer label."""
+    _svg, png = figure
+    return image_full(png, eyebrow_text, caption, notes=notes,
+                      fit='contain', bg=PAPER)
 
 
 # ───────────────────────── 00 · open and recall ─────────────────────────
@@ -60,11 +66,8 @@ S.append(cards('00 · A LANGUAGE MACHINE, THREE WAYS', 'From rules to patterns t
 S.append(journey('00 · THE COURSE', 'Where we are', JOURNEY, here=(1, 0),
                  notes='Three weeks, three kinds of material. Week 4 is the first class in module 2. Weeks 1 to 3 built the contrast between rules and learned examples; now we move from models that write to systems that can act.'))
 
-S.append(figure_slide('00 · WEEKS 1–3 · TWO MACHINES', 'Write the rule, or show the examples.', F.two_machines(),
-                      body=['Machine A: a person writes the rule; the system applies it. Exact, explainable, brittle.',
-                            'Machine B: show examples; training adjusts the weights. Flexible, learned, hard to explain.',
-                            'This is a useful course distinction, not a complete taxonomy of AI.'],
-                      caption='Week 1 introduced the distinction; week 2 made rules; week 3 showed a perceptron learning from examples.',
+S.append(full_diagram('00 · WEEKS 1–3 · TWO MACHINES',
+                      'Rules are written. Patterns are learned.', W4.machine_ab(),
                       notes='Revisit the chairs. A rule can decide exactly what counts as a chair, until an unusual chair arrives. A model can learn from many chairs, but cannot point to one explicit definition. Week 2 put rules into art and code; week 3 showed a network adjusting weights against examples. Today both machines will appear in language.'))
 
 S.append(cards('00 · THE FIRST THREE WEEKS', 'The language class inherits both.',
@@ -94,12 +97,9 @@ S.append(content('01 · NOAM CHOMSKY · GENERATIVE GRAMMAR',
                  body_size=28,
                  notes='Chomsky’s generative grammar begins with the question of how a finite system can account for indefinitely many sentences. His account of Universal Grammar is a theoretical proposal about the human language faculty and what learners bring to acquisition. Do not equate UG with symbolic AI: the link to Machine A is that rules and structure are made explicit.'))
 
-S.append(figure_slide('01 · A TOY GRAMMAR · NOT UNIVERSAL GRAMMAR',
-                      'One small rule generates many sentences.', W4.grammar_tree(),
-                      body=['S → NP + VP: a sentence can be built from a noun phrase and a verb phrase.',
-                            'A small grammar can generate several valid combinations. This is a teaching example, not a model of every human language.'],
-                      caption='Toy phrase structure for “the designer writes a brief”. The diagram illustrates generative rules; it does not claim to depict Chomsky’s UG.',
-                      notes='Read the tree top to bottom. S is a sentence; NP and VP are categories; the leaves are the words. The categories are not the words themselves. Chomsky’s work is a much richer theory of linguistic competence; keep the caveat in the slide title and caption.'))
+S.append(full_diagram('01 · A TOY GRAMMAR',
+                      'Phrase structure shows one way rules build a sentence.', W4.grammar_tree(),
+                      notes='Read the tree top to bottom. S is a sentence; NP and VP are categories; the leaves are the words. The categories are not the words themselves. Chomsky’s work is a much richer theory of linguistic competence; the diagram is a teaching example, not a depiction of Universal Grammar.'))
 
 S.append(content('01 · WEIZENBAUM · ELIZA · 1966',
                  'A conversation can feel intelligent because a rule fits.',
@@ -111,17 +111,14 @@ S.append(content('01 · WEIZENBAUM · ELIZA · 1966',
                  body_size=31,
                  notes='Weizenbaum described ELIZA as a text-manipulation program based on transformation rules. It is an important early language interface and a sharp lesson in how easily people read understanding into fluent conversation. The exact reply varies with the script and the input; the next slide uses a compact teaching example.'))
 
-S.append(figure_slide('01 · A RULE, RUN ONCE',
-                      'The same words return as a question.',
-                      F.eliza_transcript([
+S.append(full_diagram('01 · ELIZA · 1966',
+                      'Pattern matching can sound like understanding.',
+                      W4.eliza_transcript([
                           'I AM UNHAPPY',
                           '{violet:HOW LONG HAVE YOU BEEN UNHAPPY?}',
                           'I HAVE BEEN UNHAPPY FOR WEEKS',
                           '{violet:WHY DO YOU SAY YOU HAVE BEEN UNHAPPY FOR WEEKS?}',
-                      ], name='w04-eliza-example', w=800, h=300),
-                      body=['Pattern: “I am *” → “How long have you been *?”',
-                            'ELIZA transforms the words it matches; a fluent reply does not prove understanding.'],
-                      caption='A simplified DOCTOR-script example after Weizenbaum (1966).',
+                      ]),
                       notes='Point to the transformation, not to the machine as a character. The input is echoed, reordered, and returned as a question. Ask whether a person could still find the exchange useful. The answer can be yes, without deciding that ELIZA understands.'))
 
 S.append(question('multiple_choice', 'What is ELIZA doing in this example?',
@@ -150,13 +147,13 @@ S.append(cards('02 · BEFORE THE TRANSFORMER · RNNs',
     ], text_size=23,
     notes='Elman’s 1990 paper uses recurrent links to provide dynamic memory: hidden activity feeds back into later processing. This is one clear historical example, not the first recurrent network. The design tradeoff is visible: each step depends on the state from the step before it.'))
 
-S.append(figure_slide('02 · RNN → TRANSFORMER',
-                      'Two ways to carry context through a sequence.',
-                      W4.sequence_models(),
-                      body=['An RNN passes a learned state from one position to the next.',
-                            'A transformer uses self-attention to mix information across positions. During training, positions can be processed in parallel; a GPT-style decoder still generates one next token at a time.'],
-                      caption='Schematic only. The attention cells are a causal mask, not measured model weights.',
-                      notes='Left: the current hidden state depends on the prior state, so the sequence is read step by step. Right: self-attention builds relationships across positions, with future positions masked for a causal text generator. Transformers made parallel training easier; generation is still autoregressive, one token at a time.'))
+S.append(full_diagram('02 · RNN · RECURRENT STATE',
+                      'A learned state moves from one token to the next.', W4.rnn_steps(),
+                      notes='The hidden state at each step depends on the previous state. The network learns these representations from examples; they are not hand-written grammar rules.'))
+
+S.append(full_diagram('02 · TRANSFORMER · CAUSAL SELF-ATTENTION',
+                      'Attention looks back; generation stays one token at a time.', W4.transformer_mask(),
+                      notes='The teal cells indicate positions available to each token; dark cells mark future positions masked in a causal decoder. Transformers made training across positions easier to parallelize. GPT-style generation remains autoregressive, one token at a time.'))
 
 S.append(cards('02 · TRANSFORMERS · 2017',
                'Attention lets a token use its context.',
@@ -187,13 +184,9 @@ S.append(section('03', 'Question answering → agents',
                  'retrieve · answer · act · observe', bg=INK,
                  notes='A question-answering bot and an agent may share a language model. What changes is the system around it: evidence, tools, a loop, and control.'))
 
-S.append(figure_slide('03 · RETRIEVAL-AUGMENTED ANSWERS',
-                      'Retrieval adds evidence to an answer.',
-                      W4.qa_to_agent(),
-                      body=['A one-shot retrieval system searches a collection, gives passages to the model, and generates an answer; an interface may also show the sources.',
-                            'An agent can choose an action, inspect the result, and decide whether another action is needed.'],
-                      caption='Top: retrieve, then answer; citations depend on the system. Bottom: an agent can continue from the observation or stop for a person.',
-                      notes='Distinguish a fixed search-and-answer workflow from a system that chooses its own sequence of actions. Retrieval-augmented generation combines a model with external passages; retrieval can be one step in a workflow or one tool an agent chooses to call. Not every QA bot is an agent.'))
+S.append(full_diagram('03 · QUESTION ANSWERING',
+                      'Retrieve evidence, then generate an answer.', W4.qa_pipeline(),
+                      notes='The figure shows a fixed retrieval-and-answer path. Sources can be shown in an interface, but citations depend on the system. The following cards compare a ruled FAQ, one-pass RAG, and an agent that can choose what to do next.'))
 
 S.append(cards('03 · THREE ANSWERING SYSTEMS',
                'A tool call alone does not make a system an agent.',
@@ -221,13 +214,9 @@ S.append(section('04', 'The agent',
                  'a model that can choose a tool and go again', bg=VIOLET,
                  notes='Now the model can affect a system outside its reply. The loop and the harness become part of the design.'))
 
-S.append(figure_slide('04 · THE AGENT LOOP',
-                      'The tool result becomes the next context.',
-                      W4.agent_loop(),
-                      body=['Give a goal and limits. The model proposes an action. The harness routes it to a tool and records the result.',
-                            'The model can continue, ask a person, or stop. Each extra step can help or compound an error.'],
-                      caption='After ReAct (Yao et al., 2022): reasoning and actions can alternate as a model interacts with an environment.',
-                      notes='Walk the arrows: goal and limits; model; tool call; observation; continue or stop. Connect this to the 2025 programming slides: input handling, polling, event loops and callbacks already gave us the control structures; the agent harness runs a loop in which the model can select the next action from the latest observation. The model does not replace the program around it. A search result or file output is new evidence, not automatically trusted truth. The stopping rule, tool access, and approval point are design decisions.'))
+S.append(full_diagram('04 · THE AGENT LOOP',
+                      'Observe the result; continue, ask, or stop.', W4.agent_loop(),
+                      notes='Walk the arrows: goal and limits; model; tool call; observation. Connect this to the 2025 programming slides: input handling, polling, event loops and callbacks already gave us the control structures; the agent harness runs a loop in which the model can select the next action from the latest observation. The model does not replace the program around it. A search result or file output is new evidence, not automatically trusted truth. The stopping rule, tool access, and approval point are design decisions.'))
 
 S.append(cards('04 · TOOLS ARE ACTIONS',
                'The model chooses; the harness performs.',
@@ -252,13 +241,9 @@ S.append(content('04 · WHEN THE LOOP GOES WRONG',
                  body_size=28,
                  notes='This is not a warning slide detached from design. It is the reason to observe the harness in the demo. Tools and memory expand what the model can do; permissions, sandboxing, logging, and checkpoints set the boundary. Ask where the boundary sits in each tool Gio shows.'))
 
-S.append(figure_slide('04 · THE AGENT HARNESS',
-                      'The model is one part of the running system.',
-                      W4.harness_layers(),
-                      body=['The harness supplies instructions, context and memory; exposes tools; routes results; enforces permissions; records the run; and decides when to pause.',
-                            'The same model can behave differently when these conditions change.'],
-                      caption='The “harness” is the software around the model that runs the loop and routes tool calls.',
-                      notes='Anthropic describes a harness as the loop calling the model and routing tool calls to infrastructure. For this class, use the wider working view in the diagram: prompt and context, memory, tools, sandbox, permissions, logs, and a human checkpoint. Product interfaces hide some of this and expose other parts.'))
+S.append(full_diagram('04 · THE AGENT HARNESS',
+                      'The harness sets context, tools, permissions, and review.', W4.harness_map(),
+                      notes='Anthropic describes a harness as the loop calling the model and routing tool calls to infrastructure. For this class, use the wider working view in the diagram: goal and context, memory, tools, sandbox, permissions, logs, and a human checkpoint. Product interfaces hide some of this and expose other parts.'))
 
 S.append(content('04 · THE HARNESS IS PART OF THE DESIGN',
                  'The interface decides what people can see and control.',
@@ -444,12 +429,8 @@ S.append(cards('08 · HOW IT IS MARKED',
     ], text_size=20,
     notes='These percentages come from the approved reflection rubric. The process note is required; the syllabus says missing it lowers the clarity criterion by one grade band. Remind students that invented citations fail the assignment.'))
 
-S.append(figure_slide('08 · KEEP THE EVIDENCE AS YOU GO',
-                      'Three of five experiments are enough.',
-                      W4.reflection_evidence(),
-                      body=['Week 2: a picture from rules. Week 3: a picture from text and references. Week 4: a brief drafted and edited.',
-                            'Weeks 5 and 6 add image/layout and sound/music experiments. Save the prompt, the result, your change, and an image each week.'],
-                      caption='The individual reflection is due in Week 7 on Canvas; the link will be posted by Gio.',
+S.append(full_diagram('08 · KEEP THE EVIDENCE AS YOU GO',
+                      'Save evidence from any three experiments in Weeks 2–6.', W4.reflection_evidence(),
                       notes='At least three of the week 2–6 experiments are required; students can choose which ones support their argument. The point of the timeline is to collect evidence while the choices and revisions are fresh.'))
 
 S.append(cards('08 · THE NEXT THREE CLASSES',
