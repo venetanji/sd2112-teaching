@@ -15,7 +15,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import week04_figures as W4                          # noqa: E402
 from deckgen import attach_reports, build_all, INK, PAPER, VIOLET, YELLOWS  # noqa: E402
 from deckgen.layouts import (title, end, agenda, section, statement, content, cards, question,
-                             journey, activity, two_col, image_full, live, place_sketch, finalize)
+                             journey, activity, two_col, image_full, live, sketch_slide,
+                             Rect, T, eyebrow, finalize)
 from course import SITE, PLAYLIST, JOURNEY, footer     # noqa: E402
 
 
@@ -24,20 +25,22 @@ HERE = Path(__file__).resolve().parent
 S = []
 
 
-def full_diagram(eyebrow_text, caption, figure, notes=''):
-    """Give a code-drawn diagram a full-slide image area and a short footer label."""
+def full_diagram(eyebrow_text, title_text, figure, notes='',
+                 header_bg=PAPER, eyebrow_color=None, title_color=None):
+    """Keep diagrams large while laying their header and title in deck-native text."""
     _svg, png = figure
-    return image_full(png, eyebrow_text, caption, notes=notes,
-                      fit='contain', bg=PAPER)
-
-
-def full_interactive(eyebrow_text, caption, figure, sketch, notes=''):
-    """Keep the full-slide diagram treatment while layering a live p5.js sketch over its still."""
-    _svg, png = figure
-    slide = image_full(png, eyebrow_text, caption, notes=notes,
-                       fit='contain', bg=PAPER)
-    slide.els = slide.els[1:]  # replace the still with the paired figure + live canvas
-    place_sketch(slide, sketch, (120, 40, 1680, 880), figure=figure)
+    slide = image_full(png, '', '', notes=notes, fit='contain', bg=PAPER)
+    image = slide.els[0]
+    text_color = title_color or INK
+    header_text_color = eyebrow_color or '#5C6470'
+    slide.els = [
+        image,
+        Rect(120, 40, 1680, 180, header_bg),  # covers the older raster heading/title
+        eyebrow(120, 78, eyebrow_text, header_text_color),
+        T(120, 126, 1680, 80, title_text, 'xbold', 54, text_color,
+          lh=0.96, spc=-0.03),
+    ]
+    slide.chrome = True
     return slide
 
 
@@ -48,7 +51,7 @@ let lines = [];
 const INK = '#000B1C', ORANGE = '#ED6D24', TEAL = '#246E70', VIOLET = '#943890';
 
 function setup() {
-  createCanvas(1680, 860);
+  createCanvas(1680, 640);
   pixelDensity(1);
   textFont('Arial');
   noLoop();
@@ -65,21 +68,14 @@ function makeSentences() {
 
 function draw() {
   background('#F4F4F2');
-  fill(ORANGE); textSize(28); text('MACHINE A · TRY THE TOY GRAMMAR', 70, 78);
-  fill(INK); textSize(48); text('The sentence frame stays; the words change.', 70, 148);
-  fill(VIOLET); textSize(25); text('RULE   The + NOUN + VERB + the + NOUN.', 70, 205);
-  fill('#EEE8F5'); stroke(VIOLET); strokeWeight(3); rect(1220, 46, 390, 76);
-  noStroke(); fill(VIOLET); textSize(22); textAlign(CENTER, CENTER);
-  text('HTML · CLICK TO GENERATE', 1415, 84); textAlign(LEFT, BASELINE);
-
   textSize(36);
   for (let i = 0; i < lines.length; i++) {
-    const y = 242 + i * 92, [subject, verb, object] = lines[i];
-    fill(255); stroke('#E1E1DE'); strokeWeight(2); rect(70, y, 1540, 78);
+    const y = 55 + i * 88, [subject, verb, object] = lines[i];
+    fill(255); stroke('#E1E1DE'); strokeWeight(2); rect(70, y, 1540, 70);
     noStroke(); fill('#5C6470'); textFont('monospace'); textSize(20);
-    text(String(i + 1).padStart(2, '0'), 100, y + 50);
+    text(String(i + 1).padStart(2, '0'), 100, y + 46);
     textFont('Arial'); textSize(36);
-    let x = 182; const baseline = y + 52;
+    let x = 182; const baseline = y + 48;
     fill(ORANGE); const start = 'The ' + subject + ' '; text(start, x, baseline); x += textWidth(start);
     fill(TEAL); const action = verb + ' '; text(action, x, baseline); x += textWidth(action);
     fill(VIOLET); text('the ' + object + '.', x, baseline);
@@ -157,12 +153,14 @@ S.append(content('01 · NOAM CHOMSKY · GENERATIVE GRAMMAR',
                   caption='Photo: Augusto Starita · Argentine Culture Ministry · CC BY-SA 2.0',
                  notes='Chomsky’s generative grammar begins with the question of how a finite system can account for indefinitely many sentences. His account of Universal Grammar is a theoretical proposal about the human language faculty and what learners bring to acquisition. Do not equate UG with symbolic AI: the link to Machine A is that rules and structure are made explicit. Portrait: Augusto Starita / Ministerio de Cultura de la Nación, Argentina; retouched from the original by Wugapodes; Wikimedia Commons, CC BY-SA 2.0. Source: https://commons.wikimedia.org/wiki/File:Noam_Chomsky_portrait_2015.jpg. License: https://creativecommons.org/licenses/by-sa/2.0/.'))
 
-S.append(full_interactive('01 · A TOY GRAMMAR',
-                          'HTML deck · click anywhere for six new sentences.',
-                          W4.sentence_stack(),
-                          live('grammar-sentence-generator', SENTENCE_SKETCH, 1680, 860,
-                               hint='click anywhere to generate six new sentences'),
-                          notes='This p5.js sketch applies one fixed toy frame: The + noun + verb + the + noun. Each click draws six fresh combinations and stacks them. Ask what the rule guarantees, what it leaves open, and why this small example is not Universal Grammar. The PDF and PowerPoint show a fixed sample; the HTML deck is interactive.'))
+S.append(sketch_slide('01 · A TOY GRAMMAR',
+                      'One rule generates many new sentences.',
+                      live('grammar-sentence-generator', SENTENCE_SKETCH, 1680, 640,
+                           hint='click to generate six new sentences'),
+                      figure=W4.sentence_stack(),
+                      body=['Rule: The + noun + verb + the + noun. Click to generate six more.'],
+                      bg=PAPER,
+                      notes='This p5.js sketch applies one fixed toy frame: The + noun + verb + the + noun. Each click draws six fresh combinations and stacks them. Ask what the rule guarantees, what it leaves open, and why this small example is not Universal Grammar. The PDF and PowerPoint show a fixed sample; the HTML deck is interactive.'))
 
 S.append(content('01 · WEIZENBAUM · ELIZA · 1966',
                  'A conversation can feel intelligent because a rule fits.',
@@ -207,6 +205,7 @@ S.append(full_diagram('02 · RNN · RECURRENT STATE',
 
 S.append(full_diagram('02 · TRANSFORMER · CAUSAL SELF-ATTENTION',
                       'Attention looks back; generation stays one token at a time.', W4.transformer_mask(),
+                      header_bg=INK, eyebrow_color='#64C2C3', title_color='white',
                       notes='The teal cells indicate positions available to each token; dark cells mark future positions masked in a causal decoder. Transformers made training across positions easier to parallelize. GPT-style generation remains autoregressive, one token at a time.'))
 
 S.append(cards('02 · TRANSFORMERS · 2017',
@@ -238,9 +237,19 @@ S.append(section('03', 'Question answering → agents',
                  'retrieve · answer · act · observe', bg=INK,
                  notes='A question-answering bot and an agent may share a language model. What changes is the system around it: evidence, tools, a loop, and control.'))
 
-S.append(full_diagram('03 · QUESTION ANSWERING',
-                      'Retrieve evidence, then generate an answer.', W4.qa_pipeline(),
-                      notes='The figure shows a fixed retrieval-and-answer path. Sources can be shown in an interface, but citations depend on the system. The following cards compare a ruled FAQ, one-pass RAG, and an agent that can choose what to do next.'))
+S.append(cards('03 · QUESTION ANSWERING',
+               'Retrieve evidence, then write one answer.',
+    [
+        ('01 · QUESTION', 'What do I need to know?',
+         'A visitor asks: “What time does the event start?”'),
+        ('02 · SEARCH', 'Find a source.',
+         'Search the official event page for the schedule.'),
+        ('03 · EVIDENCE', 'Select a passage.',
+         'Bring the relevant text and its URL into context.'),
+        ('04 · ANSWER', 'Write from evidence.',
+         'Answer once; mark details the source does not give.'),
+    ], text_size=22,
+    notes='This is a fixed retrieval path laid out as native HTML cards. Read left to right: question, search, evidence, answer. The system follows the same route each time; sources can be shown in the interface, but citation quality depends on the implementation. The next slide contrasts this with an agent that can change its next step.'))
 
 S.append(cards('03 · THREE ANSWERING SYSTEMS',
                'A tool call alone does not make a system an agent.',

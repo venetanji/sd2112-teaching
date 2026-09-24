@@ -79,19 +79,9 @@ def grammar_tree(name='w04-grammar-tree', w=1680, h=860):
     return c.finish(name)
 
 
-def sentence_stack(name='w04-sentence-stack', w=1680, h=860):
-    """Printable still for the live rule-based noun/verb sentence generator."""
+def sentence_stack(name='w04-sentence-stack', w=1680, h=640):
+    """Printable still for the live rule-based noun/verb sentence generator; no raster title."""
     c = Canvas(w, h, bg=PAPER)
-    c.text(70, 78, 'MACHINE A · TRY THE TOY GRAMMAR', size=28,
-           color=ORANGE, mono=True)
-    c.text(70, 148, 'The sentence frame stays; the words change.', size=48,
-           color=INK, mono=False)
-    c.text(70, 205, 'RULE   The + NOUN + VERB + the + NOUN.', size=25,
-           color=VIOLET, mono=True)
-    c.rect(1220, 46, 390, 76, fill='#EEE8F5', stroke=VIOLET, width=3)
-    c.text(1415, 94, 'HTML · CLICK TO GENERATE', size=22,
-           color=VIOLET, mono=True, anchor='middle')
-
     samples = [
         ('designer', 'writes', 'brief'),
         ('robot', 'studies', 'map'),
@@ -100,17 +90,17 @@ def sentence_stack(name='w04-sentence-stack', w=1680, h=860):
         ('agent', 'drafts', 'answer'),
         ('artist', 'redraws', 'image'),
     ]
-    size, start_y, row_h, gap = 36, 242, 78, 14
+    size, start_y, row_h, gap = 36, 55, 70, 18
     font = pil_font('semibold', round(c.s(size)))
     for i, (subject, verb, obj) in enumerate(samples):
         y = start_y + i * (row_h + gap)
         c.rect(70, y, 1540, row_h, fill=WHITE, stroke=LINE, width=2)
-        c.text(100, y + 51, f'{i + 1:02}', size=20, color=MUTED, mono=True)
+        c.text(100, y + 46, f'{i + 1:02}', size=20, color=MUTED, mono=True)
         x = 182
         for part, color in ((f'The {subject} ', ORANGE),
                             (f'{verb} ', DARK_TEAL),
                             (f'the {obj}.', VIOLET)):
-            c.text(x, y + 54, part, size=size, color=color, mono=False)
+            c.text(x, y + 48, part, size=size, color=color, mono=False)
             x += font.getlength(part) / c.scale
     return c.finish(name)
 
