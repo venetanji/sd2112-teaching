@@ -188,7 +188,7 @@ S.append(section('03', 'Question answering → agents',
                  notes='A question-answering bot and an agent may share a language model. What changes is the system around it: evidence, tools, a loop, and control.'))
 
 S.append(figure_slide('03 · RETRIEVAL-AUGMENTED ANSWERS',
-                      'A question-answering bot can bring evidence into context.',
+                      'Retrieval adds evidence to an answer.',
                       W4.qa_to_agent(),
                       body=['A one-shot retrieval system searches a collection, gives passages to the model, and generates an answer; an interface may also show the sources.',
                             'An agent can choose an action, inspect the result, and decide whether another action is needed.'],
