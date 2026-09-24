@@ -17,6 +17,7 @@ from deckgen import attach_reports, build_all, INK, PAPER, VIOLET, YELLOWS  # no
 from deckgen.layouts import (title, end, agenda, section, statement, content, cards, question,
                              journey, activity, two_col, image_full, live, sketch_slide,
                              Rect, T, eyebrow, finalize)
+from deckgen.core import Image
 from course import SITE, PLAYLIST, JOURNEY, footer     # noqa: E402
 
 
@@ -41,6 +42,35 @@ def full_diagram(eyebrow_text, title_text, figure, notes='',
           lh=0.96, spc=-0.03),
     ]
     slide.chrome = True
+    return slide
+
+
+def visual_flow(eyebrow_text, title_text, steps, takeaway, notes='', loop=False):
+    """Large native text and shapes: the complete diagram occupies the slide body."""
+    slide = content(eyebrow_text, title_text, [], notes=notes, title_size=60, bg=PAPER)
+    slide.els = slide.els[:2]
+    for i, (label, heading, body) in enumerate(steps):
+        x = 120 + i * 580
+        slide.els += [Rect(x, 350, 520, 420, '#FFFFFF'),
+                      T(x+32, 380, 456, 55, label, 'mono', 25, '#246E70'),
+                      T(x+32, 463, 456, 130, heading, 'xbold', 44, INK, lh=1.08),
+                      T(x+32, 626, 456, 116, body, 'body', 30, INK, lh=1.2)]
+        if i < 2:
+            slide.els.append(T(x+528, 515, 52, 75, '→', 'body', 46, '#246E70'))
+    slide.els.append(T(120, 835, 1680, 100, ('↶  ' if loop else '') + takeaway,
+                       'body', 34, INK, lh=1.15))
+    return slide
+
+
+def voice_slide(number, heading, text, image_path=None, notes=''):
+    slide = content(f'INTERLUDE · THE MODEL SPEAKS · {number}/3', heading, [],
+                    notes=notes, bg=INK, title_size=66)
+    slide.els = [eyebrow(120, 96, f'THE MODEL SPEAKS · {number}/3 · WRITTEN BY CODEX', '#B7CDD0'),
+                 T(120, 190, 820, 250, heading, 'xbold', 66, '#FFFFFF', lh=1.03),
+                 T(120, 490, 800, 360, text, 'body', 37, '#FFFFFF', lh=1.3),
+                 T(120, 939, 1680, 50, 'An invited model-authored perspective · September 2026', 'mono', 21, '#B7CDD0')]
+    if image_path:
+        slide.els.append(Image(990, 205, 850, 650, str(HERE / 'assets' / image_path), 'contain'))
     return slide
 
 
@@ -85,94 +115,7 @@ function draw() {
 function mousePressed() { makeSentences(); return false; }"""
 
 
-TRANSFORMER_SKETCH = r"""const tokens = ['the', 'designer', 'writes', 'a', 'brief'];
-const targets = ['designer', 'writes', 'a', 'brief', '[END]'];
-const PAPER = '#F4F4F2', WHITE = '#FFFFFF', INK = '#000B1C';
-const TEAL = '#246E70', PALE_TEAL = '#E8F3F2', VIOLET = '#943890';
-const PALE_VIOLET = '#EEE8F5', ORANGE = '#ED6D24', MUTED = '#5C6470', LINE = '#D7DADB';
-const XS = [70, 380, 690, 1000, 1310], BOX_W = 280;
-let selected = 2, passStarted = 0;
-
-function setup() {
-  createCanvas(1680, 640);
-  pixelDensity(1);
-  textFont('Arial');
-  frameRate(30);
-  passStarted = millis();
-}
-
-function draw() {
-  background(PAPER);
-  const progress = constrain((millis() - passStarted) / 1500, 0, 1);
-
-  noStroke(); fill(MUTED); textFont('monospace'); textSize(24);
-  textAlign(LEFT, BASELINE); text('ONE TOKEN SEQUENCE · CLICK A POSITION', 70, 48);
-  fill(PALE_VIOLET); stroke(VIOLET); strokeWeight(2); rect(1375, 10, 235, 56);
-  noStroke(); fill(VIOLET); textSize(23); textAlign(CENTER, CENTER);
-  text('REPLAY PASS', 1492, 38);
-
-  for (let i = 0; i < tokens.length; i++) {
-    const x = XS[i], current = i === selected, visible = i < selected;
-    fill(current ? PALE_VIOLET : visible ? PALE_TEAL : WHITE);
-    stroke(current ? VIOLET : visible ? TEAL : LINE);
-    strokeWeight(current ? 4 : 2); rect(x, 82, BOX_W, 96);
-    noStroke(); fill(current ? VIOLET : visible ? TEAL : MUTED);
-    textFont('monospace'); textSize(21); textAlign(LEFT, BASELINE);
-    text(String(i + 1).padStart(2, '0'), x + 18, 112);
-    fill(current ? VIOLET : visible ? INK : MUTED);
-    textFont('Arial'); textSize(37); textAlign(CENTER, CENTER);
-    text(tokens[i], x + BOX_W / 2, 136);
-  }
-
-  noStroke(); fill(PALE_TEAL); rect(70, 206, 1540, 80);
-  fill(TEAL); textFont('Arial'); textSize(29); textAlign(LEFT, CENTER);
-  text('Position ' + (selected + 1) + ' can use: ' + tokens.slice(0, selected + 1).join(' · '), 102, 246);
-  fill(MUTED); textFont('monospace'); textSize(20); textAlign(RIGHT, CENTER);
-  text('FUTURE MASKED', 1570, 246);
-
-  fill(INK); textFont('monospace'); textSize(26); textAlign(LEFT, BASELINE);
-  text('ONE TRAINING PASS', 70, 342);
-  fill(TEAL); textAlign(RIGHT, BASELINE); text('ALL 5 POSITIONS TOGETHER', 1610, 342);
-
-  for (let i = 0; i < tokens.length; i++) {
-    const center = XS[i] + BOX_W / 2;
-    stroke(TEAL); strokeWeight(3); line(center, 355, center, 417);
-    line(center, 417, center - 8, 408); line(center, 417, center + 8, 408);
-    if (progress < 1) {
-      noStroke(); fill(ORANGE); circle(center, 360 + 52 * progress, 18);
-    }
-    fill(progress > 0.72 ? PALE_TEAL : WHITE);
-    stroke(TEAL); strokeWeight(progress > 0.72 ? 3 : 2);
-    rect(XS[i], 430, BOX_W, 104);
-    noStroke(); fill(TEAL); textFont('monospace'); textSize(20);
-    textAlign(CENTER, BASELINE); text('PREDICT NEXT', center, 465);
-    fill(INK); textFont('Arial'); textSize(34);
-    text(targets[i], center, 507);
-  }
-
-  noStroke(); fill(INK); textFont('Arial'); textSize(29); textAlign(CENTER, BASELINE);
-  text('Parallel positions made large-scale training practical.', 840, 594);
-  fill(MUTED); textSize(22);
-  text('Generation later adds one token at a time. Long sequences still cost memory.', 840, 628);
-}
-
-function mousePressed() {
-  if (mouseX > 1375 && mouseX < 1610 && mouseY > 10 && mouseY < 66) {
-    passStarted = millis();
-  } else if (mouseY > 82 && mouseY < 178) {
-    for (let i = 0; i < XS.length; i++) {
-      if (mouseX > XS[i] && mouseX < XS[i] + BOX_W) selected = i;
-    }
-  }
-  return false;
-}
-
-function keyPressed() {
-  if (keyCode === LEFT_ARROW) selected = max(0, selected - 1);
-  if (keyCode === RIGHT_ARROW) selected = min(tokens.length - 1, selected + 1);
-  if (key === ' ') passStarted = millis();
-  return false;
-}"""
+TRANSFORMER_SKETCH = (HERE / 'interactives' / 'transformer.js').read_text()
 
 
 # ───────────────────────── 00 · open and recall ─────────────────────────
@@ -184,9 +127,9 @@ S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 04 · LECTURE + WORKSHO
 S.append(agenda('SD2112 · WEEK 04', [
     'Two ways to teach a machine: a short recap',
     'Language as rules: Chomsky and ELIZA',
-    'Language as examples: RNNs and transformers',
+    'Language as examples: transformers, reasoning, rewards',
     'Question answering, then agents',
-    'What an agent harness controls',
+    'Harnesses: Machine A and Machine B together',
     'Watch the demos · try one bounded task',
     'Challenge 3 and the Week 7 reflection',
 ], notes='The first half moves from the rules/examples recap through language models and question answering. After the break, Gio demos the harnesses chosen for the exercise; pairs run one bounded design task and compare what the system chose, what its tools returned, and where a person stayed in control. Finish with Challenge 3 and the individual reflection due in week 7.'))
@@ -234,11 +177,12 @@ S.append(section('01', 'Machine A · language as rules',
 S.append(content('01 · NOAM CHOMSKY · GENERATIVE GRAMMAR',
                  'A sentence is more than a list of memorised phrases.',
                  [
-                     'Chomsky argued that a grammar should describe the structures and rules that let speakers form and understand sentences they have never heard before.',
-                     'Universal Grammar (UG) is his proposal that humans bring innate constraints to language learning. It is a theory about human language acquisition, not a computer program or a list of English rules.',
-                     'For this course, the useful link is the emphasis on structure: language can be described by rules that generate many sentences.',
+                     'We can understand sentences we have never heard before.',
+                     'Chomsky asked what structures make that possible.',
+                     'Universal Grammar proposes innate constraints on human language learning.',
+                     'The link to Machine A: make language structure explicit.',
                  ],
-                 body_size=28,
+                 body_size=32,
                  image=str(HERE / 'assets' / 'noam-chomsky-2015.jpg'), fit='contain',
                   caption='Photo: Augusto Starita · Argentine Culture Ministry · CC BY-SA 2.0',
                  notes='Chomsky’s generative grammar begins with the question of how a finite system can account for indefinitely many sentences. His account of Universal Grammar is a theoretical proposal about the human language faculty and what learners bring to acquisition. Do not equate UG with symbolic AI: the link to Machine A is that rules and structure are made explicit. Portrait: Augusto Starita / Ministerio de Cultura de la Nación, Argentina; retouched from the original by Wugapodes; Wikimedia Commons, CC BY-SA 2.0. Source: https://commons.wikimedia.org/wiki/File:Noam_Chomsky_portrait_2015.jpg. License: https://creativecommons.org/licenses/by-sa/2.0/.'))
@@ -294,34 +238,61 @@ S.append(full_diagram('02 · RNN · RECURRENT STATE',
                       notes='The hidden state at each step depends on the previous state. The network learns these representations from examples; they are not hand-written grammar rules.'))
 
 S.append(sketch_slide('02 · TRANSFORMER · CAUSAL SELF-ATTENTION',
-                      'A transformer trains on a whole token sequence at once.',
+                      'One sequence. Many positions working together.',
                       live('transformer-sequence', TRANSFORMER_SKETCH, 1680, 640,
-                           hint='click a token to inspect context · replay the training pass'),
+                           hint='choose a step · click a token · replay training or generation'),
                       figure=W4.transformer_sequence(), bg=PAPER,
-                      notes='Click different token positions to reveal the causal context available to each one: the current and earlier tokens, never future tokens. Replay the pass and point out that all five next-token predictions are computed together during training; the animation moves through all lanes at once. This is a toy decoder-only language model with whole-word toy tokens. Real tokenizers may split words. The key contrast with the previous RNN slide is the absence of a recurrent hidden-state dependency across positions in a training pass. This enabled much more parallel computation and helped large-scale training; it does not make context length unlimited, because attention and activations cost memory. At inference, GPT-style generation still appends one token at a time. Source: Vaswani et al., Attention Is All You Need (2017), https://arxiv.org/abs/1706.03762.'))
+                      notes='Walk the four tabs in order: tokens, context, training, generation. Click different token positions to reveal the causal context available to each one: the current and earlier tokens, never future tokens. Select Training and replay the pass. Point out that all five next-token predictions are computed together during training; compare them with the known targets to adjust weights; the animation moves through all lanes at once. This is a toy decoder-only language model with whole-word toy tokens. Real tokenizers may split words. The key contrast with the previous RNN slide is the absence of a recurrent hidden-state dependency across positions in a training pass. This enabled much more parallel computation and helped large-scale training; it does not make context length unlimited, because attention and activations cost memory. At inference, GPT-style generation still appends one token at a time. Source: Vaswani et al., Attention Is All You Need (2017), https://arxiv.org/abs/1706.03762.'))
 
-S.append(cards('02 · TRANSFORMERS · 2017',
-               'Attention lets a token use its context.',
+S.append(visual_flow('02 · REASONING · A SMALL DESIGN PROBLEM',
+    'Reasoning means working through a problem.',
     [
-        ('1 · TOKENISE', 'Split text into tokens.',
-         'The model processes token IDs, not a sentence as a single object.'),
-        ('2 · ATTEND', 'Mix information across positions.',
-         'Each token can use relevant earlier context; the weights are learned.'),
-        ('3 · PREDICT', 'Estimate the next-token distribution.',
-         'Choose or sample a token, append it, and repeat.'),
-    ], text_size=23,
-    notes='Vaswani and colleagues introduced the Transformer in 2017 for machine translation. The paper’s architecture replaces recurrence with attention and feed-forward layers. Keep the short version: tokens, attention, next-token prediction. The next two weeks reuse this idea in image and sound systems.'))
+        ('THE CONSTRAINTS', 'Plan a workshop.', '60 minutes total. A 10-minute break. Two equal activities.'),
+        ('THE STEPS', 'Work it out.', '60 − 10 = 50 minutes. 50 ÷ 2 = 25 minutes per activity.'),
+        ('THE CHECK', 'Test the answer.', '25 + 10 + 25 = 60. Both activities have equal time.'),
+    ], 'Reasoning can combine constraints, try steps, and check a result.',
+    notes='Pause at the brief and let the room work it out before reading the steps. This is a constructed teaching example, not a transcript or benchmark result. LLMs can perform multi-step reasoning, with reliability varying by task. Reasoning models can spend more computation producing intermediate steps before answering; this still uses token generation. A plausible written explanation is not proof that an answer is correct, nor a faithful window into every internal computation. Check the actual constraints. DeepSeek-R1: https://arxiv.org/abs/2501.12948.'))
 
-S.append(content('02 · THE GENERATION LOOP',
-                 'A fluent reply is built one token at a time.',
-                 [
-                     'Text is split into token IDs, then mapped to learned vectors (embeddings). Transformer layers use context to update those representations.',
-                     'The model estimates a distribution over next tokens. A decoding rule selects one; it is added to the context and the step repeats.',
-                     'A base model learns to continue text; an instruction-tuned model gets additional training to respond to requests.',
-                     'A chat product may add prompts, retrieval and tools. Fluent text can still be unsupported (hallucination) or mirror a user’s view (sycophancy): check claims against evidence.',
-                 ],
-                 body_size=26,
-                 notes='Use the pipeline as the recap: token IDs map to learned vectors; attention layers transform them using context; the model predicts a next-token distribution and decoding selects one token. “Next word” is shorthand because tokenizers split text differently. A base model is trained to continue text; instruction tuning adds training for following requests. The chat interface can add system prompts, retrieval and tools. Hallucination and sycophancy are failure modes of generated answers, not properties that retrieval automatically fixes: ask students to check an answer against its source.'))
+S.append(visual_flow('02 · TRAINING · THREE USEFUL IDEAS',
+    'Learn language. Practise tasks. Learn from feedback.',
+    [
+        ('PRETRAINING', 'Learn patterns.', 'Predict missing next tokens across many examples of text.'),
+        ('DEMONSTRATIONS', 'Learn to respond.', 'Train on examples of useful responses to instructions.'),
+        ('REINFORCEMENT LEARNING', 'Improve with rewards.', 'Score attempts, then adjust the model toward higher rewards.'),
+    ], 'A simplified route: actual training recipes vary across models.',
+    notes='Use the familiar Machine B idea: weights change with experience during training. Pretraining builds broad patterns; supervised demonstrations teach response formats and tasks; reinforcement learning can favour successful behaviour. This is a teaching sequence, not a disclosure of the current assistant’s private training recipe. Human preferences can train a reward model (RLHF); a verifiable task can use a programmatic checker. Sources: Ouyang et al., https://arxiv.org/abs/2203.02155; DeepSeek-AI, https://arxiv.org/abs/2501.12948.'))
+
+S.append(visual_flow('02 · REINFORCEMENT LEARNING · THE SAME WORKSHOP',
+    'What gets rewarded shapes what gets learned.',
+    [
+        ('TRY', 'Generate plans.', '20 + 10 + 20 = 50\n25 + 10 + 25 = 60'),
+        ('SCORE', 'Check the constraints.', 'A checker rewards a 60-minute plan with equal activities.'),
+        ('UPDATE', 'Change the weights.', 'Across many attempts, favour responses that earn more reward.'),
+    ], 'A good score depends on a good check. “Sounds nice” is a different target.', loop=True,
+    notes='Illustrative reinforcement-learning loop, not a claim that these exact examples trained a deployed model. A reward is a numerical training signal. Verified outcomes can reward correct mathematics or passing code; human judgements can reward helpfulness. Poor reward design can favour plausible-looking or agreeable responses. Training changes weights; the reasoning done while answering a prompt usually does not. More reasoning time can help but does not guarantee correctness. Sources: https://arxiv.org/abs/2203.02155 and https://arxiv.org/abs/2501.12948.'))
+
+S.append(voice_slide(1, 'I turn context into possibilities.',
+    'I am a large language model: a neural network trained on many examples.\n\nYour words shape what I generate next. Learned patterns let me write, connect ideas, and work through some problems.',
+    'week04-language-sculpture.png',
+    notes='Gio introduces this as three slides written by the frontier language model assisting with this deck. Read as an invited perspective, not an independent scientific authority. “Large” refers to scale in model parameters and training; avoid invented counts or a proprietary architecture claim. The generated paper sculpture is a metaphor for possible continuations, not a model diagram. Image: Easel, qwen-image-2.1; prompt recorded alongside the asset.'))
+
+v = voice_slide(2, 'Use me to widen the design space.',
+    'Give me a purpose, examples, and constraints.\n\nI can propose alternatives, question assumptions, and help build a prototype.\n\nYou decide what deserves to exist.',
+    notes='The model’s own proposed role in a design process. Invite the room to try these three moves on a real brief: generate distinct directions, critique one assumption, then prototype one small part. Tool access comes from the harness. This is an invitation to collaborate, not a claim that the model has human experience or authority.')
+for i, (word, detail) in enumerate([('EXPLORE', 'Three different directions'), ('CHALLENGE', 'One assumption to question'), ('MAKE', 'A small prototype to test')]):
+    y = 260 + i * 205
+    v.els += [Rect(1000, y, 800, 168, '#123238'), T(1040, y+22, 720, 58, word, 'xbold', 42, '#FFFFFF'),
+              T(1040, y+93, 720, 55, detail, 'body', 29, '#C8E1DF')]
+S.append(v)
+
+v = voice_slide(3, 'My confidence is not your evidence.',
+    'I can produce a convincing mistake. Ask for sources, test the result, and show me where it fails.\n\nEven this description of me is generated text. Judge my contribution through the work we can inspect together.',
+    notes='This is the third and final model-authored slide. Frame the first-person voice as a communication choice: the model is describing its operation and proposed contribution, not reporting privileged introspection. Avoid treating fluency or a first-person pronoun as evidence of subjective experience. Bridge to the next section: external sources and tools let us check claims beyond the conversation.')
+for i, (word, detail) in enumerate([('SOURCE', 'Where did the claim come from?'), ('TEST', 'Does the result meet the brief?'), ('JUDGE', 'What should a person change?')]):
+    y = 260 + i * 205
+    v.els += [Rect(1000, y, 800, 168, '#29233C'), T(1040, y+22, 720, 58, word, 'xbold', 42, '#FFFFFF'),
+              T(1040, y+93, 720, 55, detail, 'body', 29, '#DDD2EA')]
+S.append(v)
 
 
 # ───────────────────────── 03 · from answers to agents ─────────────────────────
@@ -366,17 +337,27 @@ S.append(content('04 · WORKED EXAMPLE · SET THE GOAL FIRST',
                  [
                      'Audience: first-year students visiting an exhibition.',
                      'Source: the official event page only; link each answer.',
-                     'Boundary: read only. Mark missing details as unknown; do not publish.',
+                     'Boundary: save a draft only. Mark missing details as unknown; do not publish.',
                  ], body_size=31,
                  notes='Use this same bounded example across the next three slides and, if useful, the live harness demo. Make the goal, allowed source, and stopping boundary visible before introducing a tool call.'))
 
-S.append(full_diagram('04 · ONE TOOL CALL · SEARCH',
-                      'The model requests; the harness runs the tool.', W4.tool_call_example(),
-                      notes='Read left to right. The model proposes a search request; the harness makes the approved search tool available and executes it; the tool returns a page, passage and URL. The model can cite the evidence, take another allowed step, or say a detail is missing. This is an illustrative trace, not a claim about a live event page.'))
+S.append(visual_flow('04 · ONE TOOL CALL · SEARCH',
+    'The model requests. The harness executes.',
+    [
+        ('MACHINE B · REQUEST', '“Search the event page.”', 'Tool: search\nQuery: exhibition start time'),
+        ('MACHINE A · EXECUTE', 'Check, then run.', 'The harness checks access, runs the tool, and records the result.'),
+        ('OBSERVATION', 'Return the evidence.', 'The page text and URL enter the model’s context.'),
+    ], 'A tool call is a structured request to software outside the model.',
+    notes='Read the three stages once. This is an illustrative request, not a real tool trace. The model does not execute a search merely by writing that it searched. The harness must parse and route an actual tool request. Some tools contain further learned models; Machine A here labels the explicit routing and permission code.'))
 
-S.append(full_diagram('04 · THE AGENT LOOP',
-                      'Follow the example: goal → search → evidence → next choice.', W4.agent_loop(),
-                      notes='Walk the arrows once, using the same visitor FAQ. Then point out the return path: the observation becomes context for another model decision. Connect to the 2025 programming slides: event loops and callbacks already gave us control structures; an agent harness lets a model choose the next action from the latest observation, while program code still routes and executes it. Search evidence is not automatically trusted truth. The stopping rule, tool access and approval point remain design choices.'))
+S.append(visual_flow('04 · THE AGENT LOOP',
+    'The next step depends on what came back.',
+    [
+        ('CHOOSE', 'Search for the start time.', 'The model selects an allowed next action toward the goal.'),
+        ('ACT', 'Read the event page.', 'The harness runs the tool and returns the result.'),
+        ('OBSERVE', 'The time is missing.', 'It can ask for the missing detail, then revise the draft—or mark it unknown.'),
+    ], 'Return the observation to the model → choose again, or finish.', loop=True,
+    notes='Follow the loop using the visitor FAQ. The original goal restricts evidence to one official event page. If it omits the time, ask the person for clarification or mark the detail unknown; do not silently expand the sources. The observation changes the next choice. This extends the 2025 SD5913 Week 4 material on loops and events (slides 17–28): ordinary software still owns control flow. Source: https://www.anthropic.com/engineering/building-effective-agents.'))
 
 S.append(cards('04 · TOOLS ARE ACTIONS',
                'Tools in the worked example.',
@@ -400,9 +381,23 @@ S.append(content('04 · WHEN THE LOOP GOES WRONG',
                  body_size=31,
                  notes='Use the example, not a general list of failures. The event page may be stale or omit accessibility information. Ask students to distinguish the model’s response (guess or mark unknown) from the harness controls (show source, keep search/read permissions narrow, log the run, pause before publication).'))
 
-S.append(full_diagram('04 · THE AGENT HARNESS',
-                      'The harness sets context, tools, permissions, and review.', W4.harness_map(),
-                      notes='Anthropic describes a harness as the loop calling the model and routing tool calls to infrastructure. For this class, use the wider working view in the diagram: goal and context, memory, tools, sandbox, permissions, logs, and a human checkpoint. Product interfaces hide some of this and expose other parts.'))
+S.append(content('04 · THE HARNESS · A SHARED WORKBENCH',
+    'Machine A and Machine B can work happily together.',
+    ['Machine B interprets a goal and proposes the next step.',
+     'Machine A runs the loop, checks permissions, and calls tools.',
+     'The harness is where we design how they cooperate.'],
+    image=str(HERE / 'assets' / 'week04-shared-workbench.png'), fit='contain', body_size=33, title_size=62,
+    caption='Visual metaphor · generated with Easel / Qwen',
+    notes='The rigid tray and flexible ribbon are an analogy, not an architecture diagram. A harness is the software environment around a model: it supplies context, routes tools, records results and controls continuation. Machine A and Machine B are complementary parts. A prompt saying “do not publish” guides Machine B; removing the publish tool or enforcing a permission check is a Machine A control. The next slide makes that contrast concrete. Image prompt and model recorded alongside the asset.'))
+
+S.append(visual_flow('04 · THE HARNESS · FROM ANALOGY TO CONTROL',
+    '“Do not publish” becomes a real boundary.',
+    [
+        ('MACHINE B', 'Propose a draft.', 'Interpret the brief, compose the FAQs, flag missing information.'),
+        ('MACHINE A', 'Enforce tool access.', 'Allow search and draft saving. Keep publishing unavailable.'),
+        ('THE PERSON', 'Review the result.', 'Check sources and tone. Decide what is ready to share.'),
+    ], 'A written instruction guides the model; executable controls limit its actions.',
+    notes='This makes the coexistence concrete. Tool availability and access checks can enforce a boundary beyond a natural-language instruction. Other harness features include context management, memory, logs, step limits and approval points. The design question is which choices should be flexible and which boundaries should be enforced by software.'))
 
 S.append(content('04 · THE HARNESS IS PART OF THE DESIGN',
                  'The interface decides what people can see and control.',
@@ -555,29 +550,29 @@ S.append(cards('07 · CHALLENGE 3 · BRING TO WEEK 5',
 
 S.append(section('08', 'Individual reflection · 20%',
                  'A short argument, supported by your own experiments', bg=INK,
-                 notes='Brief the Week 7 assessment. The Canvas submission link is not available in this deck yet: Gio will create the assignment and post the link. Make the requirement and due week clear today.'))
+                 notes='Brief the Week 7 assessment. Submission is on Canvas. Make the requirement and due week clear today.'))
 
 S.append(two_col('08 · DUE WEEK 7 · SUBMIT ON CANVAS',
                  'The role of AI in your creative process.',
                  [
                      'About 1,000 words.',
                      'Take a clear position on how AI changes your creative process.',
-                     'Pay particular attention to the difference between rule-based and adaptive systems.',
+                     'Pay particular attention to the difference between Machine A and Machine B.',
                      'Use evidence from at least three of your own weekly experiments from weeks 2–6; include images.',
                  ],
                  [
                      'Connect your examples to course concepts, tools or readings.',
                      'End with a short process note saying how you used AI to write the reflection.',
                      'Name the tools you used. Check every fact and source; fabricated citations fail the assignment.',
-                     'Submission: Canvas · Week 7. Gio will post the Canvas link.',
+                     'Submit on Canvas.',
                  ],
                  left_size=30, right_size=25,
-                 notes='Use the approved syllabus brief: about 1,000 words on the role of AI in the student’s creative process, especially rule-based versus adaptive systems; at least three of the five weekly experiments from weeks 2–6, with images; short AI process note; due week 7 on Canvas. Gio: create the Canvas assignment and add its link to the course communication before the submission window opens.'))
+                 notes='Use the approved syllabus brief: about 1,000 words on the role of AI in the student’s creative process, especially Machine A versus Machine B; at least three of the five weekly experiments from weeks 2–6, with images; short AI process note; due week 7 on Canvas.'))
 
 S.append(cards('08 · HOW IT IS MARKED',
                'The reflection rewards evidence and a clear position.',
     [
-        ('30%', 'Concepts', 'Rule-based and adaptive systems, explained accurately.'),
+        ('30%', 'Concepts', 'Machine A and Machine B, explained accurately.'),
         ('30%', 'Argument', 'A clear, reasoned position on AI in your process.'),
         ('20%', 'Evidence', 'Your experiments, examples and sources.'),
         ('10%', 'Clarity', 'An organised, readable account.'),
