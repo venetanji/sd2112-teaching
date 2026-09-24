@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import week04_figures as W4                          # noqa: E402
 from deckgen import attach_reports, build_all, INK, PAPER, VIOLET, YELLOWS  # noqa: E402
 from deckgen.layouts import (title, end, agenda, section, statement, content, cards, question,
-                             journey, activity, two_col, image_full, finalize)
+                             journey, activity, two_col, image_full, live, place_sketch, finalize)
 from course import SITE, PLAYLIST, JOURNEY, footer     # noqa: E402
 
 
@@ -29,6 +29,64 @@ def full_diagram(eyebrow_text, caption, figure, notes=''):
     _svg, png = figure
     return image_full(png, eyebrow_text, caption, notes=notes,
                       fit='contain', bg=PAPER)
+
+
+def full_interactive(eyebrow_text, caption, figure, sketch, notes=''):
+    """Keep the full-slide diagram treatment while layering a live p5.js sketch over its still."""
+    _svg, png = figure
+    slide = image_full(png, eyebrow_text, caption, notes=notes,
+                       fit='contain', bg=PAPER)
+    slide.els = slide.els[1:]  # replace the still with the paired figure + live canvas
+    place_sketch(slide, sketch, (120, 40, 1680, 880), figure=figure)
+    return slide
+
+
+SENTENCE_SKETCH = r"""const subjects = ['designer', 'student', 'archivist', 'robot', 'model', 'agent', 'editor', 'machine'];
+const objects = ['brief', 'map', 'page', 'sentence', 'answer', 'image', 'question', 'story'];
+const verbs = ['writes', 'studies', 'finds', 'questions', 'drafts', 'redraws', 'maps', 'edits'];
+let lines = [];
+const INK = '#000B1C', ORANGE = '#ED6D24', TEAL = '#246E70', VIOLET = '#943890';
+
+function setup() {
+  createCanvas(1680, 860);
+  pixelDensity(1);
+  textFont('Arial');
+  noLoop();
+  makeSentences();
+}
+
+function makeSentences() {
+  lines = [];
+  for (let i = 0; i < 6; i++) {
+    lines.push([random(subjects), random(verbs), random(objects)]);
+  }
+  redraw();
+}
+
+function draw() {
+  background('#F4F4F2');
+  fill(ORANGE); textSize(28); text('MACHINE A · TRY THE TOY GRAMMAR', 70, 78);
+  fill(INK); textSize(48); text('The sentence frame stays; the words change.', 70, 148);
+  fill(VIOLET); textSize(25); text('RULE   The + NOUN + VERB + the + NOUN.', 70, 205);
+  fill('#EEE8F5'); stroke(VIOLET); strokeWeight(3); rect(1220, 46, 390, 76);
+  noStroke(); fill(VIOLET); textSize(22); textAlign(CENTER, CENTER);
+  text('HTML · CLICK TO GENERATE', 1415, 84); textAlign(LEFT, BASELINE);
+
+  textSize(36);
+  for (let i = 0; i < lines.length; i++) {
+    const y = 242 + i * 92, [subject, verb, object] = lines[i];
+    fill(255); stroke('#E1E1DE'); strokeWeight(2); rect(70, y, 1540, 78);
+    noStroke(); fill('#5C6470'); textFont('monospace'); textSize(20);
+    text(String(i + 1).padStart(2, '0'), 100, y + 50);
+    textFont('Arial'); textSize(36);
+    let x = 182; const baseline = y + 52;
+    fill(ORANGE); const start = 'The ' + subject + ' '; text(start, x, baseline); x += textWidth(start);
+    fill(TEAL); const action = verb + ' '; text(action, x, baseline); x += textWidth(action);
+    fill(VIOLET); text('the ' + object + '.', x, baseline);
+  }
+}
+
+function mousePressed() { makeSentences(); return false; }"""
 
 
 # ───────────────────────── 00 · open and recall ─────────────────────────
@@ -47,10 +105,10 @@ S.append(agenda('SD2112 · WEEK 04', [
     'Challenge 3 and the Week 7 reflection',
 ], notes='The first half moves from the rules/examples recap through language models and question answering. After the break, Gio demos the harnesses chosen for the exercise; pairs run one bounded design task and compare what the system chose, what its tools returned, and where a person stayed in control. Finish with Challenge 3 and the individual reflection due in week 7.'))
 
-S.append(question('short_answer', 'From the LLM video: what can a language model predict?',
-                  hint='One idea you can explain now · one question you still have.',
-                  eyebrow_text='00 · QUICK REWIND · 3BLUE1BROWN',
-                  notes='Two minutes, short answers. Read a few aloud. Expect: the next token, not an answer from a database; what remains unclear is attention, training, or how it gets from text to a reply. Use that to decide where to slow down in the transformer section.'))
+S.append(question('short_answer', 'A model predicts the next token. What would you check before treating its fluent answer as evidence?',
+                  hint='Use one example claim and name the source you would check.',
+                  eyebrow_text='00 · DEEP EXERCISE · FROM THE LLM VIDEO',
+                  notes='Three minutes. Ask students to connect next-token prediction to an actual claim: what outside source or evidence would make the fluent continuation trustworthy? Use the answers to bridge from generation to question answering.'))
 
 S.append(cards('00 · A LANGUAGE MACHINE, THREE WAYS', 'From rules to patterns to actions.',
     [
@@ -95,11 +153,16 @@ S.append(content('01 · NOAM CHOMSKY · GENERATIVE GRAMMAR',
                      'For this course, the useful link is the emphasis on structure: language can be described by rules that generate many sentences.',
                  ],
                  body_size=28,
-                 notes='Chomsky’s generative grammar begins with the question of how a finite system can account for indefinitely many sentences. His account of Universal Grammar is a theoretical proposal about the human language faculty and what learners bring to acquisition. Do not equate UG with symbolic AI: the link to Machine A is that rules and structure are made explicit.'))
+                 image=str(HERE / 'assets' / 'noam-chomsky-2015.jpg'), fit='contain',
+                  caption='Photo: Augusto Starita · Argentine Culture Ministry · CC BY-SA 2.0',
+                 notes='Chomsky’s generative grammar begins with the question of how a finite system can account for indefinitely many sentences. His account of Universal Grammar is a theoretical proposal about the human language faculty and what learners bring to acquisition. Do not equate UG with symbolic AI: the link to Machine A is that rules and structure are made explicit. Portrait: Augusto Starita / Ministerio de Cultura de la Nación, Argentina; retouched from the original by Wugapodes; Wikimedia Commons, CC BY-SA 2.0. Source: https://commons.wikimedia.org/wiki/File:Noam_Chomsky_portrait_2015.jpg. License: https://creativecommons.org/licenses/by-sa/2.0/.'))
 
-S.append(full_diagram('01 · A TOY GRAMMAR',
-                      'Phrase structure shows one way rules build a sentence.', W4.grammar_tree(),
-                      notes='Read the tree top to bottom. S is a sentence; NP and VP are categories; the leaves are the words. The categories are not the words themselves. Chomsky’s work is a much richer theory of linguistic competence; the diagram is a teaching example, not a depiction of Universal Grammar.'))
+S.append(full_interactive('01 · A TOY GRAMMAR',
+                          'HTML deck · click anywhere for six new sentences.',
+                          W4.sentence_stack(),
+                          live('grammar-sentence-generator', SENTENCE_SKETCH, 1680, 860,
+                               hint='click anywhere to generate six new sentences'),
+                          notes='This p5.js sketch applies one fixed toy frame: The + noun + verb + the + noun. Each click draws six fresh combinations and stacks them. Ask what the rule guarantees, what it leaves open, and why this small example is not Universal Grammar. The PDF and PowerPoint show a fixed sample; the HTML deck is interactive.'))
 
 S.append(content('01 · WEIZENBAUM · ELIZA · 1966',
                  'A conversation can feel intelligent because a rule fits.',
@@ -120,15 +183,6 @@ S.append(full_diagram('01 · ELIZA · 1966',
                           '{violet:WHY DO YOU SAY YOU HAVE BEEN UNHAPPY FOR WEEKS?}',
                       ]),
                       notes='Point to the transformation, not to the machine as a character. The input is echoed, reordered, and returned as a question. Ask whether a person could still find the exchange useful. The answer can be yes, without deciding that ELIZA understands.'))
-
-S.append(question('multiple_choice', 'What is ELIZA doing in this example?',
-                  ['Retrieving a passage from a knowledge base',
-                   'Matching a pattern and applying a written transformation',
-                   'Learning a new grammar from this conversation',
-                   'Choosing a web tool and checking its result'],
-                  eyebrow_text='01 · QUICK CHECK · MACHINE A',
-                  notes='B. The rule is authored in the script and applied to the input. C and D are later mechanisms; A describes a retrieval system. This poll checks the distinction before moving to machine B.'))
-
 
 # ───────────────────────── 02 · language as learned sequence ─────────────────────────
 S.append(section('02', 'Machine B · language as examples',
@@ -192,54 +246,58 @@ S.append(cards('03 · THREE ANSWERING SYSTEMS',
                'A tool call alone does not make a system an agent.',
     [
         ('RULED FAQ', 'Search a prepared set.',
-         'Explicit triggers and responses; predictable, narrow coverage.'),
+         '“What time?” returns the answer written into its rule.'),
         ('RAG · ONE PASS', 'Retrieve, then generate.',
-         'Search brings passages into context; the model writes one answer.'),
+         'Find the official event page, then answer once from its text.'),
         ('AGENT', 'Choose, act, observe, continue.',
-         'The system can choose a next tool or stop based on what happened.'),
+         'If access details are missing, search an allowed source or ask.'),
     ], text_size=22,
-    notes='Anthropic’s useful architectural distinction: a workflow follows predefined code paths; an agent directs its own process and tool use. Real systems can combine both. Ask which of the three changes the route while it is running.'))
-
-S.append(question('multiple_choice', 'A help bot searches one policy page, then writes one answer. Is it an agent?',
-                  ['Yes. Any system with a language model is an agent.',
-                   'Not necessarily. A fixed search-and-answer path can be a workflow.',
-                   'No. Agents cannot use retrieval.',
-                   'Yes, because its answer may sound conversational.'],
-                  eyebrow_text='03 · QUICK CHECK · QA OR AGENT?',
-                  notes='B. Retrieval can be one fixed step. An agent is distinguished here by dynamically choosing its process or tools, not by having a chat interface.'))
+    notes='Use the same visitor FAQ to compare the three. The FAQ follows written triggers; the RAG path retrieves once and answers; the agent can react to what it finds by using another allowed step or asking a person. A tool call alone does not make a system an agent.'))
 
 
 # ───────────────────────── 04 · agent loop and harness ─────────────────────────
 S.append(section('04', 'The agent',
-                 'a model that can choose a tool and go again', bg=VIOLET,
+                 'choose a tool · use the result · continue or stop', bg=VIOLET,
                  notes='Now the model can affect a system outside its reply. The loop and the harness become part of the design.'))
 
+S.append(content('04 · WORKED EXAMPLE · SET THE GOAL FIRST',
+                 'Draft three visitor FAQs from one event page.',
+                 [
+                     'Audience: first-year students visiting an exhibition.',
+                     'Source: the official event page only; link each answer.',
+                     'Boundary: read only. Mark missing details as unknown; do not publish.',
+                 ], body_size=31,
+                 notes='Use this same bounded example across the next three slides and, if useful, the live harness demo. Make the goal, allowed source, and stopping boundary visible before introducing a tool call.'))
+
+S.append(full_diagram('04 · ONE TOOL CALL · SEARCH',
+                      'The model requests; the harness runs the tool.', W4.tool_call_example(),
+                      notes='Read left to right. The model proposes a search request; the harness makes the approved search tool available and executes it; the tool returns a page, passage and URL. The model can cite the evidence, take another allowed step, or say a detail is missing. This is an illustrative trace, not a claim about a live event page.'))
+
 S.append(full_diagram('04 · THE AGENT LOOP',
-                      'Observe the result; continue, ask, or stop.', W4.agent_loop(),
-                      notes='Walk the arrows: goal and limits; model; tool call; observation. Connect this to the 2025 programming slides: input handling, polling, event loops and callbacks already gave us the control structures; the agent harness runs a loop in which the model can select the next action from the latest observation. The model does not replace the program around it. A search result or file output is new evidence, not automatically trusted truth. The stopping rule, tool access, and approval point are design decisions.'))
+                      'Follow the example: goal → search → evidence → next choice.', W4.agent_loop(),
+                      notes='Walk the arrows once, using the same visitor FAQ. Then point out the return path: the observation becomes context for another model decision. Connect to the 2025 programming slides: event loops and callbacks already gave us control structures; an agent harness lets a model choose the next action from the latest observation, while program code still routes and executes it. Search evidence is not automatically trusted truth. The stopping rule, tool access and approval point remain design choices.'))
 
 S.append(cards('04 · TOOLS ARE ACTIONS',
-               'The model chooses; the harness performs.',
+               'Tools in the worked example.',
     [
-        ('SEARCH', 'Find evidence.',
-         'The agent proposes a query; the search tool returns pages or passages.'),
-        ('FILES / DATA', 'Read or transform material.',
-         'Access is limited to the workspace the harness exposes.'),
-        ('CREATE / SEND', 'Change the world outside the chat.',
-         'Writes, purchases, messages and publishing deserve explicit review.'),
+        ('SEARCH', 'Find the source.',
+         'Search the official event page for time and location.'),
+        ('READ', 'Check what it says.',
+         'Open the page and confirm each answer against its text.'),
+        ('WRITE DRAFT', 'Prepare, then stop.',
+         'Save three answers to a draft; a person decides whether to publish.'),
     ], text_size=22,
-    notes='Keep the boundary concrete. A model can propose a tool call, but the harness decides what is available and executes it. Read-only search is different from writing files or sending something to another person. For the exercise, stay with low-risk tasks and visible outputs.'))
+    notes='These are example tools and actions, not requirements for every product. The model can propose a tool call, but the harness decides which tools are available and executes them. Search and read are read-only; writing or publishing changes the world outside the chat and should have a review point.'))
 
 S.append(content('04 · WHEN THE LOOP GOES WRONG',
-                 'More steps can compound a small mistake.',
+                 'If the event page is incomplete, the agent must not guess.',
                  [
-                     'A wrong assumption can send the agent to the wrong source or file.',
-                     'An agent may treat an untrusted page or document as an instruction.',
-                     'A tool can fail, return stale information, or expose more data than the task needs.',
-                     'A useful harness makes the working context visible, limits permissions, logs actions, and gives people a way to approve or stop.',
+                     'Risk: the page is old or missing an access detail.',
+                     'Bad response: guess, then hide which source was used.',
+                     'Design response: show the URL, mark the detail unknown, and stop for review.',
                  ],
-                 body_size=28,
-                 notes='This is not a warning slide detached from design. It is the reason to observe the harness in the demo. Tools and memory expand what the model can do; permissions, sandboxing, logging, and checkpoints set the boundary. Ask where the boundary sits in each tool Gio shows.'))
+                 body_size=31,
+                 notes='Use the example, not a general list of failures. The event page may be stale or omit accessibility information. Ask students to distinguish the model’s response (guess or mark unknown) from the harness controls (show source, keep search/read permissions narrow, log the run, pause before publication).'))
 
 S.append(full_diagram('04 · THE AGENT HARNESS',
                       'The harness sets context, tools, permissions, and review.', W4.harness_map(),
@@ -282,7 +340,7 @@ S.append(cards('05 · WATCH THE SYSTEM AROUND THE MODEL',
         ('STOP', 'Who decides it is done?',
          'The model, a limit, a checkpoint, or the person?'),
     ], text_size=20,
-    notes='Allow about fifteen minutes for the live demo. Gio chooses two or three harnesses available for this class. Use the same low-risk task if the systems allow it. Name the task, the tool boundary, what the interface shows, and the step where a person can intervene. If logins are not available to all, pairs can still analyse the demo trace and complete the brief worksheet.'))
+    notes='Allow about fifteen minutes for the live demo. Gio chooses two or three harnesses available for this class. Use the visitor FAQ example where the systems allow it: state the goal and read-only source, make one search, inspect the returned page, and stop before publishing. Name what each harness exposes, logs, and lets a person approve. If logins are not available to all, pairs can still analyse the projected trace and complete the brief worksheet.'))
 
 S.append(content('05 · BEFORE YOU START THE EXERCISE',
                  'Make the invisible parts visible.',
@@ -361,13 +419,10 @@ S.append(activity('3 · REVISE · RUN AGAIN · 12 MIN', 12,
                   panel_size=22, bg=YELLOWS[3],
                   notes='Twelve minutes. The one-change rule makes the comparison meaningful. Ask pairs to distinguish a model change from a harness change; if they change both, help them rerun with one variable fixed. Preserve the first result so the difference is visible.'))
 
-S.append(question('multiple_choice', 'Where did your design judgement matter most?',
-                  ['Choosing the goal and constraints',
-                   'Choosing what the agent could access',
-                   'Checking the sources and the result',
-                   'All three'],
-                  eyebrow_text='06 · DEBRIEF · MULTIPLE CHOICE',
-                  notes='Two minutes. There is no single correct answer; ask for one example from each choice. The last option is the synthesis: design decisions happened before, during, and after the model’s run.'))
+S.append(question('short_answer', 'What did a tool return, how did it change the next step, and what did you verify?',
+                  hint='Use one specific moment from your pair’s trace.',
+                  eyebrow_text='06 · DEEP EXERCISE · READ YOUR TRACE',
+                  notes='Three minutes. Require a concrete moment from the trace: name the tool call, describe its returned evidence, explain the next decision, and say what the pair checked before accepting the result.'))
 
 S.append(content('06 · THE DEBRIEF',
                  'The output is only one part of the design.',

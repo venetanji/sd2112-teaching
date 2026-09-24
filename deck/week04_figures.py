@@ -6,8 +6,11 @@ import random
 import re
 
 from deckgen import WHITE, PAPER
+from deckgen.core import pil_font
 from deckgen.figures import Canvas, INK, TEAL, ORANGE, VIOLET, MUTED, LINE
 from figures import draw_chair
+
+DARK_TEAL = '#246E70'
 
 
 def _arrow(c, x1, y1, x2, y2, color=INK, width=4, head=16):
@@ -73,6 +76,82 @@ def grammar_tree(name='w04-grammar-tree', w=1680, h=860):
         _box(c, x, 660, 260, 82, label, fill=WHITE, stroke=LINE, size=30)
     c.text(840, 812, 'A teaching example of phrase structure · not a diagram of Universal Grammar.',
            size=24, color=MUTED, anchor='middle', mono=False)
+    return c.finish(name)
+
+
+def sentence_stack(name='w04-sentence-stack', w=1680, h=860):
+    """Printable still for the live rule-based noun/verb sentence generator."""
+    c = Canvas(w, h, bg=PAPER)
+    c.text(70, 78, 'MACHINE A · TRY THE TOY GRAMMAR', size=28,
+           color=ORANGE, mono=True)
+    c.text(70, 148, 'The sentence frame stays; the words change.', size=48,
+           color=INK, mono=False)
+    c.text(70, 205, 'RULE   The + NOUN + VERB + the + NOUN.', size=25,
+           color=VIOLET, mono=True)
+    c.rect(1220, 46, 390, 76, fill='#EEE8F5', stroke=VIOLET, width=3)
+    c.text(1415, 94, 'HTML · CLICK TO GENERATE', size=22,
+           color=VIOLET, mono=True, anchor='middle')
+
+    samples = [
+        ('designer', 'writes', 'brief'),
+        ('robot', 'studies', 'map'),
+        ('archivist', 'finds', 'page'),
+        ('student', 'questions', 'sentence'),
+        ('agent', 'drafts', 'answer'),
+        ('artist', 'redraws', 'image'),
+    ]
+    size, start_y, row_h, gap = 36, 242, 78, 14
+    font = pil_font('semibold', round(c.s(size)))
+    for i, (subject, verb, obj) in enumerate(samples):
+        y = start_y + i * (row_h + gap)
+        c.rect(70, y, 1540, row_h, fill=WHITE, stroke=LINE, width=2)
+        c.text(100, y + 51, f'{i + 1:02}', size=20, color=MUTED, mono=True)
+        x = 182
+        for part, color in ((f'The {subject} ', ORANGE),
+                            (f'{verb} ', DARK_TEAL),
+                            (f'the {obj}.', VIOLET)):
+            c.text(x, y + 54, part, size=size, color=color, mono=False)
+            x += font.getlength(part) / c.scale
+    return c.finish(name)
+
+
+def tool_call_example(name='w04-tool-call-example', w=1680, h=860):
+    """A concrete, illustrative search tool call for the visitor FAQ example."""
+    c = Canvas(w, h, bg=PAPER)
+    c.text(70, 78, 'A TOOL CALL · ONE STEP AT A TIME', size=28,
+           color=VIOLET, mono=True)
+    c.text(70, 148, 'The model requests; the harness runs the tool.', size=46,
+           color=INK, mono=False)
+
+    stages = [
+        ('1 · MODEL REQUEST', 'Search the official event page',
+         'for visitor time and location.', '#EEE8F5', VIOLET),
+        ('2 · HARNESS RUNS IT', 'Search returns a page,',
+         'a matching passage, and its URL.', '#E8F3F2', TEAL),
+        ('3 · MODEL USES RESULT', 'Cite what is present.',
+         'Mark a missing detail as unknown.', '#FBE8DD', ORANGE),
+    ]
+    xs, box_w, box_y, box_h = [70, 620, 1170], 440, 300, 290
+    for i, (x, (head, line1, line2, fill, accent)) in enumerate(zip(xs, stages)):
+        c.rect(x, box_y, box_w, box_h, fill=fill, stroke=accent, width=4)
+        c.text(x + box_w / 2, box_y + 58, head, size=23,
+               color=DARK_TEAL if accent == TEAL else accent,
+               mono=True, anchor='middle')
+        c.text(x + box_w / 2, box_y + 145, line1, size=27,
+               color=INK, mono=False, anchor='middle')
+        c.text(x + box_w / 2, box_y + 198, line2, size=25,
+               color=INK, mono=False, anchor='middle')
+        if i < 2:
+            _arrow(c, x + box_w + 15, box_y + box_h / 2,
+                   xs[i + 1] - 18, box_y + box_h / 2,
+                   color=VIOLET, width=5, head=16)
+
+    c.text(840, 710,
+           'Illustrative trace · the tool returns evidence, not an answer.',
+           size=29, color=INK, anchor='middle', mono=False)
+    c.text(840, 765,
+           'The harness exposes the tool and executes the request.',
+           size=27, color=MUTED, anchor='middle', mono=False)
     return c.finish(name)
 
 
@@ -191,22 +270,31 @@ def qa_pipeline(name='w04-qa-pipeline', w=1680, h=860):
 
 
 def agent_loop(name='w04-agent-loop', w=1680, h=860):
-    """The observable tool loop, with the return path large enough to follow."""
+    """A concrete visitor-FAQ example of an agent's observable tool loop."""
     c = Canvas(w, h)
     c.rect(0, 0, w, h, fill=PAPER)
-    c.text(80, 88, 'AGENTS · THE ACTION AND OBSERVATION LOOP',
+    c.text(80, 88, 'AGENTS · THE LOOP, WITH A WORKED EXAMPLE',
            size=30, color=VIOLET)
-    c.text(80, 154, 'A tool result can become the next context.',
-           size=46, color=INK, mono=False)
+    c.text(80, 154, 'Use the result to choose what happens next.',
+           size=44, color=INK, mono=False)
 
-    stages = ['GOAL + LIMITS', 'MODEL', 'TOOL CALL', 'OBSERVATION']
+    stages = [
+        ('GOAL + LIMITS', '3 FAQs · event page only'),
+        ('MODEL', 'choose the next step'),
+        ('TOOL CALL', 'search the event page'),
+        ('OBSERVATION', 'page text + URL'),
+    ]
     xs = [100, 500, 900, 1300]
-    for i, (x, label) in enumerate(zip(xs, stages)):
-        _box(c, x, 330, 280, 150, label,
-             fill=INK if label == 'MODEL' else WHITE,
-             stroke=INK if label == 'MODEL' else LINE,
-             color=WHITE if label == 'MODEL' else INK,
-             size=28, mono=True)
+    for i, (x, (label, sub)) in enumerate(zip(xs, stages)):
+        fill = INK if label == 'MODEL' else WHITE
+        color = WHITE if label == 'MODEL' else INK
+        stroke = INK if label == 'MODEL' else LINE
+        c.rect(x, 330, 280, 150, fill=fill, stroke=stroke, width=4)
+        c.text(x + 140, 385, label, size=25, color=color,
+               anchor='middle', mono=True)
+        c.text(x + 140, 435, sub, size=22,
+               color=WHITE if label == 'MODEL' else MUTED,
+               anchor='middle', mono=False)
         if i < len(stages) - 1:
             _arrow(c, x + 294, 405, xs[i + 1] - 18, 405,
                    color=ORANGE if label == 'TOOL CALL' else VIOLET,
@@ -215,9 +303,9 @@ def agent_loop(name='w04-agent-loop', w=1680, h=860):
     c.line(1440, 480, 1440, 610, TEAL, 5)
     _arrow(c, 1440, 610, 660, 610, color=TEAL, width=5, head=16)
     _arrow(c, 660, 610, 660, 496, color=TEAL, width=5, head=16)
-    c.text(1050, 682, 'If useful, the observation returns to the model.',
-           size=28, color=TEAL, anchor='middle', mono=False)
-    c.text(840, 790, 'A person can redirect the run or stop it.',
+    c.text(1050, 682, 'Missing detail? Search again or ask. Supported? Draft and stop.',
+           size=25, color=TEAL, anchor='middle', mono=False)
+    c.text(840, 790, 'A person checks the source and the final draft.',
            size=28, color=INK, anchor='middle', mono=False)
     return c.finish(name)
 
