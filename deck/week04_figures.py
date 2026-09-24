@@ -3,7 +3,8 @@ from __future__ import annotations
 
 import math
 
-from deckgen.figures import Canvas, INK, WHITE, PAPER, TEAL, ORANGE, VIOLET, MUTED, LINE
+from deckgen import WHITE, PAPER
+from deckgen.figures import Canvas, INK, TEAL, ORANGE, VIOLET, MUTED, LINE
 
 
 def _arrow(c, x1, y1, x2, y2, color=INK, width=3, head=12):
