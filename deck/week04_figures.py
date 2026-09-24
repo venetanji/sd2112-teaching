@@ -194,37 +194,54 @@ def rnn_steps(name='w04-rnn-steps', w=1680, h=860):
     return c.finish(name)
 
 
-def transformer_mask(name='w04-transformer-mask', w=1680, h=860):
-    """A large causal-attention mask, separated from the RNN diagram for legibility."""
-    c = Canvas(w, h)
-    c.rect(0, 0, w, h, fill=INK)
-    c.text(80, 88, 'MACHINE B · TRANSFORMER · SELF-ATTENTION', size=30, color=TEAL)
-    c.text(80, 154, 'Each position uses its earlier context.', size=48,
-           color=WHITE, mono=False)
+def transformer_sequence(name='w04-transformer-sequence', w=1680, h=640):
+    """Printable still for the live causal-context and parallel-training sketch."""
+    c = Canvas(w, h, bg=PAPER)
+    tokens = ['the', 'designer', 'writes', 'a', 'brief']
+    targets = ['designer', 'writes', 'a', 'brief', '[END]']
+    xs = [70, 380, 690, 1000, 1310]
+    pale_teal, pale_violet = '#E8F3F2', '#EEE8F5'
 
-    words = ['the', 'designer', 'writes', 'a', 'brief']
-    gx, gy, cell = 390, 300, 110
-    for col, word in enumerate(words):
-        c.text(gx + col * cell + cell / 2, 270, word, size=22,
-               color=WHITE, anchor='middle', mono=False)
-    for row, word in enumerate(words):
-        c.text(345, gy + row * cell + 65, word, size=22,
-               color=WHITE, anchor='end', mono=False)
-        for col in range(5):
-            fill = '#64C2C3' if col <= row else '#12263B'
-            c.rect(gx + col * cell, gy + row * cell, cell - 8, cell - 8,
-                   fill=fill, stroke='#657180', width=2)
+    c.text(70, 48, 'ONE TOKEN SEQUENCE · CLICK A POSITION', size=24,
+           color=MUTED, mono=True)
+    c.rect(1375, 10, 235, 56, fill=pale_violet, stroke=VIOLET, width=2)
+    c.text(1492, 47, 'HTML · REPLAY', size=23, color=VIOLET,
+           mono=True, anchor='middle')
 
-    c.text(1050, 360, 'TEAL', size=30, color=TEAL, mono=True)
-    c.text(1050, 405, 'Current and earlier tokens', size=26,
-           color=WHITE, mono=False)
-    c.text(1050, 490, 'DARK', size=30, color='#AEB7C3', mono=True)
-    c.text(1050, 535, 'Future tokens are masked', size=26,
-           color=WHITE, mono=False)
-    c.text(1050, 660, 'Training processes positions in parallel.',
-           size=28, color=WHITE, mono=False)
-    c.text(1050, 715, 'GPT still generates one token at a time.',
-           size=28, color=WHITE, mono=False)
+    for i, (x, token) in enumerate(zip(xs, tokens)):
+        current, visible = i == 2, i < 2
+        c.rect(x, 82, 280, 96,
+               fill=pale_violet if current else pale_teal if visible else WHITE,
+               stroke=VIOLET if current else TEAL if visible else LINE,
+               width=4 if current else 2)
+        c.text(x + 18, 112, f'{i + 1:02}', size=21,
+               color=VIOLET if current else TEAL if visible else MUTED, mono=True)
+        c.text(x + 140, 150, token, size=37,
+               color=VIOLET if current else INK if visible else MUTED,
+               anchor='middle', mono=False)
+
+    c.rect(70, 206, 1540, 80, fill=pale_teal)
+    c.text(102, 257, 'Position 3 can use: the · designer · writes',
+           size=29, color=DARK_TEAL, mono=False)
+    c.text(1570, 253, 'FUTURE MASKED', size=20,
+           color=MUTED, mono=True, anchor='end')
+
+    c.text(70, 342, 'ONE TRAINING PASS', size=26, color=INK, mono=True)
+    c.text(1610, 342, 'ALL 5 POSITIONS TOGETHER', size=26,
+           color=DARK_TEAL, mono=True, anchor='end')
+    for x, target in zip(xs, targets):
+        _arrow(c, x + 140, 355, x + 140, 417, color=TEAL, width=3, head=12)
+        c.rect(x, 430, 280, 104, fill=pale_teal, stroke=TEAL, width=3)
+        c.text(x + 140, 465, 'PREDICT NEXT', size=20,
+               color=DARK_TEAL, mono=True, anchor='middle')
+        c.text(x + 140, 507, target, size=34,
+               color=INK, anchor='middle', mono=False)
+
+    c.text(840, 594, 'Parallel positions made large-scale training practical.',
+           size=29, color=INK, anchor='middle', mono=False)
+    c.text(840, 628,
+           'Generation later adds one token at a time. Long sequences still cost memory.',
+           size=22, color=MUTED, anchor='middle', mono=False)
     return c.finish(name)
 
 

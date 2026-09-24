@@ -85,6 +85,96 @@ function draw() {
 function mousePressed() { makeSentences(); return false; }"""
 
 
+TRANSFORMER_SKETCH = r"""const tokens = ['the', 'designer', 'writes', 'a', 'brief'];
+const targets = ['designer', 'writes', 'a', 'brief', '[END]'];
+const PAPER = '#F4F4F2', WHITE = '#FFFFFF', INK = '#000B1C';
+const TEAL = '#246E70', PALE_TEAL = '#E8F3F2', VIOLET = '#943890';
+const PALE_VIOLET = '#EEE8F5', ORANGE = '#ED6D24', MUTED = '#5C6470', LINE = '#D7DADB';
+const XS = [70, 380, 690, 1000, 1310], BOX_W = 280;
+let selected = 2, passStarted = 0;
+
+function setup() {
+  createCanvas(1680, 640);
+  pixelDensity(1);
+  textFont('Arial');
+  frameRate(30);
+  passStarted = millis();
+}
+
+function draw() {
+  background(PAPER);
+  const progress = constrain((millis() - passStarted) / 1500, 0, 1);
+
+  noStroke(); fill(MUTED); textFont('monospace'); textSize(24);
+  textAlign(LEFT, BASELINE); text('ONE TOKEN SEQUENCE · CLICK A POSITION', 70, 48);
+  fill(PALE_VIOLET); stroke(VIOLET); strokeWeight(2); rect(1375, 10, 235, 56);
+  noStroke(); fill(VIOLET); textSize(23); textAlign(CENTER, CENTER);
+  text('REPLAY PASS', 1492, 38);
+
+  for (let i = 0; i < tokens.length; i++) {
+    const x = XS[i], current = i === selected, visible = i < selected;
+    fill(current ? PALE_VIOLET : visible ? PALE_TEAL : WHITE);
+    stroke(current ? VIOLET : visible ? TEAL : LINE);
+    strokeWeight(current ? 4 : 2); rect(x, 82, BOX_W, 96);
+    noStroke(); fill(current ? VIOLET : visible ? TEAL : MUTED);
+    textFont('monospace'); textSize(21); textAlign(LEFT, BASELINE);
+    text(String(i + 1).padStart(2, '0'), x + 18, 112);
+    fill(current ? VIOLET : visible ? INK : MUTED);
+    textFont('Arial'); textSize(37); textAlign(CENTER, CENTER);
+    text(tokens[i], x + BOX_W / 2, 136);
+  }
+
+  noStroke(); fill(PALE_TEAL); rect(70, 206, 1540, 80);
+  fill(TEAL); textFont('Arial'); textSize(29); textAlign(LEFT, CENTER);
+  text('Position ' + (selected + 1) + ' can use: ' + tokens.slice(0, selected + 1).join(' · '), 102, 246);
+  fill(MUTED); textFont('monospace'); textSize(20); textAlign(RIGHT, CENTER);
+  text('FUTURE MASKED', 1570, 246);
+
+  fill(INK); textFont('monospace'); textSize(26); textAlign(LEFT, BASELINE);
+  text('ONE TRAINING PASS', 70, 342);
+  fill(TEAL); textAlign(RIGHT, BASELINE); text('ALL 5 POSITIONS TOGETHER', 1610, 342);
+
+  for (let i = 0; i < tokens.length; i++) {
+    const center = XS[i] + BOX_W / 2;
+    stroke(TEAL); strokeWeight(3); line(center, 355, center, 417);
+    line(center, 417, center - 8, 408); line(center, 417, center + 8, 408);
+    if (progress < 1) {
+      noStroke(); fill(ORANGE); circle(center, 360 + 52 * progress, 18);
+    }
+    fill(progress > 0.72 ? PALE_TEAL : WHITE);
+    stroke(TEAL); strokeWeight(progress > 0.72 ? 3 : 2);
+    rect(XS[i], 430, BOX_W, 104);
+    noStroke(); fill(TEAL); textFont('monospace'); textSize(20);
+    textAlign(CENTER, BASELINE); text('PREDICT NEXT', center, 465);
+    fill(INK); textFont('Arial'); textSize(34);
+    text(targets[i], center, 507);
+  }
+
+  noStroke(); fill(INK); textFont('Arial'); textSize(29); textAlign(CENTER, BASELINE);
+  text('Parallel positions made large-scale training practical.', 840, 594);
+  fill(MUTED); textSize(22);
+  text('Generation later adds one token at a time. Long sequences still cost memory.', 840, 628);
+}
+
+function mousePressed() {
+  if (mouseX > 1375 && mouseX < 1610 && mouseY > 10 && mouseY < 66) {
+    passStarted = millis();
+  } else if (mouseY > 82 && mouseY < 178) {
+    for (let i = 0; i < XS.length; i++) {
+      if (mouseX > XS[i] && mouseX < XS[i] + BOX_W) selected = i;
+    }
+  }
+  return false;
+}
+
+function keyPressed() {
+  if (keyCode === LEFT_ARROW) selected = max(0, selected - 1);
+  if (keyCode === RIGHT_ARROW) selected = min(tokens.length - 1, selected + 1);
+  if (key === ' ') passStarted = millis();
+  return false;
+}"""
+
+
 # ───────────────────────── 00 · open and recall ─────────────────────────
 S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 04 · LECTURE + WORKSHOP',
                'Language machines. From rules to agents.',
@@ -203,10 +293,12 @@ S.append(full_diagram('02 · RNN · RECURRENT STATE',
                       'A learned state moves from one token to the next.', W4.rnn_steps(),
                       notes='The hidden state at each step depends on the previous state. The network learns these representations from examples; they are not hand-written grammar rules.'))
 
-S.append(full_diagram('02 · TRANSFORMER · CAUSAL SELF-ATTENTION',
-                      'Attention looks back; generation stays one token at a time.', W4.transformer_mask(),
-                      header_bg=INK, eyebrow_color='#64C2C3', title_color='white',
-                      notes='The teal cells indicate positions available to each token; dark cells mark future positions masked in a causal decoder. Transformers made training across positions easier to parallelize. GPT-style generation remains autoregressive, one token at a time.'))
+S.append(sketch_slide('02 · TRANSFORMER · CAUSAL SELF-ATTENTION',
+                      'A transformer trains on a whole token sequence at once.',
+                      live('transformer-sequence', TRANSFORMER_SKETCH, 1680, 640,
+                           hint='click a token to inspect context · replay the training pass'),
+                      figure=W4.transformer_sequence(), bg=PAPER,
+                      notes='Click different token positions to reveal the causal context available to each one: the current and earlier tokens, never future tokens. Replay the pass and point out that all five next-token predictions are computed together during training; the animation moves through all lanes at once. This is a toy decoder-only language model with whole-word toy tokens. Real tokenizers may split words. The key contrast with the previous RNN slide is the absence of a recurrent hidden-state dependency across positions in a training pass. This enabled much more parallel computation and helped large-scale training; it does not make context length unlimited, because attention and activations cost memory. At inference, GPT-style generation still appends one token at a time. Source: Vaswani et al., Attention Is All You Need (2017), https://arxiv.org/abs/1706.03762.'))
 
 S.append(cards('02 · TRANSFORMERS · 2017',
                'Attention lets a token use its context.',
