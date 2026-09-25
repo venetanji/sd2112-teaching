@@ -5,7 +5,7 @@ From explicit rules to learned language models to systems that act through tools
 The class opens with the machine A / machine B distinction, then moves from
 Chomsky and ELIZA through RNNs, transformers and question-answering to agent
 loops and the harness around them. The exercise follows the lecturer's live
-harness demonstrations: one bounded design task, one observed run, one revision.
+harness demonstrations: a group brainstorm for the course project.
 """
 import sys
 from pathlib import Path
@@ -59,6 +59,41 @@ def visual_flow(eyebrow_text, title_text, steps, takeaway, notes='', loop=False)
             slide.els.append(T(x+528, 515, 52, 75, '→', 'body', 46, '#246E70'))
     slide.els.append(T(120, 835, 1680, 100, ('↶  ' if loop else '') + takeaway,
                        'body', 34, INK, lh=1.15))
+    return slide
+
+
+def react_loop():
+    """ReAct's thought/action/observation cycle with an explicit stop decision."""
+    slide = content('04 · REACT · THE AGENT LOOP',
+                    'Thought → Action → Observation', [], bg=PAPER,
+                    notes='ReAct interleaves reasoning and acting. In the FAQ example: think “I need the start time”; act by searching the permitted event page; observe that the time is missing. Decide whether the task is finished. If no, return to thought: ask the person or mark it unknown and revise. If yes, stop with a draft for human review. The harness routes the action, returns the observation and controls the loop. Adapted from Yao et al. (2022), ReAct; the example is illustrative, not a recorded trace.',
+                    title_size=59)
+    slide.els = slide.els[:2]
+    teal = '#246E70'
+    stages = [
+        (120, '01 · THOUGHT', 'What do I need?', 'Find the exhibition start time.'),
+        (700, '02 · ACTION', 'Use a tool.', 'Search the allowed event page.'),
+        (1280, '03 · OBSERVATION', 'What came back?', 'The page has no start time.'),
+    ]
+    for x, label, heading, example in stages:
+        slide.els += [Rect(x, 335, 500, 265, '#FFFFFF'),
+                      T(x+28, 363, 444, 38, label, 'mono', 24, teal),
+                      T(x+28, 420, 444, 75, heading, 'xbold', 43, INK),
+                      T(x+28, 518, 444, 65, example, 'body', 28, INK)]
+    slide.els += [
+        T(627, 412, 65, 90, '→', 'body', 57, teal),
+        T(1207, 412, 65, 90, '→', 'body', 57, teal),
+        T(1480, 604, 90, 70, '↓', 'body', 55, teal, align='c'),
+        Rect(1280, 680, 500, 190, '#E2EDEB'),
+        T(1310, 709, 440, 52, '04 · FINISHED?', 'xbold', 42, INK),
+        T(1310, 785, 440, 62, 'YES → stop with a draft.', 'body', 31, INK),
+        Rect(355, 900, 1185, 5, teal),
+        Rect(352, 604, 5, 301, teal),
+        Rect(1537, 866, 5, 39, teal),
+        T(320, 574, 68, 62, '↑', 'body', 52, teal, align='c'),
+        T(615, 824, 660, 66, 'NO → think again with new evidence',
+          'body', 30, teal, align='c'),
+    ]
     return slide
 
 
@@ -132,7 +167,7 @@ S.append(agenda('SD2112 · WEEK 04', [
     'Harnesses: Machine A and Machine B together',
     'Watch the demos · try one bounded task',
     'Challenge 3 and the Week 7 reflection',
-], notes='The first half moves from the rules/examples recap through language models and question answering. After the break, Gio demos the harnesses chosen for the exercise; pairs run one bounded design task and compare what the system chose, what its tools returned, and where a person stayed in control. Finish with Challenge 3 and the individual reflection due in week 7.'))
+], notes='The first half moves from the rules/examples recap through language models and question answering. After the break, Gio demos agent harnesses, then small groups brainstorm an AI product idea for the course project. Finish with Challenge 3 and the individual reflection due in week 7.'))
 
 S.append(question('short_answer', 'A model predicts the next token. What would you check before treating its fluent answer as evidence?',
                   hint='Use one example claim and name the source you would check.',
@@ -350,14 +385,7 @@ S.append(visual_flow('04 · ONE TOOL CALL · SEARCH',
     ], 'A tool call is a structured request to software outside the model.',
     notes='Read the three stages once. This is an illustrative request, not a real tool trace. The model does not execute a search merely by writing that it searched. The harness must parse and route an actual tool request. Some tools contain further learned models; Machine A here labels the explicit routing and permission code.'))
 
-S.append(visual_flow('04 · THE AGENT LOOP',
-    'The next step depends on what came back.',
-    [
-        ('CHOOSE', 'Search for the start time.', 'The model selects an allowed next action toward the goal.'),
-        ('ACT', 'Read the event page.', 'The harness runs the tool and returns the result.'),
-        ('OBSERVE', 'The time is missing.', 'It can ask for the missing detail, then revise the draft—or mark it unknown.'),
-    ], 'Return the observation to the model → choose again, or finish.', loop=True,
-    notes='Follow the loop using the visitor FAQ. The original goal restricts evidence to one official event page. If it omits the time, ask the person for clarification or mark the detail unknown; do not silently expand the sources. The observation changes the next choice. This extends the 2025 SD5913 Week 4 material on loops and events (slides 17–28): ordinary software still owns control flow. Source: https://www.anthropic.com/engineering/building-effective-agents.'))
+S.append(react_loop())
 
 S.append(cards('04 · TOOLS ARE ACTIONS',
                'Tools in the worked example.',
@@ -414,7 +442,7 @@ S.append(content('04 · THE HARNESS IS PART OF THE DESIGN',
 S.append(statement('Break. Ten minutes.',
                    eyebrow_text='AFTER THE BREAK · WATCH THE HARNESS, THEN TRY ONE',
                    size=112, bg=PAPER,
-                   notes='Give students ten minutes. After the break, Gio demonstrates two or three harnesses and then pairs use one of those systems for the exercise. Keep the chosen tools and logins ready before class.'))
+                   notes='Give students ten minutes. After the break, Gio demonstrates two or three harnesses, then small working groups use an agent as an idea partner for the project brainstorm. Keep the chosen tools and logins ready before class.'))
 
 S.append(section('05', 'Live demo',
                  'same model family · different tools and control', bg=INK,
@@ -436,101 +464,97 @@ S.append(cards('05 · WATCH THE SYSTEM AROUND THE MODEL',
         ('STOP', 'Who decides it is done?',
          'The model, a limit, a checkpoint, or the person?'),
     ], text_size=20,
-    notes='Allow about fifteen minutes for the live demo. Gio chooses two or three harnesses available for this class. Use the visitor FAQ example where the systems allow it: state the goal and read-only source, make one search, inspect the returned page, and stop before publishing. Name what each harness exposes, logs, and lets a person approve. If logins are not available to all, pairs can still analyse the projected trace and complete the brief worksheet.'))
+    notes='Allow about fifteen minutes for the live demo. Gio chooses two or three harnesses available for this class. Use the visitor FAQ example where the systems allow it: state the goal and read-only source, make one search, inspect the returned page, and stop before publishing. Name what each harness exposes, logs, and lets a person approve. If student logins are unavailable, small groups can brainstorm on paper after watching the projected demonstration.'))
 
 S.append(content('05 · BEFORE YOU START THE EXERCISE',
-                 'Make the invisible parts visible.',
+                 'Use the agent to open up possibilities.',
                  [
-                     'Write the goal and a test for a finished result.',
-                     'Name the source material and tools the agent may use.',
-                     'Set a boundary: what it may read, change, or never do.',
-                     'Watch one tool call and its result before editing the prompt.',
-                     'Save the prompt, one piece of the trace, and the output.',
+                     'Your group project: a product or service with AI inside it.',
+                     'Name a person and a problem before asking for ideas.',
+                     'Ask the agent for three different directions; discuss what each would change for that person.',
+                     'Choose one direction and sketch what the AI does, what it needs, and what a person controls.',
                  ],
                  body_size=29,
-                 notes='The exercise is an observation of a designed system, not a race to get the best output. The trace, tool availability and permissions are part of what students will compare. Avoid personal, client-confidential or sensitive data.'))
+                 notes='The group project asks students to design a product or service with AI inside it, research and prototype it, and discuss ethical and sociological implications. It could use recommendation, generative AI, an agent or another AI element. Treat today as an early brainstorm; formal teams and the proposal follow later. Use only fictional or public examples in the demo harness.'))
 
 
 # ───────────────────────── 06 · exercise ─────────────────────────
-S.append(section('06', 'Exercise · one task, one agent loop',
-                 '40 minutes · pairs · use a harness from the demo', bg=YELLOWS[0],
-                 notes='Pairs choose one bounded design task, write a brief, run it in one demonstrated harness, observe the loop, revise one thing, and share the result. One device per pair. TAs help with access and keep the task scoped.'))
+S.append(section('06', 'Exercise · brainstorm your group project',
+                 '40 minutes · small groups · one possible direction', bg=YELLOWS[0],
+                 notes='Small working groups brainstorm an early direction for the SD2112 group project. Formal teams form in Week 7; today is exploratory. The agent can suggest possibilities, while students choose and sketch one. Allow five minutes for sharing.'))
 
-S.append(activity('1 · PAIRS · WRITE THE TASK · 8 MIN', 8,
-                  'Choose one bounded design task.',
+S.append(activity('1 · GROUPS · PICK A PERSON · 10 MIN', 10,
+                  'Who could your project help?',
                   [
-                      'Work in pairs. Pick a task the demonstrated harness can support.',
-                      'Choose a public, low-risk design task: compare three public precedents; turn a public event description into a visitor FAQ; or audit a short sample text against a checklist.',
-                      'Write the goal, the output, the allowed sources, and one thing the agent must not do.',
+                      'In a small group, choose a person and a real situation they face.',
+                      'Write one sentence: “A ___ struggles to ___ when ___.”',
+                      'Keep it concrete enough to imagine a design response.',
                   ],
                   panel=[
-                      'A GOOD TASK HAS:',
-                      'one clear goal',
-                      'a checkable output',
-                      'a visible source or input',
-                      'a safe stopping point',
+                      'PROJECT BRIEF',
+                      'A product or service',
+                      'AI is part of how it works',
+                      'recommend · generate · act',
                       '',
-                      'No private client material.',
-                      'No personal student data.',
+                      'Research + prototype',
+                      'Ethical + social effects',
                   ],
-                  panel_size=21, bg=YELLOWS[1],
-                  notes='Eight minutes. Let pairs select one menu task or propose another small task with the same scope. Agree on the output format, source requirement, and stop rule before opening the harness. If student access is unavailable, observe a second run on the projected demo and write the same worksheet.'))
+                  panel_size=23, bg=YELLOWS[1],
+                  notes='Ten minutes. This is an exploratory group, not a final project team. Refer to the group brief: design a product or service incorporating AI, research and prototype it, and discuss its ethical and sociological implications. Prompt for a concrete person and situation; avoid vague ideas such as “an AI app for everyone.”'))
 
-S.append(activity('2 · RUN · OBSERVE · 15 MIN', 15,
-                  'Run once. Record what the harness did.',
+S.append(activity('2 · ASK · DISCUSS · 15 MIN', 15,
+                  'Ask for three different directions.',
                   [
-                      'Paste the brief into one of the demo harnesses. Keep the tool settings visible.',
-                      'When the agent calls a tool, record what it asked for and what came back.',
-                      'Mark one decision made by the model and one boundary set by the harness.',
-                      'Check a claim against its source. Do not treat a confident answer as evidence.',
+                      'Give the agent your person and situation. Ask for three distinct product ideas.',
+                      'For each idea, ask: what would the AI do for this person?',
+                      'Discuss the ideas together. Choose one worth exploring.',
                   ],
                   panel=[
-                      'TRACE',
-                      'What was the first tool call?',
-                      'What did the tool return?',
-                      'What changed in the context?',
-                      'Did a person approve anything?',
+                      'STARTER PROMPT',
+                      '“For this person and',
+                      'situation, suggest three',
+                      'different AI product ideas.',
+                      'Say what the AI does.”',
                       '',
-                      'Save the prompt and output.',
+                      'Keep your prompt + ideas.',
                   ],
-                  panel_size=20, bg=YELLOWS[2],
-                  notes='Fifteen minutes. TAs circulate: help with account access, then ask pairs to identify the first tool call and its result. If a harness hides the trace, note what is missing. Do not let groups paste personal or confidential content into a public demo.'))
+                  panel_size=22, bg=YELLOWS[2],
+                  notes='Fifteen minutes. The agent is an idea partner after the live demonstration; tool use is optional here. If access fails, groups brainstorm three ideas without it. Keep the prompt and the three suggestions so students can later see what they accepted or rejected. Avoid personal or confidential material.'))
 
-S.append(activity('3 · REVISE · RUN AGAIN · 12 MIN', 12,
-                  'Change one condition. Compare the result.',
+S.append(activity('3 · CHOOSE · SKETCH · 10 MIN', 10,
+                  'Show how your chosen idea works.',
                   [
-                      'Change one thing only: the task brief, one source, one tool permission, or the stopping rule.',
-                      'Run again. Compare the result with the first run.',
-                      'Keep one line: what changed, what improved, and what still needs a person.',
+                      'Draw a quick journey: person → AI feature → result.',
+                      'Label what the AI needs and how you could prototype the idea.',
+                      'Add one ethical or social question your group would research.',
                   ],
                   panel=[
-                      'ONE CHANGE',
-                      'Prompt / brief',
-                      'Source',
-                      'Tool access',
-                      'Stop rule',
+                      'ONE SKETCH',
+                      'Person + need',
+                      'What the AI does',
+                      'Prototype idea',
+                      'A question to research',
                       '',
-                      'Which change mattered?',
+                      'Why this idea?',
                   ],
-                  panel_size=22, bg=YELLOWS[3],
-                  notes='Twelve minutes. The one-change rule makes the comparison meaningful. Ask pairs to distinguish a model change from a harness change; if they change both, help them rerun with one variable fixed. Preserve the first result so the difference is visible.'))
+                  panel_size=23, bg=YELLOWS[3],
+                  notes='Ten minutes. A few boxes and arrows are enough; no prototype is required today. Ask why the group chose this direction, how they would research and prototype it, and one ethical or sociological implication worth investigating.'))
 
-S.append(question('short_answer', 'What did a tool return, how did it change the next step, and what did you verify?',
-                  hint='Use one specific moment from your pair’s trace.',
-                  eyebrow_text='06 · DEEP EXERCISE · READ YOUR TRACE',
-                  notes='Three minutes. Require a concrete moment from the trace: name the tool call, describe its returned evidence, explain the next decision, and say what the pair checked before accepting the result.'))
+S.append(question('short_answer', 'What does the AI do in your idea, and what effect on people would you need to investigate?',
+                  hint='Name your person, the AI feature, and one concrete question to research.',
+                  eyebrow_text='06 · DEEP EXERCISE · SHARE YOUR IDEA',
+                  notes='Invite groups to answer from the sketch. Require a concrete AI role and a testable ethical or social question; do not accept “the AI helps users” as a complete answer.'))
 
 S.append(content('06 · THE DEBRIEF',
-                 'The output is only one part of the design.',
+                 'A possible idea becomes a design question.',
                  [
-                     'What did the model decide on its own?',
-                     'What did the harness make possible, visible, or impossible?',
-                     'Which source or tool result changed the next step?',
-                     'Where did a person intervene, and what should remain under human judgement?',
-                     'Keep the prompt, one trace, the output, and your own edit for Challenge 3.',
+                     'Who is this for, and what problem did you choose?',
+                     'What does the AI do? What would a prototype show?',
+                     'What research would tell you whether the idea is needed?',
+                     'Which ethical or social effect should your group investigate?',
                  ],
                  body_size=29,
-                 notes='Five minutes. Invite two or three pairs to describe a concrete moment in the trace. Pull out the design choices: goal, tools, context, permission, stop, and evaluation. The agent is not the whole system; the harness is not neutral; the designer remains responsible for the use and the result.'))
+                 notes='Five minutes. Invite two or three groups to share one sketch. Highlight the AI role, a research question, a prototype path, and a social or ethical implication. This is an early brainstorm for the group project; no final concept is due today.'))
 
 
 # ───────────────────────── 07 · assignment and reflection ─────────────────────────

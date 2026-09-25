@@ -10,7 +10,7 @@ For us:
 2. Separate a theory of human language from a language program: Chomsky's generative grammar and Universal Grammar are theories about linguistic structure and acquisition; ELIZA applies hand-written patterns.
 3. Explain the move from recurrent state to transformer attention, and follow a prompt from tokens and context to parallel training and sequential generation; introduce reasoning and reward-based training with a small workshop-planning example.
 4. Explain the harness as a place where Machine A and Machine B cooperate. Distinguish a fixed question-answering workflow from an agent that can choose a tool, inspect its result, and continue or stop; show how a harness shapes that loop.
-5. Let students observe the harness in a live demo, then run and revise one bounded design task. Brief Challenge 3 and the Week 7 individual reflection.
+5. Let students observe the harness in a live demo, then brainstorm an early group project idea using an agent as an idea partner. Brief Challenge 3 and the Week 7 individual reflection.
 
 For students, by the end of the class they can:
 
@@ -18,7 +18,9 @@ For students, by the end of the class they can:
 - describe the difference between Chomsky's account of human language acquisition and an explicit grammar or program;
 - explain, at a high level, how an RNN carries state, how a transformer uses attention, and how a language model generates a reply one token at a time;
 - distinguish a fixed retrieve-and-answer path from an agent loop that selects tools based on observations;
+- follow a ReAct loop through thought, action, observation and a finish decision that returns to thought when more work is needed;
 - identify what an agent harness lets a system see and do, what it records, and where a person can intervene;
+- sketch an AI product idea with a research question, a possible prototype and an ethical or social question;
 - preserve a prompt, an unedited draft, and a considered edit as evidence for Challenge 3 and the reflection.
 
 ## The 2025 reference
@@ -33,7 +35,7 @@ The current SD2112 sequence assumes the programming exercises are not the goal t
 |---|---|
 | Nicolò | Classroom PC: open `week04-classpoint.pptx` and keep the join code visible on slide 1. Try both short-answer activities once, then reset them. Open the Week 4 web deck as backup; speaker notes are under `S`. |
 | Amber | Post the Week 4 deck and PDF to Canvas with the Challenge 3 brief. Once Gio supplies the Week 7 reflection submission link, include it in the Canvas announcement. |
-| WU Zhao, MA Jie | Help students join ClassPoint and pair up; during the exercise, help with access to the demo harnesses, keep tasks bounded and ask students to capture one tool result. |
+| WU Zhao, MA Jie | Help students join ClassPoint and form small working groups; during the exercise, prompt for a concrete person, a clear AI role, a prototype idea and an ethical or social question. |
 | Gio | Choose two or three harnesses for the demo and test logins, tool access and visible traces. Create the Week 7 Canvas reflection submission link and share it with Amber for posting. Use the same low-risk task across demos where practical. |
 
 ## Run of show
@@ -46,24 +48,24 @@ The current SD2112 sequence assumes the programming exercises are not the goal t
 | 0:42 | 17–19 | Reasoning and rewards | Work through the 60-minute workshop problem. Introduce pretraining, demonstrations and reinforcement learning. | | Let students solve it before reading the steps. Distinguish changing weights during training from spending time reasoning during a reply. Rewards can come from checks or human preferences; reward quality matters. |
 | 0:52 | 20–22 | The model speaks | Three slides authored in the assistant’s own voice. | | Frame as an invited perspective from a frontier language model. Read aloud: what it is, how to collaborate, how to check it. Its account of itself is generated text too. |
 | 1:00 | 23–25 | Question answering → agents | One evidence-based answer versus an agent choosing another action. | | Use the visitor FAQ consistently. Retrieval can be a fixed workflow or an agent tool. |
-| 1:10 | 26–34 | Tools and harnesses | State the goal; follow one tool request and the loop; show Machine A/B cooperation. | | On 32, use the tray/ribbon metaphor briefly; on 33, make it concrete: the model drafts, software controls tool access, a person reviews. |
+| 1:10 | 26–34 | Tools and harnesses | State the goal; follow one tool request and the ReAct loop; show Machine A/B cooperation. | | On slide 29, trace Thought → Action → Observation → Finished? If no, return to Thought; if yes, stop with a draft. On 32, use the tray/ribbon metaphor briefly; on 33, make it concrete: the model drafts, software controls tool access, a person reviews. |
 | 1:30 | 35 | **Break, 10 min** | Prepare the demo. | | |
 | 1:40 | 36–38 | Live demos | Gio demos two or three harnesses; students track task, context, tools, control, trace and stop. | | Use the same brief. Show an actual tool result and an enforced boundary. |
-| 1:58 | 39–42 | **Exercise: one task, one agent loop** | Pairs write a bounded task (8 min), run and observe (15 min), revise and compare (12 min). | | Allow five minutes for transitions. Preserve the second run. |
-| 2:38 | 43–44 | Debrief | Two or three pairs explain how a tool result changed the next action. | Short answer | Ask for the trace and what they verified. |
+| 1:58 | 39–42 | **Exercise: brainstorm a group project idea** | Small working groups choose a person and situation (10 min), ask an agent for three product directions (15 min), then sketch one (10 min). | | Allow five minutes for transition and sharing. Formal project teams form in Week 7. |
+| 2:38 | 43–44 | Debrief | Two or three groups share what the AI does in their idea and an effect they would investigate. | Short answer | Ask for a research question and a possible prototype. |
 | 2:45 | 45–51 | Challenge 3, reflection, close | Brief Week 5 challenge and Week 7 reflection; connect Machine A/B to evidence from experiments. | | Submit on Canvas. Close with the next two material weeks: images/video/layout, then audio/music. |
 
-If a harness login fails, pairs can analyse the projected demo trace and complete the same task brief. If the class is behind, shorten the demos to two systems and keep the exercise's second run; that comparison is the main hands-on learning.
+If a harness login fails, groups can brainstorm three ideas on paper. If the class is behind, shorten the demos to two systems and preserve time for the group sketch and share-out.
 
-## Exercise: one task, one agent loop
+## Exercise: brainstorm a group project idea
 
-The paired exercise follows the live demo and has three stages:
+The small-group exercise follows the live demo. The project brief is to design a product or service that incorporates AI, such as a recommendation system, a generative feature or an agent. Students will research and prototype the product and discuss its ethical and sociological implications. This is an early brainstorm; final teams form in Week 7.
 
-1. **Write the task, 8 minutes.** Choose a public, low-risk design task (for example, compare three public precedents, draft a visitor FAQ from a public event page, or check a short public text against a checklist). Write the goal, output, allowed sources and one thing the agent must not do.
-2. **Run and observe, 15 minutes.** Keep tool settings visible. Record the first tool call, what came back, what changed in context, and whether a person approved an action. Check one claim against its source.
-3. **Revise and run again, 12 minutes.** Change one condition only: the brief, source, permission or stop rule. Compare the second result and write what improved and what still needs a person's judgement.
+1. **Choose a person and situation, 10 minutes.** Write one concrete need as “A ___ struggles to ___ when ___.”
+2. **Ask and discuss, 15 minutes.** Ask an agent for three distinct AI product directions for that need. For each, say what the AI would do. Choose one worth exploring. Keep the prompt and suggestions.
+3. **Choose and sketch, 10 minutes.** Draw a short person → AI feature → result journey. Add what the AI needs, how the group might prototype it, and one ethical or social effect they would research.
 
-Keep a copy of the prompt, one trace excerpt, the output and the student's own edit. If the tool hides its trace, have the pair note what they could not inspect; that is part of the interface critique.
+Allow five minutes for sharing. The sketch is a starting point, not a final proposal or prototype.
 
 ## Challenge 3 · bring to Week 5
 
@@ -84,15 +86,13 @@ The assignment asks for about 1,000 words on **the role of AI in the student's c
 
 | Slide | Type | Question | Use |
 |---:|---|---|---|
-| 3 | Short answer | From the LLM video: what can a language model predict? | Surface what students retained from the playlist video. |
-| 13 | Multiple choice | What is ELIZA doing in this example? | Check that students recognise pattern matching and a written transformation. |
-| 22 | Multiple choice | A bot searches one policy page, then writes one answer. Is it an agent? | Check fixed workflow vs dynamically selected tools. |
-| 37 | Multiple choice | Where did your design judgement matter most? | Debrief the goal, permission and verification choices. |
+| 3 | Short answer | A model predicts the next token. What would you check before treating its fluent answer as evidence? | Ask students to propose a specific evidence check. |
+| 43 | Short answer | What does the AI do in your idea, and what effect on people would you need to investigate? | Require a concrete AI role and a question that can guide research. |
 
 ## Sources and teaching material
 
 - The Week 2 and Week 3 slide decks and lesson plans: the course's rule/spec and learned-example foundations.
-- 2025 SD5913 Week 4 PDF and summary: the progression from ordinary control flow and browser interactions to local LLM chat interfaces.
+- 2025 SD5913 Week 4 PDF and summary: the progression from ordinary control flow and browser interactions to local LLM chat interfaces; PR #3's Week 4 ReAct slide and the current SD2112 group project brief inform the loop and exercise.
 - Chomsky, *Aspects of the Theory of Syntax* (1965); Weizenbaum, “ELIZA” (1966); Elman, “Finding Structure in Time” (1990); Vaswani et al., “Attention Is All You Need” (2017); Lewis et al., “Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks” (2020); Yao et al., “ReAct” (2022).
 - Anthropic, [“Building Effective AI Agents”](https://www.anthropic.com/engineering/building-effective-agents); Anthropic, [“Scaling Managed Agents”](https://www.anthropic.com/engineering/managed-agents); OpenAI, [“The Next Evolution of the Agents SDK”](https://openai.com/index/the-next-evolution-of-the-agents-sdk/).
 
