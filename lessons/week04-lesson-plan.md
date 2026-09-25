@@ -10,7 +10,7 @@ For us:
 2. Separate a theory of human language from a language program: Chomsky's generative grammar and Universal Grammar are theories about linguistic structure and acquisition; ELIZA applies hand-written patterns.
 3. Explain the move from recurrent state to transformer attention, and follow a prompt from tokens and context to parallel training and sequential generation; introduce reasoning and reward-based training with a small workshop-planning example.
 4. Explain the harness as a place where Machine A and Machine B cooperate. Distinguish a fixed question-answering workflow from an agent that can choose a tool, inspect its result, and continue or stop; show how a harness shapes that loop.
-5. Let students observe the harness in a live demo, then brainstorm an early group project idea using an agent as an idea partner. Brief Challenge 3 and the Week 7 individual reflection.
+5. Let students observe the harness in a live demo, then brainstorm an early group project idea using an agent as an idea partner and skeptical reviewer. Brief Challenge 3 and the Week 7 individual reflection.
 
 For students, by the end of the class they can:
 
@@ -20,7 +20,7 @@ For students, by the end of the class they can:
 - distinguish a fixed retrieve-and-answer path from an agent loop that selects tools based on observations;
 - follow a ReAct loop through thought, action, observation and a finish decision that returns to thought when more work is needed;
 - identify what an agent harness lets a system see and do, what it records, and where a person can intervene;
-- sketch an AI product idea with a research question, a possible prototype and an ethical or social question;
+- sketch an AI product idea, use a critical LLM review to find an assumption or possible harm, and choose a prototype test;
 - preserve a prompt, an unedited draft, and a considered edit as evidence for Challenge 3 and the reflection.
 
 ## The 2025 reference
@@ -35,7 +35,7 @@ The current SD2112 sequence assumes the programming exercises are not the goal t
 |---|---|
 | Nicolò | Classroom PC: open `week04-classpoint.pptx` and keep the join code visible on slide 1. Try both short-answer activities once, then reset them. Open the Week 4 web deck as backup; speaker notes are under `S`. |
 | Amber | Post the Week 4 deck and PDF to Canvas with the Challenge 3 brief. Once Gio supplies the Week 7 reflection submission link, include it in the Canvas announcement. |
-| WU Zhao, MA Jie | Help students join ClassPoint and form small working groups; during the exercise, prompt for a concrete person, a clear AI role, a prototype idea and an ethical or social question. |
+| WU Zhao, MA Jie | Help students join ClassPoint and form small working groups; during the exercise, prompt for a concrete person, a clear AI role, a skeptical review and a specific response to it. |
 | Gio | Choose two or three harnesses for the demo and test logins, tool access and visible traces. Create the Week 7 Canvas reflection submission link and share it with Amber for posting. Use the same low-risk task across demos where practical. |
 
 ## Run of show
@@ -51,8 +51,8 @@ The current SD2112 sequence assumes the programming exercises are not the goal t
 | 1:10 | 26–34 | Tools and harnesses | State the goal; follow one tool request and the ReAct loop; show Machine A/B cooperation. | | On slide 29, trace Thought → Action → Observation → Finished? If no, return to Thought; if yes, stop with a draft. On 32, use the tray/ribbon metaphor briefly; on 33, make it concrete: the model drafts, software controls tool access, a person reviews. |
 | 1:30 | 35 | **Break, 10 min** | Prepare the demo. | | |
 | 1:40 | 36–38 | Live demos | Gio demos two or three harnesses; students track task, context, tools, control, trace and stop. | | Use the same brief. Show an actual tool result and an enforced boundary. |
-| 1:58 | 39–42 | **Exercise: brainstorm a group project idea** | Small working groups choose a person and situation (10 min), ask an agent for three product directions (15 min), then sketch one (10 min). | | Allow five minutes for transition and sharing. Formal project teams form in Week 7. |
-| 2:38 | 43–44 | Debrief | Two or three groups share what the AI does in their idea and an effect they would investigate. | Short answer | Ask for a research question and a possible prototype. |
+| 1:58 | 39–42 | **Exercise: brainstorm a group project idea** | Small working groups choose a person and situation (10 min), ask an agent for three product directions (15 min), then prompt it as a skeptical reviewer and revise one sketch (10 min). | | Allow five minutes for transition and sharing. Formal project teams form in Week 7. |
+| 2:38 | 43–44 | Debrief | Two or three groups share one criticism and how they changed the idea. | Short answer | Ask which criticism they accepted and what they would test. |
 | 2:45 | 45–51 | Challenge 3, reflection, close | Brief Week 5 challenge and Week 7 reflection; connect Machine A/B to evidence from experiments. | | Submit on Canvas. Close with the next two material weeks: images/video/layout, then audio/music. |
 
 If a harness login fails, groups can brainstorm three ideas on paper. If the class is behind, shorten the demos to two systems and preserve time for the group sketch and share-out.
@@ -63,7 +63,7 @@ The small-group exercise follows the live demo. The project brief is to design a
 
 1. **Choose a person and situation, 10 minutes.** Write one concrete need as “A ___ struggles to ___ when ___.”
 2. **Ask and discuss, 15 minutes.** Ask an agent for three distinct AI product directions for that need. For each, say what the AI would do. Choose one worth exploring. Keep the prompt and suggestions.
-3. **Choose and sketch, 10 minutes.** Draw a short person → AI feature → result journey. Add what the AI needs, how the group might prototype it, and one ethical or social effect they would research.
+3. **Critique and sketch, 10 minutes.** Give the chosen idea to the LLM with a skeptical reviewer role: “Find one excluded user, one possible harm, and one assumption to test. Do not praise the idea.” Discuss which criticism is credible. Draw a person → AI feature → result journey, mark one change and name a way to test it. The slide models this with an AI route recommendation for night travel. The group decides what to accept from the review.
 
 Allow five minutes for sharing. The sketch is a starting point, not a final proposal or prototype.
 
@@ -87,7 +87,7 @@ The assignment asks for about 1,000 words on **the role of AI in the student's c
 | Slide | Type | Question | Use |
 |---:|---|---|---|
 | 3 | Short answer | A model predicts the next token. What would you check before treating its fluent answer as evidence? | Ask students to propose a specific evidence check. |
-| 43 | Short answer | What does the AI do in your idea, and what effect on people would you need to investigate? | Require a concrete AI role and a question that can guide research. |
+| 43 | Short answer | What did the skeptical review challenge, and how did your group change the idea? | Require a concrete criticism and a specific design response or test. |
 
 ## Sources and teaching material
 

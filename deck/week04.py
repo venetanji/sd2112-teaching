@@ -472,7 +472,7 @@ S.append(content('05 · BEFORE YOU START THE EXERCISE',
                      'Your group project: a product or service with AI inside it.',
                      'Name a person and a problem before asking for ideas.',
                      'Ask the agent for three different directions; discuss what each would change for that person.',
-                     'Choose one direction and sketch what the AI does, what it needs, and what a person controls.',
+                     'Choose one direction, ask for a critical review, then sketch your response.',
                  ],
                  body_size=29,
                  notes='The group project asks students to design a product or service with AI inside it, research and prototype it, and discuss ethical and sociological implications. It could use recommendation, generative AI, an agent or another AI element. Treat today as an early brainstorm; formal teams and the proposal follow later. Use only fictional or public examples in the demo harness.'))
@@ -481,7 +481,7 @@ S.append(content('05 · BEFORE YOU START THE EXERCISE',
 # ───────────────────────── 06 · exercise ─────────────────────────
 S.append(section('06', 'Exercise · brainstorm your group project',
                  '40 minutes · small groups · one possible direction', bg=YELLOWS[0],
-                 notes='Small working groups brainstorm an early direction for the SD2112 group project. Formal teams form in Week 7; today is exploratory. The agent can suggest possibilities, while students choose and sketch one. Allow five minutes for sharing.'))
+                 notes='Small working groups brainstorm an early direction for the SD2112 group project. Formal teams form in Week 7; today is exploratory. The agent suggests possibilities, then plays a skeptical reviewer. Students decide which criticism matters and revise one sketch. Allow five minutes for sharing.'))
 
 S.append(activity('1 · GROUPS · PICK A PERSON · 10 MIN', 10,
                   'Who could your project help?',
@@ -521,40 +521,43 @@ S.append(activity('2 · ASK · DISCUSS · 15 MIN', 15,
                   panel_size=22, bg=YELLOWS[2],
                   notes='Fifteen minutes. The agent is an idea partner after the live demonstration; tool use is optional here. If access fails, groups brainstorm three ideas without it. Keep the prompt and the three suggestions so students can later see what they accepted or rejected. Avoid personal or confidential material.'))
 
-S.append(activity('3 · CHOOSE · SKETCH · 10 MIN', 10,
-                  'Show how your chosen idea works.',
+S.append(activity('3 · CRITIQUE · SKETCH · 10 MIN', 10,
+                  'Ask for a hard review. Then sketch.',
                   [
-                      'Draw a quick journey: person → AI feature → result.',
-                      'Label what the AI needs and how you could prototype the idea.',
-                      'Add one ethical or social question your group would research.',
+                      'Give the LLM your chosen idea. Set it to be a skeptical reviewer.',
+                      'Discuss one criticism that seems plausible; do not accept it automatically.',
+                      'Sketch person → AI feature → result. Mark one change you made and a way to test it.',
                   ],
                   panel=[
-                      'ONE SKETCH',
-                      'Person + need',
-                      'What the AI does',
-                      'Prototype idea',
-                      'A question to research',
+                      'EXAMPLE · CRITIC PROMPT',
+                      'Idea: AI recommends',
+                      'safer routes at night.',
                       '',
-                      'Why this idea?',
+                      '“Be a skeptical design',
+                      'reviewer. Find one',
+                      'excluded user, one',
+                      'possible harm, and one',
+                      'assumption to test.',
+                      'Do not praise the idea.”',
                   ],
-                  panel_size=23, bg=YELLOWS[3],
-                  notes='Ten minutes. A few boxes and arrows are enough; no prototype is required today. Ask why the group chose this direction, how they would research and prototype it, and one ethical or sociological implication worth investigating.'))
+                  panel_size=22, bg=YELLOWS[3],
+                  notes='Ten minutes. Read the example aloud, then have groups replace the route idea with their own. A possible critique: the “safer” label may exclude wheelchair users, expose someone’s travel patterns, or rely on untested crime data. The group should assess the critique, choose one credible issue, and change or annotate its sketch. A few boxes and arrows are enough; no prototype is required today. If access fails, another group can play the skeptical reviewer.'))
 
-S.append(question('short_answer', 'What does the AI do in your idea, and what effect on people would you need to investigate?',
-                  hint='Name your person, the AI feature, and one concrete question to research.',
+S.append(question('short_answer', 'What did the skeptical review challenge, and how did your group change the idea?',
+                  hint='Name the AI feature, one credible criticism, and your response.',
                   eyebrow_text='06 · DEEP EXERCISE · SHARE YOUR IDEA',
-                  notes='Invite groups to answer from the sketch. Require a concrete AI role and a testable ethical or social question; do not accept “the AI helps users” as a complete answer.'))
+                  notes='Invite groups to answer from the sketch. Require a concrete AI role, a credible criticism, and a specific design response or test. The LLM critic is a prompt role, not an authority; students judge what to accept.'))
 
 S.append(content('06 · THE DEBRIEF',
                  'A possible idea becomes a design question.',
                  [
                      'Who is this for, and what problem did you choose?',
                      'What does the AI do? What would a prototype show?',
-                     'What research would tell you whether the idea is needed?',
-                     'Which ethical or social effect should your group investigate?',
+                     'What did the skeptical reviewer challenge?',
+                     'What did you change, and what should research test?',
                  ],
                  body_size=29,
-                 notes='Five minutes. Invite two or three groups to share one sketch. Highlight the AI role, a research question, a prototype path, and a social or ethical implication. This is an early brainstorm for the group project; no final concept is due today.'))
+                 notes='Five minutes. Invite two or three groups to share one sketch and the criticism they chose to address. Highlight the AI role, the prototype path, and a social or ethical implication. This is an early brainstorm for the group project; no final concept is due today.'))
 
 
 # ───────────────────────── 07 · assignment and reflection ─────────────────────────
