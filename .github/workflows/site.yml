@@ -56,15 +56,15 @@ jobs:
         deck: ${{ fromJson(needs.decks.outputs.decks) }}
     steps:
       - uses: actions/checkout@v4
-      # The key is everything that can change this deck's PDF: its source, its answer links,
-      # the shared figures, course facts and assets, the site's styles and reveal.js, the
-      # course config, the deckgen pin, and this workflow (the Playwright pin). Same key,
-      # same file — restore and upload.
+      # The key covers the deck source, its own figures, shared figures, cross-week answer
+      # links, interactives, vendor scripts, course facts and assets, site styles, config,
+      # the deckgen pin, and this workflow (the Playwright pin). A report update can
+      # invalidate several PDFs; that is preferable to publishing stale answer links.
       - id: cache
         uses: actions/cache@v4
         with:
           path: pdf
-          key: pdf-${{ matrix.deck }}-${{ hashFiles(format('deck/{0}.py', matrix.deck), format('deck/{0}-reports.json', matrix.deck), 'deck/figures.py', 'deck/course.py', 'deck/assets/**', 'site/vendor/**', 'deckgen.toml', 'requirements.txt', '.github/workflows/site.yml') }}
+          key: pdf-${{ matrix.deck }}-${{ hashFiles(format('deck/{0}.py', matrix.deck), format('deck/{0}_figures.py', matrix.deck), 'deck/*-reports.json', 'deck/figures.py', 'deck/course.py', 'deck/assets/**', 'deck/interactives/**', 'deck/vendor/**', 'site/vendor/**', 'deckgen.toml', 'requirements.txt', '.github/workflows/site.yml') }}
       - if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/setup-python@v5
         with:
