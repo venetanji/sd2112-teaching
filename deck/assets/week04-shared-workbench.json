@@ -1,0 +1,11 @@
+{
+  "provider": "https://easel.ait4x.org/v1",
+  "request": {
+    "model": "qwen-image-2.1",
+    "prompt": "A single clear editorial still life, photographed from a slight overhead angle. A rectangular navy wooden sorting tray with six large compartments on an ivory studio table. One continuous soft teal fabric ribbon curls through three compartments. Two simple orange wooden blocks fit neatly in the other compartments. Tactile real materials, elegant design-school publication, warm soft shadows, minimalist, generous empty space, only these few objects. The rigid tray and flexible ribbon visibly coexist. Landscape composition. Absolutely no text, no letters, no numbers, no writing, no labels, no diagram arrows, no logos, no hands, no faces, no robots.",
+    "size": "1536x1024",
+    "n": 1,
+    "response_format": "b64_json"
+  },
+  "purpose": "Rules and learned flexibility share a workbench: visual metaphor for Machine A and B in a harness."
+}
