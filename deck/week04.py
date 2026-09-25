@@ -209,7 +209,7 @@ S.append(section('01', 'Machine A · language as rules',
                  'structure · syntax · explicit patterns', bg=INK,
                  notes='First language machine: rules. Chomsky is a theorist of human language, ELIZA is a program. They are connected by the importance they give to structure, but they are not the same thing.'))
 
-S.append(content('01 · NOAM CHOMSKY · GENERATIVE GRAMMAR',
+S.append(content('01 · NOAM CHOMSKY · GENERATIVE GRAMMAR · [CHOMSKY 1965 ↗](https://mitpress.mit.edu/9780262030113/aspects-of-the-theory-of-syntax/)',
                  'A sentence is more than a list of memorised phrases.',
                  [
                      'We can understand sentences we have never heard before.',
@@ -256,7 +256,7 @@ S.append(section('02', 'Machine B · language as examples',
                  'sequence · context · next token', bg=VIOLET,
                  notes='The second language machine is learned from examples. We will move from a recurrent state to attention and next-token generation.'))
 
-S.append(cards('02 · BEFORE THE TRANSFORMER · RNNs',
+S.append(cards('02 · BEFORE THE TRANSFORMER · RNNs · [ELMAN 1990 ↗](https://doi.org/10.1207/S15516709COG1402_1)',
                'A recurrent network carries a state forward.',
     [
         ('INPUT', 'One position at a time.',
@@ -268,18 +268,18 @@ S.append(cards('02 · BEFORE THE TRANSFORMER · RNNs',
     ], text_size=23,
     notes='Elman’s 1990 paper uses recurrent links to provide dynamic memory: hidden activity feeds back into later processing. This is one clear historical example, not the first recurrent network. The design tradeoff is visible: each step depends on the state from the step before it.'))
 
-S.append(full_diagram('02 · RNN · RECURRENT STATE',
+S.append(full_diagram('02 · RNN · RECURRENT STATE · [ELMAN 1990 ↗](https://doi.org/10.1207/S15516709COG1402_1)',
                       'A learned state moves from one token to the next.', W4.rnn_steps(),
                       notes='The hidden state at each step depends on the previous state. The network learns these representations from examples; they are not hand-written grammar rules.'))
 
-S.append(sketch_slide('02 · TRANSFORMER · CAUSAL SELF-ATTENTION',
+S.append(sketch_slide('02 · TRANSFORMER · CAUSAL SELF-ATTENTION · [VASWANI ET AL. 2017 ↗](https://arxiv.org/abs/1706.03762)',
                       'One sequence. Many positions working together.',
                       live('transformer-sequence', TRANSFORMER_SKETCH, 1680, 640,
                            hint='choose a step · click a token · replay training or generation'),
                       figure=W4.transformer_sequence(), bg=PAPER,
                       notes='Walk the four tabs in order: tokens, context, training, generation. Click different token positions to reveal the causal context available to each one: the current and earlier tokens, never future tokens. Select Training and replay the pass. Point out that all five next-token predictions are computed together during training; compare them with the known targets to adjust weights; the animation moves through all lanes at once. This is a toy decoder-only language model with whole-word toy tokens. Real tokenizers may split words. The key contrast with the previous RNN slide is the absence of a recurrent hidden-state dependency across positions in a training pass. This enabled much more parallel computation and helped large-scale training; it does not make context length unlimited, because attention and activations cost memory. At inference, GPT-style generation still appends one token at a time. Source: Vaswani et al., Attention Is All You Need (2017), https://arxiv.org/abs/1706.03762.'))
 
-S.append(visual_flow('02 · REASONING · A SMALL DESIGN PROBLEM',
+S.append(visual_flow('02 · REASONING · A SMALL DESIGN PROBLEM · [DEEPSEEK-R1 2025 ↗](https://arxiv.org/abs/2501.12948)',
     'Reasoning means working through a problem.',
     [
         ('THE CONSTRAINTS', 'Plan a workshop.', '60 minutes total. A 10-minute break. Two equal activities.'),
@@ -288,7 +288,7 @@ S.append(visual_flow('02 · REASONING · A SMALL DESIGN PROBLEM',
     ], 'Reasoning can combine constraints, try steps, and check a result.',
     notes='Pause at the brief and let the room work it out before reading the steps. This is a constructed teaching example, not a transcript or benchmark result. LLMs can perform multi-step reasoning, with reliability varying by task. Reasoning models can spend more computation producing intermediate steps before answering; this still uses token generation. A plausible written explanation is not proof that an answer is correct, nor a faithful window into every internal computation. Check the actual constraints. DeepSeek-R1: https://arxiv.org/abs/2501.12948.'))
 
-S.append(visual_flow('02 · TRAINING · THREE USEFUL IDEAS',
+S.append(visual_flow('02 · TRAINING · THREE USEFUL IDEAS · [OUYANG ET AL. 2022 ↗](https://arxiv.org/abs/2203.02155)',
     'Learn language. Practise tasks. Learn from feedback.',
     [
         ('PRETRAINING', 'Learn patterns.', 'Predict missing next tokens across many examples of text.'),
@@ -297,7 +297,7 @@ S.append(visual_flow('02 · TRAINING · THREE USEFUL IDEAS',
     ], 'A simplified route: actual training recipes vary across models.',
     notes='Use the familiar Machine B idea: weights change with experience during training. Pretraining builds broad patterns; supervised demonstrations teach response formats and tasks; reinforcement learning can favour successful behaviour. This is a teaching sequence, not a disclosure of the current assistant’s private training recipe. Human preferences can train a reward model (RLHF); a verifiable task can use a programmatic checker. Sources: Ouyang et al., https://arxiv.org/abs/2203.02155; DeepSeek-AI, https://arxiv.org/abs/2501.12948.'))
 
-S.append(visual_flow('02 · REINFORCEMENT LEARNING · THE SAME WORKSHOP',
+S.append(visual_flow('02 · REINFORCEMENT LEARNING · THE SAME WORKSHOP · [DEEPSEEK-R1 2025 ↗](https://arxiv.org/abs/2501.12948)',
     'What gets rewarded shapes what gets learned.',
     [
         ('TRY', 'Generate plans.', '20 + 10 + 20 = 50\n25 + 10 + 25 = 60'),
