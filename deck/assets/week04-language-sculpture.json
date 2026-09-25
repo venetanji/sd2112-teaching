@@ -1,0 +1,11 @@
+{
+  "provider": "https://easel.ait4x.org/v1",
+  "request": {
+    "model": "qwen-image-2.1",
+    "prompt": "Single editorial still life for a design-school lecture. One long ribbon of warm white paper folded into three branching sculptural paths on a dark navy surface. A few small teal and orange paper tiles travel along the folds. Beautiful tactile paper, clear silhouette, studio side lighting, restrained sophisticated composition, large simple shapes. Landscape close-up, generous negative space, no busy background. This is an abstract metaphor for language possibilities, not a technical diagram. Absolutely no text, no letters, no numbers, no writing, no symbols, no labels, no logos, no human face, no robot.",
+    "size": "1536x1024",
+    "n": 1,
+    "response_format": "b64_json"
+  },
+  "purpose": "Abstract language possibilities illustration for the model-authored interlude; a metaphor, not a neural architecture."
+}
