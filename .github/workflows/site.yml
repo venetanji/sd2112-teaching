@@ -1,13 +1,18 @@
 name: Publish site
 
-# On every push to main (or by hand): build the html decks, print each one to a PDF
-# without the ClassPoint buttons, build the syllabus page, and publish _site/ to
-# GitHub Pages. Pages source must be "GitHub Actions" (Settings → Pages).
-# The PowerPoints are built by the separate "Build PowerPoints" workflow.
+# On every push to main (or by hand): build the html decks and the syllabus page, print
+# each deck to a PDF without the ClassPoint buttons, and publish _site/ to GitHub Pages.
+# Pages source must be "GitHub Actions" (Settings → Pages). The PowerPoints are built by
+# the separate "Build PowerPoints" workflow.
 #
-# The site also carries the `staging` branch under /staging/, built with that branch's
-# own toolchain pin, so a week can be checked in the browser before it reaches main.
-# A finished "Build staging" run re-runs this workflow (workflow_run), still from main.
+# The PDFs are printed one deck per job, in parallel, and a deck whose inputs have not
+# changed since the last run is restored from the Actions cache instead of being printed
+# again: a one-slide fix prints one PDF. The site itself is assembled without Chromium.
+#
+# The site also carries the `staging` branch under /staging/: the html decks and PDFs that
+# the last good "Build staging" run left as its `staging-site` artifact, built with that
+# branch's own toolchain pin, so a week can be checked in the browser before it reaches
+# main. A finished "Build staging" run re-runs this workflow (workflow_run), still from main.
 on:
   push:
     branches: [main]
@@ -20,14 +25,76 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  actions: read     # to restore the last good staging build when a rebuild fails
+  actions: read     # to fetch the last good staging build
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
+  decks:
+    # the roster of decks stays in deckgen.toml; this job just reads it out
+    runs-on: ubuntu-latest
+    outputs:
+      decks: ${{ steps.list.outputs.decks }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: list
+        run: |
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import json, tomllib
+          print('decks=' + json.dumps(tomllib.load(open('deckgen.toml', 'rb'))['course']['decks']))
+          PY
+
+  pdf:
+    # one PDF per deck, printed from that deck's html deck with Chromium
+    needs: decks
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        deck: ${{ fromJson(needs.decks.outputs.decks) }}
+    steps:
+      - uses: actions/checkout@v4
+      # The key covers the deck source, its own figures, shared figures, cross-week answer
+      # links, interactives, vendor scripts, course facts and assets, site styles, config,
+      # the deckgen pin, and this workflow (the Playwright pin). A report update can
+      # invalidate several PDFs; that is preferable to publishing stale answer links.
+      - id: cache
+        uses: actions/cache@v4
+        with:
+          path: pdf
+          key: pdf-${{ matrix.deck }}-${{ hashFiles(format('deck/{0}.py', matrix.deck), format('deck/{0}_figures.py', matrix.deck), 'deck/*-reports.json', 'deck/figures.py', 'deck/course.py', 'deck/assets/**', 'deck/interactives/**', 'deck/vendor/**', 'site/vendor/**', 'deckgen.toml', 'requirements.txt', '.github/workflows/site.yml') }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: pip install -r requirements.txt
+      - if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - if: steps.cache.outputs.cache-hit != 'true'
+        name: Playwright Chromium (prints the PDF)
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - if: steps.cache.outputs.cache-hit != 'true'
+        name: Print ${{ matrix.deck }}
+        run: |
+          deckgen build --site ${{ matrix.deck }}
+          mkdir -p pdf && cp _site/${{ matrix.deck }}/*.pdf pdf/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pdf-${{ matrix.deck }}
+          path: pdf
+          retention-days: 7
+
   build:
+    needs: [decks, pdf]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,15 +104,18 @@ jobs:
           cache: pip
           cache-dependency-path: requirements.txt
       - run: pip install -r requirements.txt
-      - uses: actions/setup-node@v4
+      - name: Build the site (html decks, syllabus; the PDFs come from the jobs above)
+        run: deckgen build --site --no-pdf
+      - uses: actions/download-artifact@v4
         with:
-          node-version: '22'
-      - name: Playwright Chromium (prints the PDFs)
+          pattern: pdf-*
+          path: pdfs
+      - name: Put each PDF next to its deck
         run: |
-          npm install --no-save --no-package-lock playwright@1.56.1
-          npx playwright install --with-deps chromium
-      - name: Build the site (html decks, PDFs, syllabus)
-        run: deckgen build --site
+          for d in pdfs/pdf-*; do
+            cp "$d"/*.pdf "_site/${d#pdfs/pdf-}/"
+          done
+          ls -l _site/*/*.pdf
       - name: Is there a staging branch?
         id: staging
         run: |
@@ -54,33 +124,19 @@ jobs:
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/checkout@v4
+      - name: /staging/ is the last good Build staging run
+        # the deployment replaces the whole site, so a broken or missing staging build
+        # never takes /staging/ down: the last successful run still has it as an artifact
         if: steps.staging.outputs.exists == 'true'
-        with:
-          ref: staging
-          path: staging
-      - name: Build the staging branch under /staging/ (a broken staging never blocks main)
-        id: staging-build
-        if: steps.staging.outputs.exists == 'true'
-        continue-on-error: true
-        run: |
-          python -m venv staging/.venv
-          staging/.venv/bin/pip install -q -r staging/requirements.txt
-          (cd staging && NODE_PATH="$GITHUB_WORKSPACE/node_modules" .venv/bin/deckgen build --site)
-          rm -rf _site/staging && cp -r staging/_site _site/staging
-      - name: A broken staging keeps the last good one
-        # the deployment replaces the whole site, so without this a failed rebuild would
-        # take /staging/ down; the last successful Build staging run still has it as an artifact
-        if: steps.staging.outputs.exists == 'true' && steps.staging-build.outcome == 'failure'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           run_id=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow staging.yml --branch staging --status success --limit 1 --json databaseId --jq '.[0].databaseId')
           rm -rf _site/staging
           if [ -n "$run_id" ] && gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --name staging-site --dir _site/staging; then
-            echo "The staging build failed; /staging/ is the last good one, from Build staging run $run_id." >> "$GITHUB_STEP_SUMMARY"
+            echo "/staging/ is Build staging run $run_id." >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "The staging build failed and there is no earlier good build to keep: /staging/ is absent until the next good push to staging." >> "$GITHUB_STEP_SUMMARY"
+            echo "No good Build staging run to show: /staging/ is absent until the next good push to staging." >> "$GITHUB_STEP_SUMMARY"
           fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
