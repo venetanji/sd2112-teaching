@@ -7,7 +7,7 @@ name   = "Artificial Intelligence in Design"
 year   = "2026/27"
 school = "PolyU School of Design"
 footer = "SD2112 · AI IN DESIGN"
-decks  = ["week01", "week02", "week03"]
+decks  = ["week01", "week02", "week03", "week04"]
 artifact = "sd2112-powerpoints"
 
 [[nav]]
@@ -25,6 +25,10 @@ href  = "week02/"
 [[nav]]
 label = "Week 3 slides"
 href  = "week03/"
+
+[[nav]]
+label = "Week 4 slides"
+href  = "week04/"
 
 [[nav]]
 label = "Syllabus"
