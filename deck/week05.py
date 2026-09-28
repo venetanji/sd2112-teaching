@@ -21,7 +21,7 @@ def logo_exploration():
     slide = content('IMAGE GENERATION · A COURSE EXAMPLE',
                     'What changed when we remade our course mark?', [],
                     bg=PAPER, title_size=62,
-                    notes='This is a real SD2112 group co-creation, not a finalized course identity. The clean a-plus-dot mark was the source; the forest/wall version is an exploratory AI-edited variant from the group. Compare the letterform, dot, colour, material and implied space. The model can propose material and setting, but it also changes a solid dot into a chalk ring: ask whether that breaks the brief or creates a better one. Be candid that this variant was selected and further edited by people, not generated in a single perfect prompt. Ask what should be fixed in the next iteration. Source images: SD2112 group logo exploration, September 2026, shared with the teaching team.')
+                    notes='This is a real SD2112 group co-creation, not a finalized course logo. The clean a-plus-dot mark was the source; the forest/wall version is an exploratory AI-edited variant from the group. Compare the letterform, dot, colour, material and implied space. The model can propose material and setting, but it also changes a solid dot into a chalk ring: ask whether that breaks the brief or creates a better one. Be candid that this variant was selected and further edited by people, not generated in a single perfect prompt. Ask what should be fixed in the next iteration. Source images: SD2112 group logo exploration, September 2026, shared with the teaching team.')
     slide.els = slide.els[:2]
     slide.els += [
         Rect(220, 322, 630, 570, '#FFFFFF'),
@@ -60,7 +60,7 @@ S.append(cards('00 · THE DESIGNER’S JOB', 'The model does not supply your rea
 notes='Position the language agent as a prompt clarifier, not an autonomous creative director. Students remain the source of the idea and the judge of the output.'))
 
 S.append(section('IMAGE MODELS · A SHORT LINEAGE',
-                 'What changed when images learned language?',
+                 'How did words begin to guide image generation?',
                  'from examples · to alignment · to denoising', bg=VIOLET,
                  notes='Frame this as a change in how visual models can be conditioned, not as a claim that one architecture simply replaced another. Keep the technical account at the level needed to understand the image-generation tools students will meet.'))
 
@@ -68,7 +68,7 @@ S.append(content('GANs · 2014 · GENERATIVE ADVERSARIAL NETWORKS',
                  'GANs learn a visual distribution—not a description.', [
                      'A generator turns random input into candidate images.',
                      'A discriminator learns to distinguish generated images from examples.',
-                     'In this early image-generation story, there is no caption telling the GAN what to draw.',
+                     'Classic image GANs: no text prompt telling the model what to draw.',
                  ], image='edmond-de-belamy.jpg', fit='contain', body_size=28,
                  caption='Obvious, Portrait of Edmond de Belamy (2018), made with a GAN; the historical example shown in the 2025 Week 5 deck.',
                  notes='Use the portrait as a concrete artifact, not as evidence that all GANs are unconditional: conditional GAN variants exist. The teaching contrast is with the text-conditioned image-generation interfaces students use today. The original 2025 Week 5 deck shows generated sample grids and a generator/discriminator schematic on pp. 45–46, then this portrait on p. 47.'))
@@ -80,7 +80,7 @@ S.append(figure_slide('GANs · TWO MODELS IN COMPETITION',
 
 S.append(figure_slide('CLIP · CONTRASTIVE LANGUAGE–IMAGE PRETRAINING',
                       'CLIP brings words and images into a shared space.', F.clip_shared_space(),
-                      caption='Paired text and image representations are trained to align; CLIP is not itself the image generator.',
+                      caption='Matching pairs move closer; mismatched pairs move apart. CLIP does not generate an image.',
                       notes='Explain the two encoders and paired examples: matching captions and pictures are trained to have similar representations, while non-matching pairs are pushed apart. Treat the 2D points as a conceptual projection, not CLIP’s literal high-dimensional space. This updates the 2025 deck’s helpful caption/image pairing and similarity-matrix visuals on pp. 48–50.'))
 
 S.append(figure_slide('TEXT-TO-IMAGE · A GENERATIVE SYSTEM',
@@ -88,20 +88,29 @@ S.append(figure_slide('TEXT-TO-IMAGE · A GENERATIVE SYSTEM',
                       caption='In latent diffusion, text conditions iterative denoising; a VAE decoder turns the final latent into pixels.',
                       notes='Walk from prompt to text encoder to contextual text features. Separately sample initial latent noise; the denoising model updates that latent over many steps, using the text features as a condition, and the VAE decoder returns pixels. This is a high-level latent-diffusion workflow, not a literal network graph: exact text encoders, denoisers, step counts and VAE configurations vary by model. The 2025 Week 5 PDF page 54 shows a comparable text encoder, random-noise input, iterative diffusion model and VAE decoder; its CLIP label is model-specific, not universal.'))
 
+S.append(content('GENERATED EXAMPLE · FROM PROMPT TO IMAGE',
+                 'The model gives you a candidate—not a decision.', [
+                     'Intent: one paper lantern in a night garden.',
+                     'Look: warm light, framing, plants, material. What did the model choose?',
+                     'Decide: which choices serve the intent, and what would you revise?',
+                 ], image='week05-lantern-easel.jpg', fit='contain', body_size=28,
+                 caption='Generated course example · Easel / Flux2-9B · 28 Sep 2026.',
+                 notes='This single course-generated still illustrates the difference between specifying an intent and accepting a candidate output. Tool/model: Easel Flux2-9B image server, 28 September 2026. The image depicts one orange paper lantern in dark teal garden foliage and contains no text. The three-line intent on screen is an illustrative summary, not a verbatim generation prompt. Ask what the model inferred about leaf density, lantern shape and lighting; do not claim these details were specified.'))
+
 S.append(figure_slide('LATENT DIFFUSION · VARIATIONAL AUTOENCODER',
                       'A VAE moves between pixels and a compact latent.', F.vae_latent(),
-                      caption='The encoder predicts a latent distribution; sample z at the narrow bottleneck, then decode back to image space.',
+                      caption='This image-to-image reconstruction illustrates VAE training; generation begins from latent noise.',
                       notes='Follow the hourglass: image x enters the encoder, which predicts a distribution over z (shown with its mean and log-variance); sample z, then the expanding decoder predicts reconstruction x-hat. This is the standard VAE shape shown in the 2025 Week 5 PDF page 53. Do not imply that text-to-image sampling needs a source image: in latent diffusion, noise is denoised in latent space and the VAE decoder maps the final latent to pixels.'))
 
 S.append(figure_slide('DIFFUSION · TRAINING AND GENERATION',
                       'Generation reverses the gradual noising process.', F.diffusion_denoising(),
-                      caption='Training adds noise to examples; generation iteratively removes it from a noisy latent.',
+                      caption='Top: conceptual image-space noising. Bottom: latent denoising, then VAE decoding to pixels.',
                       notes='Contrast the directions: forward noising is used to train the denoiser; generation runs the learned process in reverse, updating a noisy latent over many steps. The sketches show only a few qualitative snapshots, not literal saved outputs or measured noise levels. Encoded text can condition the reverse updates. A VAE decoder then maps the final latent to pixels in latent-diffusion systems. The 2025 deck introduces this forward/reverse relationship on p. 51 and connects the text encoder, denoiser and VAE on p. 54.'))
 
 S.append(question('short_answer', "If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair?",
-                  hint='Which part aligns words and images? Which part actually makes the image?',
+                  hint='What can your tool show or control? What would require evidence?',
                   eyebrow_text='IMAGE MODELS · DEEP QUESTION',
-                  notes='Allow three minutes. A strong answer separates CLIP-like alignment from generation: the text encoder produces a condition; iterative denoising builds a latent; the VAE decoder maps the final latent to pixels. CLIP itself is not the drawing system. In some pipelines the conditioning encoder is not CLIP-derived. Ask which distinctions the earlier diagrams made visible, then bridge to tools an agent might call.'))
+                  notes='Allow three minutes. A strong answer separates CLIP-like alignment from generation: the text encoder produces a condition; iterative denoising builds a latent; the VAE decoder maps the final latent to pixels. CLIP itself is not the drawing system. In some pipelines the conditioning encoder is not CLIP-derived. Probe what a student can actually inspect or control in the approved image tool, and what would need vendor documentation or another source as evidence; do not assume the controls exist. Then bridge to tools an agent might call.'))
 
 S.append(figure_slide('AGENTS · IMAGE UNDERSTANDING + GENERATION AS TOOLS',
                       'The agent can look, make, and look again.', F.agent_image_tools(),

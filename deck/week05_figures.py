@@ -122,8 +122,8 @@ def clip_shared_space(name='w05-clip-shared-space', w=1680, h=620):
     c.circle(1500, 255, 14, fill=TEAL)
     c.text(1060, 235, 'caption', size=18, color=VIOLET, anchor='middle')
     c.text(1115, 315, 'matching image', size=18, color=TEAL, anchor='middle')
-    c.text(1265, 405, 'different meaning → farther apart', size=19,
-           color=MUTED, anchor='middle')
+    c.text(1212, 486, 'matching pairs nearby · mismatched pairs far apart', size=22,
+           color=MUTED, anchor='middle', weight=700)
     c.text(840, 570, 'CLIP aligns meaning across modalities; it does not generate the picture.',
            size=25, color=INK, mono=False, anchor='middle', weight=600)
     return c.finish(name)
@@ -251,11 +251,22 @@ def _diffusion_snapshot(c, x, y, level, seed):
         c.rect(nx, ny, 11, 9, fill=rng.choice(palette))
 
 
+def _latent_snapshot(c, x, y, stage, seed):
+    """Abstract feature grids avoid depicting a latent as a viewable chair image."""
+    c.rect(x, y, 200, 112, fill='#1D303B', stroke=TEAL, width=2)
+    rng = random.Random(seed)
+    palette = ('#3C5964', '#5C7981', TEAL, VIOLET, ORANGE)
+    for row in range(6):
+        for col in range(11):
+            value = rng.randrange(5) if stage == 0 or rng.random() < (0.5 - stage * 0.12) else (col + row // 2) % 5
+            c.rect(x + 11 + col * 16, y + 10 + row * 16, 13, 13, fill=palette[value])
+
+
 def diffusion_denoising(name='w05-diffusion-denoising', w=1680, h=620):
     """Contrast training's forward noising with generation's iterative reverse process."""
     c = Canvas(w, h, bg=WHITE)
     xs = (35, 455, 875, 1295)
-    c.text(840, 46, 'TRAINING · FORWARD PROCESS · ADD NOISE TO EXAMPLES', size=21,
+    c.text(840, 46, 'TRAINING · FORWARD NOISING · IMAGE-SPACE EXPLANATION', size=21,
            color=ORANGE, anchor='middle', weight=700)
     top_labels = ('clean image  x0', 'add some noise', 'add more noise', 'mostly noise  xT')
     for i, (x, label) in enumerate(zip(xs, top_labels)):
@@ -266,15 +277,28 @@ def diffusion_denoising(name='w05-diffusion-denoising', w=1680, h=620):
 
     c.text(840, 275, 'GENERATION · REVERSE PROCESS · START FROM LATENT NOISE', size=21,
            color=VIOLET, anchor='middle', weight=700)
-    bottom_labels = ('latent noise  zT', 'denoise', 'denoise again', 'clean latent  z0')
-    for i, (x, label) in enumerate(zip(xs, bottom_labels)):
-        c.text(x + 150, 319, label, size=17, color=INK, anchor='middle', weight=700)
-        _diffusion_snapshot(c, x, 334, 3 - i, 40 + i)
-    for x in (345, 765, 1185):
+    latent_xs = (35, 350, 665, 980)
+    bottom_labels = ('LATENT NOISE  zT', 'DENOISE', 'DENOISE AGAIN', 'CLEAN LATENT  z0')
+    for i, (x, label) in enumerate(zip(latent_xs, bottom_labels)):
+        c.text(x + 100, 319, label, size=17, color=INK, anchor='middle', weight=700)
+        _latent_snapshot(c, x, 334, i, 40 + i)
+    for x in (240, 555, 870):
         _arrow(c, x, 389, x + 95, 389, color=VIOLET, width=4, head=13)
 
-    c.rect(275, 480, 1130, 58, fill=PALE_TEAL, stroke=TEAL, width=2)
-    c.text(840, 516, 'At each reverse step, the text condition can guide the latent update.',
+    _arrow(c, 1185, 389, 1240, 389, color=VIOLET, width=4, head=13)
+    c.poly([(1245, 340), (1355, 320), (1355, 458), (1245, 438)],
+           fill=PALE_TEAL, stroke=TEAL, width=3)
+    c.text(1300, 382, 'VAE', size=18, color=INK, anchor='middle', weight=700)
+    c.text(1300, 408, 'DECODER', size=16, color=INK, anchor='middle', weight=700)
+    c.text(1300, 472, 'VAE DECODER', size=14, color=TEAL, anchor='middle', weight=700)
+    _arrow(c, 1355, 389, 1410, 389, color=TEAL, width=4, head=13)
+    c.rect(1415, 334, 230, 112, fill=PAPER, stroke=LINE, width=2)
+    draw_chair(c, 1475, 347, 105, seat_h=0.42, back_h=0.6,
+               back_angle=10, seat_w=0.68, legs=4, stroke=INK, width=4)
+    c.text(1530, 472, 'OUTPUT IMAGE', size=15, color=INK, anchor='middle', weight=700)
+
+    c.rect(185, 490, 1310, 48, fill=PALE_TEAL, stroke=TEAL, width=2)
+    c.text(840, 521, 'Text can guide each latent update; only decoding makes a viewable image.',
            size=21, color=INK, anchor='middle', weight=600)
     c.text(840, 574, 'Only a few snapshots are shown; real sampling uses many smaller updates.',
            size=18, color=MUTED, anchor='middle')

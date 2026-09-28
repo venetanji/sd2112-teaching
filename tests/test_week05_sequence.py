@@ -119,6 +119,27 @@ class Week05SequenceTests(unittest.TestCase):
         self.assertEqual(len(images), 2)
         self.assertTrue(all(__import__("pathlib").Path(image.src).is_file() for image in images))
 
+    def test_generated_lantern_is_a_concrete_example_after_the_pipeline(self):
+        slides = [slide_text(slide) for slide in S]
+        index = next(i for i, text in enumerate(slides) if "The model gives you a candidate—not a decision." in text)
+        images = [element for element in S[index].els if type(element).__name__ == "Image" and "week05-lantern" in element.src]
+        self.assertEqual(len(images), 1)
+        self.assertIn("week05-lantern-easel.jpg", images[0].src)
+        self.assertIn("A prompt guides an iterative image-generation pipeline.", slides[index - 1])
+
+    def test_latent_process_distinguishes_training_and_generation(self):
+        vae = F.vae_latent()[0]
+        diffusion = F.diffusion_denoising()[0]
+        self.assertIn("DISTRIBUTION", vae)
+        self.assertIn("LATENT NOISE", diffusion)
+        self.assertIn("VAE DECODER", diffusion)
+        self.assertIn("OUTPUT IMAGE", diffusion)
+        self.assertIn("reconstruction illustrates VAE training", " ".join(slide_text(slide) for slide in S))
+
+    def test_clip_and_evidence_question_are_visible(self):
+        self.assertIn("mismatched pairs", F.clip_shared_space()[0])
+        self.assertIn("What would require evidence?", " ".join(slide_text(slide) for slide in S))
+
 
 if __name__ == "__main__":
     unittest.main()
