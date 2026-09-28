@@ -50,7 +50,7 @@ The three-hour block is planned as 170 minutes of class plus one 10-minute break
 |---|---|---|---|
 | 0:00–0:10 | Open: image idea | Students write an image they have wanted to make and one visual quality they care about. | Short answer. Use volunteered examples; no sensitive personal details. |
 | 0:10–0:18 | Intent, prompt, judgement | Establish the designer's role: intent first, agent-assisted clarification second, student approval and judgement throughout. | Keep this bridge concise; the model sequence follows. |
-| 0:18–0:38 | Image-model lineage | Compare classic image GANs, CLIP (paired image/text embeddings), then text-conditioned latent diffusion (iterative denoising). Examine one lantern output as a candidate, not proof of a perfect prompt. End with the short CLIP-versus-generator question. | Distinguish alignment from generation; VAE reconstruction illustrates training, whereas text-to-image sampling begins with latent noise. Give the question roughly three minutes and ask which tool behavior requires evidence. |
+| 0:18–0:38 | Image-model lineage | Compare classic image GANs, CLIP (paired image/text embeddings), then text-conditioned latent diffusion. Examine one lantern output as a candidate, not proof of a perfect prompt. Teach forward noising and reverse generation on separate slides, then ask the short CLIP-versus-generator question. | Distinguish alignment from generation; VAE reconstruction and noising illustrate training, whereas text-to-image sampling begins with fresh latent noise. Give the question roughly three minutes and ask which tool behavior requires evidence. |
 | 0:38–0:48 | Agent tool loop and a course example | Show image understanding and image generation as tools an agent can call, then compare the co-created SD2112 source mark with an exploratory image edit from the group. | Ask what kept the intended form and what changed (including the solid dot becoming a ring). The agent orchestrates; a person selects and revises. Do not present the exploration as a finalized logo or a one-prompt result. |
 | 0:48–1:00 | Pair exercise: prompt clarification | One student describes their idea; partner/agent asks questions, flags assumptions and proposes a prompt. Student approves, edits or rejects it. | If the LLM is unavailable, pairs use the same questions. |
 | 1:00–1:08 | A working specification | Discuss subject, intended use, composition, viewpoint, material/light, constraints and deliberately open choices. | Emphasize that more prompt text is not necessarily better. |
@@ -94,9 +94,9 @@ Confirm the submission destination and deadline in Canvas before teaching; neith
 | Slide | Type | Question | Use |
 |---:|---|---|---|
 | 3 | Short answer | What image have you wanted to make but not yet managed to make? | Start with student interests and visual intent. |
-| 13 | Short answer | If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair? | Separate matching/conditioning from generating the latent and decoding the image. Ask what the tool exposes versus what needs evidence. |
-| 22 | Short answer | What did the model decide that you did not specify? | Ask for an observable output choice. |
-| 26 | Short answer | What did you keep, change or reject—and what evidence led you there? | Make the student's design decision visible. |
+| 14 | Short answer | If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair? | Separate matching/conditioning from generating the latent and decoding the image. Ask what the tool exposes versus what needs evidence. |
+| 23 | Short answer | What did the model decide that you did not specify? | Ask for an observable output choice. |
+| 27 | Short answer | What did you keep, change or reject—and what evidence led you there? | Make the student's design decision visible. |
 
 ## Sources and teaching material
 

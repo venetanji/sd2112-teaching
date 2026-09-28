@@ -237,77 +237,97 @@ def vae_latent(name='w05-vae-latent', w=1680, h=620):
 
 def _latent_tile(c, x, y, noisy):
     """Symbolic latent states, repeated across both flows rather than fake image frames."""
-    c.rect(x, y, 210, 125, fill='#1D303B', stroke=TEAL, width=3)
+    c.rect(x, y, 255, 185, fill='#1D303B', stroke=TEAL, width=4)
     rng = random.Random(31)
     clean = ('#27505E', '#4B8991', TEAL, '#78CFCC')
     noise = ('#34404D', '#607180', '#8B879E', VIOLET, ORANGE)
-    for row in range(4):
+    for row in range(5):
         for col in range(7):
             color = rng.choice(noise) if noisy else clean[(col // 2 + row) % len(clean)]
-            c.rect(x + 15 + col * 26, y + 13 + row * 26, 21, 21, fill=color)
+            c.rect(x + 23 + col * 30, y + 20 + row * 30, 25, 25, fill=color)
 
 
-def diffusion_denoising(name='w05-diffusion-denoising', w=1680, h=620):
-    """Keep both training and generation in latent space with one clear reversal."""
+def diffusion_training(name='w05-diffusion-training', w=1680, h=620):
+    """Show how a denoiser learns from encoded examples and known added noise."""
     c = Canvas(w, h, bg=WHITE)
-    c.rect(20, 15, 1640, 265, fill=PALE_ORANGE, stroke=ORANGE, width=2)
-    c.rect(20, 300, 1640, 265, fill=PALE_VIOLET, stroke=VIOLET, width=2)
-    c.text(840, 60, 'TRAINING · ADD NOISE TO ENCODED EXAMPLES', size=27,
+    xs = (40, 370, 700, 1030, 1360)
+    y = 170
+    c.text(840, 75, 'FROM AN EXAMPLE IMAGE TO A NOISY LATENT', size=31,
            color=ORANGE, anchor='middle', weight=700)
-    c.text(840, 345, 'GENERATION · REMOVE NOISE FROM A NEW LATENT', size=27,
-           color=VIOLET, anchor='middle', weight=700)
-    xs = (75, 390, 705, 1020, 1335)
-    top_y, bottom_y = 100, 385
+    c.text(840, 115, 'Noise is added to encoded data, not to a picture on screen.',
+           size=25, color=INK, anchor='middle', mono=False)
 
-    c.rect(xs[0], top_y, 210, 125, fill=WHITE, stroke=INK, width=3)
-    draw_chair(c, xs[0] + 56, top_y + 11, 98, seat_h=0.42, back_h=0.6,
-               back_angle=10, seat_w=0.68, legs=4, stroke=INK, width=5)
-    c.poly([(xs[1], top_y), (xs[1] + 210, top_y + 28),
-            (xs[1] + 210, top_y + 97), (xs[1], top_y + 125)],
-           fill=WHITE, stroke=ORANGE, width=4)
-    c.text(xs[1] + 105, top_y + 72, 'VAE ENCODER', size=24,
+    c.rect(xs[0], y, 255, 185, fill=WHITE, stroke=INK, width=4)
+    draw_chair(c, xs[0] + 75, y + 28, 118, seat_h=0.42, back_h=0.6,
+               back_angle=10, seat_w=0.68, legs=4, stroke=INK, width=6)
+    c.poly([(xs[1], y), (xs[1] + 255, y + 36),
+            (xs[1] + 255, y + 149), (xs[1], y + 185)],
+           fill=WHITE, stroke=ORANGE, width=5)
+    c.text(xs[1] + 127, y + 104, 'VAE ENCODER', size=29,
            color=INK, anchor='middle', weight=700)
-    _latent_tile(c, xs[2], top_y, noisy=False)
-    c.rect(xs[3], top_y, 210, 125, fill=WHITE, stroke=ORANGE, width=4)
-    c.text(xs[3] + 105, top_y + 58, 'ADD NOISE', size=25,
+    _latent_tile(c, xs[2], y, noisy=False)
+    c.rect(xs[3], y, 255, 185, fill=WHITE, stroke=ORANGE, width=5)
+    c.text(xs[3] + 127, y + 86, 'ADD NOISE', size=31,
            color=ORANGE, anchor='middle', weight=700)
-    c.text(xs[3] + 105, top_y + 91, 'many levels', size=20,
+    c.text(xs[3] + 127, y + 127, 'known amount', size=23,
            color=INK, anchor='middle')
-    _latent_tile(c, xs[4], top_y, noisy=True)
+    _latent_tile(c, xs[4], y, noisy=True)
+    for x in (300, 630, 960, 1290):
+        _arrow(c, x, y + 92, x + 62, y + 92, color=ORANGE, width=6, head=18)
+    for x, label in zip(xs, ('EXAMPLE IMAGE', 'ENCODE', 'CLEAN LATENT  z0',
+                              'ADD KNOWN NOISE', 'NOISY LATENT  zT')):
+        c.text(x + 127, 405, label, size=24, color=INK, anchor='middle', weight=700)
 
-    _latent_tile(c, xs[0], bottom_y, noisy=True)
-    c.rect(xs[1], bottom_y, 210, 125, fill=INK)
-    c.text(xs[1] + 105, bottom_y + 56, 'DENOISER', size=25,
-           color=WHITE, anchor='middle', weight=700)
-    c.text(xs[1] + 105, bottom_y + 92, 'text-guided · repeat', size=17,
-           color='#D3E7E8', anchor='middle')
-    _latent_tile(c, xs[2], bottom_y, noisy=False)
-    c.poly([(xs[3], bottom_y + 28), (xs[3] + 210, bottom_y),
-            (xs[3] + 210, bottom_y + 125), (xs[3], bottom_y + 97)],
-           fill=WHITE, stroke=TEAL, width=4)
-    c.text(xs[3] + 105, bottom_y + 72, 'VAE DECODER', size=23,
+    c.rect(190, 472, 1300, 105, fill=PALE_ORANGE, stroke=ORANGE, width=3)
+    c.text(840, 517, 'DENOISER LEARNS TO PREDICT THE ADDED NOISE', size=29,
            color=INK, anchor='middle', weight=700)
-    c.rect(xs[4], bottom_y, 210, 125, fill='#172B37', stroke=INK, width=3)
-    c.circle(xs[4] + 105, bottom_y + 65, 49, fill='#24434A')
-    c.line(xs[4] + 105, bottom_y + 4, xs[4] + 105, bottom_y + 21, ORANGE, 4)
-    c.poly([(xs[4] + 84, bottom_y + 28), (xs[4] + 126, bottom_y + 28),
-            (xs[4] + 134, bottom_y + 103), (xs[4] + 76, bottom_y + 103)],
-           fill=ORANGE, stroke='#F9C68E', width=3)
-    for y in (bottom_y + 51, bottom_y + 73, bottom_y + 95):
-        c.line(xs[4] + 81, y, xs[4] + 129, y, '#F9C68E', 3)
+    c.text(840, 552, 'Train on many examples at different noise levels.', size=23,
+           color=INK, anchor='middle', mono=False)
+    return c.finish(name)
 
-    for y, color in ((top_y + 62, ORANGE), (bottom_y + 62, VIOLET)):
-        for x in (290, 605, 920, 1235):
-            _arrow(c, x, y, x + 90, y, color=color, width=5, head=16)
-    top_labels = ('EXAMPLE IMAGE', 'ENCODE', 'CLEAN LATENT  z0', 'ADD NOISE', 'NOISY LATENT  zT')
-    bottom_labels = ('NEW NOISY LATENT  zT', 'DENOISE MANY STEPS', 'CLEAN LATENT  z0',
-                     'DECODE', 'OUTPUT IMAGE')
-    for x, label in zip(xs, top_labels):
-        c.text(x + 105, 255, label, size=20, color=INK, anchor='middle', weight=700)
-    for x, label in zip(xs, bottom_labels):
-        c.text(x + 105, 540, label, size=19, color=INK, anchor='middle', weight=700)
-    c.text(840, 602, 'The small tiles stand for latent data, not pictures you can view directly.',
-           size=20, color=MUTED, anchor='middle')
+
+def diffusion_generation(name='w05-diffusion-generation', w=1680, h=620):
+    """Start with new latent noise; use a learned denoiser before VAE decoding."""
+    c = Canvas(w, h, bg=WHITE)
+    xs = (40, 370, 700, 1030, 1360)
+    y = 205
+    c.text(840, 64, 'FROM NEW LATENT NOISE TO A VIEWABLE IMAGE', size=31,
+           color=VIOLET, anchor='middle', weight=700)
+    c.rect(xs[1], 100, 255, 65, fill=PALE_VIOLET, stroke=VIOLET, width=3)
+    c.text(xs[1] + 127, 142, 'TEXT FEATURES', size=25,
+           color=VIOLET, anchor='middle', weight=700)
+    _arrow(c, xs[1] + 127, 167, xs[1] + 127, 196,
+           color=VIOLET, width=5, head=15)
+
+    _latent_tile(c, xs[0], y, noisy=True)
+    c.rect(xs[1], y, 255, 185, fill=INK)
+    c.text(xs[1] + 127, y + 81, 'DENOISER', size=32,
+           color=WHITE, anchor='middle', weight=700)
+    c.text(xs[1] + 127, y + 125, 'many small steps', size=22,
+           color='#D3E7E8', anchor='middle')
+    _latent_tile(c, xs[2], y, noisy=False)
+    c.poly([(xs[3], y + 36), (xs[3] + 255, y),
+            (xs[3] + 255, y + 185), (xs[3], y + 149)],
+           fill=WHITE, stroke=TEAL, width=5)
+    c.text(xs[3] + 127, y + 104, 'VAE DECODER', size=29,
+           color=INK, anchor='middle', weight=700)
+    c.rect(xs[4], y, 255, 185, fill='#172B37', stroke=INK, width=4)
+    c.circle(xs[4] + 127, y + 102, 65, fill='#24434A')
+    c.line(xs[4] + 127, y + 8, xs[4] + 127, y + 32, ORANGE, 5)
+    c.poly([(xs[4] + 100, y + 42), (xs[4] + 154, y + 42),
+            (xs[4] + 164, y + 150), (xs[4] + 90, y + 150)],
+           fill=ORANGE, stroke='#F9C68E', width=4)
+    for line_y in (y + 77, y + 109, y + 141):
+        c.line(xs[4] + 96, line_y, xs[4] + 158, line_y, '#F9C68E', 4)
+    for x in (300, 630, 960, 1290):
+        _arrow(c, x, y + 92, x + 62, y + 92, color=VIOLET, width=6, head=18)
+    for x, label in zip(xs, ('NEW NOISY LATENT  zT', 'DENOISE MANY STEPS',
+                              'CLEAN LATENT  z0', 'DECODE', 'OUTPUT IMAGE')):
+        c.text(x + 127, 442, label, size=23, color=INK, anchor='middle', weight=700)
+
+    c.rect(190, 505, 1300, 78, fill=PALE_TEAL, stroke=TEAL, width=3)
+    c.text(840, 553, 'Text guides denoising; only the VAE decoder makes pixels.',
+           size=28, color=INK, anchor='middle', weight=700)
     return c.finish(name)
 
 

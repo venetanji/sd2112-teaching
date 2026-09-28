@@ -22,7 +22,8 @@ class Week05SequenceTests(unittest.TestCase):
             "CLIP brings words and images into a shared space.",
             "A prompt guides an iterative image-generation pipeline.",
             "A VAE moves between pixels and a compact latent.",
-            "Generation reverses the gradual noising process.",
+            "Training teaches a denoiser to remove noise.",
+            "Generation turns new noise into an image.",
             "The agent can look, make, and look again.",
             "Ask an agent to help sharpen your prompt.",
         ]
@@ -38,7 +39,8 @@ class Week05SequenceTests(unittest.TestCase):
             "CLIP brings words and images into a shared space.",
             "A prompt guides an iterative image-generation pipeline.",
             "A VAE moves between pixels and a compact latent.",
-            "Generation reverses the gradual noising process.",
+            "Training teaches a denoiser to remove noise.",
+            "Generation turns new noise into an image.",
             "The agent can look, make, and look again.",
         )
         for title in titles:
@@ -50,7 +52,8 @@ class Week05SequenceTests(unittest.TestCase):
         titles = (
             "A prompt guides an iterative image-generation pipeline.",
             "A VAE moves between pixels and a compact latent.",
-            "Generation reverses the gradual noising process.",
+            "Training teaches a denoiser to remove noise.",
+            "Generation turns new noise into an image.",
             "The agent can look, make, and look again.",
         )
         slides = [slide_text(slide) for slide in S]
@@ -105,7 +108,7 @@ class Week05SequenceTests(unittest.TestCase):
         question = "If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair?"
         index = next(i for i, text in enumerate(slides) if question in text)
         self.assertLess(
-            next(i for i, text in enumerate(slides) if "Generation reverses the gradual noising process." in text),
+            next(i for i, text in enumerate(slides) if "Generation turns new noise into an image." in text),
             index,
         )
         self.assertLess(
@@ -129,17 +132,14 @@ class Week05SequenceTests(unittest.TestCase):
 
     def test_latent_process_distinguishes_training_and_generation(self):
         vae = F.vae_latent()[0]
-        diffusion = F.diffusion_denoising()[0]
+        training = F.diffusion_training()[0]
+        generation = F.diffusion_generation()[0]
         self.assertIn("DISTRIBUTION", vae)
-        self.assertIn("TRAINING · ADD NOISE", diffusion)
-        self.assertIn("GENERATION · REMOVE NOISE", diffusion)
-        self.assertIn("VAE ENCODER", diffusion)
-        self.assertIn("CLEAN LATENT", diffusion)
-        self.assertIn("NOISY LATENT", diffusion)
-        self.assertIn("DENOISER", diffusion)
-        self.assertIn("VAE DECODER", diffusion)
-        self.assertIn("OUTPUT IMAGE", diffusion)
-        self.assertNotIn("IMAGE-SPACE EXPLANATION", diffusion)
+        for label in ("VAE ENCODER", "CLEAN LATENT", "ADD NOISE", "NOISY LATENT", "DENOISER"):
+            self.assertIn(label, training)
+        for label in ("NEW NOISY LATENT", "DENOISER", "CLEAN LATENT", "VAE DECODER", "OUTPUT IMAGE"):
+            self.assertIn(label, generation)
+        self.assertNotIn("EXAMPLE IMAGE", generation)
         self.assertIn("reconstruction illustrates VAE training", " ".join(slide_text(slide) for slide in S))
 
     def test_clip_and_evidence_question_are_visible(self):

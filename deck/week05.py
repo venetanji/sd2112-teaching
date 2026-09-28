@@ -102,10 +102,15 @@ S.append(figure_slide('LATENT DIFFUSION · VARIATIONAL AUTOENCODER',
                       caption='This image-to-image reconstruction illustrates VAE training; generation begins from latent noise.',
                       notes='Follow the hourglass: image x enters the encoder, which predicts a distribution over z (shown with its mean and log-variance); sample z, then the expanding decoder predicts reconstruction x-hat. This is the standard VAE shape shown in the 2025 Week 5 PDF page 53. Do not imply that text-to-image sampling needs a source image: in latent diffusion, noise is denoised in latent space and the VAE decoder maps the final latent to pixels.'))
 
-S.append(figure_slide('DIFFUSION · TRAINING AND GENERATION',
-                      'Generation reverses the gradual noising process.', F.diffusion_denoising(),
-                      caption='Training encodes images and adds latent noise; generation denoises new noise, then decodes pixels.',
-                      notes='Read the two rows left to right. In latent diffusion training, a VAE encoder maps an example image to a latent; adding noise at different levels trains a denoiser to predict noise. At generation time, sample new latent noise and repeatedly denoise it under a text condition. The VAE decoder then maps the clean latent to a viewable image. The small tiles stand for latent data, not literal image thumbnails or sampled outputs; the chair and lantern are separate examples, not a claim that the model copies the training image. The 2025 deck introduces the forward/reverse relationship on p. 51 and connects text conditioning, denoising and VAE decoding on p. 54.'))
+S.append(figure_slide('LATENT DIFFUSION · TRAINING',
+                      'Training teaches a denoiser to remove noise.', F.diffusion_training(),
+                      caption='Encode example images into latents; add known noise, then train the denoiser to predict that noise.',
+                      notes='Follow the single flow left to right. The VAE encoder maps an example image to a clean latent. Noise is added to this encoded latent at different noise levels, and a denoiser learns to predict the added noise. The colored tiles symbolize latent data; they are not viewable image frames. This is a simplified training explanation, not a claim that one chair is enough to train a model. The 2025 deck illustrates forward noising on p. 51 and the VAE on p. 53.'))
+
+S.append(figure_slide('LATENT DIFFUSION · GENERATION',
+                      'Generation turns new noise into an image.', F.diffusion_generation(),
+                      caption='Start with fresh latent noise; iteratively denoise under a text condition, then decode the final latent to pixels.',
+                      notes='Follow this flow left to right, contrasting it with the preceding training slide. The denoiser starts from new latent noise; text features can guide each update through many steps. A VAE decoder maps the final clean latent to a viewable image. The lantern is a different illustrative output from the chair used as the preceding training example; do not suggest the model copied that chair. Colored tiles symbolize latent data, not saved image frames. The 2025 deck illustrates reverse denoising on p. 51 and a text-conditioned latent-diffusion workflow on p. 54.'))
 
 S.append(question('short_answer', "If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair?",
                   hint='What can your tool show or control? What would require evidence?',
