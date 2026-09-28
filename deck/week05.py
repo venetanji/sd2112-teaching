@@ -6,8 +6,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from deckgen import build_all, PAPER, INK, VIOLET, ORANGE, TEALS  # noqa: E402
 from deckgen.layouts import (title, end, agenda, section, statement, content, cards,
-                             question, activity, two_col, finalize)  # noqa: E402
+                             question, activity, two_col, figure_slide, finalize)  # noqa: E402
 from course import SITE, PLAYLIST, JOURNEY, footer  # noqa: E402
+import week05_figures as F  # noqa: E402
 
 FOOTER = footer(5)
 S = []
@@ -15,16 +16,16 @@ S = []
 S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 05 · LECTURE + WORKSHOP',
                'Images, intentions, iterations.',
                'You bring the idea. The model brings possibilities.',
-               notes='Open with the students’ own image ideas, not a catalogue of models. The question for today is how to translate visual intent into a prompt, use an image-generation API, and make the next decision deliberately. Confirm the actual authorized API or course platform before class; do not imply an API is available if it is not.'))
+               notes='Open with the students’ own image ideas. The lecture makes the visual-model sequence legible: image-only GANs, CLIP’s shared image/text representation, diffusion, then an agent that can use image-understanding and image-generation tools. The workshop applies that sequence to student-owned intent. Confirm the actual authorized image service before class; do not imply a direct API is available if it is not.'))
 
 S.append(agenda('SD2112 · WEEK 05', [
     'Start with an image you want to make',
+    'From image-only GANs to CLIP and diffusion',
+    'Use image understanding and generation through an agent',
     'Clarify the intent; do not outsource it',
-    'Make a first image with an image-generation API',
-    'Critique what happened, not just whether you like it',
-    'Change one thing at a time and keep the evidence',
+    'Generate, critique, and change one thing at a time',
     'Bring a deliberate iteration to Week 6',
-], notes='Keep the lecture short. Students should spend most of the session making, looking, discussing and iterating.'))
+], notes='Give the image-model sequence a clear visual explanation before moving into the agent-supported making exercise. Protect the extended time for making, looking, discussing and iterating.'))
 
 S.append(question('short_answer', 'What image have you wanted to make but not yet managed to make?',
                   hint='Name the subject and one visual quality you care about.',
@@ -37,6 +38,40 @@ S.append(cards('00 · THE DESIGNER’S JOB', 'The model does not supply your rea
     ('JUDGEMENT', 'Decide what happens next.', 'You select, critique, revise or reject the result. The model does not own that decision.'),
 ], text_size=23,
 notes='Position the language agent as a prompt clarifier, not an autonomous creative director. Students remain the source of the idea and the judge of the output.'))
+
+S.append(section('IMAGE MODELS · A SHORT LINEAGE',
+                 'What changed when images learned language?',
+                 'from examples · to alignment · to denoising', bg=VIOLET,
+                 notes='Frame this as a change in how visual models can be conditioned, not as a claim that one architecture simply replaced another. Keep the technical account at the level needed to understand the image-generation tools students will meet.'))
+
+S.append(content('GANs · 2014 · GENERATIVE ADVERSARIAL NETWORKS',
+                 'GANs learn a visual distribution—not a description.', [
+                     'A generator turns random input into candidate images.',
+                     'A discriminator learns to distinguish generated images from examples.',
+                     'In this early image-generation story, there is no caption telling the GAN what to draw.',
+                 ], image='edmond-de-belamy.jpg', fit='contain', body_size=28,
+                 caption='Obvious, Portrait of Edmond de Belamy (2018), made with a GAN; the historical example shown in the 2025 Week 5 deck.',
+                 notes='Use the portrait as a concrete artifact, not as evidence that all GANs are unconditional: conditional GAN variants exist. The teaching contrast is with the text-conditioned image-generation interfaces students use today. The original 2025 Week 5 deck shows generated sample grids and a generator/discriminator schematic on pp. 45–46, then this portrait on p. 47.'))
+
+S.append(figure_slide('GANs · TWO MODELS IN COMPETITION',
+                      'One learns to make. The other learns to catch.', F.gan_adversaries(),
+                      caption='A simplified training picture. Classic image GANs learn from image examples; text is not the instruction channel here.',
+                      notes='Walk left to right: training examples and random latent input; the generator makes a candidate; the discriminator compares it with real examples; their competition improves both. This is a teaching schematic, not a literal network diagram for every GAN variant. The original 2025 slide used a generator/discriminator flow beside grids of generated digits, faces and animals.'))
+
+S.append(figure_slide('CLIP · CONTRASTIVE LANGUAGE–IMAGE PRETRAINING',
+                      'CLIP brings words and images into a shared space.', F.clip_shared_space(),
+                      caption='Paired text and image representations are trained to align; CLIP is not itself the image generator.',
+                      notes='Explain the two encoders and paired examples: matching captions and pictures are trained to have similar representations, while non-matching pairs are pushed apart. Treat the 2D points as a conceptual projection, not CLIP’s literal high-dimensional space. This updates the 2025 deck’s helpful caption/image pairing and similarity-matrix visuals on pp. 48–50.'))
+
+S.append(figure_slide('TEXT-TO-IMAGE · DIFFUSION',
+                      'Diffusion turns conditioned noise into an image.', F.diffusion_denoising(),
+                      caption='Conceptual sequence only: the middle states are not saved outputs from a particular model.',
+                      notes='At training time, noise is added to images and the model learns to predict or remove it. At generation time, it starts from noise and iteratively denoises, guided by an encoded text condition. In latent diffusion, denoising happens in a compressed representation and a decoder returns pixels. Some systems use CLIP-derived text encoders; do not imply every diffusion model uses CLIP. The 2025 deck’s visual bridge is the forward-noise/reverse-denoise strip and latent-diffusion pipeline on pp. 51–54.'))
+
+S.append(figure_slide('AGENTS · IMAGE UNDERSTANDING + GENERATION AS TOOLS',
+                      'The agent can look, make, and look again.', F.agent_image_tools(),
+                      caption='The student supplies the intent and decides whether the result is worth keeping.',
+                      notes='Bridge from model capability to interaction. An agent can inspect an image with a vision tool, draft or revise a prompt, call an image-generation/editing tool, and inspect the result. The agent coordinates tools; it does not own the design intention or decide what counts as success. Tool availability and actual course platform are still subject to the pre-class check.'))
 
 S.append(section('01', 'A picture is not a prompt',
                  'intent first · words second · output third', bg=VIOLET,

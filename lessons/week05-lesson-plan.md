@@ -4,20 +4,22 @@
 
 ## Purpose
 
-Students bring their own image ideas and visual intent. A language agent helps them clarify and sharpen a prompt without taking over authorship. Students make a first image with the approved image-generation API or course platform, critique the result against their intention, then make deliberate iterations and document their decisions.
+Students bring their own image ideas and visual intent. A short, visual lecture traces image generation from GANs that learn image patterns without a language prompt, through CLIP's shared text/image representation, to text-conditioned diffusion. Students then see how an agent can use image-understanding and image-generation tools to inspect, prompt, generate and compare. In the workshop, a language agent helps clarify their own prompt without taking over authorship; students generate, critique and iterate using the approved service, then document their decisions.
 
 By the end of class, students can:
 
 - describe an image they want to make and identify the visual choices that matter to them;
+- explain the distinct roles of GANs, CLIP and diffusion in the move from image-only generation to text-conditioned image generation;
+- describe how an agent can call image-understanding and image-generation tools, and identify where the student still directs the process;
 - use an agent to clarify an image brief, notice assumptions and approve or reject a rewritten prompt;
 - submit a prompt to the authorized image-generation service and record the model/tool details available;
 - critique an output against intent, naming a visible choice they did not specify;
 - make at least one deliberate iteration, compare versions and explain what they kept, changed or rejected;
 - document a process that supports Challenge 4 and the Week 7 reflection.
 
-This session intentionally prioritizes the student-led making process over a survey of architectures. Keep the diffusion/CLIP explanation brief and only add it if time permits; do not let technical exposition crowd out generation, critique and iteration. The Week 5 syllabus topic remains “Image machines and mediation”; close by asking how the tool's interface shaped what the student could specify and see. The core Verbeek reading remains assigned in the syllabus.
+The model sequence is core lecture content, not optional material: use the visuals to make each model's role distinct, then move quickly into the agent/tool relationship and student-led making. Do not turn it into a full architecture survey. The Week 5 syllabus topic remains “Image machines and mediation”; close by asking how the model and interface shaped what the student could specify and see. The core Verbeek reading remains assigned in the syllabus.
 
-The 2025 Week 5 deck provides a useful bridge, not a script to repeat: it moves from the prior language-model work through technological mediation, then introduces data-driven image generation and its tool interfaces. Preserve that connection in the closing discussion: the prompt interface and the model mediate how the student's intent becomes an image, and what can be inspected or changed depends on the service. Do not assign one fixed Ihde relation to “image generation” in general; ask what relation this particular workflow created for the student.
+The 2025 Week 5 deck provides the visual source, not a script to repeat. Adapt its progression from GAN output samples and the generator/discriminator competition, to CLIP's paired caption/image representations, to the noisy-image/denoising sequence and latent-diffusion pipeline. The old slide's image/text similarity matrix is a useful reference, but explain it as alignment in a shared embedding space—not as CLIP generating images. Preserve the mediation connection in the closing discussion: the prompt interface and model shape how student intent becomes an image, and what can be inspected or changed depends on the tools. Do not assign one fixed Ihde relation to “image generation” in general; ask what relation this particular workflow created for the student.
 
 ## Important pre-class check: API and platform access
 
@@ -47,18 +49,21 @@ The three-hour block is planned as 170 minutes of class plus one 10-minute break
 | Time | Segment | What happens | ClassPoint / notes |
 |---|---|---|---|
 | 0:00–0:10 | Open: image idea | Students write an image they have wanted to make and one visual quality they care about. | Short answer. Use volunteered examples; no sensitive personal details. |
-| 0:10–0:22 | Intent, prompt, judgement | Establish the designer's role: intent first, agent-assisted clarification second, student approval and judgement throughout. | Keep the agenda short. Do not lead with a tool demo. |
-| 0:22–0:34 | Pair exercise: prompt clarification | One student describes their idea; partner/agent asks questions, flags assumptions and proposes a prompt. Student approves, edits or rejects it. | If the LLM is unavailable, pairs use the same questions. |
-| 0:34–0:44 | A working specification | Discuss subject, intended use, composition, viewpoint, material/light, constraints and deliberately open choices. | Emphasize that more prompt text is not necessarily better. |
-| 0:44–0:56 | Approved image service/API | Demonstrate one low-risk generation, naming only controls and models verified before class. | If endpoint/API authorization is unconfirmed, use the course UI accurately or the fallback; no keys in chat. |
-| 0:56–1:01 | First critique | Students name one visible decision the model made that was not specified. | Short answer; distinguish observation from evaluation. |
-| 1:01–1:11 | Critique framework | Compare output with intent; identify a success, a miss/reinterpretation and one decision to test. | Model one example from a student-volunteered idea. |
-| 1:11–1:21 | Break | Ten minutes. | TAs confirm tool access and help resolve ordinary login issues. |
-| 1:21–1:31 | Set up iteration | Write one testable change and predict its effect. Keep other prompt dimensions stable where possible. | Use seed/reference controls only if the verified service supports them. |
-| 1:31–2:06 | Activity: deliberate iteration | Generate, compare, and iterate once or twice; keep prompts and versions in order. Pair critique supports, but does not override, the image author's judgement. | 35-minute activity. If generation is slow, one version plus a written next-iteration prompt still counts as evidence. |
-| 2:06–2:21 | Compare and discuss | Compare versions against original intent; share what changed, what stayed, and whether the result should be kept, revised or rejected. | Short answer and two contrasting examples. |
-| 2:21–2:36 | Challenge 4 and process record | Explain the Week 6 deliverable, model/tool disclosure, prompt/version record and critique. Confirm Canvas logistics only after verified. | No new deadline is inferred here. |
-| 2:36–2:50 | Mediation and close | Ask how the interface and model shaped what was easy to specify, see or revise. Connect the work to the Week 7 reflection. | Keep a bridge to Week 6 sound and the course mediation vocabulary. |
+| 0:10–0:18 | Intent, prompt, judgement | Establish the designer's role: intent first, agent-assisted clarification second, student approval and judgement throughout. | Keep this bridge concise; the model sequence follows. |
+| 0:18–0:38 | Image-model lineage | Compare GANs (image examples, adversarial generator/discriminator), CLIP (paired image/text embeddings), then text-conditioned diffusion (iterative denoising). | Teach from the diagrams and output images; distinguish alignment from generation. |
+| 0:38–0:48 | Agent tool loop | Show image understanding and image generation as tools an agent can call, then inspect and compare the result. | The agent orchestrates; the student owns intent and approval. Avoid claiming a specific platform feature until verified. |
+| 0:48–1:00 | Pair exercise: prompt clarification | One student describes their idea; partner/agent asks questions, flags assumptions and proposes a prompt. Student approves, edits or rejects it. | If the LLM is unavailable, pairs use the same questions. |
+| 1:00–1:08 | A working specification | Discuss subject, intended use, composition, viewpoint, material/light, constraints and deliberately open choices. | Emphasize that more prompt text is not necessarily better. |
+| 1:08–1:18 | Approved image service/API | Demonstrate one low-risk generation, naming only controls and models verified before class. | If endpoint/API authorization is unconfirmed, use the course UI accurately or the fallback; no keys in chat. |
+| 1:18–1:23 | First critique | Students name one visible decision the model made that was not specified. | Short answer; distinguish observation from evaluation. |
+| 1:23–1:33 | Break | Ten minutes. | TAs confirm tool access and help resolve ordinary login issues. |
+| 1:33–1:43 | Critique framework | Compare output with intent; identify a success, a miss/reinterpretation and one decision to test. | Model one example from a student-volunteered idea. |
+| 1:43–1:48 | Set up iteration | Write one testable change and predict its effect. Keep other prompt dimensions stable where possible. | Use seed/reference controls only if the verified service supports them. |
+| 1:48–2:23 | Activity: deliberate iteration | Generate, compare, and iterate once or twice; keep prompts and versions in order. Pair critique supports, but does not override, the image author's judgement. | 35-minute activity. If generation is slow, one version plus a written next-iteration prompt still counts as evidence. |
+| 2:23–2:35 | Compare and discuss | Compare versions against original intent; share what changed, what stayed, and whether the result should be kept, revised or rejected. | Short answer and two contrasting examples. |
+| 2:35–2:50 | Challenge 4 and process record | Explain the Week 6 deliverable, model/tool disclosure, prompt/version record and critique. Confirm Canvas logistics only after verified. | No new deadline is inferred here. |
+| 2:50–2:58 | Mediation and close | Ask how the interface and model shaped what was easy to specify, see or revise. Connect the work to the Week 7 reflection. | Keep a bridge to Week 6 sound and the course mediation vocabulary. |
+| 2:58–3:00 | Transition buffer | Leave two minutes for questions or room handoff. | The three-hour block remains 170 minutes of class plus a 10-minute break. |
 
 ## Activity: your idea, your prompt, your iterations
 
@@ -89,12 +94,12 @@ Confirm the submission destination and deadline in Canvas before teaching; neith
 | Slide | Type | Question | Use |
 |---:|---|---|---|
 | 3 | Short answer | What image have you wanted to make but not yet managed to make? | Start with student interests and visual intent. |
-| 12 | Short answer | What did the model decide that you did not specify? | Ask for an observable output choice. |
-| 15 | Short answer | What did you keep, change or reject—and what evidence led you there? | Make the student's design decision visible. |
+| 17 | Short answer | What did the model decide that you did not specify? | Ask for an observable output choice. |
+| 21 | Short answer | What did you keep, change or reject—and what evidence led you there? | Make the student's design decision visible. |
 
 ## Sources and teaching material
 
 - Current syllabus, Week 5: image machines and mediation; Challenge 4; PolyU GenAI and named Flux/Qwen models; Verbeek (2015) core reading.
 - Week 4 lesson and deck: preserve the course's distinction between learned model behaviour and designed constraints/harness; refer back to Challenge 3's prompt/draft/edit evidence.
 - PR #3 draft `week05` deck and lesson: reviewed for the image-making context and workshop lineage; its very long technical tour and multi-stage ClassPoint wall exercise are not carried over wholesale. This plan narrows the class around Gio's confirmed focus: student intent, agent clarification, image generation, critique and deliberate iteration.
-- 2025 SD2112 references reviewed: `SD2112 - AI in Design - Week 5.pdf` (61 pages) and `SD2112 - AI in Design - Master.pdf` (50 pages), from `/home/venetanji/.openclaw/workspace-sd2112/references/2025/`. Week 5 places “Mediation Theory” before “Data-driven image generation” in its agenda (pp. 2, 34–44), names Ihde/Verbeek/Rosenberger and the four relations (pp. 35–43), then surveys GANs, CLIP, U-Net, VAE, latent diffusion, and UI/API tools (pp. 44–55). The Master deck condenses the image-model sequence (pp. 18–19), mediation relations (pp. 21–24), and design implications (pp. 25, 47–49). These are evidence of the 2025 teaching sequence and framing, not current platform/API documentation or authority for 2026 tool availability. The 2026 lesson retains the useful mediation bridge while shifting classroom time to student-owned intent, agent-assisted clarification, generation, critique and iteration as directed by Gio.
+- Original 2025 slide sources reviewed visually: `SD2112 - AI in Design - Week 5.pptx` and `SD2112 - AI in Design - Master.pptx` under `/home/venetanji/.openclaw/workspace-sd2112/references/onedrive-pptx/`; matching PDFs are in `references/2025/`. The Week 5 sequence uses GAN output grids and a generator/discriminator schematic (slides 45–46), Edmond de Belamy (47), a prompt/image example and CLIP encoder/similarity visuals (48–50), forward/reverse noise and U-Net/VAE diagrams (51–54), then UI/API examples (55). The 2026 deck adapts those visual ideas with the existing Edmond portrait asset, newly drawn diagrams in the course palette, and the agent-tool loop requested by Gio. The sources establish the prior teaching sequence and visuals, not current platform/API documentation or 2026 tool availability.
