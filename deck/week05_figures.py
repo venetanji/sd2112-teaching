@@ -235,73 +235,79 @@ def vae_latent(name='w05-vae-latent', w=1680, h=620):
     return c.finish(name)
 
 
-def _diffusion_snapshot(c, x, y, level, seed):
-    """Draw one illustrative image/noise state; levels are qualitative, not measured."""
-    c.rect(x, y, 300, 112, fill='#E8E8E4', stroke=LINE, width=2)
-    if level < 3:
-        draw_chair(c, x + 105, y + 19, 92, seat_h=0.42, back_h=0.6,
-                   back_angle=10, seat_w=0.68, legs=4,
-                   stroke=('#B8BEC0' if level == 2 else INK), width=4)
-    rng = random.Random(seed)
-    count = (0, 9, 25, 42)[level]
-    palette = ('#535A60', '#74818C', '#9A8CB0', '#64C2C3', '#ED6D24')
-    for _ in range(count):
-        nx = x + rng.randrange(12, 278)
-        ny = y + rng.randrange(9, 100)
-        c.rect(nx, ny, 11, 9, fill=rng.choice(palette))
-
-
-def _latent_snapshot(c, x, y, stage, seed):
-    """Abstract feature grids avoid depicting a latent as a viewable chair image."""
-    c.rect(x, y, 200, 112, fill='#1D303B', stroke=TEAL, width=2)
-    rng = random.Random(seed)
-    palette = ('#3C5964', '#5C7981', TEAL, VIOLET, ORANGE)
-    for row in range(6):
-        for col in range(11):
-            value = rng.randrange(5) if stage == 0 or rng.random() < (0.5 - stage * 0.12) else (col + row // 2) % 5
-            c.rect(x + 11 + col * 16, y + 10 + row * 16, 13, 13, fill=palette[value])
+def _latent_tile(c, x, y, noisy):
+    """Symbolic latent states, repeated across both flows rather than fake image frames."""
+    c.rect(x, y, 210, 125, fill='#1D303B', stroke=TEAL, width=3)
+    rng = random.Random(31)
+    clean = ('#27505E', '#4B8991', TEAL, '#78CFCC')
+    noise = ('#34404D', '#607180', '#8B879E', VIOLET, ORANGE)
+    for row in range(4):
+        for col in range(7):
+            color = rng.choice(noise) if noisy else clean[(col // 2 + row) % len(clean)]
+            c.rect(x + 15 + col * 26, y + 13 + row * 26, 21, 21, fill=color)
 
 
 def diffusion_denoising(name='w05-diffusion-denoising', w=1680, h=620):
-    """Contrast training's forward noising with generation's iterative reverse process."""
+    """Keep both training and generation in latent space with one clear reversal."""
     c = Canvas(w, h, bg=WHITE)
-    xs = (35, 455, 875, 1295)
-    c.text(840, 46, 'TRAINING · FORWARD NOISING · IMAGE-SPACE EXPLANATION', size=21,
+    c.rect(20, 15, 1640, 265, fill=PALE_ORANGE, stroke=ORANGE, width=2)
+    c.rect(20, 300, 1640, 265, fill=PALE_VIOLET, stroke=VIOLET, width=2)
+    c.text(840, 60, 'TRAINING · ADD NOISE TO ENCODED EXAMPLES', size=27,
            color=ORANGE, anchor='middle', weight=700)
-    top_labels = ('clean image  x0', 'add some noise', 'add more noise', 'mostly noise  xT')
-    for i, (x, label) in enumerate(zip(xs, top_labels)):
-        c.text(x + 150, 90, label, size=17, color=INK, anchor='middle', weight=700)
-        _diffusion_snapshot(c, x, 105, i, 20 + i)
-    for x in (345, 765, 1185):
-        _arrow(c, x, 160, x + 95, 160, color=ORANGE, width=4, head=13)
-
-    c.text(840, 275, 'GENERATION · REVERSE PROCESS · START FROM LATENT NOISE', size=21,
+    c.text(840, 345, 'GENERATION · REMOVE NOISE FROM A NEW LATENT', size=27,
            color=VIOLET, anchor='middle', weight=700)
-    latent_xs = (35, 350, 665, 980)
-    bottom_labels = ('LATENT NOISE  zT', 'DENOISE', 'DENOISE AGAIN', 'CLEAN LATENT  z0')
-    for i, (x, label) in enumerate(zip(latent_xs, bottom_labels)):
-        c.text(x + 100, 319, label, size=17, color=INK, anchor='middle', weight=700)
-        _latent_snapshot(c, x, 334, i, 40 + i)
-    for x in (240, 555, 870):
-        _arrow(c, x, 389, x + 95, 389, color=VIOLET, width=4, head=13)
+    xs = (75, 390, 705, 1020, 1335)
+    top_y, bottom_y = 100, 385
 
-    _arrow(c, 1185, 389, 1240, 389, color=VIOLET, width=4, head=13)
-    c.poly([(1245, 340), (1355, 320), (1355, 458), (1245, 438)],
-           fill=PALE_TEAL, stroke=TEAL, width=3)
-    c.text(1300, 382, 'VAE', size=18, color=INK, anchor='middle', weight=700)
-    c.text(1300, 408, 'DECODER', size=16, color=INK, anchor='middle', weight=700)
-    c.text(1300, 472, 'VAE DECODER', size=14, color=TEAL, anchor='middle', weight=700)
-    _arrow(c, 1355, 389, 1410, 389, color=TEAL, width=4, head=13)
-    c.rect(1415, 334, 230, 112, fill=PAPER, stroke=LINE, width=2)
-    draw_chair(c, 1475, 347, 105, seat_h=0.42, back_h=0.6,
-               back_angle=10, seat_w=0.68, legs=4, stroke=INK, width=4)
-    c.text(1530, 472, 'OUTPUT IMAGE', size=15, color=INK, anchor='middle', weight=700)
+    c.rect(xs[0], top_y, 210, 125, fill=WHITE, stroke=INK, width=3)
+    draw_chair(c, xs[0] + 56, top_y + 11, 98, seat_h=0.42, back_h=0.6,
+               back_angle=10, seat_w=0.68, legs=4, stroke=INK, width=5)
+    c.poly([(xs[1], top_y), (xs[1] + 210, top_y + 28),
+            (xs[1] + 210, top_y + 97), (xs[1], top_y + 125)],
+           fill=WHITE, stroke=ORANGE, width=4)
+    c.text(xs[1] + 105, top_y + 72, 'VAE ENCODER', size=24,
+           color=INK, anchor='middle', weight=700)
+    _latent_tile(c, xs[2], top_y, noisy=False)
+    c.rect(xs[3], top_y, 210, 125, fill=WHITE, stroke=ORANGE, width=4)
+    c.text(xs[3] + 105, top_y + 58, 'ADD NOISE', size=25,
+           color=ORANGE, anchor='middle', weight=700)
+    c.text(xs[3] + 105, top_y + 91, 'many levels', size=20,
+           color=INK, anchor='middle')
+    _latent_tile(c, xs[4], top_y, noisy=True)
 
-    c.rect(185, 490, 1310, 48, fill=PALE_TEAL, stroke=TEAL, width=2)
-    c.text(840, 521, 'Text can guide each latent update; only decoding makes a viewable image.',
-           size=21, color=INK, anchor='middle', weight=600)
-    c.text(840, 574, 'Only a few snapshots are shown; real sampling uses many smaller updates.',
-           size=18, color=MUTED, anchor='middle')
+    _latent_tile(c, xs[0], bottom_y, noisy=True)
+    c.rect(xs[1], bottom_y, 210, 125, fill=INK)
+    c.text(xs[1] + 105, bottom_y + 56, 'DENOISER', size=25,
+           color=WHITE, anchor='middle', weight=700)
+    c.text(xs[1] + 105, bottom_y + 92, 'text-guided · repeat', size=17,
+           color='#D3E7E8', anchor='middle')
+    _latent_tile(c, xs[2], bottom_y, noisy=False)
+    c.poly([(xs[3], bottom_y + 28), (xs[3] + 210, bottom_y),
+            (xs[3] + 210, bottom_y + 125), (xs[3], bottom_y + 97)],
+           fill=WHITE, stroke=TEAL, width=4)
+    c.text(xs[3] + 105, bottom_y + 72, 'VAE DECODER', size=23,
+           color=INK, anchor='middle', weight=700)
+    c.rect(xs[4], bottom_y, 210, 125, fill='#172B37', stroke=INK, width=3)
+    c.circle(xs[4] + 105, bottom_y + 65, 49, fill='#24434A')
+    c.line(xs[4] + 105, bottom_y + 4, xs[4] + 105, bottom_y + 21, ORANGE, 4)
+    c.poly([(xs[4] + 84, bottom_y + 28), (xs[4] + 126, bottom_y + 28),
+            (xs[4] + 134, bottom_y + 103), (xs[4] + 76, bottom_y + 103)],
+           fill=ORANGE, stroke='#F9C68E', width=3)
+    for y in (bottom_y + 51, bottom_y + 73, bottom_y + 95):
+        c.line(xs[4] + 81, y, xs[4] + 129, y, '#F9C68E', 3)
+
+    for y, color in ((top_y + 62, ORANGE), (bottom_y + 62, VIOLET)):
+        for x in (290, 605, 920, 1235):
+            _arrow(c, x, y, x + 90, y, color=color, width=5, head=16)
+    top_labels = ('EXAMPLE IMAGE', 'ENCODE', 'CLEAN LATENT  z0', 'ADD NOISE', 'NOISY LATENT  zT')
+    bottom_labels = ('NEW NOISY LATENT  zT', 'DENOISE MANY STEPS', 'CLEAN LATENT  z0',
+                     'DECODE', 'OUTPUT IMAGE')
+    for x, label in zip(xs, top_labels):
+        c.text(x + 105, 255, label, size=20, color=INK, anchor='middle', weight=700)
+    for x, label in zip(xs, bottom_labels):
+        c.text(x + 105, 540, label, size=19, color=INK, anchor='middle', weight=700)
+    c.text(840, 602, 'The small tiles stand for latent data, not pictures you can view directly.',
+           size=20, color=MUTED, anchor='middle')
     return c.finish(name)
 
 

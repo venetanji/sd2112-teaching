@@ -131,9 +131,15 @@ class Week05SequenceTests(unittest.TestCase):
         vae = F.vae_latent()[0]
         diffusion = F.diffusion_denoising()[0]
         self.assertIn("DISTRIBUTION", vae)
-        self.assertIn("LATENT NOISE", diffusion)
+        self.assertIn("TRAINING · ADD NOISE", diffusion)
+        self.assertIn("GENERATION · REMOVE NOISE", diffusion)
+        self.assertIn("VAE ENCODER", diffusion)
+        self.assertIn("CLEAN LATENT", diffusion)
+        self.assertIn("NOISY LATENT", diffusion)
+        self.assertIn("DENOISER", diffusion)
         self.assertIn("VAE DECODER", diffusion)
         self.assertIn("OUTPUT IMAGE", diffusion)
+        self.assertNotIn("IMAGE-SPACE EXPLANATION", diffusion)
         self.assertIn("reconstruction illustrates VAE training", " ".join(slide_text(slide) for slide in S))
 
     def test_clip_and_evidence_question_are_visible(self):

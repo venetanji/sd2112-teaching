@@ -104,8 +104,8 @@ S.append(figure_slide('LATENT DIFFUSION · VARIATIONAL AUTOENCODER',
 
 S.append(figure_slide('DIFFUSION · TRAINING AND GENERATION',
                       'Generation reverses the gradual noising process.', F.diffusion_denoising(),
-                      caption='Top: conceptual image-space noising. Bottom: latent denoising, then VAE decoding to pixels.',
-                      notes='Contrast the directions: forward noising is used to train the denoiser; generation runs the learned process in reverse, updating a noisy latent over many steps. The sketches show only a few qualitative snapshots, not literal saved outputs or measured noise levels. Encoded text can condition the reverse updates. A VAE decoder then maps the final latent to pixels in latent-diffusion systems. The 2025 deck introduces this forward/reverse relationship on p. 51 and connects the text encoder, denoiser and VAE on p. 54.'))
+                      caption='Training encodes images and adds latent noise; generation denoises new noise, then decodes pixels.',
+                      notes='Read the two rows left to right. In latent diffusion training, a VAE encoder maps an example image to a latent; adding noise at different levels trains a denoiser to predict noise. At generation time, sample new latent noise and repeatedly denoise it under a text condition. The VAE decoder then maps the clean latent to a viewable image. The small tiles stand for latent data, not literal image thumbnails or sampled outputs; the chair and lantern are separate examples, not a claim that the model copies the training image. The 2025 deck introduces the forward/reverse relationship on p. 51 and connects text conditioning, denoising and VAE decoding on p. 54.'))
 
 S.append(question('short_answer', "If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair?",
                   hint='What can your tool show or control? What would require evidence?',
