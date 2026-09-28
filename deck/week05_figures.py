@@ -129,43 +129,155 @@ def clip_shared_space(name='w05-clip-shared-space', w=1680, h=620):
     return c.finish(name)
 
 
-def diffusion_denoising(name='w05-diffusion-denoising', w=1680, h=620):
-    """Conceptual latent-noise-to-image sequence, not a recorded model trajectory."""
+def text_conditioning(name='w05-text-conditioning', w=1680, h=620):
+    """Show text conditioning and latent noise meeting in an image-generation path."""
     c = Canvas(w, h, bg=WHITE)
-    stages = [35, 445, 855, 1265]
-    labels = ['1 · NOISE', '2 · DENOISE', '3 · STRUCTURE', '4 · DECODE']
-    for x, label in zip(stages, labels):
-        c.text(x + 170, 76, label, size=21, color=INK, anchor='middle', weight=700)
-        c.rect(x, 100, 340, 390, fill=PAPER, stroke=LINE, width=2)
-    rng = random.Random(5)
-    palette = ['#4F5559', '#6685BF', '#943890', '#64C2C3', '#ED6D24', '#BBBCB9']
-    for row in range(8):
-        for col in range(8):
-            c.rect(55 + col * 36, 140 + row * 36, 28, 28,
+    c.rect(35, 195, 270, 165, fill=PALE_ORANGE, stroke=ORANGE, width=3)
+    c.text(70, 232, 'PROMPT', size=20, color=ORANGE, weight=700)
+    c.text(70, 278, 'paper lantern', size=25, color=INK)
+    c.text(70, 316, 'in a night garden', size=25, color=INK)
+
+    c.rect(370, 210, 255, 135, fill=PALE_VIOLET, stroke=VIOLET, width=3)
+    c.text(497, 258, 'TEXT ENCODER', size=22, color=INK, anchor='middle', weight=700)
+    c.text(497, 294, 'words → features', size=19, color=MUTED, anchor='middle')
+
+    c.text(707, 194, 'TEXT FEATURES', size=18, color=VIOLET, anchor='middle', weight=700)
+    for i, height in enumerate((54, 82, 62, 91, 68, 79)):
+        x = 675 + i * 12
+        c.rect(x, 230 + 90 - height, 8, height, fill=VIOLET if i % 2 else TEAL)
+
+    c.rect(825, 175, 325, 240, fill=INK, stroke=INK, width=3)
+    c.text(987, 215, 'DENOISING MODEL', size=22, color=WHITE,
+           anchor='middle', weight=700)
+    c.text(987, 249, 'uses text features', size=18, color='#DCE8E9', anchor='middle')
+    c.circle(987, 326, 48, fill='#182B3A', stroke=TEAL, width=4)
+    c.text(987, 322, 'UPDATE', size=15, color=WHITE, anchor='middle', weight=700)
+    c.text(987, 343, 'repeat', size=14, color='#DCE8E9', anchor='middle')
+
+    palette = ('#33434F', '#77828A', '#64C2C3', '#943890', '#ED6D24')
+    rng = random.Random(41)
+    for row in range(4):
+        for col in range(6):
+            c.rect(958 + col * 15, 480 + row * 14, 11, 10,
                    fill=rng.choice(palette))
+    c.text(1000, 562, 'INITIAL LATENT', size=17, color=TEAL,
+           anchor='middle', weight=700)
 
-    draw_chair(c, 520, 190, 180, seat_h=0.42, back_h=0.6,
-               back_angle=10, seat_w=0.66, legs=4, stroke='#BBBCB9', width=8)
-    for _ in range(25):
-        x, y = rng.randrange(460, 765), rng.randrange(145, 450)
-        c.rect(x, y, 14, 14, fill=rng.choice(palette))
+    c.poly([(1200, 238), (1325, 238), (1325, 372), (1200, 338)],
+           fill=PALE_TEAL, stroke=TEAL, width=4)
+    c.text(1260, 287, 'VAE', size=19, color=INK, anchor='middle', weight=700)
+    c.text(1260, 317, 'DECODER', size=18, color=INK, anchor='middle', weight=700)
 
-    draw_chair(c, 930, 190, 180, seat_h=0.42, back_h=0.6,
-               back_angle=10, seat_w=0.66, legs=4, stroke='#56616D', width=7)
-    for _ in range(8):
-        x, y = rng.randrange(895, 1160), rng.randrange(145, 455)
-        c.rect(x, y, 10, 10, fill=rng.choice(palette))
+    c.rect(1450, 190, 190, 205, fill='#172B37', stroke=LINE, width=2)
+    c.text(1545, 220, 'OUTPUT IMAGE', size=16, color=WHITE,
+           anchor='middle', weight=700)
+    c.circle(1545, 305, 57, fill='#24434A')
+    c.line(1545, 246, 1545, 260, ORANGE, 4)
+    c.line(1527, 260, 1563, 260, ORANGE, 3)
+    c.poly([(1526, 263), (1564, 263), (1571, 322), (1519, 322)],
+           fill=ORANGE, stroke=ORANGE, width=2)
+    c.line(1530, 278, 1560, 278, '#F9C68E', 3)
+    c.line(1530, 298, 1560, 298, '#F9C68E', 3)
+    c.line(1530, 315, 1560, 315, '#F9C68E', 3)
 
-    draw_chair(c, 1345, 190, 180, seat_h=0.42, back_h=0.6,
-               back_angle=10, seat_w=0.66, legs=4, stroke=INK, width=7)
-    c.rect(1295, 392, 280, 48, fill=PALE_TEAL)
-    c.text(1435, 423, '“a chair with a curved back”', size=17, color=INK,
-           mono=False, anchor='middle')
+    _arrow(c, 305, 277, 370, 277, color=ORANGE, width=4, head=14)
+    _arrow(c, 625, 277, 660, 277, color=VIOLET, width=4, head=14)
+    _arrow(c, 742, 277, 825, 277, color=VIOLET, width=4, head=14)
+    _arrow(c, 1000, 480, 1000, 420, color=TEAL, width=4, head=13)
+    _arrow(c, 1150, 290, 1200, 290, color=ORANGE, width=4, head=14)
+    _arrow(c, 1325, 290, 1450, 290, color=ORANGE, width=4, head=14)
+    c.text(1384, 270, 'final z', size=15, color=ORANGE, anchor='middle')
+    return c.finish(name)
 
-    for x in (385, 795, 1205):
-        _arrow(c, x, 290, x + 48, 290, color=ORANGE, width=5, head=15)
-    c.text(840, 555, 'Text conditions the denoising; latent diffusion decodes the final image back to pixels.',
-           size=23, color=INK, mono=False, anchor='middle', weight=600)
+
+def vae_latent(name='w05-vae-latent', w=1680, h=620):
+    """Show the VAE's tapered encoder, sampled latent bottleneck and decoder."""
+    c = Canvas(w, h, bg=WHITE)
+    c.rect(35, 205, 210, 205, fill=PALE_TEAL, stroke=TEAL, width=3)
+    c.text(140, 238, 'INPUT IMAGE x', size=19, color=INK, anchor='middle', weight=700)
+    draw_chair(c, 83, 260, 112, seat_h=0.42, back_h=0.6,
+               back_angle=10, seat_w=0.68, legs=4, stroke=INK, width=5)
+
+    c.poly([(300, 165), (540, 225), (540, 370), (300, 430)],
+           fill=PALE_ORANGE, stroke=ORANGE, width=4)
+    c.text(403, 275, 'ENCODER', size=23, color=INK, anchor='middle', weight=700)
+    c.text(403, 309, 'q(z|x)', size=20, color=MUTED, anchor='middle')
+
+    c.rect(600, 218, 190, 158, fill=PALE_VIOLET, stroke=VIOLET, width=3)
+    c.text(695, 250, 'DISTRIBUTION', size=18, color=VIOLET,
+           anchor='middle', weight=700)
+    c.text(695, 290, 'mean', size=18, color=INK, anchor='middle')
+    c.rect(638, 300, 115, 8, fill=VIOLET)
+    c.text(695, 336, 'log variance', size=16, color=INK, anchor='middle')
+    c.rect(638, 346, 84, 8, fill=TEAL)
+
+    c.text(860, 248, 'SAMPLE', size=17, color=VIOLET, anchor='middle', weight=700)
+    c.circle(860, 310, 48, fill=VIOLET)
+    c.text(860, 319, 'z', size=29, color=WHITE, anchor='middle', weight=700)
+
+    c.poly([(970, 245), (1240, 175), (1240, 420), (970, 350)],
+           fill=PALE_TEAL, stroke=TEAL, width=4)
+    c.text(1100, 285, 'DECODER', size=23, color=INK, anchor='middle', weight=700)
+    c.text(1100, 319, 'p(x-hat|z)', size=18, color=MUTED, anchor='middle')
+
+    c.rect(1410, 205, 235, 205, fill=PAPER, stroke=LINE, width=3)
+    c.text(1527, 238, 'RECONSTRUCTION', size=18, color=INK,
+           anchor='middle', weight=700)
+    draw_chair(c, 1467, 260, 112, seat_h=0.42, back_h=0.6,
+               back_angle=10, seat_w=0.68, legs=4, stroke=INK, width=5)
+    c.text(1527, 388, 'x-hat', size=18, color=MUTED, anchor='middle')
+
+    _arrow(c, 245, 307, 300, 307, color=TEAL, width=4, head=14)
+    _arrow(c, 540, 295, 600, 295, color=ORANGE, width=4, head=14)
+    _arrow(c, 790, 295, 812, 295, color=VIOLET, width=4, head=14)
+    _arrow(c, 908, 310, 970, 310, color=VIOLET, width=4, head=14)
+    _arrow(c, 1240, 307, 1410, 307, color=TEAL, width=4, head=14)
+    return c.finish(name)
+
+
+def _diffusion_snapshot(c, x, y, level, seed):
+    """Draw one illustrative image/noise state; levels are qualitative, not measured."""
+    c.rect(x, y, 300, 112, fill='#E8E8E4', stroke=LINE, width=2)
+    if level < 3:
+        draw_chair(c, x + 105, y + 19, 92, seat_h=0.42, back_h=0.6,
+                   back_angle=10, seat_w=0.68, legs=4,
+                   stroke=('#B8BEC0' if level == 2 else INK), width=4)
+    rng = random.Random(seed)
+    count = (0, 9, 25, 42)[level]
+    palette = ('#535A60', '#74818C', '#9A8CB0', '#64C2C3', '#ED6D24')
+    for _ in range(count):
+        nx = x + rng.randrange(12, 278)
+        ny = y + rng.randrange(9, 100)
+        c.rect(nx, ny, 11, 9, fill=rng.choice(palette))
+
+
+def diffusion_denoising(name='w05-diffusion-denoising', w=1680, h=620):
+    """Contrast training's forward noising with generation's iterative reverse process."""
+    c = Canvas(w, h, bg=WHITE)
+    xs = (35, 455, 875, 1295)
+    c.text(840, 46, 'TRAINING · FORWARD PROCESS · ADD NOISE TO EXAMPLES', size=21,
+           color=ORANGE, anchor='middle', weight=700)
+    top_labels = ('clean image  x0', 'add some noise', 'add more noise', 'mostly noise  xT')
+    for i, (x, label) in enumerate(zip(xs, top_labels)):
+        c.text(x + 150, 90, label, size=17, color=INK, anchor='middle', weight=700)
+        _diffusion_snapshot(c, x, 105, i, 20 + i)
+    for x in (345, 765, 1185):
+        _arrow(c, x, 160, x + 95, 160, color=ORANGE, width=4, head=13)
+
+    c.text(840, 275, 'GENERATION · REVERSE PROCESS · START FROM LATENT NOISE', size=21,
+           color=VIOLET, anchor='middle', weight=700)
+    bottom_labels = ('latent noise  zT', 'denoise', 'denoise again', 'clean latent  z0')
+    for i, (x, label) in enumerate(zip(xs, bottom_labels)):
+        c.text(x + 150, 319, label, size=17, color=INK, anchor='middle', weight=700)
+        _diffusion_snapshot(c, x, 334, 3 - i, 40 + i)
+    for x in (345, 765, 1185):
+        _arrow(c, x, 389, x + 95, 389, color=VIOLET, width=4, head=13)
+
+    c.rect(275, 480, 1130, 58, fill=PALE_TEAL, stroke=TEAL, width=2)
+    c.text(840, 516, 'At each reverse step, the text condition can guide the latent update.',
+           size=21, color=INK, anchor='middle', weight=600)
+    c.text(840, 574, 'Only a few snapshots are shown; real sampling uses many smaller updates.',
+           size=18, color=MUTED, anchor='middle')
     return c.finish(name)
 
 

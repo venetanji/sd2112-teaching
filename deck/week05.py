@@ -63,10 +63,20 @@ S.append(figure_slide('CLIP · CONTRASTIVE LANGUAGE–IMAGE PRETRAINING',
                       caption='Paired text and image representations are trained to align; CLIP is not itself the image generator.',
                       notes='Explain the two encoders and paired examples: matching captions and pictures are trained to have similar representations, while non-matching pairs are pushed apart. Treat the 2D points as a conceptual projection, not CLIP’s literal high-dimensional space. This updates the 2025 deck’s helpful caption/image pairing and similarity-matrix visuals on pp. 48–50.'))
 
-S.append(figure_slide('TEXT-TO-IMAGE · DIFFUSION',
-                      'Diffusion turns conditioned noise into an image.', F.diffusion_denoising(),
-                      caption='Conceptual sequence only: the middle states are not saved outputs from a particular model.',
-                      notes='At training time, noise is added to images and the model learns to predict or remove it. At generation time, it starts from noise and iteratively denoises, guided by an encoded text condition. In latent diffusion, denoising happens in a compressed representation and a decoder returns pixels. Some systems use CLIP-derived text encoders; do not imply every diffusion model uses CLIP. The 2025 deck’s visual bridge is the forward-noise/reverse-denoise strip and latent-diffusion pipeline on pp. 51–54.'))
+S.append(figure_slide('TEXT-TO-IMAGE · A GENERATIVE SYSTEM',
+                      'A prompt guides an iterative image-generation pipeline.', F.text_conditioning(),
+                      caption='In latent diffusion, text conditions iterative denoising; a VAE decoder turns the final latent into pixels.',
+                      notes='Walk from prompt to text encoder to contextual text features. Separately sample initial latent noise; the denoising model updates that latent over many steps, using the text features as a condition, and the VAE decoder returns pixels. This is a high-level latent-diffusion workflow, not a literal network graph: exact text encoders, denoisers, step counts and VAE configurations vary by model. The 2025 Week 5 PDF page 54 shows a comparable text encoder, random-noise input, iterative diffusion model and VAE decoder; its CLIP label is model-specific, not universal.'))
+
+S.append(figure_slide('LATENT DIFFUSION · VARIATIONAL AUTOENCODER',
+                      'A VAE moves between pixels and a compact latent.', F.vae_latent(),
+                      caption='The encoder predicts a latent distribution; sample z at the narrow bottleneck, then decode back to image space.',
+                      notes='Follow the hourglass: image x enters the encoder, which predicts a distribution over z (shown with its mean and log-variance); sample z, then the expanding decoder predicts reconstruction x-hat. This is the standard VAE shape shown in the 2025 Week 5 PDF page 53. Do not imply that text-to-image sampling needs a source image: in latent diffusion, noise is denoised in latent space and the VAE decoder maps the final latent to pixels.'))
+
+S.append(figure_slide('DIFFUSION · TRAINING AND GENERATION',
+                      'Generation reverses the gradual noising process.', F.diffusion_denoising(),
+                      caption='Training adds noise to examples; generation iteratively removes it from a noisy latent.',
+                      notes='Contrast the directions: forward noising is used to train the denoiser; generation runs the learned process in reverse, updating a noisy latent over many steps. The sketches show only a few qualitative snapshots, not literal saved outputs or measured noise levels. Encoded text can condition the reverse updates. A VAE decoder then maps the final latent to pixels in latent-diffusion systems. The 2025 deck introduces this forward/reverse relationship on p. 51 and connects the text encoder, denoiser and VAE on p. 54.'))
 
 S.append(figure_slide('AGENTS · IMAGE UNDERSTANDING + GENERATION AS TOOLS',
                       'The agent can look, make, and look again.', F.agent_image_tools(),
