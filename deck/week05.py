@@ -6,12 +6,32 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from deckgen import build_all, PAPER, INK, VIOLET, ORANGE, TEALS  # noqa: E402
 from deckgen.layouts import (title, end, agenda, section, statement, content, cards,
-                             question, activity, two_col, figure_slide, finalize)  # noqa: E402
+                             question, activity, two_col, figure_slide, finalize, T, Rect)  # noqa: E402
+from deckgen.core import Image  # noqa: E402
 from course import SITE, PLAYLIST, JOURNEY, footer  # noqa: E402
 import week05_figures as F  # noqa: E402
 
 FOOTER = footer(5)
 S = []
+ASSETS = Path(__file__).resolve().parent / 'assets'
+
+
+def logo_exploration():
+    """Use an actual group co-creation to test what an image model preserves."""
+    slide = content('IMAGE GENERATION · A COURSE EXAMPLE',
+                    'What changed when we remade our course mark?', [],
+                    bg=PAPER, title_size=62,
+                    notes='This is a real SD2112 group co-creation, not a finalized course identity. The clean a-plus-dot mark was the source; the forest/wall version is an exploratory AI-edited variant from the group. Compare the letterform, dot, colour, material and implied space. The model can propose material and setting, but it also changes a solid dot into a chalk ring: ask whether that breaks the brief or creates a better one. Be candid that this variant was selected and further edited by people, not generated in a single perfect prompt. Ask what should be fixed in the next iteration. Source images: SD2112 group logo exploration, September 2026, shared with the teaching team.')
+    slide.els = slide.els[:2]
+    slide.els += [
+        Rect(220, 322, 630, 570, '#FFFFFF'),
+        Image(250, 326, 570, 555, str(ASSETS / 'week05-logo-original.png'), 'contain'),
+        Rect(1060, 322, 630, 570, INK),
+        Image(1090, 326, 570, 555, str(ASSETS / 'week05-logo-forest-exploration.jpg'), 'contain'),
+        T(220, 910, 650, 46, 'SOURCE MARK · THE SHAPE TO KEEP', 'monomed', 24, INK),
+        T(1060, 910, 660, 46, 'EXPLORATION · MATERIAL + SETTING', 'monomed', 24, INK),
+    ]
+    return slide
 
 S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 05 · LECTURE + WORKSHOP',
                'Images, intentions, iterations.',
@@ -78,10 +98,17 @@ S.append(figure_slide('DIFFUSION · TRAINING AND GENERATION',
                       caption='Training adds noise to examples; generation iteratively removes it from a noisy latent.',
                       notes='Contrast the directions: forward noising is used to train the denoiser; generation runs the learned process in reverse, updating a noisy latent over many steps. The sketches show only a few qualitative snapshots, not literal saved outputs or measured noise levels. Encoded text can condition the reverse updates. A VAE decoder then maps the final latent to pixels in latent-diffusion systems. The 2025 deck introduces this forward/reverse relationship on p. 51 and connects the text encoder, denoiser and VAE on p. 54.'))
 
+S.append(question('short_answer', "If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair?",
+                  hint='Which part aligns words and images? Which part actually makes the image?',
+                  eyebrow_text='IMAGE MODELS · DEEP QUESTION',
+                  notes='Allow three minutes. A strong answer separates CLIP-like alignment from generation: the text encoder produces a condition; iterative denoising builds a latent; the VAE decoder maps the final latent to pixels. CLIP itself is not the drawing system. In some pipelines the conditioning encoder is not CLIP-derived. Ask which distinctions the earlier diagrams made visible, then bridge to tools an agent might call.'))
+
 S.append(figure_slide('AGENTS · IMAGE UNDERSTANDING + GENERATION AS TOOLS',
                       'The agent can look, make, and look again.', F.agent_image_tools(),
                       caption='The student supplies the intent and decides whether the result is worth keeping.',
                       notes='Bridge from model capability to interaction. An agent can inspect an image with a vision tool, draft or revise a prompt, call an image-generation/editing tool, and inspect the result. The agent coordinates tools; it does not own the design intention or decide what counts as success. Tool availability and actual course platform are still subject to the pre-class check.'))
+
+S.append(logo_exploration())
 
 S.append(section('01', 'A picture is not a prompt',
                  'intent first · words second · output third', bg=VIOLET,

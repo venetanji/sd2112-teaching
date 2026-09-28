@@ -100,6 +100,25 @@ class Week05SequenceTests(unittest.TestCase):
         self.assertIn("Change one thing. Compare. Decide.", text)
         self.assertIn("35 min", text)
 
+    def test_deep_question_bridges_theory_and_student_decisions(self):
+        slides = [slide_text(slide) for slide in S]
+        question = "If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair?"
+        index = next(i for i, text in enumerate(slides) if question in text)
+        self.assertLess(
+            next(i for i, text in enumerate(slides) if "Generation reverses the gradual noising process." in text),
+            index,
+        )
+        self.assertLess(
+            index,
+            next(i for i, text in enumerate(slides) if "The agent can look, make, and look again." in text),
+        )
+
+    def test_logo_case_shows_original_and_exploratory_variant(self):
+        slide = next(slide for slide in S if "What changed when we remade our course mark?" in slide_text(slide))
+        images = [element for element in slide.els if type(element).__name__ == "Image"]
+        self.assertEqual(len(images), 2)
+        self.assertTrue(all(__import__("pathlib").Path(image.src).is_file() for image in images))
+
 
 if __name__ == "__main__":
     unittest.main()

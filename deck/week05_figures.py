@@ -134,8 +134,8 @@ def text_conditioning(name='w05-text-conditioning', w=1680, h=620):
     c = Canvas(w, h, bg=WHITE)
     c.rect(35, 195, 270, 165, fill=PALE_ORANGE, stroke=ORANGE, width=3)
     c.text(70, 232, 'PROMPT', size=20, color=ORANGE, weight=700)
-    c.text(70, 278, 'paper lantern', size=25, color=INK)
-    c.text(70, 316, 'in a night garden', size=25, color=INK)
+    c.text(58, 278, 'paper lantern', size=22, color=INK)
+    c.text(58, 316, 'in a night garden', size=22, color=INK)
 
     c.rect(370, 210, 255, 135, fill=PALE_VIOLET, stroke=VIOLET, width=3)
     c.text(497, 258, 'TEXT ENCODER', size=22, color=INK, anchor='middle', weight=700)

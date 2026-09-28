@@ -50,8 +50,8 @@ The three-hour block is planned as 170 minutes of class plus one 10-minute break
 |---|---|---|---|
 | 0:00–0:10 | Open: image idea | Students write an image they have wanted to make and one visual quality they care about. | Short answer. Use volunteered examples; no sensitive personal details. |
 | 0:10–0:18 | Intent, prompt, judgement | Establish the designer's role: intent first, agent-assisted clarification second, student approval and judgement throughout. | Keep this bridge concise; the model sequence follows. |
-| 0:18–0:38 | Image-model lineage | Compare GANs (image examples, adversarial generator/discriminator), CLIP (paired image/text embeddings), then text-conditioned diffusion (iterative denoising). | Teach from the diagrams and output images; distinguish alignment from generation. |
-| 0:38–0:48 | Agent tool loop | Show image understanding and image generation as tools an agent can call, then inspect and compare the result. | The agent orchestrates; the student owns intent and approval. Avoid claiming a specific platform feature until verified. |
+| 0:18–0:38 | Image-model lineage | Compare GANs (image examples, adversarial generator/discriminator), CLIP (paired image/text embeddings), then text-conditioned diffusion (iterative denoising). End with the short CLIP-versus-generator question. | Teach from the diagrams and output images; distinguish alignment from generation. Give the deep question roughly three minutes within this segment. |
+| 0:38–0:48 | Agent tool loop and a course example | Show image understanding and image generation as tools an agent can call, then compare the co-created SD2112 source mark with an exploratory image edit from the group. | Ask what kept the intended form and what changed (including the solid dot becoming a ring). The agent orchestrates; a person selects and revises. Do not present the exploration as a finalized logo or a one-prompt result. |
 | 0:48–1:00 | Pair exercise: prompt clarification | One student describes their idea; partner/agent asks questions, flags assumptions and proposes a prompt. Student approves, edits or rejects it. | If the LLM is unavailable, pairs use the same questions. |
 | 1:00–1:08 | A working specification | Discuss subject, intended use, composition, viewpoint, material/light, constraints and deliberately open choices. | Emphasize that more prompt text is not necessarily better. |
 | 1:08–1:18 | Approved image service/API | Demonstrate one low-risk generation, naming only controls and models verified before class. | If endpoint/API authorization is unconfirmed, use the course UI accurately or the fallback; no keys in chat. |
@@ -94,8 +94,9 @@ Confirm the submission destination and deadline in Canvas before teaching; neith
 | Slide | Type | Question | Use |
 |---:|---|---|---|
 | 3 | Short answer | What image have you wanted to make but not yet managed to make? | Start with student interests and visual intent. |
-| 17 | Short answer | What did the model decide that you did not specify? | Ask for an observable output choice. |
-| 21 | Short answer | What did you keep, change or reject—and what evidence led you there? | Make the student's design decision visible. |
+| 12 | Short answer | If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair? | Separate matching/conditioning from generating the latent and decoding the image. |
+| 21 | Short answer | What did the model decide that you did not specify? | Ask for an observable output choice. |
+| 25 | Short answer | What did you keep, change or reject—and what evidence led you there? | Make the student's design decision visible. |
 
 ## Sources and teaching material
 
@@ -103,3 +104,4 @@ Confirm the submission destination and deadline in Canvas before teaching; neith
 - Week 4 lesson and deck: preserve the course's distinction between learned model behaviour and designed constraints/harness; refer back to Challenge 3's prompt/draft/edit evidence.
 - PR #3 draft `week05` deck and lesson: reviewed for the image-making context and workshop lineage; its very long technical tour and multi-stage ClassPoint wall exercise are not carried over wholesale. This plan narrows the class around Gio's confirmed focus: student intent, agent clarification, image generation, critique and deliberate iteration.
 - Original 2025 slide sources reviewed visually: `SD2112 - AI in Design - Week 5.pptx` and `SD2112 - AI in Design - Master.pptx` under `/home/venetanji/.openclaw/workspace-sd2112/references/onedrive-pptx/`; matching PDFs are in `references/2025/`. The Week 5 sequence uses GAN output grids and a generator/discriminator schematic (slides 45–46), Edmond de Belamy (47), a prompt/image example and CLIP encoder/similarity visuals (48–50), forward/reverse noise and U-Net/VAE diagrams (51–54), then UI/API examples (55). The 2026 deck adapts those visual ideas with the existing Edmond portrait asset, newly drawn diagrams in the course palette, and the agent-tool loop requested by Gio. The sources establish the prior teaching sequence and visuals, not current platform/API documentation or 2026 tool availability.
+- SD2112 group logo exploration (September 2026): the clean `a` mark was provided as the base; a selected forest/wall variant was edited for its brighter landscape. The lecture compares these two course-created images as an exploratory prompt/edit example, not as a finalized course logo or a single-step generation.
