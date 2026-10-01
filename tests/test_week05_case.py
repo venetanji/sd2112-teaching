@@ -76,6 +76,14 @@ class Week05CaseTests(unittest.TestCase):
                 if hasattr(element, 'paras'):
                     self.assertLessEqual(element.y + element.h, 995, slide.title)
 
+    def test_image_labels_use_dark_text_on_the_light_slide_background(self):
+        labels = [e for e in slides()[0].els if hasattr(e, 'paras') and e.y == 786]
+        self.assertEqual(len(labels), 3)
+        for label in labels:
+            for paragraph in label.paras:
+                for run in paragraph.runs:
+                    self.assertEqual(run.color, '#246E70')
+
 
 if __name__ == "__main__":
     unittest.main()

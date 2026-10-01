@@ -1,7 +1,7 @@
 """Three evidence-led slides on an SD2112 agent/media co-creation case."""
 from pathlib import Path
 
-from deckgen import INK, PAPER, TEALS, ORANGE
+from deckgen import INK, PAPER, ORANGE
 from deckgen.core import Image
 from deckgen.layouts import Rect, T, content
 
@@ -27,7 +27,7 @@ def _stage(slide, x, label, detail, image=None, dark=False):
         slide.els.append(Image(x + 30, 393, 440, 320, str(ASSETS / image), "contain"))
     else:
         slide.els.append(T(x + 32, 422, 436, 250, detail, "body", 31, "#FFFFFF" if dark else INK, lh=1.28))
-    slide.els.append(T(x + 20, 786, 460, 42, label, "monomed", 24, TEAL if not dark else TEALS[4]))
+    slide.els.append(T(x + 20, 786, 460, 42, label, "monomed", 24, TEAL))
 
 
 def _case_brief():
