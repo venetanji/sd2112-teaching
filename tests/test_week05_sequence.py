@@ -115,6 +115,57 @@ class Week05SequenceTests(unittest.TestCase):
         positions = [next(i for i, text in enumerate(slides) if title in text) for title in titles]
         self.assertEqual(positions, sorted(positions))
 
+    def test_photography_mediation_block_precedes_image_generation_history(self):
+        titles = (
+            "Photography is not a neutral window.",
+            "Flusser: the camera is part of an apparatus.",
+            "Heidegger: a tool is more than an object.",
+            "Ihde: technology mediates our world.",
+            "Same request. Different machines.",
+        )
+        slides = [slide_text(slide) for slide in S]
+        positions = [next(i for i, text in enumerate(slides) if title in text) for title in titles]
+        generation_intro = next(
+            i for i, text in enumerate(slides)
+            if "How did words begin to guide image generation?" in text
+        )
+        self.assertEqual(positions, list(range(positions[0], positions[0] + 5)))
+        self.assertLess(positions[-1], generation_intro)
+        self.assertEqual(positions[0], 5)
+        self.assertEqual(len(S), 37)
+
+    def test_mediation_slides_have_evidence_and_course_machine_notation(self):
+        titles = (
+            "Photography is not a neutral window.",
+            "Flusser: the camera is part of an apparatus.",
+            "Heidegger: a tool is more than an object.",
+            "Ihde: technology mediates our world.",
+            "Same request. Different machines.",
+        )
+        slides = [next(slide for slide in S if title in slide_text(slide)) for title in titles]
+        for title, slide in zip(titles, slides):
+            evidence = [
+                element for element in slide.els
+                if type(element).__name__ in ("Figure", "Image")
+            ]
+            self.assertTrue(evidence, title)
+            for image in (element for element in evidence if type(element).__name__ == "Image"):
+                from pathlib import Path
+                self.assertTrue(Path(image.src).is_file(), image.src)
+        comparison = slide_text(slides[-1])
+        for label in ("Machine A", "Machine B", "A+B"):
+            self.assertIn(label.upper(), comparison.upper())
+        block_text = " ".join(slide_text(slide) for slide in slides)
+        self.assertNotRegex(block_text, r"\b[RD]\[\]")
+
+    def test_lesson_plan_maps_classpoint_questions_after_inserted_block(self):
+        from pathlib import Path
+        plan = Path(__file__).resolve().parents[1].joinpath("lessons/week05-lesson-plan.md").read_text()
+        expected = {4, 21, 32, 34}
+        rows = [line for line in plan.splitlines() if line.startswith("| ") and "| Short answer |" in line]
+        mapped = {int(line.split("|")[1].strip()) for line in rows}
+        self.assertEqual(mapped, expected)
+
     def test_workshop_timing_and_machine_roles_are_explicit(self):
         slides = [slide_text(slide) for slide in S]
         for title, duration in (("Code the mark.", "10 min"),

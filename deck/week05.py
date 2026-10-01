@@ -7,13 +7,70 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from deckgen import build_all, PAPER, INK, VIOLET, ORANGE, TEALS  # noqa: E402
 from deckgen.layouts import (title, end, agenda, section, statement, content, cards,
                              question, activity, two_col, figure_slide, finalize, T, Rect)  # noqa: E402
-from deckgen.core import Image  # noqa: E402
+from deckgen.core import Image, Figure  # noqa: E402
 from course import SITE, PLAYLIST, JOURNEY, footer  # noqa: E402
 import week05_figures as F  # noqa: E402
+import week05_mediation_figures as M  # noqa: E402
 
 FOOTER = footer(5)
 S = []
 ASSETS = Path(__file__).resolve().parent / 'assets'
+
+
+def photographic_frame():
+    slide = content('PHOTOGRAPHY · THE IMAGE IS A CHOICE',
+                    'Photography is not a neutral window.', [], bg=PAPER, title_size=64,
+                    notes='Source: Giovanni Lion, Concept Formation in Computational Creativity, Chapter 5 opening and sections 5.1 and 5.3: https://giovannilion.link/thesis/5-study-images.html#scope-1 . The left image is the study photograph in Figure 5.1 (Miller and Lion, 2022); the right is a teaching crop of that SAME file, not another exposure or a generated variant. Photography records light from a scene, but viewpoint, framing, exposure, timing and selection mediate that record. A generated image need not document any photographed event. Ask what the tighter frame makes salient and what it excludes; do not call photography false or erase the distinction between capture and synthesis. Keep this opening to about 90 seconds.')
+    slide.els = slide.els[:2]
+    slide.els += [
+        Image(120, 330, 780, 545, str(ASSETS / 'week05-thesis-storefront.jpg'), 'contain'),
+        Image(1020, 330, 780, 545, str(ASSETS / 'week05-thesis-storefront-crop.jpg'), 'contain'),
+        T(120, 890, 780, 40, 'STUDY PHOTOGRAPH · SHAM SHUI PO', 'monomed', 24, '#246E70'),
+        T(1020, 890, 780, 40, 'TEACHING CROP · SAME PHOTOGRAPH', 'monomed', 24, '#246E70'),
+        T(120, 946, 1680, 45, 'What did the frame make you notice—and what disappeared?', 'xbold', 35, INK),
+    ]
+    return slide
+
+
+def flusser_apparatus():
+    slide = content('FLUSSER · PHOTOGRAPHY AND PROGRAMMED POSSIBILITIES',
+                    'Flusser: the camera is part of an apparatus.', [], bg=PAPER, title_size=64,
+                    notes='Source: Lion thesis Chapter 5.1, applying Vilem Flusser, Towards a Philosophy of Photography (English edition cited as 2000), and Chapter 5.3: https://giovannilion.link/thesis/5-study-images.html#method-1 . Flusser is a media philosopher whose apparatus argument Lion brings into a postphenomenological analysis; do not present him as the founder of Ihde\'s school. A program structures possibilities, not merely literal camera firmware. The wider apparatus includes production, distribution and cultural conventions; photographers can explore and challenge its possibilities rather than only repeat defaults. The photograph shown is one example from the study, NOT the sole training image. These two actual first-iteration FastGAN outputs are from thesis Figure 5.3; their native resolution is 128 x 128, not a slide-export fault. Across the curated dataset, habitual framing and shop selection produced a repeated dark centre, which appeared in generated outputs and prompted reflection. This is the researchers\' case, not a finding asserted by Flusser or a controlled experiment isolating one cause. Spend about two minutes; keep the detailed dataset/training procedure out of the lecture.')
+    slide.els = slide.els[:2]
+    slide.els += [
+        T(120, 348, 780, 80, 'More than a camera.', 'xbold', 46, INK),
+        T(120, 446, 780, 145, 'Optics, settings and formats.\nDistribution and conventions.\nA field of programmed possibilities.', 'body', 33, INK, lh=1.25),
+        T(120, 655, 780, 145, 'In the study, a habitual dark centre\nechoed in the generated shops.\nThe outputs exposed a framing habit.', 'body', 33, INK, lh=1.25),
+        T(970, 338, 400, 45, 'CURATED PHOTOGRAPHS', 'monomed', 24, '#246E70'),
+        Image(970, 405, 390, 300, str(ASSETS / 'week05-thesis-storefront.jpg'), 'contain'),
+        T(970, 733, 390, 90, 'One study photograph,\nfrom a larger dataset.', 'body', 27, INK, lh=1.2),
+        T(1430, 338, 370, 45, 'FASTGAN SAMPLES', 'monomed', 24, '#246E70'),
+        Image(1460, 405, 220, 220, str(ASSETS / 'week05-thesis-fastgan-1.jpg'), 'contain'),
+        Image(1460, 650, 220, 220, str(ASSETS / 'week05-thesis-fastgan-2.jpg'), 'contain'),
+        T(1400, 885, 400, 40, 'NATIVE 128 PX · THESIS FIG. 5.3', 'mono', 20, '#246E70'),
+        T(120, 946, 1680, 45, 'Are you exploring possibilities—or repeating the apparatus’s defaults?', 'xbold', 35, INK),
+    ]
+    return slide
+
+
+def machine_mediation():
+    slide = content('GIO’S COURSE EXTENSION · MACHINE A / MACHINE B / A+B',
+                    'Same request. Different machines.', [], bg=PAPER, title_size=64,
+                    notes='Source: Lion thesis Chapter 3.1 and Chapter 6.1: https://giovannilion.link/thesis/3-methodology.html#sec:technological-mediation ; https://giovannilion.link/thesis/6-study-text-to-image.html#scope-2 . Also the 2025 Week 5 PDF pages 42-43. Use ONLY the established course A/B/A+B labels on slides, not the thesis notation. This comparison applies Lion\'s extension of the mediation framework; A/B are not Ihde\'s original categories. Left: an illustrative execution of two explicit circle calls matching the 2025 teaching code, not an image-model result. Right: the actual four historical Stable Diffusion samples in thesis Figure 6.1 for the prompt two circles. They show that exact count was not reliably enforced in that example; do not generalize to every current model, every seed or all prompts. Code can include randomness, learned systems can be repeatable, and neither is fully transparent just because we know the label. In the workshop, Machine B can write the code that Machine A executes. A+B allocates coded geometry and generated appearance; it does not automatically improve the result. Ask which choices students make and which the system makes possible or likely. This is a spoken question within the five-slide bridge, not another ClassPoint activity.')
+    slide.els = slide.els[:2]
+    svg, png = M.two_circle_rules()
+    slide.els += [
+        T(120, 312, 1680, 60, 'THE REQUEST: “TWO CIRCLES”', 'xbold', 38, INK),
+        T(120, 399, 780, 42, 'MACHINE A · EXPLICIT INSTRUCTIONS', 'monomed', 24, '#246E70'),
+        T(1020, 399, 780, 42, 'MACHINE B · LEARNED INTERPRETATION', 'monomed', 24, '#246E70'),
+        Rect(120, 456, 780, 385, '#FFFFFF'),
+        Figure(253, 456, 514, 385, svg, png, name='two-circle-rules'),
+        Image(1218, 456, 385, 385, str(ASSETS / 'week05-thesis-two-circles.jpg'), 'contain'),
+        T(120, 860, 780, 76, 'circle(200, 300, 150);\ncircle(400, 200, 250);', 'mono', 27, INK, lh=1.2),
+        T(1020, 860, 780, 76, 'Historical Stable Diffusion samples.\nAppearance suggested; count not enforced.', 'body', 27, INK, lh=1.2),
+        T(120, 947, 1680, 45, 'A+B: code sets the boundary; generated pixels supply the surface.', 'xbold', 34, INK),
+    ]
+    return slide
 
 
 def logo_exploration():
@@ -128,7 +185,7 @@ S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 05 · LECTURE + WORKSHO
 S.append(easel_demo())
 
 S.append(agenda('SD2112 · WEEK 05', [
-    'One personal identity: code, generate, combine',
+    'Photography, apparatus and the Machine A/B lens',
     'GANs generate; CLIP aligns; diffusion and flow models generate',
     'Agents, tools and our logo/video iterations',
     'After the break: install Easel and set the brief',
@@ -147,6 +204,18 @@ S.append(cards('00 · THE DESIGNER’S JOB', 'The model does not supply your rea
     ('JUDGEMENT', 'Decide what happens next.', 'You select, critique, revise or reject the result. The model does not own that decision.'),
 ], text_size=23,
 notes='Position the language agent as a prompt clarifier, not an autonomous creative director. Students remain the source of the idea and the judge of the output.'))
+
+S.append(photographic_frame())
+S.append(flusser_apparatus())
+S.append(figure_slide('HEIDEGGER · EQUIPMENT AND TECHNOLOGICAL REVEALING',
+                      'Heidegger: a tool is more than an object.', M.tool_encounter(), bg=PAPER,
+                      caption='A way of revealing—not a synonym for photographic framing.',
+                      notes='Keep two accounts distinct: Being and Time (1927) examines equipment in practical involvement (ready-to-hand) and objects considered in inspection (present-at-hand); breakdown may interrupt use but does not simply define presence-at-hand. The Question Concerning Technology (1954) examines modern technology as enframing, a mode of revealing that orders things as resources or standing-reserve. Enframing is not the camera crop introduced earlier, nor merely a property of a device. These are introductory distinctions, not identical to Ihde\'s categories. Lion thesis Chapter 2 and Chapter 3.1 situate the phenomenological background; sources: https://plato.stanford.edu/entries/heidegger/ and https://giovannilion.link/thesis/3-methodology.html#sec:technological-mediation . Spend around two minutes; avoid a history-of-philosophy detour.'))
+S.append(figure_slide('IHDE · POSTPHENOMENOLOGY AND TECHNOLOGICAL MEDIATION',
+                      'Ihde: technology mediates our world.', M.mediation_relations(), bg=PAPER,
+                      caption='Same camera. Different relations—depending on how you use it.',
+                      notes='Source: Don Ihde, Technology and the Lifeworld (1990), as discussed in Lion thesis Chapter 3.1: https://giovannilion.link/thesis/3-methodology.html#sec:technological-mediation . The four relations are embodiment, hermeneutic, alterity and background. Use two situated examples: looking through a viewfinder towards a scene; interpreting a photograph as a representation. Neither permanently classifies all photography. Interacting with a camera menu or an agent may foreground the tool as quasi-other; background systems shape the situation without focal attention. Technologies amplify and reduce aspects of perception and action, rather than being neutral pipes between a fully fixed person and world. The diagram is a simplified relational schema, not a signal-processing pipeline. Postphenomenology inherits and revises phenomenological questions; do not collapse Ihde with Heidegger, or call Flusser its founder. Spend around two minutes.'))
+S.append(machine_mediation())
 
 S.append(section('IMAGE MODELS · A SHORT LINEAGE',
                  'How did words begin to guide image generation?',
