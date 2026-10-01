@@ -33,6 +33,93 @@ def logo_exploration():
     ]
     return slide
 
+
+def lantern_example():
+    """Let the real output carry the slide; separate brief, observation and judgement."""
+    slide = content('GENERATED EXAMPLE · EASEL / FLUX2-9B',
+                    'The model gives you a candidate—not a decision.', [],
+                    title_size=62, bg=PAPER,
+                    notes='Course-generated still: Easel Flux2-9B, 28 September 2026. The on-slide intent is an illustrative summary, not the verbatim generation prompt. Ask students to point at observable choices: the dense foliage, lantern geometry and dramatic lighting. These were not all specified by the brief. The sample is one generated candidate, not evidence of a controlled A/B experiment or a perfect prompt. Flux is a flow-matching model family; the next slides teach classic latent diffusion as a conceptual foundation, not this exact model architecture.')
+    slide.els = slide.els[:2]
+    slide.els += [
+        Image(1015, 318, 755, 620, str(ASSETS / 'week05-lantern-easel.jpg'), 'contain'),
+        T(120, 340, 820, 45, 'INTENT', 'monomed', 25, VIOLET),
+        T(120, 400, 780, 116, 'One paper lantern\nin a night garden.', 'xbold', 46, INK, lh=1.1),
+        T(120, 560, 820, 45, 'OBSERVATION', 'monomed', 25, '#246E70'),
+        T(120, 615, 800, 110, 'Dense leaves. Warm light.\nA very particular lantern shape.', 'body', 34, INK, lh=1.2),
+        T(120, 770, 820, 45, 'DECISION', 'monomed', 25, VIOLET),
+        T(120, 825, 800, 110, 'Which choices serve the intent?\nWhich would you change?', 'body', 34, INK, lh=1.2),
+        T(1030, 950, 740, 35, 'COURSE-GENERATED STILL · 28 SEP 2026', 'mono', 20, '#5C6470'),
+    ]
+    return slide
+
+
+def easel_demo():
+    """Three concrete outputs, with generation and code authoring kept distinct."""
+    slide = content('LIVE DEMO · EASEL CLIENT',
+                    'One agent. Three kinds of making.', [], bg=PAPER, title_size=64,
+                    notes='Gio will demo Easel Client (repository UI name: Easel Studio): https://github.com/venetanji/easel-client. Source capabilities checked 1 October 2026. Image generation/editing, generate_video, HTML project source edits and live captures are documented. Media support depends on the configured provider/model. HTML is code authored by the agent and rendered by the browser; it is not a diffusion image. Start one short video job without resubmitting while it is pending, then use the wait to build the HTML comparison. Accepted generation may continue after Stop. Test the installed app and configured models before class; repository support is not a guarantee of classroom access. Do not show credentials.')
+    slide.els = slide.els[:2]
+    rows = [
+        (330, 'IMAGE', 'Make a candidate.', 'Call a media model; inspect the result.'),
+        (515, 'VIDEO', 'Make change over time.', 'Call a video model; check motion and continuity.'),
+        (700, 'HTML', 'Make something you can use.', 'The agent writes code; the browser renders it.'),
+    ]
+    for y, label, heading, detail in rows:
+        slide.els += [
+            Rect(120, y + 150, 1680, 2, '#D5DCDA'),
+            T(120, y + 16, 240, 70, label, 'xbold', 49, '#246E70'),
+            T(425, y + 4, 1300, 70, heading, 'xbold', 44, INK),
+            T(425, y + 82, 1300, 65, detail, 'body', 32, INK),
+        ]
+    slide.els.append(T(120, 914, 1680, 60, 'Easel Client connects the tools. You set the brief and judge what returns.',
+                       'body', 32, INK))
+    return slide
+
+
+def video_discussion():
+    slide = content('CASE DISCUSSION · OUR CHAT + VIDEO ITERATIONS',
+                    'What stayed wrong after a better prompt?', [], bg=INK, title_size=64,
+                    notes='Gio will show the actual chat and multiple iterations from the SD2112 logo-video experiment in the other session. Switch to that chat and play selected real versions side by side or in sequence. This slide is a discussion guide, not an embedded recording or a claim that the final sequence succeeded. The documented intended sequence was nature/leaves, origami paper, electronic circuits/optic fibres, then the upper-right dot reveal. Earlier versions had unwanted jumps and unstable letterforms; exact duration, sound and final-frame constraints changed with the brief. Ask which revision changed the prompt, which changed the reference or pipeline, and what the resulting video actually shows. If a clip is unavailable, discuss the saved chat without fabricating a result. Keep media generations out of this preparation pass: no new video render is requested.')
+    slide.els = slide.els[:2]
+    for y, label, heading, detail in [
+        (340, 'BRIEF', 'What must survive?', 'The mark, the ordered transformations, the final reveal.'),
+        (525, 'EVIDENCE', 'What actually changed?', 'Motion, continuity, shape—and the constraints we lost.'),
+        (710, 'NEXT MOVE', 'Prompt, reference, or workflow?', 'Choose the intervention that addresses the visible failure.'),
+    ]:
+        slide.els += [
+            T(120, y + 15, 275, 60, label, 'monomed', 28, TEALS[4]),
+            T(425, y, 1300, 75, heading, 'xbold', 47, '#FFFFFF'),
+            T(425, y + 86, 1300, 65, detail, 'body', 31, '#D3E7E8'),
+        ]
+    slide.els.append(T(120, 927, 1680, 55, 'Watch the versions. Do not confuse a confident explanation with a better result.',
+                       'body', 30, '#FFFFFF'))
+    return slide
+
+
+def modern_models():
+    slide = content('TODAY’S MODELS · SAME MAP, DIFFERENT TRAINING',
+                    'The diagram is a map—not every model’s blueprint.', [],
+                    title_size=62, bg=PAPER,
+                    notes='Noise prediction describes a classic DDPM-style objective, not all diffusion objectives. Flow matching learns a vector field or velocity along a path between noise and data; it is not simply predicting the noise just added. Flux and Qwen Image are transformer-based flow-matching families, not the exact CLIP/U-Net pipeline in the historical 2025 slide. Check the demonstrated model/version in Easel: app name, agent model and media model are different things. Sources: https://github.com/black-forest-labs/flux (Flux Kontext flow-matching paper reference); https://github.com/QwenLM/Qwen-Image; https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/qwenimage/pipeline_qwenimage.py (FlowMatchEulerDiscreteScheduler).')
+    slide.els = slide.els[:2]
+    for x, label, heading, body in [
+        (120, 'CLASSIC DIFFUSION', 'Predict the noise.', 'Learn from known added noise\nat different noise levels.'),
+        (1000, 'FLOW MATCHING', 'Learn a direction.', 'Learn a direction along a path\nfrom noise towards data.'),
+    ]:
+        slide.els += [
+            T(x, 350, 780, 50, label, 'monomed', 27, '#246E70'),
+            T(x, 432, 780, 92, heading, 'xbold', 52, INK),
+            T(x, 555, 780, 145, body, 'body', 36, INK, lh=1.25),
+        ]
+    slide.els += [
+        Rect(120, 750, 1680, 3, '#D5DCDA'),
+        T(120, 794, 1680, 76, 'Text condition → latent updates → decoding', 'xbold', 43, INK),
+        T(120, 903, 1680, 65, 'Flux and Qwen Image use flow matching. Check the model—not just the app name.',
+          'body', 30, INK),
+    ]
+    return slide
+
 S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 05 · LECTURE + WORKSHOP',
                'Images, intentions, iterations.',
                'You bring the idea. The model brings possibilities.',
@@ -40,8 +127,8 @@ S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 05 · LECTURE + WORKSHO
 
 S.append(agenda('SD2112 · WEEK 05', [
     'Start with an image you want to make',
-    'From image-only GANs to CLIP and diffusion',
-    'Use image understanding and generation through an agent',
+    'GANs generate; CLIP aligns; diffusion and flow models generate',
+    'Easel Client: images, video and HTML through an agent',
     'Clarify the intent; do not outsource it',
     'Generate, critique, and change one thing at a time',
     'Bring a deliberate iteration to Week 6',
@@ -61,7 +148,7 @@ notes='Position the language agent as a prompt clarifier, not an autonomous crea
 
 S.append(section('IMAGE MODELS · A SHORT LINEAGE',
                  'How did words begin to guide image generation?',
-                 'from examples · to alignment · to denoising', bg=VIOLET,
+                 'GANs synthesize · CLIP aligns · diffusion / flow models generate', bg=VIOLET,
                  notes='Frame this as a change in how visual models can be conditioned, not as a claim that one architecture simply replaced another. Keep the technical account at the level needed to understand the image-generation tools students will meet.'))
 
 S.append(content('GANs · 2014 · GENERATIVE ADVERSARIAL NETWORKS',
@@ -85,32 +172,27 @@ S.append(figure_slide('CLIP · CONTRASTIVE LANGUAGE–IMAGE PRETRAINING',
 
 S.append(figure_slide('TEXT-TO-IMAGE · A GENERATIVE SYSTEM',
                       'A prompt guides an iterative image-generation pipeline.', F.text_conditioning(),
-                      caption='In latent diffusion, text conditions iterative denoising; a VAE decoder turns the final latent into pixels.',
+                      caption='Text is a condition, noise is the starting state, and the decoder returns pixels. Classic latent-diffusion schematic.',
                       notes='Walk from prompt to text encoder to contextual text features. Separately sample initial latent noise; the denoising model updates that latent over many steps, using the text features as a condition, and the VAE decoder returns pixels. This is a high-level latent-diffusion workflow, not a literal network graph: exact text encoders, denoisers, step counts and VAE configurations vary by model. The 2025 Week 5 PDF page 54 shows a comparable text encoder, random-noise input, iterative diffusion model and VAE decoder; its CLIP label is model-specific, not universal.'))
 
-S.append(content('GENERATED EXAMPLE · FROM PROMPT TO IMAGE',
-                 'The model gives you a candidate—not a decision.', [
-                     'Intent: one paper lantern in a night garden.',
-                     'Look: warm light, framing, plants, material. What did the model choose?',
-                     'Decide: which choices serve the intent, and what would you revise?',
-                 ], image='week05-lantern-easel.jpg', fit='contain', body_size=28,
-                 caption='Generated course example · Easel / Flux2-9B · 28 Sep 2026.',
-                 notes='This single course-generated still illustrates the difference between specifying an intent and accepting a candidate output. Tool/model: Easel Flux2-9B image server, 28 September 2026. The image depicts one orange paper lantern in dark teal garden foliage and contains no text. The three-line intent on screen is an illustrative summary, not a verbatim generation prompt. Ask what the model inferred about leaf density, lantern shape and lighting; do not claim these details were specified.'))
+S.append(lantern_example())
 
 S.append(figure_slide('LATENT DIFFUSION · VARIATIONAL AUTOENCODER',
                       'A VAE moves between pixels and a compact latent.', F.vae_latent(),
                       caption='This image-to-image reconstruction illustrates VAE training; generation begins from latent noise.',
                       notes='Follow the hourglass: image x enters the encoder, which predicts a distribution over z (shown with its mean and log-variance); sample z, then the expanding decoder predicts reconstruction x-hat. This is the standard VAE shape shown in the 2025 Week 5 PDF page 53. Do not imply that text-to-image sampling needs a source image: in latent diffusion, noise is denoised in latent space and the VAE decoder maps the final latent to pixels.'))
 
-S.append(figure_slide('LATENT DIFFUSION · TRAINING',
+S.append(figure_slide('CLASSIC LATENT DIFFUSION · TRAINING',
                       'Training teaches a denoiser to remove noise.', F.diffusion_training(),
-                      caption='Encode example images into latents; add known noise, then train the denoiser to predict that noise.',
-                      notes='Follow the single flow left to right. The VAE encoder maps an example image to a clean latent. Noise is added to this encoded latent at different noise levels, and a denoiser learns to predict the added noise. The colored tiles symbolize latent data; they are not viewable image frames. This is a simplified training explanation, not a claim that one chair is enough to train a model. The 2025 deck illustrates forward noising on p. 51 and the VAE on p. 53.'))
+                      caption='Compare predicted noise with known added noise; use that error to update the denoiser, not the latent.',
+                      notes='Read the top preparation row, then the learning row. Encode an example image with a VAE; combine its latent with known sampled noise at a chosen noise level t. Feed the noisy latent and noise level to the denoiser, compare its noise prediction with the saved target, and update denoiser weights using the error. Repeat on many examples and noise levels. Text conditioning and scheduler details are omitted for clarity. zt means a sampled training noise level, not always the fully noised endpoint zT. The VAE is usually trained separately; this flow does not jointly train every module. This is the classic noise-prediction objective, not a universal account of Flux or Qwen Image. The 2025 deck illustrates forward noising on PDF p. 51 and the VAE on p. 53.'))
 
-S.append(figure_slide('LATENT DIFFUSION · GENERATION',
+S.append(figure_slide('CLASSIC LATENT DIFFUSION · GENERATION',
                       'Generation turns new noise into an image.', F.diffusion_generation(),
-                      caption='Start with fresh latent noise; iteratively denoise under a text condition, then decode the final latent to pixels.',
+                      caption='The loop changes the latent, not the trained weights. Decode the final latent after the last update.',
                       notes='Follow this flow left to right, contrasting it with the preceding training slide. The denoiser starts from new latent noise; text features can guide each update through many steps. A VAE decoder maps the final clean latent to a viewable image. The lantern is a different illustrative output from the chair used as the preceding training example; do not suggest the model copied that chair. Colored tiles symbolize latent data, not saved image frames. The 2025 deck illustrates reverse denoising on p. 51 and a text-conditioned latent-diffusion workflow on p. 54.'))
+
+S.append(modern_models())
 
 S.append(question('short_answer', "If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair?",
                   hint='What can your tool show or control? What would require evidence?',
@@ -120,9 +202,18 @@ S.append(question('short_answer', "If CLIP can match the words 'a chair' to a pi
 S.append(figure_slide('AGENTS · IMAGE UNDERSTANDING + GENERATION AS TOOLS',
                       'The agent can look, make, and look again.', F.agent_image_tools(),
                       caption='The student supplies the intent and decides whether the result is worth keeping.',
-                      notes='Bridge from model capability to interaction. An agent can inspect an image with a vision tool, draft or revise a prompt, call an image-generation/editing tool, and inspect the result. The agent coordinates tools; it does not own the design intention or decide what counts as success. Tool availability and actual course platform are still subject to the pre-class check.'))
+                      notes='Bridge from model capability to interaction. An agent can inspect an image with a vision tool, draft or revise a prompt, call an image-generation/editing tool, and inspect the result. The agent coordinates tools; it does not own the design intention or decide what counts as success. Easel Client is the lecturer demo. Student tool access and the installed app configuration still require a pre-class check.'))
 
 S.append(logo_exploration())
+
+S.append(easel_demo())
+
+S.append(video_discussion())
+
+S.append(section('DEMO · WATCH THE HANDOFFS',
+                 'What can the agent change?',
+                 'Images. Video. HTML. What must you still decide?', bg=INK,
+                   notes='Live demo prompt suggestion, not a recorded result: make a lantern image, request one short video from an available supported route, then ask the agent to build an HTML comparison with the returned assets. Do not imply the selected video model supports image conditioning until checked. While a video job waits, inspect the image or work on the HTML; do not resubmit accepted jobs. Show one critique and one revision, the tool/model names and the saved chat. Ask the audience to identify a model choice, an agent/tool choice and a human decision. HTML interaction and sampled video frames do not establish smooth playback or sound: play and test the actual output.'))
 
 S.append(section('01', 'A picture is not a prompt',
                  'intent first · words second · output third', bg=VIOLET,
@@ -164,11 +255,11 @@ S.append(content('02 · PROMPT AS A WORKING SPECIFICATION',
 
 S.append(section('03', 'Call the image model',
                  'one prompt · one first result · record what you actually used', bg=INK,
-                 notes='Before class, confirm the authorized student-facing image-generation API, its account requirements, supported inputs and rate limits. The syllabus names PolyU GenAI with Flux and Qwen, but does not establish a direct API endpoint or student API credentials. If only the approved platform UI is available, use it and describe the activity accurately; do not invent an API route or ask students to expose credentials.'))
+                 notes='Gio demos Easel Client for agent-directed image, video and HTML making. Student use is a separate access decision: confirm the authorized student-facing image service, accounts, quotas and inputs. The syllabus names PolyU GenAI with Flux and Qwen, but does not establish student API credentials or Easel access. Use the approved platform UI or fallback where necessary; do not ask students to expose credentials.'))
 
 S.append(two_col('03 · A FIRST GENERATION', 'Make a first image, not a final answer.',
                  [
-                     'Use your approved image-generation API or course platform.',
+                     'Demo: Easel Client. Your task: the course-approved image service.',
                      'Submit the prompt you approved with the agent.',
                      'Record the model, tool, settings and date if shown.',
                      'Save the output and prompt together.',

@@ -137,7 +137,7 @@ class Week05SequenceTests(unittest.TestCase):
         self.assertIn("DISTRIBUTION", vae)
         for label in ("VAE ENCODER", "CLEAN LATENT", "ADD NOISE", "NOISY LATENT", "DENOISER"):
             self.assertIn(label, training)
-        for label in ("NEW NOISY LATENT", "DENOISER", "CLEAN LATENT", "VAE DECODER", "OUTPUT IMAGE"):
+        for label in ("NEW NOISY LATENT", "DENOISER", "FINAL LATENT", "VAE DECODER", "OUTPUT IMAGE"):
             self.assertIn(label, generation)
         self.assertNotIn("EXAMPLE IMAGE", generation)
         self.assertIn("reconstruction illustrates VAE training", " ".join(slide_text(slide) for slide in S))
@@ -145,6 +145,37 @@ class Week05SequenceTests(unittest.TestCase):
     def test_clip_and_evidence_question_are_visible(self):
         self.assertIn("mismatched pairs", F.clip_shared_space()[0])
         self.assertIn("What would require evidence?", " ".join(slide_text(slide) for slide in S))
+
+    def test_training_shows_prediction_comparison_and_weight_update(self):
+        svg, _ = F.diffusion_training()
+        for label in ("PREDICT NOISE", "COMPARE", "KNOWN NOISE", "UPDATE WEIGHTS", "NOISY LATENT  zt"):
+            self.assertIn(label, svg)
+
+    def test_generation_has_repeated_updates_before_decoding(self):
+        svg, _ = F.diffusion_generation()
+        self.assertIn("REPEAT LATENT UPDATE", svg)
+        self.assertIn("FINAL LATENT", svg)
+        self.assertNotIn("only the VAE decoder makes pixels", svg)
+
+    def test_demo_separates_media_generation_from_html_authoring(self):
+        text = " ".join(slide_text(slide) for slide in S)
+        for label in ("Easel Client", "IMAGE", "VIDEO", "HTML", "The agent writes code", "flow matching"):
+            self.assertIn(label, text)
+        notes = " ".join(slide.notes for slide in S)
+        self.assertIn("https://github.com/venetanji/easel-client", notes)
+
+    def test_video_case_is_a_discussion_not_an_invented_success_trace(self):
+        slide = next(slide for slide in S if "What stayed wrong after a better prompt?" in slide_text(slide))
+        self.assertIn("Gio", slide.notes)
+        self.assertIn("chat", slide.notes)
+        self.assertIn("not", slide.notes)
+
+    def test_lesson_plan_classpoint_mapping_matches_deck(self):
+        from pathlib import Path
+        plan = Path(__file__).resolve().parents[1].joinpath("lessons/week05-lesson-plan.md").read_text()
+        for i, slide in enumerate(S, 1):
+            if slide.cp:
+                self.assertIn(f"| {i} | Short answer |", plan)
 
 
 if __name__ == "__main__":

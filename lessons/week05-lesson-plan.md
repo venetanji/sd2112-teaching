@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Students bring their own image ideas and visual intent. A short, visual lecture traces image generation from GANs that learn image patterns without a language prompt, through CLIP's shared text/image representation, to text-conditioned diffusion. Students then see how an agent can use image-understanding and image-generation tools to inspect, prompt, generate and compare. In the workshop, a language agent helps clarify their own prompt without taking over authorship; students generate, critique and iterate using the approved service, then document their decisions.
+Students bring their own image ideas and visual intent. A visual lecture distinguishes GAN synthesis, CLIP alignment, VAE representation and text-conditioned latent generation. Classic noise-prediction training is a teaching example, not a universal description of modern flow-matching models. Gio demos Easel Client for agent-directed images, video and HTML, and shows the actual chat and iterations from the course-logo video experiment. HTML is agent-authored code rendered by a browser, not a diffusion-generated image. In the workshop, a language agent helps clarify student prompts without taking over authorship; students generate, critique and iterate using the approved service, then document their decisions.
 
 By the end of class, students can:
 
@@ -21,7 +21,15 @@ The model sequence is core lecture content, not optional material: use the visua
 
 The 2025 Week 5 deck provides the visual source, not a script to repeat. Adapt its progression from GAN output samples and the generator/discriminator competition, to CLIP's paired caption/image representations, to the noisy-image/denoising sequence and latent-diffusion pipeline. The old slide's image/text similarity matrix is a useful reference, but explain it as alignment in a shared embedding space—not as CLIP generating images. Preserve the mediation connection in the closing discussion: the prompt interface and model shape how student intent becomes an image, and what can be inspected or changed depends on the tools. Do not assign one fixed Ihde relation to “image generation” in general; ask what relation this particular workflow created for the student.
 
-## Important pre-class check: API and platform access
+## Lecturer demo and student access
+
+The confirmed lecturer demo is [Easel Client / Easel Studio](https://github.com/venetanji/easel-client), selected by Gio on 1 October. Its documented tools generate/edit images, submit video jobs, author HTML project files and inspect canvas captures. Actual model support depends on configured endpoints and the installed build. This is not a new student installation or API-access requirement.
+
+Demo sequence: make one image; critique a visible choice; request one short video via a verified model route; use the wait to build an HTML comparison using saved assets. Show model/tool identity and one revision, not a long feature tour. Do not resubmit an accepted pending generation. Play the resulting video rather than inferring continuity from sampled frames, and click the HTML controls rather than trusting a screenshot.
+
+For the video discussion, Gio opens the real chat and selected iterations from the course-logo experiment. Compare the intended nature/leaves → origami → circuits/fibres → upper-right-dot reveal with visible motion, shape and continuity. Ask whether the next intervention belongs in the prompt, reference inputs or workflow. Do not claim a successful final cut, fixed duration or controlled A/B comparison unless the selected evidence establishes it. No new video render is part of slide preparation.
+
+### Student platform check
 
 The syllabus currently identifies PolyU GenAI (`genai.polyu.edu.hk`) and names Flux and Qwen image models. It does **not** establish that students have direct API access, a supported endpoint, API quotas, or permission to use a specific client library. Before the class, Gio/Nicolò must confirm, with the course/platform owner:
 
@@ -50,11 +58,10 @@ The three-hour block is planned as 170 minutes of class plus one 10-minute break
 |---|---|---|---|
 | 0:00–0:10 | Open: image idea | Students write an image they have wanted to make and one visual quality they care about. | Short answer. Use volunteered examples; no sensitive personal details. |
 | 0:10–0:18 | Intent, prompt, judgement | Establish the designer's role: intent first, agent-assisted clarification second, student approval and judgement throughout. | Keep this bridge concise; the model sequence follows. |
-| 0:18–0:38 | Image-model lineage | Compare classic image GANs, CLIP (paired image/text embeddings), then text-conditioned latent diffusion. Examine one lantern output as a candidate, not proof of a perfect prompt. Teach forward noising and reverse generation on separate slides, then ask the short CLIP-versus-generator question. | Distinguish alignment from generation; VAE reconstruction and noising illustrate training, whereas text-to-image sampling begins with fresh latent noise. Give the question roughly three minutes and ask which tool behavior requires evidence. |
-| 0:38–0:48 | Agent tool loop and a course example | Show image understanding and image generation as tools an agent can call, then compare the co-created SD2112 source mark with an exploratory image edit from the group. | Ask what kept the intended form and what changed (including the solid dot becoming a ring). The agent orchestrates; a person selects and revises. Do not present the exploration as a finalized logo or a one-prompt result. |
-| 0:48–1:00 | Pair exercise: prompt clarification | One student describes their idea; partner/agent asks questions, flags assumptions and proposes a prompt. Student approves, edits or rejects it. | If the LLM is unavailable, pairs use the same questions. |
-| 1:00–1:08 | A working specification | Discuss subject, intended use, composition, viewpoint, material/light, constraints and deliberately open choices. | Emphasize that more prompt text is not necessarily better. |
-| 1:08–1:18 | Approved image service/API | Demonstrate one low-risk generation, naming only controls and models verified before class. | If endpoint/API authorization is unconfirmed, use the course UI accurately or the fallback; no keys in chat. |
+| 0:18–0:43 | Image-model roles | Compare GAN synthesis and CLIP alignment; use the lantern candidate, VAE hourglass, classic training comparison and generation loop. Briefly distinguish noise prediction from flow matching, then ask the CLIP question. | The training error updates weights; sampling updates the latent with trained weights fixed. The symbolic tiles are not actual intermediate images. Allow three minutes for the question. |
+| 0:43–1:03 | Easel Client and our iterations | Show the agent/tool loop and source-mark comparison. Demo image, short video job and HTML authoring; use the real chat and selected logo-video versions for the discussion. | Keep model generation, agent code and human decisions distinct. Ask what survived, what failed, and whether to change prompt, references or workflow. A selected exploration is not a finalized logo. |
+| 1:03–1:15 | Pair exercise: prompt clarification | One student describes their idea; partner/agent asks questions, flags assumptions and proposes a prompt. Student approves, edits or rejects it. | Preserve the 12-minute exercise. If the LLM is unavailable, pairs interview each other. |
+| 1:15–1:18 | Working specification and student route | Recap the choices that matter and show the confirmed student-facing service or fallback. | The lecturer demo does not establish student Easel/API access. No keys in chat. |
 | 1:18–1:23 | First critique | Students name one visible decision the model made that was not specified. | Short answer; distinguish observation from evaluation. |
 | 1:23–1:33 | Break | Ten minutes. | TAs confirm tool access and help resolve ordinary login issues. |
 | 1:33–1:43 | Critique framework | Compare output with intent; identify a success, a miss/reinterpretation and one decision to test. | Model one example from a student-volunteered idea. |
@@ -94,9 +101,9 @@ Confirm the submission destination and deadline in Canvas before teaching; neith
 | Slide | Type | Question | Use |
 |---:|---|---|---|
 | 3 | Short answer | What image have you wanted to make but not yet managed to make? | Start with student interests and visual intent. |
-| 14 | Short answer | If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair? | Separate matching/conditioning from generating the latent and decoding the image. Ask what the tool exposes versus what needs evidence. |
-| 23 | Short answer | What did the model decide that you did not specify? | Ask for an observable output choice. |
-| 27 | Short answer | What did you keep, change or reject—and what evidence led you there? | Make the student's design decision visible. |
+| 15 | Short answer | If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair? | Separate matching/conditioning from generating the latent and decoding the image. Ask what the tool exposes versus what needs evidence. |
+| 27 | Short answer | What did the model decide that you did not specify? | Ask for an observable output choice. |
+| 31 | Short answer | What did you keep, change or reject—and what evidence led you there? | Make the student's design decision visible. |
 
 ## Sources and teaching material
 
@@ -106,3 +113,5 @@ Confirm the submission destination and deadline in Canvas before teaching; neith
 - Original 2025 slide sources reviewed visually: `SD2112 - AI in Design - Week 5.pptx` and `SD2112 - AI in Design - Master.pptx` under `/home/venetanji/.openclaw/workspace-sd2112/references/onedrive-pptx/`; matching PDFs are in `references/2025/`. The Week 5 sequence uses GAN output grids and a generator/discriminator schematic (slides 45–46), Edmond de Belamy (47), a prompt/image example and CLIP encoder/similarity visuals (48–50), forward/reverse noise and U-Net/VAE diagrams (51–54), then UI/API examples (55). The 2026 deck adapts those visual ideas with the existing Edmond portrait asset, newly drawn diagrams in the course palette, and the agent-tool loop requested by Gio. The sources establish the prior teaching sequence and visuals, not current platform/API documentation or 2026 tool availability.
 - SD2112 group logo exploration (September 2026): the clean `a` mark was provided as the base; a selected forest/wall variant was edited for its brighter landscape. The lecture compares these two course-created images as an exploratory prompt/edit example, not as a finalized course logo or a single-step generation.
 - Lantern example is a course-generated still from Easel Flux2-9B (image server), 28 September 2026. The on-slide intent summarizes the teaching example, not a verbatim prompt. A second ComfyUI attempt produced unwanted lettering and is not used or presented as a valid comparison.
+- Easel Client repository README checked 1 October 2026: media generation and editing, queued video jobs, HTML project authoring, live inspection/capture and local export. These are documented capabilities, not a guarantee that every classroom endpoint supports every input.
+- Modern model caveat: Black Forest Labs Flux documentation; Qwen Image model documentation and Diffusers Qwen Image pipeline (`FlowMatchEulerDiscreteScheduler`). Keep the classic noise-prediction diagram explicitly labeled rather than presenting it as every current model's objective.

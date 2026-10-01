@@ -1,9 +1,12 @@
-"""Week 5 diagrams: image-model lineage and a human-directed agent tool loop."""
+"""Week 5 diagrams: model roles, latent generation and a human-directed tool loop."""
 from __future__ import annotations
 
+import base64
 import math
 import random
+from pathlib import Path
 
+from PIL import Image, ImageOps
 from deckgen.figures import Canvas, INK, TEAL, ORANGE, VIOLET, MUTED, LINE
 from figures import draw_chair
 
@@ -12,6 +15,7 @@ PALE_TEAL = '#E9F3F4'
 PALE_VIOLET = '#F2ECF5'
 PALE_ORANGE = '#FCF2EA'
 WHITE = '#FFFFFF'
+DARK_TEAL = '#246E70'
 
 
 def _arrow(c, x1, y1, x2, y2, color=INK, width=5, head=17):
@@ -22,340 +26,227 @@ def _arrow(c, x1, y1, x2, y2, color=INK, width=5, head=17):
         c.line(x2, y2, x2 + head * math.cos(a), y2 + head * math.sin(a), color, width)
 
 
-def _box(c, x, y, w, h, title, detail, fill, accent, title_color=INK):
-    c.rect(x, y, w, h, fill=fill, stroke=accent, width=4)
-    c.text(x + w / 2, y + 43, title, size=25, color=title_color,
-           mono=True, anchor='middle', weight=700)
-    c.text(x + w / 2, y + 82, detail, size=23, color=title_color,
-           mono=False, anchor='middle')
+def _label(c, x, y, text, size=30, color=INK, mono=False):
+    c.text(x, y, text, size=size, color=color, anchor='middle', mono=mono, weight=700)
 
 
-def gan_adversaries(name='w05-gan-adversaries', w=1680, h=620):
-    """The generator/discriminator competition, explicitly without caption input."""
-    c = Canvas(w, h, bg=WHITE)
-    c.text(840, 45, 'LEARN FROM EXAMPLES · NOT A TEXT PROMPT', size=23,
-           color=VIOLET, anchor='middle', weight=700)
-
-    c.rect(1090, 80, 255, 145, fill=PAPER, stroke=LINE, width=3)
-    c.text(1217, 116, 'TRAINING IMAGES', size=20, color=INK, anchor='middle', weight=700)
-    tile = 68
-    colors = [TEAL, '#9FCED0', '#6685BF', '#B68EBB', '#E38E5D', '#F0BD60']
-    for i, color in enumerate(colors):
-        x, y = 1100 + (i % 3) * 76, 135 + (i // 3) * 42
-        c.rect(x, y, 64, 34, fill=WHITE, stroke=LINE, width=2)
-        c.rect(x + 7, y + 5, 50, 18, fill=color)
-        c.line(x + 8, y + 28, x + 56, y + 28, MUTED, 2)
-
-    c.rect(115, 262, 220, 95, fill=INK)
-    rng = random.Random(8)
-    for row in range(4):
-        for col in range(10):
-            shade = rng.choice(['#35404C', '#57616D', '#79828B', '#28313A'])
-            c.rect(128 + col * 19, 274 + row * 17, 15, 13, fill=shade)
-    c.text(225, 384, 'RANDOM LATENT', size=20, color=MUTED, anchor='middle')
-
-    _box(c, 440, 300, 230, 130, 'GENERATOR', 'makes a candidate',
-         PALE_VIOLET, VIOLET)
-    c.rect(735, 285, 245, 165, fill=PALE_ORANGE, stroke=ORANGE, width=4)
-    c.text(857, 325, 'SYNTHETIC', size=21, color=ORANGE, anchor='middle', weight=700)
-    for i, color in enumerate(('#B68EBB', '#6685BF', '#E38E5D')):
-        x = 755 + i * 67
-        c.rect(x, 355, 52, 60, fill=WHITE, stroke=LINE, width=2)
-        c.circle(x + 26, 377, 11, fill=color)
-        c.rect(x + 15, 392, 22, 14, fill=color)
-
-    _box(c, 1090, 300, 245, 130, 'DISCRIMINATOR', 'real or generated?',
-         PALE_TEAL, TEAL)
-    c.circle(1500, 365, 75, fill=INK)
-    c.text(1500, 359, 'REAL?', size=25, color=WHITE, anchor='middle', weight=700)
-    c.text(1500, 391, 'OR FAKE?', size=19, color='#D3E7E8', anchor='middle')
-
-    _arrow(c, 335, 310, 440, 350, color=ORANGE)
-    _arrow(c, 670, 365, 735, 365, color=VIOLET)
-    _arrow(c, 980, 365, 1090, 365, color=ORANGE)
-    _arrow(c, 1212, 225, 1212, 300, color=LINE, width=4)
-    _arrow(c, 1335, 365, 1425, 365, color=TEAL)
-    c.line(1500, 440, 1500, 485, ORANGE, 4)
-    c.line(1500, 485, 555, 485, ORANGE, 4)
-    _arrow(c, 555, 485, 555, 430, color=ORANGE)
-    c.text(1030, 535, 'The discriminator learns to catch fakes. The generator learns to fool it.',
-           size=25, color=INK, mono=False, anchor='middle', weight=600)
-    return c.finish(name)
+def _node(c, x, y, w, h, title, detail='', fill=PAPER, accent=LINE):
+    c.rect(x, y, w, h, fill=fill, stroke=accent, width=3)
+    color = WHITE if fill == INK else INK
+    _label(c, x + w / 2, y + h / 2 - (8 if detail else -10), title, 32, color)
+    if detail:
+        c.text(x + w / 2, y + h / 2 + 35, detail, size=27,
+               color='#D3E7E8' if fill == INK else color, mono=False, anchor='middle')
 
 
-def clip_shared_space(name='w05-clip-shared-space', w=1680, h=620):
-    """Show text and image encoders aligning paired examples in one vector space."""
-    c = Canvas(w, h, bg=WHITE)
-    c.rect(45, 85, 330, 155, fill=PALE_VIOLET, stroke=VIOLET, width=3)
-    c.text(75, 125, 'CAPTION', size=21, color=VIOLET, weight=700)
-    c.text(75, 165, 'a chair with a', size=22, color=INK, mono=False)
-    c.text(75, 193, 'curved back', size=22, color=INK, mono=False)
-
-    c.rect(45, 285, 330, 225, fill=PAPER, stroke=LINE, width=3)
-    c.text(75, 325, 'IMAGE', size=21, color=TEAL, weight=700)
-    draw_chair(c, 125, 337, 155, seat_h=0.42, back_h=0.6,
-               back_angle=12, seat_w=0.7, legs=4, stroke=INK, width=5)
-
-    _box(c, 455, 115, 250, 105, 'TEXT ENCODER', 'caption → vector',
-         PALE_VIOLET, VIOLET)
-    _box(c, 455, 335, 250, 105, 'IMAGE ENCODER', 'picture → vector',
-         PALE_TEAL, TEAL)
-    _arrow(c, 375, 160, 455, 160, color=VIOLET)
-    _arrow(c, 375, 397, 455, 397, color=TEAL)
-
-    c.rect(800, 85, 825, 430, fill='#FBFBFA', stroke=LINE, width=3)
-    c.text(1212, 125, 'SHARED EMBEDDING SPACE', size=24, color=INK,
-           anchor='middle', weight=700)
-    c.line(880, 445, 1550, 445, MUTED, 2)
-    c.line(880, 170, 880, 445, MUTED, 2)
-    for i in range(1, 5):
-        c.line(880 + i * 134, 170, 880 + i * 134, 445, '#E1E1DE', 1)
-    for i in range(1, 3):
-        c.line(880, 170 + i * 91, 1550, 170 + i * 91, '#E1E1DE', 1)
-
-    pairs = [((1030, 260), (1084, 282)), ((1335, 340), (1390, 322))]
-    for (tx, ty), (ix, iy) in pairs:
-        c.line(tx, ty, ix, iy, MUTED, 3)
-        c.circle(tx, ty, 14, fill=VIOLET)
-        c.circle(ix, iy, 14, fill=TEAL)
-    c.circle(1190, 210, 14, fill=VIOLET)
-    c.circle(1500, 255, 14, fill=TEAL)
-    c.text(1060, 235, 'caption', size=18, color=VIOLET, anchor='middle')
-    c.text(1115, 315, 'matching image', size=18, color=TEAL, anchor='middle')
-    c.text(1212, 486, 'matching pairs nearby · mismatched pairs far apart', size=22,
-           color=MUTED, anchor='middle', weight=700)
-    c.text(840, 570, 'CLIP aligns meaning across modalities; it does not generate the picture.',
-           size=25, color=INK, mono=False, anchor='middle', weight=600)
-    return c.finish(name)
-
-
-def text_conditioning(name='w05-text-conditioning', w=1680, h=620):
-    """Show text conditioning and latent noise meeting in an image-generation path."""
-    c = Canvas(w, h, bg=WHITE)
-    c.rect(35, 195, 270, 165, fill=PALE_ORANGE, stroke=ORANGE, width=3)
-    c.text(70, 232, 'PROMPT', size=20, color=ORANGE, weight=700)
-    c.text(58, 278, 'paper lantern', size=22, color=INK)
-    c.text(58, 316, 'in a night garden', size=22, color=INK)
-
-    c.rect(370, 210, 255, 135, fill=PALE_VIOLET, stroke=VIOLET, width=3)
-    c.text(497, 258, 'TEXT ENCODER', size=22, color=INK, anchor='middle', weight=700)
-    c.text(497, 294, 'words → features', size=19, color=MUTED, anchor='middle')
-
-    c.text(707, 194, 'TEXT FEATURES', size=18, color=VIOLET, anchor='middle', weight=700)
-    for i, height in enumerate((54, 82, 62, 91, 68, 79)):
-        x = 675 + i * 12
-        c.rect(x, 230 + 90 - height, 8, height, fill=VIOLET if i % 2 else TEAL)
-
-    c.rect(825, 175, 325, 240, fill=INK, stroke=INK, width=3)
-    c.text(987, 215, 'DENOISING MODEL', size=22, color=WHITE,
-           anchor='middle', weight=700)
-    c.text(987, 249, 'uses text features', size=18, color='#DCE8E9', anchor='middle')
-    c.circle(987, 326, 48, fill='#182B3A', stroke=TEAL, width=4)
-    c.text(987, 322, 'UPDATE', size=15, color=WHITE, anchor='middle', weight=700)
-    c.text(987, 343, 'repeat', size=14, color='#DCE8E9', anchor='middle')
-
-    palette = ('#33434F', '#77828A', '#64C2C3', '#943890', '#ED6D24')
-    rng = random.Random(41)
-    for row in range(4):
-        for col in range(6):
-            c.rect(958 + col * 15, 480 + row * 14, 11, 10,
-                   fill=rng.choice(palette))
-    c.text(1000, 562, 'INITIAL LATENT', size=17, color=TEAL,
-           anchor='middle', weight=700)
-
-    c.poly([(1200, 238), (1325, 238), (1325, 372), (1200, 338)],
-           fill=PALE_TEAL, stroke=TEAL, width=4)
-    c.text(1260, 287, 'VAE', size=19, color=INK, anchor='middle', weight=700)
-    c.text(1260, 317, 'DECODER', size=18, color=INK, anchor='middle', weight=700)
-
-    c.rect(1450, 190, 190, 205, fill='#172B37', stroke=LINE, width=2)
-    c.text(1545, 220, 'OUTPUT IMAGE', size=16, color=WHITE,
-           anchor='middle', weight=700)
-    c.circle(1545, 305, 57, fill='#24434A')
-    c.line(1545, 246, 1545, 260, ORANGE, 4)
-    c.line(1527, 260, 1563, 260, ORANGE, 3)
-    c.poly([(1526, 263), (1564, 263), (1571, 322), (1519, 322)],
-           fill=ORANGE, stroke=ORANGE, width=2)
-    c.line(1530, 278, 1560, 278, '#F9C68E', 3)
-    c.line(1530, 298, 1560, 298, '#F9C68E', 3)
-    c.line(1530, 315, 1560, 315, '#F9C68E', 3)
-
-    _arrow(c, 305, 277, 370, 277, color=ORANGE, width=4, head=14)
-    _arrow(c, 625, 277, 660, 277, color=VIOLET, width=4, head=14)
-    _arrow(c, 742, 277, 825, 277, color=VIOLET, width=4, head=14)
-    _arrow(c, 1000, 480, 1000, 420, color=TEAL, width=4, head=13)
-    _arrow(c, 1150, 290, 1200, 290, color=ORANGE, width=4, head=14)
-    _arrow(c, 1325, 290, 1450, 290, color=ORANGE, width=4, head=14)
-    c.text(1384, 270, 'final z', size=15, color=ORANGE, anchor='middle')
-    return c.finish(name)
-
-
-def vae_latent(name='w05-vae-latent', w=1680, h=620):
-    """Show the VAE's tapered encoder, sampled latent bottleneck and decoder."""
-    c = Canvas(w, h, bg=WHITE)
-    c.rect(35, 205, 210, 205, fill=PALE_TEAL, stroke=TEAL, width=3)
-    c.text(140, 238, 'INPUT IMAGE x', size=19, color=INK, anchor='middle', weight=700)
-    draw_chair(c, 83, 260, 112, seat_h=0.42, back_h=0.6,
-               back_angle=10, seat_w=0.68, legs=4, stroke=INK, width=5)
-
-    c.poly([(300, 165), (540, 225), (540, 370), (300, 430)],
-           fill=PALE_ORANGE, stroke=ORANGE, width=4)
-    c.text(403, 275, 'ENCODER', size=23, color=INK, anchor='middle', weight=700)
-    c.text(403, 309, 'q(z|x)', size=20, color=MUTED, anchor='middle')
-
-    c.rect(600, 218, 190, 158, fill=PALE_VIOLET, stroke=VIOLET, width=3)
-    c.text(695, 250, 'DISTRIBUTION', size=18, color=VIOLET,
-           anchor='middle', weight=700)
-    c.text(695, 290, 'mean', size=18, color=INK, anchor='middle')
-    c.rect(638, 300, 115, 8, fill=VIOLET)
-    c.text(695, 336, 'log variance', size=16, color=INK, anchor='middle')
-    c.rect(638, 346, 84, 8, fill=TEAL)
-
-    c.text(860, 248, 'SAMPLE', size=17, color=VIOLET, anchor='middle', weight=700)
-    c.circle(860, 310, 48, fill=VIOLET)
-    c.text(860, 319, 'z', size=29, color=WHITE, anchor='middle', weight=700)
-
-    c.poly([(970, 245), (1240, 175), (1240, 420), (970, 350)],
-           fill=PALE_TEAL, stroke=TEAL, width=4)
-    c.text(1100, 285, 'DECODER', size=23, color=INK, anchor='middle', weight=700)
-    c.text(1100, 319, 'p(x-hat|z)', size=18, color=MUTED, anchor='middle')
-
-    c.rect(1410, 205, 235, 205, fill=PAPER, stroke=LINE, width=3)
-    c.text(1527, 238, 'RECONSTRUCTION', size=18, color=INK,
-           anchor='middle', weight=700)
-    draw_chair(c, 1467, 260, 112, seat_h=0.42, back_h=0.6,
-               back_angle=10, seat_w=0.68, legs=4, stroke=INK, width=5)
-    c.text(1527, 388, 'x-hat', size=18, color=MUTED, anchor='middle')
-
-    _arrow(c, 245, 307, 300, 307, color=TEAL, width=4, head=14)
-    _arrow(c, 540, 295, 600, 295, color=ORANGE, width=4, head=14)
-    _arrow(c, 790, 295, 812, 295, color=VIOLET, width=4, head=14)
-    _arrow(c, 908, 310, 970, 310, color=VIOLET, width=4, head=14)
-    _arrow(c, 1240, 307, 1410, 307, color=TEAL, width=4, head=14)
-    return c.finish(name)
-
-
-def _latent_tile(c, x, y, noisy):
-    """Symbolic latent states, repeated across both flows rather than fake image frames."""
-    c.rect(x, y, 255, 185, fill='#1D303B', stroke=TEAL, width=4)
+def _latent_tile(c, x, y, noisy, w=230, h=150):
+    """Symbolic data, not miniature pictures or actual intermediate model states."""
+    c.rect(x, y, w, h, fill='#1D303B', stroke=TEAL, width=3)
     rng = random.Random(31)
     clean = ('#27505E', '#4B8991', TEAL, '#78CFCC')
     noise = ('#34404D', '#607180', '#8B879E', VIOLET, ORANGE)
+    dx, dy = (w - 32) / 7, (h - 30) / 5
     for row in range(5):
         for col in range(7):
             color = rng.choice(noise) if noisy else clean[(col // 2 + row) % len(clean)]
-            c.rect(x + 23 + col * 30, y + 20 + row * 30, 25, 25, fill=color)
+            c.rect(x + 16 + col * dx, y + 15 + row * dy, dx - 4, dy - 4, fill=color)
 
 
-def diffusion_training(name='w05-diffusion-training', w=1680, h=620):
-    """Show how a denoiser learns from encoded examples and known added noise."""
+def _lantern_photo(c, x, y, w, h):
+    """Use the real course example in both raster and vector diagram outputs."""
+    path = Path(__file__).resolve().parent / 'assets/week05-lantern-easel.jpg'
+    with Image.open(path) as source:
+        tile = ImageOps.fit(source.convert('RGBA'), (round(c.s(w)), round(c.s(h))))
+        c.im.paste(tile, (round(c.s(x)), round(c.s(y))))
+    encoded = base64.b64encode(path.read_bytes()).decode('ascii')
+    c.svg.append(f'<image x="{x}" y="{y}" width="{w}" height="{h}" '
+                 f'href="data:image/jpeg;base64,{encoded}" preserveAspectRatio="xMidYMid slice"/>')
+
+
+def gan_adversaries(name='w05-gan-adversaries', w=1680, h=560):
     c = Canvas(w, h, bg=WHITE)
-    xs = (40, 370, 700, 1030, 1360)
-    y = 170
-    c.text(840, 75, 'FROM AN EXAMPLE IMAGE TO A NOISY LATENT', size=31,
-           color=ORANGE, anchor='middle', weight=700)
-    c.text(840, 115, 'Noise is added to encoded data, not to a picture on screen.',
-           size=25, color=INK, anchor='middle', mono=False)
+    _node(c, 25, 215, 255, 145, 'RANDOM INPUT', 'sample noise')
+    _node(c, 360, 215, 285, 145, 'GENERATOR', 'makes an image', PALE_ORANGE, ORANGE)
+    _node(c, 725, 215, 260, 145, 'CANDIDATE', 'generated image', PALE_ORANGE, ORANGE)
+    _node(c, 1065, 215, 320, 145, 'DISCRIMINATOR', 'real or generated?', INK, INK)
+    _node(c, 1065, 15, 320, 115, 'REAL EXAMPLES', 'training images', PALE_TEAL, TEAL)
+    _label(c, 1540, 270, 'TRAINING', 28, DARK_TEAL)
+    _label(c, 1540, 315, 'SIGNAL', 32)
+    for start, stop in ((280, 360), (645, 725), (985, 1065), (1385, 1440)):
+        _arrow(c, start, 285, stop, 285, ORANGE)
+    _arrow(c, 1225, 130, 1225, 215, DARK_TEAL)
+    c.line(1510, 350, 1510, 440, DARK_TEAL, 5)
+    c.line(1510, 440, 1225, 440, DARK_TEAL, 5)
+    _arrow(c, 1225, 440, 1225, 360, DARK_TEAL)
+    c.line(1225, 440, 502, 440, ORANGE, 5)
+    _arrow(c, 502, 440, 502, 360, ORANGE)
+    _label(c, 855, 506, 'Both learn: distinguish examples; make harder-to-distinguish images.', 32)
+    return c.finish(name)
 
-    c.rect(xs[0], y, 255, 185, fill=WHITE, stroke=INK, width=4)
-    draw_chair(c, xs[0] + 75, y + 28, 118, seat_h=0.42, back_h=0.6,
+
+def clip_shared_space(name='w05-clip-shared-space', w=1680, h=560):
+    c = Canvas(w, h, bg=WHITE)
+    _node(c, 25, 45, 345, 145, 'CAPTION', 'a chair with curved back', PALE_VIOLET, VIOLET)
+    c.rect(25, 275, 345, 200, fill=PAPER)
+    draw_chair(c, 125, 290, 160, seat_h=0.42, back_h=0.6,
+               back_angle=12, seat_w=0.7, legs=4, stroke=INK, width=6)
+    _node(c, 450, 45, 300, 145, 'TEXT ENCODER', 'caption to vector', PALE_VIOLET, VIOLET)
+    _node(c, 450, 305, 300, 145, 'IMAGE ENCODER', 'picture to vector', PALE_TEAL, TEAL)
+    _arrow(c, 370, 118, 450, 118, VIOLET)
+    _arrow(c, 370, 378, 450, 378, DARK_TEAL)
+    c.rect(860, 15, 790, 470, fill=PAPER)
+    _label(c, 1255, 65, 'SHARED EMBEDDING SPACE', 34)
+    _arrow(c, 750, 118, 930, 230, VIOLET)
+    _arrow(c, 750, 378, 970, 290, DARK_TEAL)
+    c.circle(1030, 230, 17, fill=VIOLET)
+    c.rect(1070, 255, 34, 34, fill=DARK_TEAL)
+    c.line(1047, 245, 1070, 255, MUTED, 3)
+    _label(c, 1060, 192, 'matching pair', 28)
+    c.circle(1360, 350, 17, fill=VIOLET)
+    c.rect(1400, 310, 34, 34, fill=DARK_TEAL)
+    c.line(1377, 345, 1400, 327, MUTED, 3)
+    c.circle(1470, 175, 17, fill=VIOLET)
+    _label(c, 1470, 225, 'different caption', 26)
+    _label(c, 1255, 436, 'mismatched pairs move apart', 30)
+    _label(c, 840, 540, 'Similarity is not synthesis. A matching vector is not a picture.', 34)
+    return c.finish(name)
+
+
+def text_conditioning(name='w05-text-conditioning', w=1680, h=560):
+    """Two inputs meet at iterative updates; the decoder follows the final latent."""
+    c = Canvas(w, h, bg=WHITE)
+    _node(c, 25, 25, 350, 130, 'PROMPT', 'paper lantern in a garden', PALE_VIOLET, VIOLET)
+    _node(c, 455, 25, 320, 130, 'TEXT ENCODER', 'words to features', PALE_VIOLET, VIOLET)
+    _arrow(c, 375, 90, 455, 90, VIOLET)
+    c.line(775, 90, 865, 90, VIOLET, 5)
+    _arrow(c, 865, 90, 865, 220, VIOLET)
+    _label(c, 1010, 145, 'TEXT FEATURES', 28, VIOLET)
+    _latent_tile(c, 25, 235, True, 250, 170)
+    _label(c, 150, 450, 'INITIAL LATENT', 28)
+    _node(c, 385, 220, 490, 200, 'DENOISING MODEL', 'text-conditioned latent updates', INK, INK)
+    _arrow(c, 275, 320, 385, 320, DARK_TEAL)
+    _arrow(c, 875, 320, 1020, 320, DARK_TEAL)
+    _label(c, 950, 274, 'final z', 28, DARK_TEAL)
+    c.poly([(1020, 260), (1300, 220), (1300, 420), (1020, 380)],
+           fill=PALE_TEAL, stroke=TEAL, width=4)
+    _label(c, 1160, 311, 'VAE', 34)
+    _label(c, 1160, 352, 'DECODER', 32)
+    _arrow(c, 1300, 320, 1380, 320, DARK_TEAL)
+    _lantern_photo(c, 1380, 215, 270, 220)
+    _label(c, 1515, 477, 'OUTPUT IMAGE', 28)
+    c.line(750, 420, 750, 505, DARK_TEAL, 5)
+    c.line(750, 505, 455, 505, DARK_TEAL, 5)
+    _arrow(c, 455, 505, 455, 420, DARK_TEAL)
+    _label(c, 601, 549, 'REPEAT', 28, DARK_TEAL)
+    return c.finish(name)
+
+
+def vae_latent(name='w05-vae-latent', w=1680, h=560):
+    c = Canvas(w, h, bg=WHITE)
+    c.rect(25, 140, 235, 260, fill=PAPER)
+    _label(c, 142, 118, 'INPUT IMAGE x', 28)
+    draw_chair(c, 75, 180, 145, seat_h=0.42, back_h=0.6,
                back_angle=10, seat_w=0.68, legs=4, stroke=INK, width=6)
-    c.poly([(xs[1], y), (xs[1] + 255, y + 36),
-            (xs[1] + 255, y + 149), (xs[1], y + 185)],
-           fill=WHITE, stroke=ORANGE, width=5)
-    c.text(xs[1] + 127, y + 104, 'VAE ENCODER', size=29,
-           color=INK, anchor='middle', weight=700)
-    _latent_tile(c, xs[2], y, noisy=False)
-    c.rect(xs[3], y, 255, 185, fill=WHITE, stroke=ORANGE, width=5)
-    c.text(xs[3] + 127, y + 86, 'ADD NOISE', size=31,
-           color=ORANGE, anchor='middle', weight=700)
-    c.text(xs[3] + 127, y + 127, 'known amount', size=23,
-           color=INK, anchor='middle')
-    _latent_tile(c, xs[4], y, noisy=True)
-    for x in (300, 630, 960, 1290):
-        _arrow(c, x, y + 92, x + 62, y + 92, color=ORANGE, width=6, head=18)
-    for x, label in zip(xs, ('EXAMPLE IMAGE', 'ENCODE', 'CLEAN LATENT  z0',
-                              'ADD KNOWN NOISE', 'NOISY LATENT  zT')):
-        c.text(x + 127, 405, label, size=24, color=INK, anchor='middle', weight=700)
-
-    c.rect(190, 472, 1300, 105, fill=PALE_ORANGE, stroke=ORANGE, width=3)
-    c.text(840, 517, 'DENOISER LEARNS TO PREDICT THE ADDED NOISE', size=29,
-           color=INK, anchor='middle', weight=700)
-    c.text(840, 552, 'Train on many examples at different noise levels.', size=23,
-           color=INK, anchor='middle', mono=False)
+    c.poly([(320, 110), (590, 205), (590, 335), (320, 430)],
+           fill=PALE_ORANGE, stroke=ORANGE, width=4)
+    _label(c, 438, 263, 'ENCODER', 34)
+    _label(c, 438, 308, 'q(z|x)', 28, mono=True)
+    _label(c, 790, 90, 'DISTRIBUTION', 28, VIOLET)
+    _label(c, 790, 137, 'mean + log variance', 28)
+    c.line(665, 157, 910, 157, VIOLET, 3)
+    _label(c, 790, 217, 'SAMPLE', 28, VIOLET)
+    c.circle(790, 290, 60, fill=VIOLET)
+    _label(c, 790, 306, 'z', 44, WHITE)
+    c.poly([(990, 205), (1260, 110), (1260, 430), (990, 335)],
+           fill=PALE_TEAL, stroke=TEAL, width=4)
+    _label(c, 1142, 263, 'DECODER', 34)
+    _label(c, 1142, 308, 'p(x|z)', 28, mono=True)
+    c.rect(1370, 140, 285, 260, fill=PAPER)
+    _label(c, 1512, 118, 'RECONSTRUCTION', 28)
+    draw_chair(c, 1435, 180, 145, seat_h=0.42, back_h=0.6,
+               back_angle=13, seat_w=0.65, legs=4, stroke=INK, width=6)
+    _label(c, 1512, 440, 'x-hat', 28, mono=True)
+    for x1, x2 in ((260, 320), (590, 730), (850, 990), (1260, 1370)):
+        _arrow(c, x1, 290, x2, 290, DARK_TEAL)
+    _label(c, 840, 532, 'Reconstruction is approximate. Compact data is not a smaller photograph.', 32)
     return c.finish(name)
 
 
-def diffusion_generation(name='w05-diffusion-generation', w=1680, h=620):
-    """Start with new latent noise; use a learned denoiser before VAE decoding."""
+def diffusion_training(name='w05-diffusion-training', w=1680, h=560):
+    """Classic noise-prediction training: make a target, compare, update weights."""
     c = Canvas(w, h, bg=WHITE)
-    xs = (40, 370, 700, 1030, 1360)
-    y = 205
-    c.text(840, 64, 'FROM NEW LATENT NOISE TO A VIEWABLE IMAGE', size=31,
-           color=VIOLET, anchor='middle', weight=700)
-    c.rect(xs[1], 100, 255, 65, fill=PALE_VIOLET, stroke=VIOLET, width=3)
-    c.text(xs[1] + 127, 142, 'TEXT FEATURES', size=25,
-           color=VIOLET, anchor='middle', weight=700)
-    _arrow(c, xs[1] + 127, 167, xs[1] + 127, 196,
-           color=VIOLET, width=5, head=15)
-
-    _latent_tile(c, xs[0], y, noisy=True)
-    c.rect(xs[1], y, 255, 185, fill=INK)
-    c.text(xs[1] + 127, y + 81, 'DENOISER', size=32,
-           color=WHITE, anchor='middle', weight=700)
-    c.text(xs[1] + 127, y + 125, 'many small steps', size=22,
-           color='#D3E7E8', anchor='middle')
-    _latent_tile(c, xs[2], y, noisy=False)
-    c.poly([(xs[3], y + 36), (xs[3] + 255, y),
-            (xs[3] + 255, y + 185), (xs[3], y + 149)],
-           fill=WHITE, stroke=TEAL, width=5)
-    c.text(xs[3] + 127, y + 104, 'VAE DECODER', size=29,
-           color=INK, anchor='middle', weight=700)
-    c.rect(xs[4], y, 255, 185, fill='#172B37', stroke=INK, width=4)
-    c.circle(xs[4] + 127, y + 102, 65, fill='#24434A')
-    c.line(xs[4] + 127, y + 8, xs[4] + 127, y + 32, ORANGE, 5)
-    c.poly([(xs[4] + 100, y + 42), (xs[4] + 154, y + 42),
-            (xs[4] + 164, y + 150), (xs[4] + 90, y + 150)],
-           fill=ORANGE, stroke='#F9C68E', width=4)
-    for line_y in (y + 77, y + 109, y + 141):
-        c.line(xs[4] + 96, line_y, xs[4] + 158, line_y, '#F9C68E', 4)
-    for x in (300, 630, 960, 1290):
-        _arrow(c, x, y + 92, x + 62, y + 92, color=VIOLET, width=6, head=18)
-    for x, label in zip(xs, ('NEW NOISY LATENT  zT', 'DENOISE MANY STEPS',
-                              'CLEAN LATENT  z0', 'DECODE', 'OUTPUT IMAGE')):
-        c.text(x + 127, 442, label, size=23, color=INK, anchor='middle', weight=700)
-
-    c.rect(190, 505, 1300, 78, fill=PALE_TEAL, stroke=TEAL, width=3)
-    c.text(840, 553, 'Text guides denoising; only the VAE decoder makes pixels.',
-           size=28, color=INK, anchor='middle', weight=700)
+    _label(c, 840, 36, 'PREPARE A TRAINING PAIR', 30, DARK_TEAL)
+    c.rect(25, 65, 215, 135, fill=PAPER)
+    draw_chair(c, 78, 73, 110, seat_h=0.42, back_h=0.6,
+               back_angle=10, seat_w=0.68, legs=4, stroke=INK, width=5)
+    _label(c, 132, 241, 'EXAMPLE IMAGE', 26)
+    c.poly([(325, 65), (555, 95), (555, 170), (325, 200)],
+           fill=PALE_ORANGE, stroke=ORANGE, width=4)
+    _label(c, 440, 135, 'VAE ENCODER', 28)
+    _latent_tile(c, 635, 65, False, 230, 135)
+    _label(c, 750, 241, 'CLEAN LATENT  z0', 26)
+    _node(c, 950, 65, 255, 135, 'ADD NOISE', 'save the target', PALE_ORANGE, ORANGE)
+    _latent_tile(c, 1310, 65, True, 290, 135)
+    _label(c, 1455, 241, 'NOISY LATENT  zt', 26)
+    for a, b in ((240, 325), (555, 635), (865, 950), (1205, 1310)):
+        _arrow(c, a, 132, b, 132, DARK_TEAL)
+    c.line(1455, 260, 1455, 300, DARK_TEAL, 5)
+    c.line(1455, 300, 185, 300, DARK_TEAL, 5)
+    _arrow(c, 185, 300, 185, 355, DARK_TEAL)
+    _node(c, 25, 355, 320, 125, 'DENOISER', 'latent + noise level', INK, INK)
+    _node(c, 450, 355, 310, 125, 'PREDICT NOISE', 'model output', PALE_TEAL, TEAL)
+    _node(c, 885, 355, 295, 125, 'COMPARE', 'prediction vs target', PALE_ORANGE, ORANGE)
+    _node(c, 1305, 355, 350, 125, 'UPDATE WEIGHTS', 'reduce prediction error', PALE_ORANGE, ORANGE)
+    for a, b in ((345, 450), (760, 885), (1180, 1305)):
+        _arrow(c, a, 418, b, 418, ORANGE)
+    _label(c, 1032, 333, 'KNOWN NOISE', 24, INK)
+    _arrow(c, 1032, 338, 1032, 355, ORANGE, head=10)
+    _label(c, 840, 546, 'Repeat across many images and noise levels. Text conditioning omitted here.', 30)
     return c.finish(name)
 
 
-def agent_image_tools(name='w05-agent-image-tools', w=1680, h=620):
-    """Human-directed agent loop using vision and image-generation tools."""
+def diffusion_generation(name='w05-diffusion-generation', w=1680, h=560):
     c = Canvas(w, h, bg=WHITE)
-    _box(c, 45, 205, 260, 150, 'YOUR INTENT', 'what should it do?',
-         PAPER, LINE)
-    _box(c, 425, 205, 270, 150, 'AGENT', 'plan · call · compare',
-         INK, INK, title_color=WHITE)
-    _box(c, 825, 95, 300, 145, 'VISION TOOL', 'describe / inspect',
-         PALE_TEAL, TEAL)
-    _box(c, 825, 355, 300, 145, 'IMAGE TOOL', 'generate / edit',
-         PALE_ORANGE, ORANGE)
-    c.rect(1260, 195, 350, 270, fill=PAPER, stroke=LINE, width=3)
-    c.text(1435, 235, 'CANDIDATE IMAGE', size=21, color=INK,
-           anchor='middle', weight=700)
-    c.rect(1340, 265, 190, 135, fill=PALE_VIOLET, stroke=VIOLET, width=2)
-    c.circle(1435, 300, 24, fill=ORANGE)
-    c.rect(1400, 327, 70, 45, fill=TEAL)
+    _node(c, 375, 5, 330, 100, 'TEXT FEATURES', '', PALE_VIOLET, VIOLET)
+    _arrow(c, 540, 105, 540, 180, VIOLET)
+    _latent_tile(c, 25, 180, True, 250, 180)
+    _label(c, 150, 405, 'NEW NOISY LATENT', 26)
+    _node(c, 375, 180, 330, 180, 'DENOISER', 'learned prediction', INK, INK)
+    _latent_tile(c, 810, 180, False, 250, 180)
+    _label(c, 935, 405, 'FINAL LATENT', 28)
+    c.poly([(1150, 220), (1375, 180), (1375, 360), (1150, 320)],
+           fill=PALE_TEAL, stroke=TEAL, width=4)
+    _label(c, 1262, 267, 'VAE DECODER', 28)
+    _lantern_photo(c, 1455, 155, 200, 225)
+    _label(c, 1555, 425, 'OUTPUT IMAGE', 26)
+    for a, b in ((275, 375), (705, 810), (1060, 1150), (1375, 1455)):
+        _arrow(c, a, 270, b, 270, DARK_TEAL)
+    c.line(758, 270, 758, 465, DARK_TEAL, 5)
+    c.line(758, 465, 335, 465, DARK_TEAL, 5)
+    c.line(335, 465, 335, 320, DARK_TEAL, 5)
+    _arrow(c, 335, 320, 375, 320, DARK_TEAL)
+    _label(c, 545, 507, 'REPEAT LATENT UPDATE', 28, DARK_TEAL)
+    _label(c, 1260, 527, 'Decode after the last update.', 30)
+    return c.finish(name)
 
-    _arrow(c, 305, 280, 425, 280, color=VIOLET)
-    _arrow(c, 695, 245, 825, 175, color=TEAL)
-    _arrow(c, 695, 315, 825, 425, color=ORANGE)
-    _arrow(c, 1125, 425, 1260, 340, color=ORANGE)
-    _arrow(c, 1260, 240, 1125, 175, color=TEAL)
-    c.line(975, 240, 975, 355, TEAL, 4)
-    _arrow(c, 825, 175, 695, 245, color=TEAL)
-    c.text(840, 555, 'The agent can inspect and generate. The designer still chooses what counts as success.',
-           size=23, color=INK, mono=False, anchor='middle', weight=600)
+
+def agent_image_tools(name='w05-agent-image-tools', w=1680, h=560):
+    """Explicit observation return, without an invented vision-to-image tool edge."""
+    c = Canvas(w, h, bg=WHITE)
+    _node(c, 25, 180, 320, 165, 'YOUR INTENT', 'approve the next step')
+    _node(c, 450, 180, 340, 165, 'AGENT', 'plan / call / observe', INK, INK)
+    _node(c, 905, 50, 335, 150, 'VISION TOOL', 'inspect an output', PALE_TEAL, TEAL)
+    _node(c, 905, 330, 335, 150, 'MEDIA TOOL', 'generate / edit', PALE_ORANGE, ORANGE)
+    _lantern_photo(c, 1380, 165, 270, 225)
+    _label(c, 1515, 434, 'CANDIDATE', 28)
+    _arrow(c, 345, 263, 450, 263, VIOLET)
+    _arrow(c, 790, 310, 905, 405, ORANGE)
+    _arrow(c, 1240, 405, 1380, 315, ORANGE)
+    _arrow(c, 1380, 215, 1240, 125, DARK_TEAL)
+    _arrow(c, 905, 125, 790, 215, DARK_TEAL)
+    _label(c, 620, 100, 'OBSERVATION', 28, DARK_TEAL)
+    c.line(620, 345, 620, 485, VIOLET, 5)
+    c.line(620, 485, 185, 485, VIOLET, 5)
+    _arrow(c, 185, 485, 185, 345, VIOLET)
+    _label(c, 410, 545, 'YOU KEEP / REVISE / REJECT', 28, VIOLET)
     return c.finish(name)
