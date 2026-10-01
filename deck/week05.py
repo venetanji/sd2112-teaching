@@ -11,6 +11,8 @@ from deckgen.core import Image, Figure  # noqa: E402
 from course import SITE, PLAYLIST, JOURNEY, footer  # noqa: E402
 import week05_figures as F  # noqa: E402
 import week05_mediation_figures as M  # noqa: E402
+import week05_history as H  # noqa: E402
+import week05_case as C  # noqa: E402
 
 FOOTER = footer(5)
 S = []
@@ -179,11 +181,12 @@ def modern_models():
 
 S.append(agenda('SD2112 · WEEK 05', [
     'Photography, apparatus and the Machine A/B lens',
+    'Machine A: Bense, Nake and the computer-art debate',
     'GANs generate; CLIP aligns; diffusion and flow models generate',
     'Agents coordinate tools; you make the design decisions',
     'After the break: logo demo, install Easel and set the brief',
     '40 minutes: Machine A, Machine B, Machine A+B',
-    'Compare the routes; keep evidence for Week 6',
+    'Compare the routes; keep evidence for your reflection',
 ], notes='Start with roughly one hour of theory. Break, the logo/Easel demo, installation and the brief precede the 40-minute making block. Protect 10 + 10 + 15 + 5 minutes; do not add a separate prompt-writing or 35-minute iteration exercise.'))
 
 S.append(cards('00 · THE DESIGNER’S JOB', 'The model does not supply your reason for making the image.', [
@@ -204,6 +207,7 @@ S.append(figure_slide('IHDE · POSTPHENOMENOLOGY AND TECHNOLOGICAL MEDIATION',
                       caption='Same camera. Different relations—depending on how you use it.',
                       notes='Source: Don Ihde, Technology and the Lifeworld (1990), as discussed in Lion thesis Chapter 3.1: https://giovannilion.link/thesis/3-methodology.html#sec:technological-mediation . The four relations are embodiment, hermeneutic, alterity and background. Use two situated examples: looking through a viewfinder towards a scene; interpreting a photograph as a representation. Neither permanently classifies all photography. Interacting with a camera menu or an agent may foreground the tool as quasi-other; background systems shape the situation without focal attention. Technologies amplify and reduce aspects of perception and action, rather than being neutral pipes between a fully fixed person and world. The diagram is a simplified relational schema, not a signal-processing pipeline. Postphenomenology inherits and revises phenomenological questions; do not collapse Ihde with Heidegger, or call Flusser its founder. Spend around two minutes.'))
 S.append(machine_mediation())
+S.extend(H.slides())
 
 S.append(section('IMAGE MODELS · A SHORT LINEAGE',
                  'How did words begin to guide image generation?',
@@ -253,10 +257,10 @@ S.append(figure_slide('CLASSIC LATENT DIFFUSION · GENERATION',
 
 S.append(modern_models())
 
-S.append(question('short_answer', "If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair?",
-                  hint='What can your tool show or control? What would require evidence?',
-                  eyebrow_text='IMAGE MODELS · DEEP QUESTION',
-                  notes='Allow three minutes. A strong answer separates CLIP-like alignment from generation: the text encoder produces a condition; iterative denoising builds a latent; the VAE decoder maps the final latent to pixels. CLIP itself is not the drawing system. In some pipelines the conditioning encoder is not CLIP-derived. Probe what a student can actually inspect or control in the approved image tool, and what would need vendor documentation or another source as evidence; do not assume the controls exist. Then bridge to tools an agent might call.'))
+S.append(question('short_answer', 'When would a convincing image still fail your intention?',
+                  hint='Name a convincing result you would reject. What in your brief would it fail?',
+                  eyebrow_text='REFLECTION SEED 1 · INTENT AND APPEARANCE',
+                  notes='Allow roughly three minutes within the lecture, not an extra quiz. Reflection seed: distinguish visual plausibility, matching words and serving a purpose. Use evidence from a previous experiment or a specific example just shown; state which requirement matters and why. CLIP alignment is not image generation or a guarantee of exact count, identity or meaning. Connect Bense/Nake\'s critique of novelty to a present design decision without equating the historical systems. There is no preferred pro- or anti-AI answer. These ClassPoint responses can become starting claims for the Week 7 reflection, not finished paragraphs or new assessment requirements.'))
 
 S.append(figure_slide('AGENTS · IMAGE UNDERSTANDING + GENERATION AS TOOLS',
                       'The agent can look, make, and look again.', F.agent_image_tools(),
@@ -283,6 +287,7 @@ S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 05 · DEMO + WORKSHOP',
 S.append(easel_demo())
 S.append(logo_exploration())
 S.append(video_discussion())
+S.extend(C.slides())
 
 S.append(content('AFTER THE BREAK · EASEL SETUP', 'Install. Open. Check.', [
     'Download the package for your OS from github.com/venetanji/easel-client/releases.',
@@ -301,10 +306,10 @@ S.append(content('THE SHARED BRIEF · BEFORE THE TIMER',
 ], body_size=32,
 notes='Briefing precedes the making timer. Ask for two observable invariants, for example a crescent silhouette and a detached dot, not a demand that every pixel match. Use this same brief in A, B and A+B. No real name, photograph or personal data is required. This is a rapid identity study, not a commercial trademark or a finished branding project.'))
 
-S.append(question('short_answer', 'What could stand for you without being a portrait?',
-                  hint='A name, nickname, character or symbol—and one quality it should communicate.',
-                  eyebrow_text='THE SHARED BRIEF · START WITH YOUR IDENTITY',
-                  notes='Take a few short responses as part of the post-break brief, before the making timer starts. Students can use a fictional identity or non-identifying nickname. No photograph or personal details are required. This is not a separate making exercise.'))
+S.append(question('short_answer', 'What should your mark never lose—even when a model reinterprets it?',
+                  hint='Name a feature and why it matters to your intent—not only how it looks.',
+                  eyebrow_text='REFLECTION SEED 2 · YOUR SHARED BRIEF',
+                  notes='A reflexive moment within the post-break brief before the making timer. Reflection seed: choose a boundary between a deliberate invariant and an interpretation you can delegate. Give evidence by identifying an observable feature and explaining its significance to the chosen identity. Students may use a fictional identity; no personal photograph or private details are required. Keep one sentence of intent and two recognizable features across A, B and A+B. Answers are provisional: later outputs may challenge the student\'s priorities, but any change to the brief must be acknowledged rather than retroactively called success.'))
 
 S.append(activity('WORKSHOP · ONE BRIEF · THREE QUICK STUDIES', 40,
                   'One identity. Three ways of making it.', [
@@ -364,10 +369,10 @@ S.append(activity('B · MACHINE B · PATTERNS PROPOSE THE PICTURE', 10,
 ], panel_size=24, bg=PAPER,
 notes='Ten minutes includes generation waits and the short observation question that follows. Use the verified course image route. Exact generated lettering is not a requirement; if it fails, that is evidence about control rather than a reason to spend the activity chasing it. A saved image can be reused or a visible material region cropped for the hybrid. Submit once; do not duplicate a pending job. If the call is unavailable or slow, use a supplied image and explicitly record its source.'))
 
-S.append(question('short_answer', 'What did the model decide that you did not specify?',
-                  hint='Point to one visible choice in B. Would you keep it for A+B?',
-                  eyebrow_text='B · OBSERVE BEFORE COMBINING',
-                  notes='A brief check within the B ten-minute allocation, not extra activity time. Ask for an observable choice tied to the shared brief; material, framing, shape, text or atmosphere. A model contribution is not automatically a mistake.'))
+S.append(question('short_answer', "What did the model's interpretation reveal about your own brief?",
+                  hint='Use one visible choice you kept or rejected. Did it change what you thought you wanted?',
+                  eyebrow_text='REFLECTION SEED 3 · OBSERVE BEFORE COMBINING',
+                  notes='Reflection seed within B\'s ten minutes, not extra activity time: use the generated candidate as evidence of mediation. Name a visible choice you did not specify, compare it with the shared brief, and explain keeping or rejecting it. It may expose ambiguity, a learned convention, a stereotype or an unexpected possibility; do not require a claim of bias without evidence. A model contribution is not automatically a mistake or a discovery. Preserve the prompt and returned image so the later reflection can distinguish intention, observation and judgement.'))
 
 S.append(activity('A+B · MACHINE A + MACHINE B', 15,
                   'Keep the form. Borrow the surface.', [
@@ -388,10 +393,10 @@ S.append(activity('A+B · MACHINE A + MACHINE B', 15,
 ], panel_size=24, bg=TEALS[4],
 notes='Fifteen minutes. SVG image clipping or Canvas drawImage plus a mask is the baseline. Explicitly request the saved project asset, not a guessed path or a remote URL. The original B image may include a mark; choose a material region and crop it deliberately if reusing the whole image duplicates the shape. This operation reuses pixels; it is not a new generative-model call or a generated 3D model. Three.js is optional only when its offline kit is enabled and WebGL works. A texture on a coded plane or an extruded mark is sufficient; do not add a 3D modeling tutorial. Code fixes boundaries, transforms and interaction; a supplied fallback texture must be labeled. The hybrid is not automatically better.'))
 
-S.append(question('short_answer', 'What did combining the machines buy you?',
-                  hint='Show A / B / A+B. Where did rules help—and where did generation help?',
-                  eyebrow_text='COMPARE · 5 MIN',
-                  notes='The final five minutes of the 40-minute activity. Place the three views side by side in an HTML comparison or a simple contact sheet. Name one enforced decision, one delegated decision and one trade-off. The hybrid may be worse; ask for evidence, not a favourite-image vote. A partial study with an honest explanation is more useful than an unsupported claim of control.'))
+S.append(question('short_answer', 'Did combining the machines increase your control—or relocate it?',
+                  hint='Compare all three against your brief. Name one gain, one loss, and who controlled each.',
+                  eyebrow_text='COMPARE · 5 MIN · REFLECTION SEED 4',
+                  notes='The final five minutes of the protected 40-minute activity. Reflection seed: distinguish control of geometry, appearance, meaning and selection, using the three views as evidence. Name an enforced decision, a delegated decision and a trade-off; connect the judgement to the initial intent and two features. The hybrid can be worse or move effort to cropping, masking and selection. Avoid assuming more technical control means more creative freedom. An honest partial study or failure supports an argument better than an unsupported success claim. Keep the ClassPoint answer as a note to revisit for Week 7; it is not an additional submission or marking criterion.'))
 
 S.append(cards('CHALLENGE 4 · BRING TO WEEK 6',
                'Three routes. One comparison layout.', [
@@ -401,13 +406,13 @@ S.append(cards('CHALLENGE 4 · BRING TO WEEK 6',
 ], text_size=23,
 notes='Use these studies in a side-by-side comparison layout, then make and critique one deliberate revision before Week 6. This connects the new personal-mark activity to the syllabus Challenge 4 wording: a layout you could not design, generated, iterated and critiqued. Do not silently change assessment weighting, deadline or submission destination. Record supplied fallback images honestly. A comparison can use the code-based layout and generated media, not a claim that the image model generated the whole page.'))
 
-S.append(content('KEEP A PROCESS RECORD', 'Show who decided what.', [
-    'Keep your shared brief and the three views: A, B and A+B.',
-    'Retain the A code and parameter change; the B prompt and returned asset.',
-    'Record the hybrid crop, mask or texture choices, plus one success or miss.',
-    'Name tools and supplied assets honestly. Keep credentials out of the record.',
+S.append(content('KEEP A PROCESS RECORD · WEEK 7 REFLECTION', 'Turn a result into an argument.', [
+    'Return to a ClassPoint question: make a claim about your creative process.',
+    'Support it with a decision and evidence: images, code, prompts or revisions.',
+    'Compare A and B. What did each make possible, difficult or likely?',
+    'About 1000 words; three of your own experiments with images; an AI-writing process note.',
 ], body_size=30,
-notes='This record supplies evidence for the Week 7 Machine A/B reflection. Follow course privacy rules and the confirmed submission route. Do not expose keys, account tokens or real personal identifiers. Students can explain a rejected hybrid or a service failure without fabricating an output.'))
+notes='Remind the existing syllabus reflection brief, not a new requirement: about 1000 words on the role of AI in your creative process, particularly Machine A versus Machine B, at least three of your own weekly-challenge experiments from weeks 2–6 with images, and a short note on how AI was used in writing. Submitted in Week 7 via Canvas. The four ClassPoint themes—intent versus convincing appearance, identity and delegated interpretation, what outputs reveal about the brief, and relocated control—are optional avenues for an evidence-led argument, not four compulsory essay sections. Retain the brief, code/parameter change, prompt/asset and hybrid choices; identify supplied fallbacks honestly. Do not expose credentials or personal identifiers. A rejected hybrid or service failure can be useful evidence without a fabricated output.'))
 
 S.append(end('Rules. Patterns. Your decisions.',
              'You chose what each machine could decide—and what it could not.',

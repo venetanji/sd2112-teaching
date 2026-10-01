@@ -117,13 +117,13 @@ class Week05SequenceTests(unittest.TestCase):
                   "One mark. Three routes.", "What changed when we remade our course mark?",
                   "What stayed wrong after a better prompt?", "Install. Open. Check.",
                   "Make a mark that represents you.",
-                  "What could stand for you without being a portrait?",
+                  "What should your mark never lose—even when a model reinterprets it?",
                   "One identity. Three ways of making it.")
         positions = [next(i for i, text in enumerate(slides) if title in text) for title in titles]
         self.assertEqual(positions, sorted(positions))
         self.assertEqual(S[0].title, "Today")
-        self.assertEqual(S[20].title, "After the break: make it yours.")
-        self.assertEqual(S[21].title, "Images, intentions, iterations.")
+        self.assertEqual(S[25].title, "After the break: make it yours.")
+        self.assertEqual(S[26].title, "Images, intentions, iterations.")
 
     def test_photography_mediation_block_precedes_image_generation_history(self):
         titles = (
@@ -142,7 +142,7 @@ class Week05SequenceTests(unittest.TestCase):
         self.assertEqual(positions, list(range(positions[0], positions[0] + 5)))
         self.assertLess(positions[-1], generation_intro)
         self.assertEqual(positions[0], 2)
-        self.assertEqual(len(S), 37)
+        self.assertEqual(len(S), 45)
 
     def test_mediation_slides_have_evidence_and_course_machine_notation(self):
         titles = (
@@ -171,7 +171,7 @@ class Week05SequenceTests(unittest.TestCase):
     def test_lesson_plan_maps_classpoint_questions_after_inserted_block(self):
         from pathlib import Path
         plan = Path(__file__).resolve().parents[1].joinpath("lessons/week05-lesson-plan.md").read_text()
-        expected = {18, 28, 32, 34}
+        expected = {23, 36, 40, 42}
         rows = [line for line in plan.splitlines() if line.startswith("| ") and "| Short answer |" in line]
         mapped = {int(line.split("|")[1].strip()) for line in rows}
         self.assertEqual(mapped, expected)
@@ -198,7 +198,7 @@ class Week05SequenceTests(unittest.TestCase):
 
     def test_deep_question_bridges_theory_and_student_decisions(self):
         slides = [slide_text(slide) for slide in S]
-        question = "If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair?"
+        question = "When would a convincing image still fail your intention?"
         index = next(i for i, text in enumerate(slides) if question in text)
         self.assertLess(
             next(i for i, text in enumerate(slides) if "Generation turns new noise into an image." in text),
@@ -237,7 +237,37 @@ class Week05SequenceTests(unittest.TestCase):
 
     def test_clip_and_evidence_question_are_visible(self):
         self.assertIn("mismatched pairs", F.clip_shared_space()[0])
-        self.assertIn("What would require evidence?", " ".join(slide_text(slide) for slide in S))
+        self.assertIn("Name a convincing result you would reject", " ".join(slide_text(slide) for slide in S))
+
+    def test_four_reflexive_questions_support_the_existing_reflection_brief(self):
+        questions = [slide for slide in S if slide.cp]
+        self.assertEqual([slide.cp['type'] for slide in questions], ['short_answer'] * 4)
+        self.assertEqual([slide.title for slide in questions], [
+            'When would a convincing image still fail your intention?',
+            'What should your mark never lose—even when a model reinterprets it?',
+            "What did the model's interpretation reveal about your own brief?",
+            'Did combining the machines increase your control—or relocate it?',
+        ])
+        for question in questions:
+            self.assertIn('reflection', question.notes.lower())
+            self.assertIn('evidence', question.notes.lower())
+        text = ' '.join(slide_text(slide) for slide in S)
+        for phrase in ('1000 words', 'three of your own experiments', 'AI-writing process note'):
+            self.assertIn(phrase, text)
+
+    def test_new_history_and_case_blocks_are_integrated_at_the_approved_positions(self):
+        self.assertEqual([s.title for s in S[7:12]], [
+            'Machine A: design the procedure.',
+            'Bense: can aesthetic form be described systematically?',
+            'Nake: the artist programs possibilities.',
+            'A new machine. A familiar argument.',
+            'There should be no Computer Art.',
+        ])
+        self.assertEqual([s.title for s in S[30:33]], [
+            'The brief emerged through choices.',
+            'A better prompt was not always the right repair.',
+            'What did the agent actually contribute?',
+        ])
 
     def test_training_shows_prediction_comparison_and_weight_update(self):
         svg, _ = F.diffusion_training()

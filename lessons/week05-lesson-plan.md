@@ -23,17 +23,25 @@ Keep the image-model theory visual and concise. Classic noise-prediction trainin
 
 ## Lecture, followed by logo/Easel demonstration
 
-Teach the theory before showing Easel. The lecture runs through slide 20; it introduces the designer's intent, image-model concepts and mediation before students see the practical routes. Do not open with a product showcase or move the demo into the lecture.
+Teach the theory before showing Easel. The lecture runs through slide 25: photography and mediation, Machine A's computer-art history, Machine B's image models, then the agent/tool bridge. Do not open with a product showcase or move the demo into the lecture.
 
 After the break, use the ten-minute demonstration to show the course-logo still, Easel's three routes and the actual chat/video iterations from the course-logo experiment. Compare the intended nature/leaves → origami → circuits/fibres → upper-right-dot reveal with visible shape, motion and continuity. Ask whether a next intervention belongs in the prompt, reference inputs or workflow. Do not claim a successful final cut or controlled A/B comparison unless the selected evidence establishes it. No new video generation is required for preparation or the student activity. HTML is authored code rendered by the browser, not diffusion-generated media.
 
 ### Photography, apparatus and mediation inside the lecture
 
-Reserve **8–10 minutes of the 60-minute lecture** for the five-slide block (slides 3–7 of the 37-slide sequence). Keep the lecture theory-first and the break, post-break demonstration, setup and 40-minute activity fixed. Make room by tightening narration around model diagrams; the actual chat/video evidence belongs in the post-break demonstration. Do not remove the CLIP distinction or core model concepts. This is a conceptual bridge, not a new exercise or assessment.
+Reserve **8–10 minutes of the 60-minute lecture** for the five-slide block (slides 3–7 of the 45-slide sequence). Keep the lecture theory-first and the break, post-break demonstration, setup and 40-minute activity fixed. Make room by tightening narration around model diagrams; the actual chat/video evidence belongs in the post-break demonstration. Do not remove the CLIP distinction or core model concepts. This is a conceptual bridge, not a new exercise or assessment.
 
 Use the sequence to move from photographs as mediated choices, through Flusser's apparatus, Heidegger's account of equipment and Ihde's postphenomenological mediation, to a concrete comparison using the course's terms **Machine A, Machine B and A+B**. Keep the distinctions precise: Flusser's apparatus is not the later postphenomenological framework; Heidegger's equipment/readiness-to-hand is not interchangeable with his later account of revealing and enframing; enframing is not simply a photographic crop. Apply the same request across different machines to discuss what each makes easy to specify, notice or revise. Treat the course's A/B/A+B comparison as Gio's teaching application, not Ihde's original typology. A rule-based route can still involve learned code-writing and seeded randomness; a learned system can be repeatable. Neither label guarantees full transparency or independence from human choices.
 
 The storefront photographs from Sham Shui Po and their repeated GAN outputs in Gio's thesis offer a grounded case: a dataset's recurring dark central corridor becomes a habit reproduced across generated results. Use it to ask how capture, selection, dataset and model shape what appears—not to claim a neutral photographic record or equate the camera crop with enframing. This adds no student task and does not change the shared identity brief.
+
+### Machine A and the computer-art debate
+
+Slides 8–12 add roughly six minutes within the same lecture: the programmed image-making procedure; Bense's information/generative aesthetics; Nake's artist-programmer practice; exhibitions and public attention; Nake's 1971 critique of market fashion and technological mystification. Reuse the actual Nake works from Week 2. Keep Birkhoff distinct from Bense and Nees's *Schotter* distinct from Nake's work. Information aesthetics is not an entropy-equals-beauty formula. Nake's title does not mean he opposed all artistic use of computers: his essay supports investigation and socially meaningful communication. Machine A and B are different approaches, not a progress ladder.
+
+Rebalance the hour: about five minutes opening/intent, nine minutes photography/mediation, six minutes computer-art history, thirty minutes model diagrams/examples, three minutes the first reflective answer and seven minutes agent bridge/recap. These are approximate narration allocations, not extra exercises.
+
+The three case/reflection slides (31–33) fit inside the ten-minute post-break demo: the brief emerged through choices; a better prompt was not always the right repair; the agent coordinated learned proposals with explicit software. Select short saved excerpts, including failures and targeted revisions. V9 was delivered for review, not confirmed final creative acceptance. Technical validation is not aesthetic approval. Exact frame preservation concerns the lossless master, not the pixels of every lossy review copy. No new rendering or extra student task is required.
 
 ## Installation and access checks
 
@@ -64,10 +72,10 @@ Keep the three-hour booking's core sequence fixed: 60-minute theory lecture, ten
 
 | Time | Segment | What happens | Notes |
 |---|---|---|---|
-| 0:00–1:00 | Theory lecture | Slides 1–20 in the agreed order: agenda; designer's intent; five philosophy slides; image-model introduction; GANs; CLIP; pipeline; lantern; VAE; training; generation; modern models; deep CLIP question; agent diagram; Machine A/B recap. | Keep all Easel material for after the break. Keep slides 3–7 to 8–10 minutes within this hour, not added on top. Preserve core concepts and distinctions. |
+| 0:00–1:00 | Theory lecture | Slides 1–25: agenda and intent; photography/mediation 3–7; Machine A/Bense/Nake 8–12; image models from 13; reflective question 23; agent diagram and A/B recap. | Keep all Easel material for after the break. Fit both conceptual/history blocks within the hour by tightening diagram narration. |
 | 1:00–1:10 | Break | Ten minutes. | Keep release links and the backup device ready. |
-| 1:10–1:20 | Logo/Easel/chat demo | Slides 22–25: introduce the moved “Images, intentions, iterations” title; show Easel's three routes, the logo still and actual chat/video iterations. | Use prepared material; no new live generation wait. Distinguish documented evidence from exploratory iterations. |
-| 1:20–1:35 | Install and brief | Slides 26–29: match installer to OS; open a project and check tools; set the identity brief; explain all three tasks and the 40-minute sequence. | Outside the making timer. Pair or use prepared fallback rather than endless troubleshooting. |
+| 1:10–1:20 | Logo/Easel/chat demo | Slides 27–33: moved title, Easel routes, logo/chat/video and three case/reflection slides. | Select short real excerpts. Added slides guide discussion within this ten-minute window; no extra demo or live generation wait. |
+| 1:20–1:35 | Install and brief | Slides 34–37: installer and tool checks; identity brief; reflective boundary-setting question; 40-minute overview. | Outside the making timer. Pair or use prepared fallback rather than endless troubleshooting. |
 | 1:35–2:15 | Activity: A / B / A+B / compare | Ten minutes coded mark, ten minutes generated interpretation, fifteen minutes combination, five minutes side-by-side comparison. | Protect the full 40 minutes, including comparison. One modest study per route; no extra prompt-writing or iteration block. |
 | 2:15–3:00 | Flexible feedback, close and help | Support students, discuss outcomes, revisit Challenge 4 evidence and close. | Flexible use of booked time; not more making or an expanded activity. Submission details remain those confirmed in Canvas. |
 
@@ -80,7 +88,7 @@ Keep the three-hour booking's core sequence fixed: 60-minute theory lecture, ten
 | 0–10 | A · rules | Ask Easel's agent for a simple HTML/SVG/Canvas mark, without an image-generation call. Expose two controls and change one value. | Keep source code, one view and the parameter change. Machine B wrote the code; Machine A executed it. |
 | 10–20 | B · learned image | Give the image tool the same brief and two features. Explore a material/texture/atmosphere, save one candidate and identify one unrequested choice. | Keep prompt, returned asset and model/tool details where available. Exact lettering is not a requirement. The observation question is inside these ten minutes. |
 | 20–35 | A+B · combination | Reuse A's code and B's image. Clip the image or a chosen material region into the silhouette; adjust crop, scale or offset. | Keep the coded boundary, reused asset and hybrid view. Code controls geometry and placement; pixels supply the surface. Three.js is optional when the offline kit is verified. |
-| 35–40 | Compare | Show A / B / A+B side by side and answer: what did combining the machines buy you? | Identify one enforced decision, one delegated decision and one trade-off against the original brief. A hybrid can be worse. |
+| 35–40 | Compare | Show A / B / A+B side by side: did combining the machines increase your control—or relocate it? | Identify one enforced decision, one delegated decision and one trade-off against the original brief. A hybrid can be worse. |
 
 The agent is learned in every route; the labels describe how the visual artifact is made, not three different kinds of agent. Machine A can include seeded randomness. Adding a generated texture to coded geometry is not generating a 3D model. If B contains a whole mark, choose a material region rather than accidentally duplicating its shape inside A. No new generation is needed in A+B. Use project assets and offline kits rather than external URLs.
 
@@ -102,18 +110,25 @@ Confirm submission destination and timing in Canvas; do not invent a deadline be
 
 ## ClassPoint questions
 
+Keep **four short answers total**. These are reflexive moments and possible seeds for the Week 7 argument, not attention checks, an extra quiz or four compulsory essay sections. Ask for a decision, evidence and a reason. The shared brief remains the reference point; an attractive output or fluent explanation is not proof of success. The last three answers happen within briefing, B and comparison respectively, without extending the timer.
+
 | Slide | Type | Question | Use |
 |---:|---|---|---|
-| 18 | Short answer | If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair? | Separate alignment from generation; ask what tool controls or claims require evidence. |
-| 28 | Short answer | What could stand for you without being a portrait? | Start from an identity and one quality; no personal image is required. |
-| 32 | Short answer | What did the model decide that you did not specify? | One brief observation within B's ten minutes, not extra activity time. |
-| 34 | Short answer | What did combining the machines buy you? | Final five minutes: compare the three views, enforced/delegated decisions and trade-offs. |
+| 23 | Short answer | When would a convincing image still fail your intention? | Within the lecture: distinguish appearance, matching words and serving a purpose; name evidence and a requirement. |
+| 36 | Short answer | What should your mark never lose—even when a model reinterprets it? | Within briefing: identify an invariant and its significance; locate the boundary of delegated interpretation. |
+| 40 | Short answer | What did the model's interpretation reveal about your own brief? | Within B's ten minutes: use a visible kept/rejected choice to examine ambiguity, assumptions or possibilities. |
+| 42 | Short answer | Did combining the machines increase your control—or relocate it? | Within the final five minutes: compare all three against intent; explain a gain, loss and change in who decides. |
+
+### Reminder of the individual reflection brief
+
+Slide 44 turns the process record into an argument. The existing syllabus asks for about **1000 words** on AI's role in the student's creative process, particularly **Machine A versus Machine B**, with **at least three of their own weekly-challenge experiments from weeks 2–6, with images**, and a short note on **how AI was used in writing**. It is submitted through Canvas in Week 7. ClassPoint themes are optional ways into that argument; they do not change weighting, rubric or submission details. Encourage claim → evidence → interpretation rather than a tool list or unexamined praise.
 
 ## Sources and teaching material
 
 - Gio's approved 1 October sequencing correction: theory lecture first (0:00–1:00), break (1:00–1:10), logo/Easel/chat demonstration (1:10–1:20), installation and brief (1:20–1:35), then making including comparison (1:35–2:15). The original standalone prompt exercise and 35-minute iteration block are replaced; 2:15–3:00 is flexible feedback, close and help, not more making.
-- Agreed 37-slide order: 1 original agenda; 2 designer intent; 3–7 five philosophy slides; 8 image-model introduction; 9–10 GANs; 11 CLIP; 12 pipeline; 13 lantern; 14 VAE; 15 training; 16 generation; 17 modern models; 18 deep CLIP question; 19 agent diagram; 20 Machine A/B recap; 21 break; 22 moved original “Images, intentions, iterations” title; 23 Easel's three routes; 24 logo still; 25 real chat/video; 26 installation; 27 brief; 28 identity ClassPoint; 29 40-minute overview; 30–37 remaining original slides unchanged.
-- Gio's approved five-slide philosophy block is slides 3–7; its 8–10 minutes fit within the 60-minute theory lecture. The revised ClassPoint question map is slides 18, 28, 32 and 34.
+- Approved 45-slide order: 1 agenda; 2 intent; 3–7 philosophy/mediation; 8–12 Machine A history; 13 image-model introduction; 14–15 GANs; 16 CLIP; 17 pipeline; 18 lantern; 19 VAE; 20 training; 21 generation; 22 modern models; 23 reflection; 24 agent diagram; 25 A/B recap; 26 break; 27 moved title; 28 Easel routes; 29 logo still; 30 chat/video; 31–33 case/reflection; 34 installation; 35 brief; 36 reflection; 37 overview; 38 A; 39 B; 40 reflection; 41 A+B; 42 comparison reflection; 43 Challenge 4; 44 reflection/process record; 45 close.
+- Both five-slide lecture blocks fit within 60 minutes. The ClassPoint map is 23, 36, 40 and 42; no questions are added by either new block.
+- Historical block: 2025 Week 2 PDF positions 28–30 and 36–37; Frieder Nake, [There should be no Computer Art](https://dam.org/museum/essays_ui/essays/there-should-be-no-computer-art/), *Bulletin of the Computer Arts Society*, October 1971, pp. 18–19. Do not repeat the old PDF's unverified Berlin/first-exhibition claim.
 - Current syllabus: image machines and mediation; Challenge 4; PolyU GenAI and named Flux/Qwen models; Verbeek (2015) core reading. The workshop supplies a comparison-layout route without silently rewriting assessment.
 - Week 2 deck: “Machine B writes Machine A” and controlled parameters/seeds. Week 4 deck: tools and harnesses connect learned proposals with explicit software rules and permissions.
 - Original 2025 slide sources: `SD2112 - AI in Design - Week 5.pptx` and `SD2112 - AI in Design - Master.pptx` under `references/onedrive-pptx/`; PDFs under `references/2025/`. GAN examples/competition are on Week 5 PDF pp. 45–46, Edmond portrait 47, caption/image alignment 48–50, noise/U-Net/VAE 51–54 and tools 55. PDF page positions are not printed slide numbers. The revised CLIP account corrects the old generation claim.

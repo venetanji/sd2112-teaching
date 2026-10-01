@@ -7,6 +7,7 @@ import random
 from pathlib import Path
 
 from PIL import Image, ImageOps
+from deckgen.core import pil_font
 from deckgen.figures import Canvas, INK, TEAL, ORANGE, VIOLET, MUTED, LINE
 from figures import draw_chair
 
@@ -26,14 +27,20 @@ def _arrow(c, x1, y1, x2, y2, color=INK, width=5, head=17):
         c.line(x2, y2, x2 + head * math.cos(a), y2 + head * math.sin(a), color, width)
 
 
-def _label(c, x, y, text, size=30, color=INK, mono=False):
+def _label(c, x, y, text, size=30, color=INK, mono=False, centered=False):
+    if centered:
+        # Canvas uses a baseline; align the visible glyphs, not the font's line box.
+        font = pil_font('monomed' if mono else 'semibold', round(c.s(size)))
+        top, bottom = font.getbbox(text)[1::2]
+        y += (font.getmetrics()[0] - (top + bottom) / 2) / c.s(1)
     c.text(x, y, text, size=size, color=color, anchor='middle', mono=mono, weight=700)
 
 
 def _node(c, x, y, w, h, title, detail='', fill=PAPER, accent=LINE):
     c.rect(x, y, w, h, fill=fill, stroke=accent, width=3)
     color = WHITE if fill == INK else INK
-    _label(c, x + w / 2, y + h / 2 - (8 if detail else -10), title, 32, color)
+    _label(c, x + w / 2, y + h / 2 - (8 if detail else 0), title, 32, color,
+           centered=not detail)
     if detail:
         c.text(x + w / 2, y + h / 2 + 35, detail, size=27,
                color='#D3E7E8' if fill == INK else color, mono=False, anchor='middle')
@@ -65,21 +72,21 @@ def _lantern_photo(c, x, y, w, h):
 
 def gan_adversaries(name='w05-gan-adversaries', w=1680, h=560):
     c = Canvas(w, h, bg=WHITE)
-    _node(c, 25, 215, 255, 145, 'RANDOM INPUT', 'sample noise')
-    _node(c, 360, 215, 285, 145, 'GENERATOR', 'makes an image', PALE_ORANGE, ORANGE)
-    _node(c, 725, 215, 260, 145, 'CANDIDATE', 'generated image', PALE_ORANGE, ORANGE)
-    _node(c, 1065, 215, 320, 145, 'DISCRIMINATOR', 'real or generated?', INK, INK)
-    _node(c, 1065, 15, 320, 115, 'REAL EXAMPLES', 'training images', PALE_TEAL, TEAL)
+    _node(c, 25, 215, 320, 145, 'RANDOM INPUT', 'sample noise')
+    _node(c, 400, 215, 285, 145, 'GENERATOR', 'makes an image', PALE_ORANGE, ORANGE)
+    _node(c, 765, 215, 260, 145, 'CANDIDATE', 'generated image', PALE_ORANGE, ORANGE)
+    _node(c, 1105, 215, 320, 145, 'DISCRIMINATOR', 'real or generated?', INK, INK)
+    _node(c, 1105, 15, 320, 115, 'REAL EXAMPLES', 'training images', PALE_TEAL, TEAL)
     _label(c, 1540, 270, 'TRAINING', 28, DARK_TEAL)
     _label(c, 1540, 315, 'SIGNAL', 32)
-    for start, stop in ((280, 360), (645, 725), (985, 1065), (1385, 1440)):
+    for start, stop in ((345, 400), (685, 765), (1025, 1105), (1425, 1475)):
         _arrow(c, start, 285, stop, 285, ORANGE)
-    _arrow(c, 1225, 130, 1225, 215, DARK_TEAL)
+    _arrow(c, 1265, 130, 1265, 215, DARK_TEAL)
     c.line(1510, 350, 1510, 440, DARK_TEAL, 5)
-    c.line(1510, 440, 1225, 440, DARK_TEAL, 5)
-    _arrow(c, 1225, 440, 1225, 360, DARK_TEAL)
-    c.line(1225, 440, 502, 440, ORANGE, 5)
-    _arrow(c, 502, 440, 502, 360, ORANGE)
+    c.line(1510, 440, 1265, 440, DARK_TEAL, 5)
+    _arrow(c, 1265, 440, 1265, 360, DARK_TEAL)
+    c.line(1265, 440, 542.5, 440, ORANGE, 5)
+    _arrow(c, 542.5, 440, 542.5, 360, ORANGE)
     _label(c, 855, 506, 'Both learn: distinguish examples; make harder-to-distinguish images.', 32)
     return c.finish(name)
 
@@ -182,7 +189,7 @@ def diffusion_training(name='w05-diffusion-training', w=1680, h=560):
     _label(c, 132, 241, 'EXAMPLE IMAGE', 26)
     c.poly([(325, 65), (555, 95), (555, 170), (325, 200)],
            fill=PALE_ORANGE, stroke=ORANGE, width=4)
-    _label(c, 440, 135, 'VAE ENCODER', 28)
+    _label(c, 440, 132.5, 'VAE ENCODER', 28, centered=True)
     _latent_tile(c, 635, 65, False, 230, 135)
     _label(c, 750, 241, 'CLEAN LATENT  z0', 26)
     _node(c, 950, 65, 255, 135, 'ADD NOISE', 'save the target', PALE_ORANGE, ORANGE)
@@ -216,7 +223,7 @@ def diffusion_generation(name='w05-diffusion-generation', w=1680, h=560):
     _label(c, 935, 405, 'FINAL LATENT', 28)
     c.poly([(1150, 220), (1375, 180), (1375, 360), (1150, 320)],
            fill=PALE_TEAL, stroke=TEAL, width=4)
-    _label(c, 1262, 267, 'VAE DECODER', 28)
+    _label(c, 1262, 270, 'VAE DECODER', 28, centered=True)
     _lantern_photo(c, 1455, 155, 200, 225)
     _label(c, 1555, 425, 'OUTPUT IMAGE', 26)
     for a, b in ((275, 375), (705, 810), (1060, 1150), (1375, 1455)):
