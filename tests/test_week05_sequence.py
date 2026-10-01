@@ -107,13 +107,23 @@ class Week05SequenceTests(unittest.TestCase):
         self.assertNotIn("35 min", text)
         self.assertNotIn("Ask an agent to help sharpen your prompt.", text)
 
-    def test_showcase_lecture_break_setup_and_workshop_are_in_order(self):
+    def test_theory_break_logo_demo_brief_and_workshop_are_in_order(self):
         slides = [slide_text(slide) for slide in S]
-        titles = ("One mark. Three routes.", "How did words begin to guide image generation?",
-                  "After the break: make it yours.", "Install. Open. Check.",
-                  "Make a mark that represents you.", "One identity. Three ways of making it.")
+        titles = ("Photography is not a neutral window.",
+                  "How did words begin to guide image generation?",
+                  "The agent can look, make, and look again.",
+                  "Same intent. Different kinds of control.",
+                  "After the break: make it yours.", "Images, intentions, iterations.",
+                  "One mark. Three routes.", "What changed when we remade our course mark?",
+                  "What stayed wrong after a better prompt?", "Install. Open. Check.",
+                  "Make a mark that represents you.",
+                  "What could stand for you without being a portrait?",
+                  "One identity. Three ways of making it.")
         positions = [next(i for i, text in enumerate(slides) if title in text) for title in titles]
         self.assertEqual(positions, sorted(positions))
+        self.assertEqual(S[0].title, "Today")
+        self.assertEqual(S[20].title, "After the break: make it yours.")
+        self.assertEqual(S[21].title, "Images, intentions, iterations.")
 
     def test_photography_mediation_block_precedes_image_generation_history(self):
         titles = (
@@ -131,7 +141,7 @@ class Week05SequenceTests(unittest.TestCase):
         )
         self.assertEqual(positions, list(range(positions[0], positions[0] + 5)))
         self.assertLess(positions[-1], generation_intro)
-        self.assertEqual(positions[0], 5)
+        self.assertEqual(positions[0], 2)
         self.assertEqual(len(S), 37)
 
     def test_mediation_slides_have_evidence_and_course_machine_notation(self):
@@ -161,7 +171,7 @@ class Week05SequenceTests(unittest.TestCase):
     def test_lesson_plan_maps_classpoint_questions_after_inserted_block(self):
         from pathlib import Path
         plan = Path(__file__).resolve().parents[1].joinpath("lessons/week05-lesson-plan.md").read_text()
-        expected = {4, 21, 32, 34}
+        expected = {18, 28, 32, 34}
         rows = [line for line in plan.splitlines() if line.startswith("| ") and "| Short answer |" in line]
         mapped = {int(line.split("|")[1].strip()) for line in rows}
         self.assertEqual(mapped, expected)
@@ -182,8 +192,8 @@ class Week05SequenceTests(unittest.TestCase):
         from pathlib import Path
         plan = Path(__file__).resolve().parents[1].joinpath("lessons/week05-lesson-plan.md").read_text()
         for label in ("10 + 10 + 15 + 5 = 40", "Start the 40-minute clock only after",
-                      "0:00–0:05", "0:05–1:00", "1:00–1:10", "1:10–1:25",
-                      "1:25–2:05", "Three.js is optional"):
+                      "0:00–1:00", "1:00–1:10", "1:10–1:20", "1:20–1:35",
+                      "1:35–2:15", "Three.js is optional"):
             self.assertIn(label, plan)
 
     def test_deep_question_bridges_theory_and_student_decisions(self):
@@ -265,6 +275,7 @@ class Week05SequenceTests(unittest.TestCase):
         from pathlib import Path
         syllabus = Path(__file__).resolve().parents[1].joinpath("syllabus/SD2112-syllabus-2026.md").read_text()
         self.assertIn("40-minute identity workshop", syllabus)
+        self.assertIn("Image-model lecture, break, logo/Easel demo, then installation", syllabus)
         self.assertIn("**Challenge 4:** a layout you could not design, generated, iterated and critiqued.", syllabus)
 
 

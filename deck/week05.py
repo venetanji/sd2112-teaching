@@ -112,10 +112,10 @@ def lantern_example():
 
 
 def easel_demo():
-    """A short opening showcase; installation and student making happen after the break."""
-    slide = content('OPENING SHOWCASE · EASEL CLIENT · 5 MIN',
+    """A post-break showcase connects the theory to the shared identity brief."""
+    slide = content('AFTER THE BREAK · EASEL CLIENT · LOGO DEMO',
                     'One mark. Three routes.', [], bg=PAPER, title_size=64,
-                    notes='Five-minute opening showcase, before the lecture: show one prepared identity as coded HTML/SVG/Canvas graphics, a generated image and a combination. These are routes to compare, not a claim that a hybrid is best. Easel Client UI name is Easel Studio: https://github.com/venetanji/easel-client. The agent writes code; the browser executes it. Media models generate pixels through separate tools. Explain the Machine A/B distinction during the lecture, not a long feature tour here. Show already saved outputs; do not let an asynchronous image/video job delay the opening. Video generation remains a documented capability and the real logo-video iterations are discussed later. Installation and provider checks happen after the break; do not display credentials.')
+                    notes='Post-break logo/Easel demo, after all the theory and before installation and the brief: show one prepared identity as coded HTML/SVG/Canvas graphics, a generated image and a combination. These are routes to compare, not a claim that a hybrid is best. Easel Client UI name is Easel Studio: https://github.com/venetanji/easel-client. The agent writes code; the browser executes it. Media models generate pixels through separate tools. Apply the Machine A/B distinction just taught, rather than giving a long feature tour. Show already saved outputs; do not let an asynchronous image/video job delay the demo. Follow with the actual course-mark still and chat/video iterations. Keep the combined demo to around ten minutes. Installation and provider checks come next, outside the 40-minute activity; do not display credentials.')
     slide.els = slide.els[:2]
     rows = [
         (330, 'A', 'Code the form.', 'HTML / SVG / Canvas: shapes and parameters.'),
@@ -177,26 +177,14 @@ def modern_models():
     ]
     return slide
 
-S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 05 · LECTURE + WORKSHOP',
-               'Images, intentions, iterations.',
-               'You bring the idea. The model brings possibilities.',
-                       notes='Open with a five-minute Easel showcase, then roughly 55 minutes of lecture. Keep the image-model theory and real logo/video discussion. After the break, walk through installation and one shared personal-mark brief. The 40-minute activity clock starts only once setup and the brief are complete. Students make A, B and A+B studies of the same identity; do not imply student credentials or endpoint access are already established.'))
-
-S.append(easel_demo())
-
 S.append(agenda('SD2112 · WEEK 05', [
     'Photography, apparatus and the Machine A/B lens',
     'GANs generate; CLIP aligns; diffusion and flow models generate',
-    'Agents, tools and our logo/video iterations',
-    'After the break: install Easel and set the brief',
+    'Agents coordinate tools; you make the design decisions',
+    'After the break: logo demo, install Easel and set the brief',
     '40 minutes: Machine A, Machine B, Machine A+B',
     'Compare the routes; keep evidence for Week 6',
-], notes='The opening showcase plus lecture takes roughly an hour. Break, installation and the brief come before the 40-minute making block. Protect 10 + 10 + 15 + 5 minutes; do not add a separate prompt-writing or 35-minute iteration exercise.'))
-
-S.append(question('short_answer', 'What could stand for you without being a portrait?',
-                  hint='A name, nickname, character or symbol—and one quality it should communicate.',
-                  eyebrow_text='00 · START WITH YOUR IDENTITY',
-                  notes='Take a few short responses within the lecture, not a separate making exercise. Students can use a fictional identity or non-identifying nickname. No photograph or personal details are required. The final brief is written after the break.'))
+], notes='Start with roughly one hour of theory. Break, the logo/Easel demo, installation and the brief precede the 40-minute making block. Protect 10 + 10 + 15 + 5 minutes; do not add a separate prompt-writing or 35-minute iteration exercise.'))
 
 S.append(cards('00 · THE DESIGNER’S JOB', 'The model does not supply your reason for making the image.', [
     ('INTENT', 'What should the image do?', 'Name the subject, audience, feeling, use and visual choices that matter to you.'),
@@ -275,10 +263,6 @@ S.append(figure_slide('AGENTS · IMAGE UNDERSTANDING + GENERATION AS TOOLS',
                       caption='The student supplies the intent and decides whether the result is worth keeping.',
                       notes='Bridge from model capability to interaction. An agent can inspect an image with a vision tool, draft or revise a prompt, call an image-generation/editing tool, and inspect the result. The agent coordinates tools; it does not own the design intention or decide what counts as success. Easel Client is the lecturer demo. Student tool access and the installed app configuration still require a pre-class check.'))
 
-S.append(logo_exploration())
-
-S.append(video_discussion())
-
 S.append(cards('FROM WEEK 2 + WEEK 4 · NAME THE MACHINES',
                'Same intent. Different kinds of control.', [
     ('MACHINE A', 'Rules execute.', 'Code sets the shapes, layout and parameters. Change a rule; inspect its effect.'),
@@ -288,8 +272,17 @@ S.append(cards('FROM WEEK 2 + WEEK 4 · NAME THE MACHINES',
 notes='Machine B writes the code; Machine A executes it. This is the Week 2 distinction, not a claim that the coding agent is a symbolic model. All three routes may use a learned agent; the distinction concerns how the visual artifact is produced. A programmed sketch can include controlled randomness, so do not equate Machine A with no variation. Rendering a generated texture on a surface is not a generated 3D model.'))
 
 S.append(section('BREAK', 'After the break: make it yours.',
-                 'Install Easel → set one brief → make A, B and A+B', bg=INK,
-                 notes='Break after about one hour including the opening showcase. On return, walk through installation and the shared brief before starting the activity clock. The lecturer may use remaining scheduled class time for setup or individual help; do not inflate the 40-minute activity to fill the three-hour booking.'))
+                 'Logo demo → install Easel → set one brief → make A, B and A+B', bg=INK,
+                 notes='Natural break after about one hour of theory. On return, show the logo/Easel demo and actual chat/video iterations, then walk through installation and the shared brief before starting the activity clock. The lecturer may use remaining scheduled class time for setup or individual help; do not inflate the 40-minute activity to fill the three-hour booking.'))
+
+S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 05 · DEMO + WORKSHOP',
+               'Images, intentions, iterations.',
+               'You bring the idea. The model brings possibilities.',
+               notes='This title begins the post-break demo and workshop, after all the theory. Demonstrate Easel with the course mark and real logo/video iterations, then walk through installation and one shared personal-mark brief. The 40-minute activity clock starts only once setup and the brief are complete. Students make A, B and A+B studies of the same identity; do not imply student credentials or endpoint access are already established.'))
+
+S.append(easel_demo())
+S.append(logo_exploration())
+S.append(video_discussion())
 
 S.append(content('AFTER THE BREAK · EASEL SETUP', 'Install. Open. Check.', [
     'Download the package for your OS from github.com/venetanji/easel-client/releases.',
@@ -307,6 +300,11 @@ S.append(content('THE SHARED BRIEF · BEFORE THE TIMER',
     'Keep the same brief. A fictional identity is fine; no portrait is required.',
 ], body_size=32,
 notes='Briefing precedes the making timer. Ask for two observable invariants, for example a crescent silhouette and a detached dot, not a demand that every pixel match. Use this same brief in A, B and A+B. No real name, photograph or personal data is required. This is a rapid identity study, not a commercial trademark or a finished branding project.'))
+
+S.append(question('short_answer', 'What could stand for you without being a portrait?',
+                  hint='A name, nickname, character or symbol—and one quality it should communicate.',
+                  eyebrow_text='THE SHARED BRIEF · START WITH YOUR IDENTITY',
+                  notes='Take a few short responses as part of the post-break brief, before the making timer starts. Students can use a fictional identity or non-identifying nickname. No photograph or personal details are required. This is not a separate making exercise.'))
 
 S.append(activity('WORKSHOP · ONE BRIEF · THREE QUICK STUDIES', 40,
                   'One identity. Three ways of making it.', [

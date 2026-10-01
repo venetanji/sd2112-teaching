@@ -27,7 +27,7 @@ class Week05MediationFiguresTests(unittest.TestCase):
 
     def test_new_slide_text_stays_above_the_course_footer(self):
         from deck.week05 import DECK
-        for slide in DECK['slides'][5:10]:
+        for slide in DECK['slides'][2:7]:
             for element in slide.els:
                 if hasattr(element, 'paras') and element.y < 1000:
                     self.assertLessEqual(element.y + element.h, 1000, slide.title)
