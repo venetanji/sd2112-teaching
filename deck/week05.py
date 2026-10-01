@@ -1,4 +1,4 @@
-"""SD2112 Week 5: image generation as a designed, iterative process."""
+"""SD2112 Week 5: one identity, made with rules, learned images and both."""
 from pathlib import Path
 import sys
 
@@ -55,15 +55,15 @@ def lantern_example():
 
 
 def easel_demo():
-    """Three concrete outputs, with generation and code authoring kept distinct."""
-    slide = content('LIVE DEMO · EASEL CLIENT',
-                    'One agent. Three kinds of making.', [], bg=PAPER, title_size=64,
-                    notes='Gio will demo Easel Client (repository UI name: Easel Studio): https://github.com/venetanji/easel-client. Source capabilities checked 1 October 2026. Image generation/editing, generate_video, HTML project source edits and live captures are documented. Media support depends on the configured provider/model. HTML is code authored by the agent and rendered by the browser; it is not a diffusion image. Start one short video job without resubmitting while it is pending, then use the wait to build the HTML comparison. Accepted generation may continue after Stop. Test the installed app and configured models before class; repository support is not a guarantee of classroom access. Do not show credentials.')
+    """A short opening showcase; installation and student making happen after the break."""
+    slide = content('OPENING SHOWCASE · EASEL CLIENT · 5 MIN',
+                    'One mark. Three routes.', [], bg=PAPER, title_size=64,
+                    notes='Five-minute opening showcase, before the lecture: show one prepared identity as coded HTML/SVG/Canvas graphics, a generated image and a combination. These are routes to compare, not a claim that a hybrid is best. Easel Client UI name is Easel Studio: https://github.com/venetanji/easel-client. The agent writes code; the browser executes it. Media models generate pixels through separate tools. Explain the Machine A/B distinction during the lecture, not a long feature tour here. Show already saved outputs; do not let an asynchronous image/video job delay the opening. Video generation remains a documented capability and the real logo-video iterations are discussed later. Installation and provider checks happen after the break; do not display credentials.')
     slide.els = slide.els[:2]
     rows = [
-        (330, 'IMAGE', 'Make a candidate.', 'Call a media model; inspect the result.'),
-        (515, 'VIDEO', 'Make change over time.', 'Call a video model; check motion and continuity.'),
-        (700, 'HTML', 'Make something you can use.', 'The agent writes code; the browser renders it.'),
+        (330, 'A', 'Code the form.', 'HTML / SVG / Canvas: shapes and parameters.'),
+        (515, 'B', 'Generate an interpretation.', 'An image model proposes appearance and material.'),
+        (700, 'A+B', 'Combine the two.', 'Generated pixels inside a coded shape or surface.'),
     ]
     for y, label, heading, detail in rows:
         slide.els += [
@@ -123,21 +123,23 @@ def modern_models():
 S.append(title('POLYU SCHOOL OF DESIGN · SD2112 · WEEK 05 · LECTURE + WORKSHOP',
                'Images, intentions, iterations.',
                'You bring the idea. The model brings possibilities.',
-               notes='Open with the students’ own image ideas. The lecture makes the visual-model sequence legible: image-only GANs, CLIP’s shared image/text representation, diffusion, then an agent that can use image-understanding and image-generation tools. The workshop applies that sequence to student-owned intent. Confirm the actual authorized image service before class; do not imply a direct API is available if it is not.'))
+                       notes='Open with a five-minute Easel showcase, then roughly 55 minutes of lecture. Keep the image-model theory and real logo/video discussion. After the break, walk through installation and one shared personal-mark brief. The 40-minute activity clock starts only once setup and the brief are complete. Students make A, B and A+B studies of the same identity; do not imply student credentials or endpoint access are already established.'))
+
+S.append(easel_demo())
 
 S.append(agenda('SD2112 · WEEK 05', [
-    'Start with an image you want to make',
+    'One personal identity: code, generate, combine',
     'GANs generate; CLIP aligns; diffusion and flow models generate',
-    'Easel Client: images, video and HTML through an agent',
-    'Clarify the intent; do not outsource it',
-    'Generate, critique, and change one thing at a time',
-    'Bring a deliberate iteration to Week 6',
-], notes='Give the image-model sequence a clear visual explanation before moving into the agent-supported making exercise. Protect the extended time for making, looking, discussing and iterating.'))
+    'Agents, tools and our logo/video iterations',
+    'After the break: install Easel and set the brief',
+    '40 minutes: Machine A, Machine B, Machine A+B',
+    'Compare the routes; keep evidence for Week 6',
+], notes='The opening showcase plus lecture takes roughly an hour. Break, installation and the brief come before the 40-minute making block. Protect 10 + 10 + 15 + 5 minutes; do not add a separate prompt-writing or 35-minute iteration exercise.'))
 
-S.append(question('short_answer', 'What image have you wanted to make but not yet managed to make?',
-                  hint='Name the subject and one visual quality you care about.',
-                  eyebrow_text='00 · START WITH YOUR IDEA',
-                  notes='Give students a minute to write privately, then take a few examples. Invite specific personal visual intentions, not personal data or sensitive images. They may work from an imagined image; no upload is required.'))
+S.append(question('short_answer', 'What could stand for you without being a portrait?',
+                  hint='A name, nickname, character or symbol—and one quality it should communicate.',
+                  eyebrow_text='00 · START WITH YOUR IDENTITY',
+                  notes='Take a few short responses within the lecture, not a separate making exercise. Students can use a fictional identity or non-identifying nickname. No photograph or personal details are required. The final brief is written after the break.'))
 
 S.append(cards('00 · THE DESIGNER’S JOB', 'The model does not supply your reason for making the image.', [
     ('INTENT', 'What should the image do?', 'Name the subject, audience, feeling, use and visual choices that matter to you.'),
@@ -206,135 +208,142 @@ S.append(figure_slide('AGENTS · IMAGE UNDERSTANDING + GENERATION AS TOOLS',
 
 S.append(logo_exploration())
 
-S.append(easel_demo())
-
 S.append(video_discussion())
 
-S.append(section('DEMO · WATCH THE HANDOFFS',
-                 'What can the agent change?',
-                 'Images. Video. HTML. What must you still decide?', bg=INK,
-                   notes='Live demo prompt suggestion, not a recorded result: make a lantern image, request one short video from an available supported route, then ask the agent to build an HTML comparison with the returned assets. Do not imply the selected video model supports image conditioning until checked. While a video job waits, inspect the image or work on the HTML; do not resubmit accepted jobs. Show one critique and one revision, the tool/model names and the saved chat. Ask the audience to identify a model choice, an agent/tool choice and a human decision. HTML interaction and sampled video frames do not establish smooth playback or sound: play and test the actual output.'))
+S.append(cards('FROM WEEK 2 + WEEK 4 · NAME THE MACHINES',
+               'Same intent. Different kinds of control.', [
+    ('MACHINE A', 'Rules execute.', 'Code sets the shapes, layout and parameters. Change a rule; inspect its effect.'),
+    ('MACHINE B', 'Learned patterns propose.', 'An image model interprets the brief. You judge its appearance and assumptions.'),
+    ('A + B', 'Divide the decisions.', 'Keep geometry in code; use generated pixels for material, texture or atmosphere.'),
+], text_size=24,
+notes='Machine B writes the code; Machine A executes it. This is the Week 2 distinction, not a claim that the coding agent is a symbolic model. All three routes may use a learned agent; the distinction concerns how the visual artifact is produced. A programmed sketch can include controlled randomness, so do not equate Machine A with no variation. Rendering a generated texture on a surface is not a generated 3D model.'))
 
-S.append(section('01', 'A picture is not a prompt',
-                 'intent first · words second · output third', bg=VIOLET,
-                 notes='Use an example volunteered by the class. Do not replace it with a generic prompt exercise.'))
+S.append(section('BREAK', 'After the break: make it yours.',
+                 'Install Easel → set one brief → make A, B and A+B', bg=INK,
+                 notes='Break after about one hour including the opening showcase. On return, walk through installation and the shared brief before starting the activity clock. The lecturer may use remaining scheduled class time for setup or individual help; do not inflate the 40-minute activity to fill the three-hour booking.'))
 
-S.append(content('01 · MAKE THE VISUAL INTENT CONCRETE',
-                 'What must the image communicate?', [
-                     'Subject and action: what is happening, and to whom?',
-                     'Point of view and composition: where is the viewer, and what is in frame?',
-                     'Light, colour, material and atmosphere: what should it feel like?',
-                     'Use and constraints: where will it appear, what must remain legible, and what should be absent?',
-                 ], body_size=29,
-                 notes='Do not prescribe one aesthetic. Ask students which of these dimensions matter for their own image and which they want to leave open. They can name intentional uncertainty too.'))
+S.append(content('AFTER THE BREAK · EASEL SETUP', 'Install. Open. Check.', [
+    'Download the package for your OS from github.com/venetanji/easel-client/releases.',
+    'Open Easel Studio. Create one project for your personal mark.',
+    'Use the course-approved configuration; test a canvas and one image call.',
+    'If setup fails, pair on a working device. Keep your own brief and decisions.',
+], body_size=29,
+notes='Installation and access checks are outside the 40-minute activity. Current verified release: https://github.com/venetanji/easel-client/releases/tag/v0.0.1. Packaged Windows x64 EXE/ZIP, macOS ARM64 DMG/ZIP and Linux x86_64 AppImage/DEB are listed; no Intel Mac installer was listed on 1 October. Check current releases, actual classroom OS/architecture and permitted installation before class. Release installers do not require the Node.js development workflow. Do not bypass OS or institutional security controls. Student accounts, endpoints and quotas must be course-approved; do not ask for keys in a chat or screenshot. Test HTML/SVG/Canvas, image generation and saved-image reuse. For optional Three.js, verify the bundled offline kit under Settings > Kits and in project settings; no CDN or external URL imports. If no device works, use a TA-prepared browser example and supplied texture; label supplied assets as fallback rather than student-generated evidence.'))
 
-S.append(activity('02 · PAIRS · CLARIFY THE IDEA · 12 MIN', 12,
-                  'Ask an agent to help sharpen your prompt.', [
-                      'Describe your own image idea in plain language; say what matters most to you.',
-                      'Ask the agent to ask up to five clarifying questions before it rewrites anything.',
-                      'Answer, skip or reject its assumptions. Keep your original idea visible.',
-                      'Ask for one concise prompt and a short list of unresolved choices.',
-                  ], panel=[
-                      'PROMPT-CLARIFIER STARTER',
-                      'Do not invent my image idea.',
-                      'Ask questions first.',
-                      'Preserve my intent and words.',
-                      'Flag assumptions; offer options.',
-                      'Wait for my approval before rewriting.',
-                  ], panel_size=20, bg=PAPER,
-                  notes='Twelve minutes. One person owns the image idea; their partner helps inspect the revised prompt. The language agent may clarify, but the student chooses which suggestions to keep. If no language-model access is available, partners interview each other using the same questions.'))
+S.append(content('THE SHARED BRIEF · BEFORE THE TIMER',
+                 'Make a mark that represents you.', [
+    'Choose a name, nickname, invented character or personal symbol.',
+    'Write one sentence: what should this identity communicate?',
+    'Choose two things that must remain recognizable across all three routes.',
+    'Keep the same brief. A fictional identity is fine; no portrait is required.',
+], body_size=32,
+notes='Briefing precedes the making timer. Ask for two observable invariants, for example a crescent silhouette and a detached dot, not a demand that every pixel match. Use this same brief in A, B and A+B. No real name, photograph or personal data is required. This is a rapid identity study, not a commercial trademark or a finished branding project.'))
 
-S.append(content('02 · PROMPT AS A WORKING SPECIFICATION',
-                 'Keep the choices that matter; leave room where you want surprise.', [
-                     'Intent: subject, purpose and intended viewer.',
-                     'Visual controls: composition, viewpoint, light, palette, material or style—only where useful.',
-                     'Constraints: aspect ratio, text or no text, exclusions and practical limits.',
-                     'Open choices: name what the model may interpret, rather than pretending to control everything.',
-                 ], body_size=27,
-                 notes='This is not a magic-word recipe. More detail is not automatically better: specify what matters to this image, and deliberately leave some dimensions open.'))
+S.append(activity('WORKSHOP · ONE BRIEF · THREE QUICK STUDIES', 40,
+                  'One identity. Three ways of making it.', [
+    'A · 10 min: code a mark; change one parameter.',
+    'B · 10 min: generate an interpretation; inspect one model choice.',
+    'A+B · 15 min: combine generated pixels with the coded form.',
+    'Compare · 5 min: show all three and explain the trade-off.',
+], panel=[
+    'SAME IDENTITY',
+    'One sentence of intent.',
+    'Two recognizable features.',
+    '',
+    'THREE ROUTES',
+    'A: rules',
+    'B: learned images',
+    'A+B: rules + generated pixels',
+    '',
+    'Quick studies, not finished logos.',
+], panel_size=25, bg=PAPER,
+notes='This overview announces the entire block, not an additional 40-minute exercise. Start the 40-minute clock only after installation, tool checks and the brief. The following steps divide it: 10 + 10 + 15 + 5 = 40. Students may share a device but retain individual authorship. Build one modest artifact per route. Iteration happens within the steps, not a separate prompt-writing or repeated-generation block. If a media job is slow, submit it once, work on the code while it waits, and label any supplied fallback texture.'))
 
-S.append(section('03', 'Call the image model',
-                 'one prompt · one first result · record what you actually used', bg=INK,
-                 notes='Gio demos Easel Client for agent-directed image, video and HTML making. Student use is a separate access decision: confirm the authorized student-facing image service, accounts, quotas and inputs. The syllabus names PolyU GenAI with Flux and Qwen, but does not establish student API credentials or Easel access. Use the approved platform UI or fallback where necessary; do not ask students to expose credentials.'))
+S.append(activity('A · MACHINE A · RULES MAKE THE PICTURE', 10,
+                  'Code the mark.', [
+    'Ask the agent for a simple SVG or Canvas mark from your shared brief.',
+    'Expose two parameters: spacing, stroke width, scale or colour.',
+    'Change one value. Check what changes and what stays fixed.',
+    'Save the code and one view of the mark.',
+], panel=[
+    'ASK THE CODING AGENT',
+    'Use my shared identity brief.',
+    'Make HTML with SVG or Canvas.',
+    'No image-generation call here.',
+    'Expose two simple controls.',
+    'Preserve my two key features.',
+    '',
+    'Machine B writes the code;',
+    'Machine A executes it.',
+], panel_size=24, bg=TEALS[4],
+notes='Ten minutes includes the deliberate parameter change. The coding agent is Machine B; the resulting explicit rules and browser execution are Machine A. Code is not the same as sampled image pixels. Keep the mark simple enough to edit: initials, a few geometric shapes or a symbol. Do not require students to read every line, but ask them to locate the parameter they changed. If randomness is used, a fixed seed supports comparison. Save this source for the hybrid step.'))
 
-S.append(two_col('03 · A FIRST GENERATION', 'Make a first image, not a final answer.',
-                 [
-                     'Demo: Easel Client. Your task: the course-approved image service.',
-                     'Submit the prompt you approved with the agent.',
-                     'Record the model, tool, settings and date if shown.',
-                     'Save the output and prompt together.',
-                 ], [
-                     'Do not paste API keys into a chat or shared prompt.',
-                     'Use only images you may upload; an image reference is optional.',
-                     'If the service is unavailable, work from the prompt and critique a sample provided by the teaching team.',
-                     'One image is enough to begin critique.',
-                 ], left_size=28, right_size=24,
-                 notes='Live tool details remain subject to a pre-class API/access check. No API keys or personal identifiers should appear in submitted screenshots. Provide a no-login fallback if access or quotas fail.'))
+S.append(activity('B · MACHINE B · PATTERNS PROPOSE THE PICTURE', 10,
+                  'Generate an interpretation.', [
+    'Give the image model the same identity brief and two key features.',
+    'Explore one material, texture or atmosphere; keep one candidate.',
+    'Identify one visible choice the model added or changed.',
+    'Save the image, prompt and model name if available.',
+], panel=[
+    'ASK THE IMAGE TOOL',
+    'Use my shared identity brief.',
+    'Interpret it as an image.',
+    'Keep the two key features.',
+    'Explore material and atmosphere.',
+    'Do not depend on exact lettering.',
+    '',
+    'Save the returned image asset.',
+    'Keep it for A+B.',
+], panel_size=24, bg=PAPER,
+notes='Ten minutes includes generation waits and the short observation question that follows. Use the verified course image route. Exact generated lettering is not a requirement; if it fails, that is evidence about control rather than a reason to spend the activity chasing it. A saved image can be reused or a visible material region cropped for the hybrid. Submit once; do not duplicate a pending job. If the call is unavailable or slow, use a supplied image and explicitly record its source.'))
 
 S.append(question('short_answer', 'What did the model decide that you did not specify?',
-                  hint='Point to one visible choice: framing, detail, colour, text, material, or something else.',
-                  eyebrow_text='04 · LOOK BEFORE YOU PROMPT AGAIN',
-                  notes='Ask students to identify an observable choice, not just say good/bad. Separate what the prompt specified, what the output shows and what the viewer infers.'))
+                  hint='Point to one visible choice in B. Would you keep it for A+B?',
+                  eyebrow_text='B · OBSERVE BEFORE COMBINING',
+                  notes='A brief check within the B ten-minute allocation, not extra activity time. Ask for an observable choice tied to the shared brief; material, framing, shape, text or atmosphere. A model contribution is not automatically a mistake.'))
 
-S.append(cards('04 · CRITIQUE THE RESULT', 'Use evidence from the image and your intent.', [
-    ('INTENT', 'What did you want it to do?', 'Which part of the brief mattered most?'),
-    ('OUTPUT', 'What is actually visible?', 'Where did the result meet, miss or reinterpret the intent?'),
-    ('DECISION', 'What was left to the model?', 'Name one useful surprise and one assumption or failure to address.'),
+S.append(activity('A+B · MACHINE A + MACHINE B', 15,
+                  'Keep the form. Borrow the surface.', [
+    'Reuse the A code and the image saved from B.',
+    'Clip the image, or a cropped region, inside your coded silhouette.',
+    'Let code control the boundary and placement; pixels supply the surface.',
+    'Three.js is optional: use a texture on a coded surface or mark.',
+], panel=[
+    'ASK THE CODING AGENT',
+    'Keep my A silhouette and controls.',
+    'Use the saved B image as a texture.',
+    'Use SVG clipping or Canvas masking.',
+    'Let me change crop, scale or offset.',
+    'Reuse the asset; do not regenerate.',
+    '',
+    'Optional: bundled Three.js kit.',
+    'No external CDN imports.',
+], panel_size=24, bg=TEALS[4],
+notes='Fifteen minutes. SVG image clipping or Canvas drawImage plus a mask is the baseline. Explicitly request the saved project asset, not a guessed path or a remote URL. The original B image may include a mark; choose a material region and crop it deliberately if reusing the whole image duplicates the shape. This operation reuses pixels; it is not a new generative-model call or a generated 3D model. Three.js is optional only when its offline kit is enabled and WebGL works. A texture on a coded plane or an extruded mark is sufficient; do not add a 3D modeling tutorial. Code fixes boundaries, transforms and interaction; a supplied fallback texture must be labeled. The hybrid is not automatically better.'))
+
+S.append(question('short_answer', 'What did combining the machines buy you?',
+                  hint='Show A / B / A+B. Where did rules help—and where did generation help?',
+                  eyebrow_text='COMPARE · 5 MIN',
+                  notes='The final five minutes of the 40-minute activity. Place the three views side by side in an HTML comparison or a simple contact sheet. Name one enforced decision, one delegated decision and one trade-off. The hybrid may be worse; ask for evidence, not a favourite-image vote. A partial study with an honest explanation is more useful than an unsupported claim of control.'))
+
+S.append(cards('CHALLENGE 4 · BRING TO WEEK 6',
+               'Three routes. One comparison layout.', [
+    ('YOUR IDENTITY', 'Keep the shared brief.', 'One sentence of intent, two recognizable features, and the A / B / A+B views.'),
+    ('YOUR PROCESS', 'Keep the evidence.', 'Code, image prompt, model/tool details and one deliberate change with its effect.'),
+    ('YOUR JUDGEMENT', 'Explain the trade-off.', 'What did rules enforce? What did the model invent? Was the hybrid worth it?'),
 ], text_size=23,
-notes='The model’s unasked-for choices are not automatically errors. Students decide whether to keep, alter or reject them in light of their purpose.'))
+notes='Use these studies in a side-by-side comparison layout, then make and critique one deliberate revision before Week 6. This connects the new personal-mark activity to the syllabus Challenge 4 wording: a layout you could not design, generated, iterated and critiqued. Do not silently change assessment weighting, deadline or submission destination. Record supplied fallback images honestly. A comparison can use the code-based layout and generated media, not a claim that the image model generated the whole page.'))
 
-S.append(activity('05 · SOLO → PAIRS · ITERATE DELIBERATELY · 35 MIN', 35,
-                  'Change one thing. Compare. Decide.', [
-                      'Choose one critique point and write the change you intend to test.',
-                      'Revise one prompt dimension; keep the rest stable where possible.',
-                      'Generate a new image. Compare it with the previous version against your stated intent.',
-                      'Repeat once if time allows. Keep both outputs, prompts and the reason for each change.',
-                  ], panel=[
-                      'ITERATION LOG',
-                      'Version / model / settings',
-                      'What I changed — one thing',
-                      'What I expected to change',
-                      'What actually changed',
-                      'Keep · revise · reject? Why?',
-                  ], panel_size=20, bg=TEALS[4],
-                  notes='Thirty-five minutes includes generation waits and comparison. Students may change composition, palette, subject detail or another dimension, but should make one deliberate change per round so they can interpret the result. A seed or reference may help hold other variables steady only if the chosen API exposes it; do not promise controls the service lacks. In pairs, each student remains author of their own idea.'))
+S.append(content('KEEP A PROCESS RECORD', 'Show who decided what.', [
+    'Keep your shared brief and the three views: A, B and A+B.',
+    'Retain the A code and parameter change; the B prompt and returned asset.',
+    'Record the hybrid crop, mask or texture choices, plus one success or miss.',
+    'Name tools and supplied assets honestly. Keep credentials out of the record.',
+], body_size=30,
+notes='This record supplies evidence for the Week 7 Machine A/B reflection. Follow course privacy rules and the confirmed submission route. Do not expose keys, account tokens or real personal identifiers. Students can explain a rejected hybrid or a service failure without fabricating an output.'))
 
-S.append(content('05 · COMPARE, DO NOT JUST POLL FOR A FAVOURITE',
-                 'Which version better serves the intent—and why?', [
-                     'Compare the images side by side against the original brief.',
-                     'Name what changed and what stayed stubbornly the same.',
-                     'Did the agent’s rewrite help, flatten, or redirect your idea?',
-                     'Choose: keep, revise again or reject. Explain the choice in your own terms.',
-                 ], body_size=28,
-                 notes='Invite two examples with contrasting decisions. Do not frame iteration count or polish as success; an informed rejection is a valid design outcome.'))
-
-S.append(question('short_answer', 'What did you keep, change or reject—and what evidence led you there?',
-                  hint='Name one prompt choice and one visible effect in the image.',
-                  eyebrow_text='06 · SHARE THE DESIGN DECISION',
-                  notes='Use responses to make authorship explicit: image generation is part of the process, and deciding what counts as success remains design work.'))
-
-S.append(cards('06 · CHALLENGE 4 · BRING TO WEEK 6',
-               'A deliberate image iteration, with its evidence.', [
-    ('YOUR IDEA', 'Start with your intent.', 'Keep your initial image idea and the prompt you approved.'),
-    ('YOUR PROCESS', 'Show the changes.', 'Name the model/tool and retain two or more versions with the prompts or settings you used.'),
-    ('YOUR CRITIQUE', 'Explain one decision.', 'Identify something the model decided, then say whether you kept, changed or rejected it and why.'),
-], text_size=22,
-notes='The syllabus calls Challenge 4 “a layout you could not design, generated, iterated and critiqued.” Keep that challenge framing while making clear the student owns the image idea and the iteration decisions. Submit via the course platform specified by the teaching team; do not invent a due date beyond Week 6.'))
-
-S.append(two_col('06 · KEEP A PROCESS RECORD', 'A useful record makes your choices visible.',
-                 [
-                     'Your original idea and intended audience or use.',
-                     'The first prompt and the agent’s proposed rewrite; mark what you accepted or refused.',
-                     'The first output and the model/service details available to you.',
-                 ], [
-                     'Each iteration prompt and image in order.',
-                     'One critique tied to visible evidence.',
-                     'A short process note: what you decided, and why.',
-                 ], left_size=25, right_size=25,
-                 notes='This process record can contribute evidence to the Week 7 reflection. Follow the course platform’s normal submission and privacy rules; do not include API keys, account tokens or personal information.'))
-
-S.append(end('The model made an image.',
-             'You decided what the image was for—and what to do next.',
+S.append(end('Rules. Patterns. Your decisions.',
+             'You chose what each machine could decide—and what it could not.',
              f'{SITE} · {PLAYLIST.replace("https://", "")}',
              notes='Close with the course question: the image model produces possibilities from learned patterns, but the designer defines the intention, judges the result and takes responsibility for the iteration.'))
 

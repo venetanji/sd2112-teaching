@@ -16,7 +16,7 @@ def slide_text(slide):
 
 
 class Week05SequenceTests(unittest.TestCase):
-    def test_model_to_agent_story_precedes_the_existing_workshop(self):
+    def test_model_to_agent_story_precedes_the_three_route_workshop(self):
         titles = [
             "GANs learn a visual distribution—not a description.",
             "CLIP brings words and images into a shared space.",
@@ -25,7 +25,7 @@ class Week05SequenceTests(unittest.TestCase):
             "Training teaches a denoiser to remove noise.",
             "Generation turns new noise into an image.",
             "The agent can look, make, and look again.",
-            "Ask an agent to help sharpen your prompt.",
+            "One identity. Three ways of making it.",
         ]
         slides = [slide_text(slide) for slide in S]
         for title in titles:
@@ -98,10 +98,42 @@ class Week05SequenceTests(unittest.TestCase):
         ):
             self.assertIn(label, svg)
 
-    def test_existing_iteration_activity_remains_in_the_deck(self):
+    def test_three_route_activity_replaces_old_separate_exercises(self):
         text = "\n".join(slide_text(slide) for slide in S)
-        self.assertIn("Change one thing. Compare. Decide.", text)
-        self.assertIn("35 min", text)
+        for label in ("One identity. Three ways of making it.", "40 min",
+                      "Code the mark.", "Generate an interpretation.",
+                      "Keep the form. Borrow the surface."):
+            self.assertIn(label, text)
+        self.assertNotIn("35 min", text)
+        self.assertNotIn("Ask an agent to help sharpen your prompt.", text)
+
+    def test_showcase_lecture_break_setup_and_workshop_are_in_order(self):
+        slides = [slide_text(slide) for slide in S]
+        titles = ("One mark. Three routes.", "How did words begin to guide image generation?",
+                  "After the break: make it yours.", "Install. Open. Check.",
+                  "Make a mark that represents you.", "One identity. Three ways of making it.")
+        positions = [next(i for i, text in enumerate(slides) if title in text) for title in titles]
+        self.assertEqual(positions, sorted(positions))
+
+    def test_workshop_timing_and_machine_roles_are_explicit(self):
+        slides = [slide_text(slide) for slide in S]
+        for title, duration in (("Code the mark.", "10 min"),
+                                ("Generate an interpretation.", "10 min"),
+                                ("Keep the form. Borrow the surface.", "15 min")):
+            self.assertTrue(any(title in text and duration in text for text in slides), title)
+        text = " ".join(slides)
+        self.assertIn("COMPARE · 5 MIN", text)
+        self.assertIn("Machine B writes the code; Machine A executes it.", text)
+        self.assertIn("Three.js is optional", text)
+        self.assertIn("not a generated 3D model", " ".join(slide.notes for slide in S))
+
+    def test_lesson_plan_protects_making_time_after_setup(self):
+        from pathlib import Path
+        plan = Path(__file__).resolve().parents[1].joinpath("lessons/week05-lesson-plan.md").read_text()
+        for label in ("10 + 10 + 15 + 5 = 40", "Start the 40-minute clock only after",
+                      "0:00–0:05", "0:05–1:00", "1:00–1:10", "1:10–1:25",
+                      "1:25–2:05", "Three.js is optional"):
+            self.assertIn(label, plan)
 
     def test_deep_question_bridges_theory_and_student_decisions(self):
         slides = [slide_text(slide) for slide in S]
@@ -159,7 +191,7 @@ class Week05SequenceTests(unittest.TestCase):
 
     def test_demo_separates_media_generation_from_html_authoring(self):
         text = " ".join(slide_text(slide) for slide in S)
-        for label in ("Easel Client", "IMAGE", "VIDEO", "HTML", "The agent writes code", "flow matching"):
+        for label in ("Easel Client", "HTML", "flow matching", "Machine B writes the code"):
             self.assertIn(label, text)
         notes = " ".join(slide.notes for slide in S)
         self.assertIn("https://github.com/venetanji/easel-client", notes)
@@ -176,6 +208,13 @@ class Week05SequenceTests(unittest.TestCase):
         for i, slide in enumerate(S, 1):
             if slide.cp:
                 self.assertIn(f"| {i} | Short answer |", plan)
+                self.assertIn(slide.title, plan)
+
+    def test_workshop_alignment_preserves_the_syllabus_challenge(self):
+        from pathlib import Path
+        syllabus = Path(__file__).resolve().parents[1].joinpath("syllabus/SD2112-syllabus-2026.md").read_text()
+        self.assertIn("40-minute identity workshop", syllabus)
+        self.assertIn("**Challenge 4:** a layout you could not design, generated, iterated and critiqued.", syllabus)
 
 
 if __name__ == "__main__":

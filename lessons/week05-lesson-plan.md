@@ -1,117 +1,113 @@
 # SD2112 · Week 5 lesson plan
 
-**Images, intentions, iterations** · Friday 2 October 2026 (date confirmed by Gio; confirm room and teaching-team arrangements in Canvas) · three-hour lecture-workshop · deck: `week05-classpoint.pptx` from the *Build PowerPoints* artifact; web/PDF paths follow the repository's Week 5 naming convention after the deck is registered.
+**Images, intentions, iterations** · Friday 2 October 2026 (date confirmed by Gio; confirm room and teaching-team arrangements in Canvas) · lecture-workshop in the booked three-hour slot · deck: `week05-classpoint.pptx`; web/PDF paths follow the repository's Week 5 naming convention.
 
 ## Purpose
 
-Students bring their own image ideas and visual intent. A visual lecture distinguishes GAN synthesis, CLIP alignment, VAE representation and text-conditioned latent generation. Classic noise-prediction training is a teaching example, not a universal description of modern flow-matching models. Gio demos Easel Client for agent-directed images, video and HTML, and shows the actual chat and iterations from the course-logo video experiment. HTML is agent-authored code rendered by a browser, not a diffusion-generated image. In the workshop, a language agent helps clarify student prompts without taking over authorship; students generate, critique and iterate using the approved service, then document their decisions.
+One personal identity connects three visual-making routes: **Machine A** executes coded shapes and parameters; **Machine B** generates an interpretation from learned patterns; **A+B** puts generated pixels inside a coded form or surface. Easel supplies the agent, project and tools, but students set the intent and judge each result. The coding agent is itself Machine B: **Machine B writes the code; Machine A executes it.** Applying generated pixels as a texture does not generate the geometry or a 3D model.
 
-By the end of class, students can:
+Gio opens with a five-minute Easel showcase, then lectures for roughly 55 minutes. After the break, installation and the shared brief precede a protected 40-minute activity: **10 + 10 + 15 + 5 = 40**. The target is three quick studies, not three finished logos. There is no separate prompt-clarification exercise or extra iteration block; deliberate changes happen within the three tasks.
 
-- describe an image they want to make and identify the visual choices that matter to them;
-- explain the distinct roles of GANs, CLIP and diffusion in the move from image-only generation to text-conditioned image generation;
-- describe how an agent can call image-understanding and image-generation tools, and identify where the student still directs the process;
-- use an agent to clarify an image brief, notice assumptions and approve or reject a rewritten prompt;
-- submit a prompt to the authorized image-generation service and record the model/tool details available;
-- critique an output against intent, naming a visible choice they did not specify;
-- make at least one deliberate iteration, compare versions and explain what they kept, changed or rejected;
-- document a process that supports Challenge 4 and the Week 7 reflection.
+By the end, students can:
 
-The model sequence is core lecture content, not optional material: use the visuals to make each model's role distinct, then move quickly into the agent/tool relationship and student-led making. Do not turn it into a full architecture survey. The Week 5 syllabus topic remains “Image machines and mediation”; close by asking how the model and interface shaped what the student could specify and see. The core Verbeek reading remains assigned in the syllabus.
+- distinguish coded visual rules from image generation, even when the same learned agent helps with both;
+- explain the distinct roles of GANs, CLIP, VAE representation and diffusion/flow generation;
+- define one identity brief and two recognizable features shared across three routes;
+- make a coded mark and demonstrate one controlled parameter change;
+- inspect one generated interpretation and identify an unrequested model choice;
+- reuse an image as a texture within a coded silhouette, then explain what each component controls;
+- compare A / B / A+B against intent, without assuming the hybrid is best;
+- keep evidence for Challenge 4 and the Week 7 reflection.
 
-The 2025 Week 5 deck provides the visual source, not a script to repeat. Adapt its progression from GAN output samples and the generator/discriminator competition, to CLIP's paired caption/image representations, to the noisy-image/denoising sequence and latent-diffusion pipeline. The old slide's image/text similarity matrix is a useful reference, but explain it as alignment in a shared embedding space—not as CLIP generating images. Preserve the mediation connection in the closing discussion: the prompt interface and model shape how student intent becomes an image, and what can be inspected or changed depends on the tools. Do not assign one fixed Ihde relation to “image generation” in general; ask what relation this particular workflow created for the student.
+Keep the image-model theory visual and concise. Classic noise-prediction training is a teaching example, not every modern model's objective. The 2025 deck's useful caption/image and latent diagrams are adapted rather than treated as authoritative: CLIP aligns representations; it does not generate pictures or captions. Preserve the course's mediation question: how did the interface and model shape what was easy to specify, inspect or revise? Do not assign one fixed Ihde relation to image generation in general. The Verbeek core reading remains assigned.
 
-## Lecturer demo and student access
+## Opening showcase and lecture examples
 
-The confirmed lecturer demo is [Easel Client / Easel Studio](https://github.com/venetanji/easel-client), selected by Gio on 1 October. Its documented tools generate/edit images, submit video jobs, author HTML project files and inspect canvas captures. Actual model support depends on configured endpoints and the installed build. This is not a new student installation or API-access requirement.
+Show one prepared identity in three forms: coded HTML/SVG/Canvas graphics, a generated interpretation and a combination. This is a five-minute invitation to the lecture, not installation or a live generation wait. Keep saved assets ready; do not claim an illustrative route is a documented successful experiment. Easel's image, video and HTML capabilities remain part of the tool discussion; HTML is authored code rendered by the browser, not diffusion-generated media.
 
-Demo sequence: make one image; critique a visible choice; request one short video via a verified model route; use the wait to build an HTML comparison using saved assets. Show model/tool identity and one revision, not a long feature tour. Do not resubmit an accepted pending generation. Play the resulting video rather than inferring continuity from sampled frames, and click the HTML controls rather than trusting a screenshot.
+During the lecture, Gio opens the actual chat and selected video iterations from the course-logo experiment. Compare the intended nature/leaves → origami → circuits/fibres → upper-right-dot reveal with visible shape, motion and continuity. Ask whether a next intervention belongs in the prompt, reference inputs or workflow. Do not claim a successful final cut or controlled A/B comparison unless the selected evidence establishes it. No new video generation is required for lecture preparation or the student activity.
 
-For the video discussion, Gio opens the real chat and selected iterations from the course-logo experiment. Compare the intended nature/leaves → origami → circuits/fibres → upper-right-dot reveal with visible motion, shape and continuity. Ask whether the next intervention belongs in the prompt, reference inputs or workflow. Do not claim a successful final cut, fixed duration or controlled A/B comparison unless the selected evidence establishes it. No new video render is part of slide preparation.
+## Installation and access checks
 
-### Student platform check
+Use [Easel Client / Easel Studio releases](https://github.com/venetanji/easel-client/releases). The release checked on 1 October is [v0.0.1](https://github.com/venetanji/easel-client/releases/tag/v0.0.1), with Windows x64 EXE/ZIP, macOS ARM64 DMG/ZIP and Linux x86_64 AppImage/DEB. No Intel Mac installer was listed. Recheck the available packages and match OS/architecture; the packaged installer is not the Node.js development setup. Do not bypass OS or institutional security controls.
 
-The syllabus currently identifies PolyU GenAI (`genai.polyu.edu.hk`) and names Flux and Qwen image models. It does **not** establish that students have direct API access, a supported endpoint, API quotas, or permission to use a specific client library. Before the class, Gio/Nicolò must confirm, with the course/platform owner:
+Before class, test the installer and the complete path on a classroom-equivalent device:
 
-1. the approved image-generation API or platform workflow available to students on 2 October;
-2. whether the workflow is a direct API call or a browser UI, and the accurate wording to use in class;
-3. authentication, account/credit limits, image-input support, model names, size/aspect-ratio controls, and expected latency;
-4. whether students can safely generate multiple versions during the activity;
-5. a fallback if API access, rate limits, network or model availability fails.
+1. Open Easel, create a project and run a simple HTML/SVG/Canvas mark.
+2. Confirm the course-approved agent and image service, accounts, endpoint configuration, model, quotas and expected waits. A desktop install alone does not establish generation access or offline media support.
+3. Generate one non-sensitive image, save it in the project, and successfully reuse that saved asset in a clipped SVG or masked Canvas composition. Use the actual project asset reference, not a guessed path.
+4. For the optional 3D route, confirm the bundled Three.js kit under Settings > Kits and in project settings, and check WebGL. External URLs/CDNs are blocked by the viewer; use bundled kit/assets. **Three.js is optional**, not a prerequisite for completing the activity.
+5. Prepare a working shared device, browser-based SVG/Canvas example and a supplied image for fallback. A supplied image must be labeled as supplied, not claimed as a student's generated result.
 
-Do not invent an endpoint, distribute credentials, ask students to paste keys into an LLM, or put secrets in slides, prompts, screenshots or submissions. If only the approved browser interface is available, use that and tell students what they are actually using; direct API use is an unresolved course/platform assumption, not something this plan presumes. A no-login fallback is partner-led prompt clarification and critique against teaching-team sample outputs.
+The syllabus names PolyU GenAI and Flux/Qwen models but does not establish student API credentials or Easel access. Confirm the authorized route rather than inventing an endpoint or distributing credentials. Keys belong only in the approved protected configuration, never chats, slides, screenshots or submissions. Installation and access support happen before the activity timer; students without access can pair while retaining their own brief and decisions.
 
 ## Before class (from 30 minutes before)
 
 | Who | Task |
 |---|---|
-| Nicolò | Confirm the approved image-generation route and test it with a non-sensitive sample; note model, available controls, latency and limits. Test ClassPoint short-answer questions, then reset. Open the web deck as backup. If there is no confirmed direct API, do not label the UI as one. |
-| Amber | Post the deck and Challenge 4 brief on the course platform named in Canvas. Confirm the submission location and deadline with Gio; the syllabus only says the challenge is brought to Week 6. |
-| WU Zhao, MA Jie | Help students without working access pair up; circulate during prompt clarification and critique. Remind students not to upload images they do not have permission to use or any sensitive personal content. |
-| Gio | Confirm room, date in Canvas, API/platform access, fallback, and whether references/seeds/settings are available. Keep the demo to a volunteered or fictional image idea. Confirm Challenge 4 submission logistics without inventing policy. |
+| Nicolò | Test the chosen installer, authorized agent/image route, saved-image reuse and optional offline Three.js kit. Prepare the Canvas/SVG fallback and supplied texture. Test ClassPoint and open the web deck as backup. |
+| Amber | Post the release/download link and deck through the course platform. Confirm the Challenge 4 submission destination and Week 6 logistics with Gio; do not infer a new deadline. |
+| WU Zhao, MA Jie | Help with OS/package matching and project setup; organize shared devices. Preserve individual briefs and authorship. Keep personal data and credentials out of shared work. |
+| Gio | Prepare the short opening showcase and real chat/video examples. Confirm the two-feature brief, tool configuration and fallback. Do not let an asynchronous live job consume lecture or making time. |
 
 ## Run of show
 
-The three-hour block is planned as 170 minutes of class plus one 10-minute break. Slide timings are approximate; protect at least 45 minutes for making and critique.
+Follow Gio's actual rhythm rather than filling every minute of the three-hour booking. The approximate core is 130 minutes including a ten-minute break and a fifteen-minute setup/brief; remaining booked time is flexible installation, individual help or discussion, not an expanded making exercise. Setup may shift the later clock times. **Start the 40-minute clock only after** installation, tool checks and the shared brief are complete.
 
-| Time | Segment | What happens | ClassPoint / notes |
+| Time | Segment | What happens | Notes |
 |---|---|---|---|
-| 0:00–0:10 | Open: image idea | Students write an image they have wanted to make and one visual quality they care about. | Short answer. Use volunteered examples; no sensitive personal details. |
-| 0:10–0:18 | Intent, prompt, judgement | Establish the designer's role: intent first, agent-assisted clarification second, student approval and judgement throughout. | Keep this bridge concise; the model sequence follows. |
-| 0:18–0:43 | Image-model roles | Compare GAN synthesis and CLIP alignment; use the lantern candidate, VAE hourglass, classic training comparison and generation loop. Briefly distinguish noise prediction from flow matching, then ask the CLIP question. | The training error updates weights; sampling updates the latent with trained weights fixed. The symbolic tiles are not actual intermediate images. Allow three minutes for the question. |
-| 0:43–1:03 | Easel Client and our iterations | Show the agent/tool loop and source-mark comparison. Demo image, short video job and HTML authoring; use the real chat and selected logo-video versions for the discussion. | Keep model generation, agent code and human decisions distinct. Ask what survived, what failed, and whether to change prompt, references or workflow. A selected exploration is not a finalized logo. |
-| 1:03–1:15 | Pair exercise: prompt clarification | One student describes their idea; partner/agent asks questions, flags assumptions and proposes a prompt. Student approves, edits or rejects it. | Preserve the 12-minute exercise. If the LLM is unavailable, pairs interview each other. |
-| 1:15–1:18 | Working specification and student route | Recap the choices that matter and show the confirmed student-facing service or fallback. | The lecturer demo does not establish student Easel/API access. No keys in chat. |
-| 1:18–1:23 | First critique | Students name one visible decision the model made that was not specified. | Short answer; distinguish observation from evaluation. |
-| 1:23–1:33 | Break | Ten minutes. | TAs confirm tool access and help resolve ordinary login issues. |
-| 1:33–1:43 | Critique framework | Compare output with intent; identify a success, a miss/reinterpretation and one decision to test. | Model one example from a student-volunteered idea. |
-| 1:43–1:48 | Set up iteration | Write one testable change and predict its effect. Keep other prompt dimensions stable where possible. | Use seed/reference controls only if the verified service supports them. |
-| 1:48–2:23 | Activity: deliberate iteration | Generate, compare, and iterate once or twice; keep prompts and versions in order. Pair critique supports, but does not override, the image author's judgement. | 35-minute activity. If generation is slow, one version plus a written next-iteration prompt still counts as evidence. |
-| 2:23–2:35 | Compare and discuss | Compare versions against original intent; share what changed, what stayed, and whether the result should be kept, revised or rejected. | Short answer and two contrasting examples. |
-| 2:35–2:50 | Challenge 4 and process record | Explain the Week 6 deliverable, model/tool disclosure, prompt/version record and critique. Confirm Canvas logistics only after verified. | No new deadline is inferred here. |
-| 2:50–2:58 | Mediation and close | Ask how the interface and model shaped what was easy to specify, see or revise. Connect the work to the Week 7 reflection. | Keep a bridge to Week 6 sound and the course mediation vocabulary. |
-| 2:58–3:00 | Transition buffer | Leave two minutes for questions or room handoff. | The three-hour block remains 170 minutes of class plus a 10-minute break. |
+| 0:00–0:05 | Opening Easel showcase | Show one mark as code, generated pixels and a combination. | Use prepared outputs. Give students something to wonder about; no installation yet. |
+| 0:05–1:00 | Lecture | Opening identity question and designer's role; GANs, CLIP, text conditioning, lantern example, VAE, classic training/generation and flow-matching caveat; deep question; agent loop, course mark and actual video iterations; Machine A/B bridge. | Keep the opening plus lecture to about an hour. Allow roughly three minutes for the CLIP question; the video/chat is evidence, not a claimed perfect result. |
+| 1:00–1:10 | Break | Ten minutes. | Keep release links and the backup device ready. |
+| 1:10–1:25 | Install and brief | Match installer to OS; open a project; check tools. Choose an identity, one sentence of intent and two recognizable features. Explain all three tasks. | Approximate setup allocation, outside the making timer. Pair or use the prepared fallback instead of endless troubleshooting. |
+| 1:25–2:05 | Activity: A / B / A+B / compare | Ten minutes coded mark, ten minutes generated interpretation, fifteen minutes combination, five minutes side-by-side comparison. | Protect the full 40 minutes after setup. One modest study per route; no extra prompt-writing or 35-minute iteration block. |
+| 2:05–2:10 | Challenge 4 and close | Keep the three views, source/prompt/asset evidence and one decision. Explain the comparison layout and a deliberate revision to bring to Week 6. | Submission details remain those confirmed in Canvas. Connect to Machine A/B and mediation. |
 
-## Activity: your idea, your prompt, your iterations
+## Activity: one identity, three ways of making it
 
-Students work from their own image ideas. One device per student is ideal; sharing a device is fine if each person retains ownership of their own idea and process. Use the course-approved API/platform only after the pre-class check above.
+**Shared brief, before the timer:** choose a name, nickname, invented character or personal symbol. Write one sentence about what it should communicate and two features that must remain recognizable. A fictional identity is welcome; a portrait, real name or personal photograph is not required. Keep this brief across all three routes; do not change the identity to rescue a weak result.
 
-1. **State the intent.** Write a private one-sentence idea and circle the most important visual quality. Students may choose an imagined concept rather than upload a personal photograph.
-2. **Clarify.** Ask an agent to ask questions before rewriting. Students can accept, edit or reject every suggestion. Keep the original idea and approved prompt.
-3. **Generate.** Submit the approved prompt; record service/model/settings as available and save the first image. Do not include tokens or keys in records.
-4. **Critique.** Compare the image to the intention. Name one visible success, one gap/reinterpretation and one unrequested model decision.
-5. **Iterate.** Choose one point to change; write the intended change; generate again. If available controls allow it, keep other variables stable. Repeat if time allows.
-6. **Decide and explain.** Compare versions side by side. Keep, revise or reject the result and explain why in terms of the original intent, not generic image quality.
-7. **Record.** Save the idea, prompt versions, outputs, model/tool information and a short rationale. Students submit through the confirmed course platform.
+| Activity minute | Route | Make and inspect | Evidence |
+|---|---|---|---|
+| 0–10 | A · rules | Ask Easel's agent for a simple HTML/SVG/Canvas mark, without an image-generation call. Expose two controls and change one value. | Keep source code, one view and the parameter change. Machine B wrote the code; Machine A executed it. |
+| 10–20 | B · learned image | Give the image tool the same brief and two features. Explore a material/texture/atmosphere, save one candidate and identify one unrequested choice. | Keep prompt, returned asset and model/tool details where available. Exact lettering is not a requirement. The observation question is inside these ten minutes. |
+| 20–35 | A+B · combination | Reuse A's code and B's image. Clip the image or a chosen material region into the silhouette; adjust crop, scale or offset. | Keep the coded boundary, reused asset and hybrid view. Code controls geometry and placement; pixels supply the surface. Three.js is optional when the offline kit is verified. |
+| 35–40 | Compare | Show A / B / A+B side by side and answer: what did combining the machines buy you? | Identify one enforced decision, one delegated decision and one trade-off against the original brief. A hybrid can be worse. |
+
+The agent is learned in every route; the labels describe how the visual artifact is made, not three different kinds of agent. Machine A can include seeded randomness. Adding a generated texture to coded geometry is not generating a 3D model. If B contains a whole mark, choose a material region rather than accidentally duplicating its shape inside A. No new generation is needed in A+B. Use project assets and offline kits rather than external URLs.
+
+If a generation waits, submit it once and work on code while the accepted job runs. Do not resubmit it or silently extend the activity. If it fails, use a supplied image, label the substitution and critique what remains controllable. One imperfect study per route is enough; polish and iteration count are not the measure of success. Keep any reference/output uploads within the course privacy and permission rules.
 
 ## Challenge 4 · bring to Week 6
 
-The syllabus names this “a layout you could not design, generated, iterated and critiqued.” Keep that scope and ask students to bring:
+Use the personal-mark studies in a **side-by-side comparison layout**, then make and critique one deliberate revision. This connects the workshop to the existing syllabus wording: “a layout you could not design, generated, iterated and critiqued.” The page can be code-authored and use generated media; do not claim the image model generated the HTML/layout if it did not. This is not a change to assessment weights or deadlines.
 
-- their image/layout intention and approved starting prompt;
-- two or more outputs or versions where access permits (if service failure prevents this, include the attempted prompt and planned next iteration);
-- the model/service name and available settings, with no credentials;
-- one critique naming a visible decision the model made;
-- a short account of a deliberate change and the evidence used to keep, revise or reject it.
+Keep:
 
-Confirm the submission destination and deadline in Canvas before teaching; neither is specified in the current syllabus beyond “bring it to the next class.”
+- the shared identity brief, two key features and A / B / A+B views;
+- A's code and a parameter change; B's prompt, image and available model/tool details;
+- the hybrid's source asset and mask/crop/texture decisions;
+- one revised version and a critique tied to visible evidence;
+- a short account of what was enforced, delegated, kept or rejected, including any supplied fallback assets.
+
+Confirm submission destination and timing in Canvas; do not invent a deadline beyond bringing the work to Week 6. These records can support the Week 7 reflection on Machine A/B and the student's creative process.
 
 ## ClassPoint questions
 
 | Slide | Type | Question | Use |
 |---:|---|---|---|
-| 3 | Short answer | What image have you wanted to make but not yet managed to make? | Start with student interests and visual intent. |
-| 15 | Short answer | If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair? | Separate matching/conditioning from generating the latent and decoding the image. Ask what the tool exposes versus what needs evidence. |
-| 27 | Short answer | What did the model decide that you did not specify? | Ask for an observable output choice. |
-| 31 | Short answer | What did you keep, change or reject—and what evidence led you there? | Make the student's design decision visible. |
+| 4 | Short answer | What could stand for you without being a portrait? | Start from an identity and one quality; no personal image is required. |
+| 16 | Short answer | If CLIP can match the words 'a chair' to a picture, why can't CLIP draw that chair? | Separate alignment from generation; ask what tool controls or claims require evidence. |
+| 27 | Short answer | What did the model decide that you did not specify? | One brief observation within B's ten minutes, not extra activity time. |
+| 29 | Short answer | What did combining the machines buy you? | Final five minutes: compare the three views, enforced/delegated decisions and trade-offs. |
 
 ## Sources and teaching material
 
-- Current syllabus, Week 5: image machines and mediation; Challenge 4; PolyU GenAI and named Flux/Qwen models; Verbeek (2015) core reading.
-- Week 4 lesson and deck: preserve the course's distinction between learned model behaviour and designed constraints/harness; refer back to Challenge 3's prompt/draft/edit evidence.
-- PR #3 draft `week05` deck and lesson: reviewed for the image-making context and workshop lineage; its very long technical tour and multi-stage ClassPoint wall exercise are not carried over wholesale. This plan narrows the class around Gio's confirmed focus: student intent, agent clarification, image generation, critique and deliberate iteration.
-- Original 2025 slide sources reviewed visually: `SD2112 - AI in Design - Week 5.pptx` and `SD2112 - AI in Design - Master.pptx` under `/home/venetanji/.openclaw/workspace-sd2112/references/onedrive-pptx/`; matching PDFs are in `references/2025/`. The Week 5 sequence uses GAN output grids and a generator/discriminator schematic (slides 45–46), Edmond de Belamy (47), a prompt/image example and CLIP encoder/similarity visuals (48–50), forward/reverse noise and U-Net/VAE diagrams (51–54), then UI/API examples (55). The 2026 deck adapts those visual ideas with the existing Edmond portrait asset, newly drawn diagrams in the course palette, and the agent-tool loop requested by Gio. The sources establish the prior teaching sequence and visuals, not current platform/API documentation or 2026 tool availability.
-- SD2112 group logo exploration (September 2026): the clean `a` mark was provided as the base; a selected forest/wall variant was edited for its brighter landscape. The lecture compares these two course-created images as an exploratory prompt/edit example, not as a finalized course logo or a single-step generation.
-- Lantern example is a course-generated still from Easel Flux2-9B (image server), 28 September 2026. The on-slide intent summarizes the teaching example, not a verbatim prompt. A second ComfyUI attempt produced unwanted lettering and is not used or presented as a valid comparison.
-- Easel Client repository README checked 1 October 2026: media generation and editing, queued video jobs, HTML project authoring, live inspection/capture and local export. These are documented capabilities, not a guarantee that every classroom endpoint supports every input.
-- Modern model caveat: Black Forest Labs Flux documentation; Qwen Image model documentation and Diffusers Qwen Image pipeline (`FlowMatchEulerDiscreteScheduler`). Keep the classic noise-prediction diagram explicitly labeled rather than presenting it as every current model's objective.
+- Gio's approved 1 October redesign: opening showcase, approximately one-hour lecture, break, then installation/brief and 40-minute personal-mark activity. The original standalone prompt exercise and 35-minute iteration block are replaced.
+- Current syllabus: image machines and mediation; Challenge 4; PolyU GenAI and named Flux/Qwen models; Verbeek (2015) core reading. The workshop supplies a comparison-layout route without silently rewriting assessment.
+- Week 2 deck: “Machine B writes Machine A” and controlled parameters/seeds. Week 4 deck: tools and harnesses connect learned proposals with explicit software rules and permissions.
+- Original 2025 slide sources: `SD2112 - AI in Design - Week 5.pptx` and `SD2112 - AI in Design - Master.pptx` under `references/onedrive-pptx/`; PDFs under `references/2025/`. GAN examples/competition are on Week 5 PDF pp. 45–46, Edmond portrait 47, caption/image alignment 48–50, noise/U-Net/VAE 51–54 and tools 55. PDF page positions are not printed slide numbers. The revised CLIP account corrects the old generation claim.
+- Course-logo exploration: source a-plus-dot and forest/wall variant shared in September 2026. The exploratory edit is not a finalized logo or a guaranteed one-prompt result. The real chat/video iterations are discussed without inventing a successful final movie.
+- Lantern still: Easel Flux2-9B, 28 September 2026. On-slide intent is a teaching summary, not the verbatim prompt; it is not a controlled comparison.
+- Easel [README](https://github.com/venetanji/easel-client#readme) and [v0.0.1 release](https://github.com/venetanji/easel-client/releases/tag/v0.0.1), checked 1 October: packaged installers, project image assets, HTML authoring, queued media generation and offline Three.js kit. Documented support is not proof of the installed classroom configuration.
+- Modern model caveat: Black Forest Labs Flux documentation; Qwen Image documentation and Diffusers Qwen Image pipeline (`FlowMatchEulerDiscreteScheduler`). Classic noise prediction is explicitly labeled rather than presented as every current model's objective.
