@@ -323,7 +323,7 @@ S.append(activity('WORKSHOP · ONE BRIEF · THREE QUICK STUDIES', 40,
     'A · 10 min: code a mark; change one parameter.',
     'B · 10 min: generate an interpretation; inspect one model choice.',
     'A+B · 15 min: combine generated pixels with the coded form.',
-    'Compare · 5 min: show all three and explain the trade-off.',
+    'Compare · 5 min: review your iterations; upload the final A+B image.',
 ], panel=[
     'SAME IDENTITY',
     'One sentence of intent.',
@@ -334,7 +334,7 @@ S.append(activity('WORKSHOP · ONE BRIEF · THREE QUICK STUDIES', 40,
     'B: learned images',
     'A+B: rules + generated pixels',
     '',
-    'Quick studies, not finished logos.',
+    'One final image submission.',
 ], panel_size=25, bg=PAPER,
 notes='This overview announces the entire block, not an additional 40-minute exercise. Start the 40-minute clock only after installation, tool checks and the brief. The following steps divide it: 10 + 10 + 15 + 5 = 40. Students may share a device but retain individual authorship. Build one modest artifact per route. Iteration happens within the steps, not a separate prompt-writing or repeated-generation block. If a media job is slow, submit it once, work on the code while it waits, and label any supplied fallback texture.'))
 
@@ -359,14 +359,14 @@ notes='Ten minutes includes the deliberate parameter change. The coding agent is
 
 S.append(activity('B · MACHINE B · PATTERNS PROPOSE THE PICTURE', 10,
                   'Generate an interpretation.', [
-    'Give the image model the same identity brief and two key features.',
+    'Ask the agent to generate images from the same identity brief.',
     'Explore one material, texture or atmosphere; keep one candidate.',
     'Identify one visible choice the model added or changed.',
     'Save the image, prompt and model name if available.',
 ], panel=[
-    'ASK THE IMAGE TOOL',
+    'ASK THE AGENT',
     'Use my shared identity brief.',
-    'Interpret it as an image.',
+    'Call the image-generation tool.',
     'Keep the two key features.',
     'Explore material and atmosphere.',
     'Do not depend on exact lettering.',
@@ -374,18 +374,13 @@ S.append(activity('B · MACHINE B · PATTERNS PROPOSE THE PICTURE', 10,
     'Save the returned image asset.',
     'Keep it for A+B.',
 ], panel_size=24, bg=PAPER,
-notes='Ten minutes includes generation waits and the short observation question that follows. Use the verified course image route. Exact generated lettering is not a requirement; if it fails, that is evidence about control rather than a reason to spend the activity chasing it. A saved image can be reused or a visible material region cropped for the hybrid. Submit once; do not duplicate a pending job. If the call is unavailable or slow, use a supplied image and explicitly record its source.'))
-
-S.append(question('short_answer', "What did the model's interpretation reveal about your own brief?",
-                  hint='Use one visible choice you kept or rejected. Did it change what you thought you wanted?',
-                  eyebrow_text='REFLECTION SEED 3 · OBSERVE BEFORE COMBINING',
-                  notes='Reflection seed within B\'s ten minutes, not extra activity time: use the generated candidate as evidence of mediation. Name a visible choice you did not specify, compare it with the shared brief, and explain keeping or rejecting it. It may expose ambiguity, a learned convention, a stereotype or an unexpected possibility; do not require a claim of bias without evidence. A model contribution is not automatically a mistake or a discovery. Preserve the prompt and returned image so the later reflection can distinguish intention, observation and judgement.'))
+notes='Ten minutes includes image-generation waits and inspecting the candidates. Ask the Easel agent to call the image-generation tool, not merely write a prompt or draw SVG in place of generated pixels. Use the verified course image route. Exact generated lettering is not a requirement; if it fails, that is evidence about control rather than a reason to spend the activity chasing it. Save the returned image assets for the third exercise; there is no intermediate ClassPoint submission. Keep a private observation about one model choice for the reflection process record. Submit a generation job once; do not duplicate a pending job. If the call is unavailable or slow, use a supplied image and explicitly record its source.'))
 
 S.append(activity('A+B · MACHINE A + MACHINE B', 15,
                   'Keep the form. Borrow the surface.', [
-    'Reuse the A code and the image saved from B.',
+    'Give the agent your A code and saved B assets as image inputs.',
     'Clip the image, or a cropped region, inside your coded silhouette.',
-    'Let code control the boundary and placement; pixels supply the surface.',
+    'Refine your final version: code controls form; pixels supply the surface.',
     'Three.js is optional: use a texture on a coded surface or mark.',
 ], panel=[
     'ASK THE CODING AGENT',
@@ -400,10 +395,18 @@ S.append(activity('A+B · MACHINE A + MACHINE B', 15,
 ], panel_size=24, bg=TEALS[4],
 notes='Fifteen minutes. SVG image clipping or Canvas drawImage plus a mask is the baseline. Explicitly request the saved project asset, not a guessed path or a remote URL. The original B image may include a mark; choose a material region and crop it deliberately if reusing the whole image duplicates the shape. This operation reuses pixels; it is not a new generative-model call or a generated 3D model. Three.js is optional only when its offline kit is enabled and WebGL works. A texture on a coded plane or an extruded mark is sufficient; do not add a 3D modeling tutorial. Code fixes boundaries, transforms and interaction; a supplied fallback texture must be labeled. The hybrid is not automatically better.'))
 
-S.append(question('short_answer', 'Did combining the machines increase your control—or relocate it?',
-                  hint='Compare all three against your brief. Name one gain, one loss, and who controlled each.',
-                  eyebrow_text='COMPARE · 5 MIN · REFLECTION SEED 4',
-                  notes='The final five minutes of the protected 40-minute activity. Reflection seed: distinguish control of geometry, appearance, meaning and selection, using the three views as evidence. Name an enforced decision, a delegated decision and a trade-off; connect the judgement to the initial intent and two features. The hybrid can be worse or move effort to cropping, masking and selection. Avoid assuming more technical control means more creative freedom. An honest partial study or failure supports an argument better than an unsupported success claim. Keep the ClassPoint answer as a note to revisit for Week 7; it is not an additional submission or marking criterion.'))
+S.append(question('image_upload', 'Upload your final A+B image.',
+                  hint='One image of your third exercise: export the result or take a screenshot.\nSubmit the final version, not a comparison sheet of all three.',
+                  eyebrow_text='COMPARE · 5 MIN · FINAL IMAGE SUBMISSION',
+                  cp={'type': 'image_upload', 'hide_names': False, 'caption_required': False},
+                  notes='One required classroom image submission per student, after all three exercises, within the final five minutes of the protected 40-minute activity. Upload an exported image or screenshot of the final third-exercise A+B result, not the B-only candidate and not a required A/B/A+B comparison collage. No written answer or caption is required here. Review the iterations against the brief before selecting the final version; retain code, prompts, inputs and private observations for the existing reflection. An honest partial result or labeled fallback is acceptable. This classroom capture does not change the separate Challenge 4 or Week 7 assessment brief.'))
+
+S.append(content('OPTIONAL EXTRA · VIDEO SUBMISSION', 'Optional: animate your final version.', [
+    'Try a short animation in Easel using your final image.',
+    'If you have a playable clip, upload it in the optional video activity.',
+    'Otherwise, skip this. Your final image completes the workshop.',
+], body_size=32,
+notes='Optional extra submission, only after the required final image. Students who want to explore animation can use their saved image as an input to the verified Easel video tool, or record a coded animation if they already have a working permitted capture route. Do not promise a built-in HTML-to-video exporter or guaranteed generation completion. Skip this if there is no time, access or playable result; it is not an extra timed exercise, an assessment requirement or an extension to the 40-minute activity. Do not wait for a pending video before submitting the required image, and do not duplicate pending generation jobs. PRE-CLASS MANUAL SETUP: deckgen v0.11.2 does not support native video_upload activities in HTML or PPTX. On slide 44, use the ClassPoint add-in to add a Video Upload activity manually, then test it on the classroom computer. Run it only for volunteers, without a mandatory caption or additional written response. This source intentionally has no CP metadata or fake generated video button.'))
 
 S.append(cards('CHALLENGE 4 · BRING TO WEEK 6',
                'Three routes. One comparison layout.', [
@@ -419,7 +422,7 @@ S.append(content('KEEP A PROCESS RECORD · WEEK 7 REFLECTION', 'Turn a result in
     'Compare A and B. What did each make possible, difficult or likely?',
     'About 1000 words; three of your own experiments with images; an AI-writing process note.',
 ], body_size=30,
-notes='Remind the existing syllabus reflection brief, not a new requirement: about 1000 words on the role of AI in your creative process, particularly Machine A versus Machine B, at least three of your own weekly-challenge experiments from weeks 2–6 with images, and a short note on how AI was used in writing. Submitted in Week 7 via Canvas. The four ClassPoint themes—intent versus convincing appearance, identity and delegated interpretation, what outputs reveal about the brief, and relocated control—are optional avenues for an evidence-led argument, not four compulsory essay sections. Retain the brief, code/parameter change, prompt/asset and hybrid choices; identify supplied fallbacks honestly. Do not expose credentials or personal identifiers. A rejected hybrid or service failure can be useful evidence without a fabricated output.'))
+notes='Remind the existing syllabus reflection brief, not a new requirement: about 1000 words on the role of AI in your creative process, particularly Machine A versus Machine B, at least three of your own weekly-challenge experiments from weeks 2–6 with images, and a short note on how AI was used in writing. Submitted in Week 7 via Canvas. The two ClassPoint questions about intention and identity, plus private observations about model choices and relocated control, are optional avenues for an evidence-led argument, not compulsory essay sections. The final image and optional video are classroom captures, not additional essay requirements. Retain the brief, code/parameter change, prompt/asset and hybrid choices; identify supplied fallbacks honestly. Do not expose credentials or personal identifiers. A rejected hybrid or service failure can be useful evidence without a fabricated output.'))
 
 S.append(end('Rules. Patterns. Your decisions.',
              'You chose what each machine could decide—and what it could not.',

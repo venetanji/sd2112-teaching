@@ -171,7 +171,7 @@ class Week05SequenceTests(unittest.TestCase):
     def test_lesson_plan_maps_classpoint_questions_after_inserted_block(self):
         from pathlib import Path
         plan = Path(__file__).resolve().parents[1].joinpath("lessons/week05-lesson-plan.md").read_text()
-        expected = {25, 38, 42, 44}
+        expected = {25, 38}
         rows = [line for line in plan.splitlines() if line.startswith("| ") and "| Short answer |" in line]
         mapped = {int(line.split("|")[1].strip()) for line in rows}
         self.assertEqual(mapped, expected)
@@ -257,14 +257,12 @@ class Week05SequenceTests(unittest.TestCase):
         self.assertIn("mismatched pairs", F.clip_shared_space()[0])
         self.assertIn("Name a convincing result you would reject", " ".join(slide_text(slide) for slide in S))
 
-    def test_four_reflexive_questions_support_the_existing_reflection_brief(self):
-        questions = [slide for slide in S if slide.cp]
-        self.assertEqual([slide.cp['type'] for slide in questions], ['short_answer'] * 4)
+    def test_two_reflexive_questions_support_the_existing_reflection_brief(self):
+        questions = [slide for slide in S if slide.cp and slide.cp['type'] == 'short_answer']
+        self.assertEqual(len(questions), 2)
         self.assertEqual([slide.title for slide in questions], [
             'When would a convincing image still fail your intention?',
             'What should your mark never lose—even when a model reinterprets it?',
-            "What did the model's interpretation reveal about your own brief?",
-            'Did combining the machines increase your control—or relocate it?',
         ])
         for question in questions:
             self.assertIn('reflection', question.notes.lower())
@@ -272,6 +270,32 @@ class Week05SequenceTests(unittest.TestCase):
         text = ' '.join(slide_text(slide) for slide in S)
         for phrase in ('1000 words', 'three of your own experiments', 'AI-writing process note'):
             self.assertIn(phrase, text)
+
+    def test_three_exercises_are_contiguous_before_one_final_image_upload(self):
+        self.assertEqual([s.title for s in S[39:42]], [
+            'Code the mark.', 'Generate an interpretation.', 'Keep the form. Borrow the surface.',
+        ])
+        self.assertTrue(all(s.cp is None for s in S[39:42]))
+        images = [(i, s) for i, s in enumerate(S, 1) if s.cp and s.cp['type'] == 'image_upload']
+        self.assertEqual([i for i, _ in images], [43])
+        self.assertEqual(images[0][1].title, 'Upload your final A+B image.')
+        self.assertFalse(images[0][1].cp.get('caption_required', False))
+        self.assertIn('third exercise', slide_text(images[0][1]))
+        self.assertIn('screenshot', slide_text(images[0][1]))
+
+    def test_optional_video_has_an_explicit_manual_setup_not_a_fake_native_button(self):
+        slide = S[43]
+        self.assertEqual(slide.title, 'Optional: animate your final version.')
+        self.assertIn('skip', slide_text(slide).lower())
+        self.assertIn('Your final image completes the workshop.', slide_text(slide))
+        self.assertIn('40-minute', slide.notes)
+        self.assertIn('PRE-CLASS MANUAL SETUP', slide.notes)
+        self.assertIn('Video Upload activity manually', slide.notes)
+        self.assertIsNone(slide.cp)
+
+    def test_b_uses_agent_generation_and_hybrid_reuses_saved_image_inputs(self):
+        self.assertIn('Ask the agent to generate images', slide_text(S[40]))
+        self.assertIn('image inputs', slide_text(S[41]))
 
     def test_new_history_and_case_blocks_are_integrated_at_the_approved_positions(self):
         self.assertEqual([s.title for s in S[9:14]], [
@@ -316,7 +340,9 @@ class Week05SequenceTests(unittest.TestCase):
         plan = Path(__file__).resolve().parents[1].joinpath("lessons/week05-lesson-plan.md").read_text()
         for i, slide in enumerate(S, 1):
             if slide.cp:
-                self.assertIn(f"| {i} | Short answer |", plan)
+                label = {'short_answer': 'Short answer', 'image_upload': 'Image upload',
+                         'video_upload': 'Video upload (optional)'}[slide.cp['type']]
+                self.assertIn(f"| {i} | {label} |", plan)
                 self.assertIn(slide.title, plan)
 
     def test_workshop_alignment_preserves_the_syllabus_challenge(self):

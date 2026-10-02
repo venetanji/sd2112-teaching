@@ -76,7 +76,7 @@ Keep the three-hour booking's core sequence fixed: 60-minute theory lecture, ten
 | 1:00–1:10 | Break | Ten minutes. | Keep release links and the backup device ready. |
 | 1:10–1:20 | Logo/Easel/chat demo | Slides 29–35: moved title, Easel routes, logo/chat/video and three case/reflection slides. | Select short real excerpts. Added slides guide discussion within this ten-minute window; no extra demo or live generation wait. |
 | 1:20–1:35 | Install and brief | Slides 36–39: installer and tool checks; identity brief; reflective boundary-setting question; 40-minute overview. | Outside the making timer. Pair or use prepared fallback rather than endless troubleshooting. |
-| 1:35–2:15 | Activity: A / B / A+B / compare | Ten minutes coded mark, ten minutes generated interpretation, fifteen minutes combination, five minutes side-by-side comparison. | Protect the full 40 minutes, including comparison. One modest study per route; no extra prompt-writing or iteration block. |
+| 1:35–2:15 | Activity: A / B / A+B / compare | Ten minutes coded mark, ten minutes generated interpretation, fifteen minutes combination, five minutes reviewing iterations and submitting the final A+B image. | Protect the full 40 minutes, including comparison. One modest study per route; no extra prompt-writing or iteration block. |
 | 2:15–3:00 | Flexible feedback, close and help | Support students, discuss outcomes, revisit Challenge 4 evidence and close. | Flexible use of booked time; not more making or an expanded activity. Submission details remain those confirmed in Canvas. |
 
 ## Activity: one identity, three ways of making it
@@ -86,13 +86,17 @@ Keep the three-hour booking's core sequence fixed: 60-minute theory lecture, ten
 | Activity minute | Route | Make and inspect | Evidence |
 |---|---|---|---|
 | 0–10 | A · rules | Ask Easel's agent for a simple HTML/SVG/Canvas mark, without an image-generation call. Expose two controls and change one value. | Keep source code, one view and the parameter change. Machine B wrote the code; Machine A executed it. |
-| 10–20 | B · learned image | Give the image tool the same brief and two features. Explore a material/texture/atmosphere, save one candidate and identify one unrequested choice. | Keep prompt, returned asset and model/tool details where available. Exact lettering is not a requirement. The observation question is inside these ten minutes. |
-| 20–35 | A+B · combination | Reuse A's code and B's image. Clip the image or a chosen material region into the silhouette; adjust crop, scale or offset. | Keep the coded boundary, reused asset and hybrid view. Code controls geometry and placement; pixels supply the surface. Three.js is optional when the offline kit is verified. |
-| 35–40 | Compare | Show A / B / A+B side by side: did combining the machines increase your control—or relocate it? | Identify one enforced decision, one delegated decision and one trade-off against the original brief. A hybrid can be worse. |
+| 10–20 | B · learned image | Ask the Easel agent to generate images from the same brief and two features. Save the returned assets and identify one unrequested choice. | Keep prompt, returned asset and model/tool details where available. Exact lettering is not a requirement. Keep observations privately for the reflection; there is no intermediate upload. |
+| 20–35 | A+B · combination | Give the agent A's code and B's saved assets as image inputs. Make the final version: clip the image or a chosen material region into the silhouette; adjust crop, scale or offset. | Keep the coded boundary, reused asset and hybrid view. Code controls geometry and placement; pixels supply the surface. Three.js is optional when the offline kit is verified. |
+| 35–40 | Review and submit | Review your iterations against the brief, then upload one image of the final third-exercise A+B result. Export an image or take a screenshot. | One required ClassPoint image upload; no required caption, written answer or comparison collage. Keep the other studies for your process record. |
 
 The agent is learned in every route; the labels describe how the visual artifact is made, not three different kinds of agent. Machine A can include seeded randomness. Adding a generated texture to coded geometry is not generating a 3D model. If B contains a whole mark, choose a material region rather than accidentally duplicating its shape inside A. No new generation is needed in A+B. Use project assets and offline kits rather than external URLs.
 
 If a generation waits, submit it once and work on code while the accepted job runs. Do not resubmit it or silently extend the activity. If it fails, use a supplied image, label the substitution and critique what remains controllable. One imperfect study per route is enough; polish and iteration count are not the measure of success. Keep any reference/output uploads within the course privacy and permission rules.
+
+### Optional animation/video
+
+After the required image submission, students who want to explore a small animation may use their final image in Easel's verified video route. Upload a playable clip through the optional video activity if one is ready; otherwise skip it. **Pre-class manual setup:** the pinned deckgen v0.11.2 has no native video-upload renderer or ClassPoint tag support. Use the ClassPoint add-in to add a Video Upload activity to slide 44 manually and test it on the classroom computer. The generated HTML/PPTX intentionally shows instructions only on that slide, not a fake automatic video button. A coded animation can also be captured if the student already has a working, permitted recording route; do not promise a built-in HTML-to-video exporter. This is an **optional extra submission**, not a fourth compulsory exercise, a new assessment requirement or more making time. Do not hold up the required image while a video job is pending.
 
 ## Challenge 4 · bring to Week 6
 
@@ -108,16 +112,18 @@ Keep:
 
 Confirm submission destination and timing in Canvas; do not invent a deadline beyond bringing the work to Week 6. These records can support the Week 7 reflection on Machine A/B and the student's creative process.
 
-## ClassPoint questions
+## ClassPoint questions and submissions
 
-Keep **four short answers total**. These are reflexive moments and possible seeds for the Week 7 argument, not attention checks, an extra quiz or four compulsory essay sections. Ask for a decision, evidence and a reason. The shared brief remains the reference point; an attractive output or fluent explanation is not proof of success. The last three answers happen within briefing, B and comparison respectively, without extending the timer.
+Keep **two short answers** as reflexive moments in the lecture and briefing. They can seed the Week 7 argument; they are not attention checks or compulsory essay sections. During the three exercises, retain observations privately rather than stopping for written submissions. The shared brief remains the reference point; an attractive output is not proof of success.
+
+After all three exercises, collect **one required image of the final A+B result**, within the final five minutes of the 40-minute activity. No A-only or B-only upload, comparison collage or caption is required. The video upload is an **optional extra** for students who choose to explore a short animation and have a playable result. Skip that activity for everyone else; do not extend the timer or make a video necessary for completion.
 
 | Slide | Type | Question | Use |
 |---:|---|---|---|
 | 25 | Short answer | When would a convincing image still fail your intention? | Within the lecture: distinguish appearance, matching words and serving a purpose; name evidence and a requirement. |
 | 38 | Short answer | What should your mark never lose—even when a model reinterprets it? | Within briefing: identify an invariant and its significance; locate the boundary of delegated interpretation. |
-| 42 | Short answer | What did the model's interpretation reveal about your own brief? | Within B's ten minutes: use a visible kept/rejected choice to examine ambiguity, assumptions or possibilities. |
-| 44 | Short answer | Did combining the machines increase your control—or relocate it? | Within the final five minutes: compare all three against intent; explain a gain, loss and change in who decides. |
+| 43 | Image upload | Upload your final A+B image. | One exported image or screenshot of the third exercise, after reviewing iterations; no required caption or collage. |
+| 44 | Video upload (optional, manual setup) | Optional: animate your final version. | Extra only after the required image, if a short playable animation is ready; otherwise skip. |
 
 ### Reminder of the individual reflection brief
 
@@ -126,8 +132,8 @@ Slide 46 turns the process record into an argument. The existing syllabus asks f
 ## Sources and teaching material
 
 - Gio's approved 1 October sequencing correction: theory lecture first (0:00–1:00), break (1:00–1:10), logo/Easel/chat demonstration (1:10–1:20), installation and brief (1:20–1:35), then making including comparison (1:35–2:15). The original standalone prompt exercise and 35-minute iteration block are replaced; 2:15–3:00 is flexible feedback, close and help, not more making.
-- Approved 2 October review order (47 slides): 1 roadmap; 2 images/technology chapter; 3 Heidegger; 4 Ihde; 5 Flusser; 6 photography; 7 A/B mediation; 8 designer intent; 9 Machine A chapter; 10–14 Machine A history; 15 Machine B chapter; 16–17 GANs; 18 CLIP; 19 pipeline; 20 lantern; 21 VAE; 22 training; 23 generation; 24 modern models; 25 reflection; 26 agent diagram; 27 A/B recap; 28 break; 29 moved title; 30 Easel routes; 31 logo still; 32 chat/video; 33–35 case/reflection; 36 installation; 37 brief; 38 reflection; 39 overview; 40 A; 41 B; 42 reflection; 43 A+B; 44 comparison reflection; 45 Challenge 4; 46 reflection/process record; 47 close.
-- Both five-slide lecture blocks fit within 60 minutes. The ClassPoint map is 25, 38, 42 and 44; no questions are added by either new block.
+- Approved 2 October review order (47 slides): 1 roadmap; 2 images/technology chapter; 3 Heidegger; 4 Ihde; 5 Flusser; 6 photography; 7 A/B mediation; 8 designer intent; 9 Machine A chapter; 10–14 Machine A history; 15 Machine B chapter; 16–17 GANs; 18 CLIP; 19 pipeline; 20 lantern; 21 VAE; 22 training; 23 generation; 24 modern models; 25 reflection; 26 agent diagram; 27 A/B recap; 28 break; 29 moved title; 30 Easel routes; 31 logo still; 32 chat/video; 33–35 case/reflection; 36 installation; 37 brief; 38 reflection; 39 overview; 40 A; 41 B; 42 A+B; 43 final image upload; 44 optional video upload; 45 Challenge 4; 46 reflection/process record; 47 close.
+- Both five-slide lecture blocks fit within 60 minutes. The generated ClassPoint map is 25/38 (short answers) and 43 (required final image); 44 is the optional video slide requiring manual add-in setup. The three exercises are contiguous at 40–42; no questions are added by either lecture block.
 - Historical block: 2025 Week 2 PDF positions 28–30 and 36–37; Frieder Nake, [There should be no Computer Art](https://dam.org/museum/essays_ui/essays/there-should-be-no-computer-art/), *Bulletin of the Computer Arts Society*, October 1971, pp. 18–19. Do not repeat the old PDF's unverified Berlin/first-exhibition claim.
 - Current syllabus: image machines and mediation; Challenge 4; PolyU GenAI and named Flux/Qwen models; Verbeek (2015) core reading. The workshop supplies a comparison-layout route without silently rewriting assessment.
 - Week 2 deck: “Machine B writes Machine A” and controlled parameters/seeds. Week 4 deck: tools and harnesses connect learned proposals with explicit software rules and permissions.
