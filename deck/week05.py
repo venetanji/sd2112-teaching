@@ -22,7 +22,7 @@ ASSETS = Path(__file__).resolve().parent / 'assets'
 def photographic_frame():
     slide = content('PHOTOGRAPHY · THE IMAGE IS A CHOICE',
                     'Photography is not a neutral window.', [], bg=PAPER, title_size=64,
-                    notes='Source: Giovanni Lion, Concept Formation in Computational Creativity, Chapter 5 opening and sections 5.1 and 5.3: https://giovannilion.link/thesis/5-study-images.html#scope-1 . The left image is the study photograph in Figure 5.1 (Miller and Lion, 2022); the right is a teaching crop of that SAME file, not another exposure or a generated variant. Photography records light from a scene, but viewpoint, framing, exposure, timing and selection mediate that record. A generated image need not document any photographed event. Ask what the tighter frame makes salient and what it excludes; do not call photography false or erase the distinction between capture and synthesis. Keep this opening to about 90 seconds.')
+                    notes='Source: Giovanni Lion, Concept Formation in Computational Creativity, Chapter 5 opening and sections 5.1 and 5.3: https://giovannilion.link/thesis/5-study-images.html#scope-1 . The left image is the study photograph in Figure 5.1 (Miller and Lion, 2022); the right is a teaching crop of that SAME file, not another exposure or a generated variant. Photography records light from a scene, but viewpoint, framing, exposure, timing and selection mediate that record. A generated image need not document any photographed event. Ask what the tighter frame makes salient and what it excludes; do not call photography false or erase the distinction between capture and synthesis. Keep this photographic example to about 90 seconds.')
     slide.els = slide.els[:2]
     slide.els += [
         Image(120, 330, 780, 545, str(ASSETS / 'week05-thesis-storefront.jpg'), 'contain'),
@@ -180,37 +180,43 @@ def modern_models():
     return slide
 
 S.append(agenda('SD2112 · WEEK 05', [
-    'Photography, apparatus and the Machine A/B lens',
-    'Machine A: Bense, Nake and the computer-art debate',
-    'GANs generate; CLIP aligns; diffusion and flow models generate',
-    'Agents coordinate tools; you make the design decisions',
-    'After the break: logo demo, install Easel and set the brief',
-    '40 minutes: Machine A, Machine B, Machine A+B',
-    'Compare the routes; keep evidence for your reflection',
+    'Images and technology: perception, mediation, photography',
+    'Machine A: rules, Bense, Nake and computer art',
+    'Machine B: learned images and text-to-image',
+    'Agents: coordinating Machine A + Machine B',
+    'After the break: logo demo, setup and brief',
+    'Activated: Machine A, Machine B, Machine A+B',
+    'Compare the routes; develop your reflection',
 ], notes='Start with roughly one hour of theory. Break, the logo/Easel demo, installation and the brief precede the 40-minute making block. Protect 10 + 10 + 15 + 5 minutes; do not add a separate prompt-writing or 35-minute iteration exercise.'))
 
-S.append(cards('00 · THE DESIGNER’S JOB', 'The model does not supply your reason for making the image.', [
-    ('INTENT', 'What should the image do?', 'Name the subject, audience, feeling, use and visual choices that matter to you.'),
-    ('PROMPT', 'Make the intent legible.', 'An agent can ask questions, expose ambiguity and help you write a clearer specification.'),
-    ('JUDGEMENT', 'Decide what happens next.', 'You select, critique, revise or reject the result. The model does not own that decision.'),
-], text_size=23,
-notes='Position the language agent as a prompt clarifier, not an autonomous creative director. Students remain the source of the idea and the judge of the output.'))
-
-S.append(photographic_frame())
-S.append(flusser_apparatus())
+S.append(section('00 · IMAGES AND TECHNOLOGY', 'Images and technology.',
+                 'Perception → mediation → apparatus → photography', bg=INK,
+                 notes='Introduce images broadly before specializing in photography or generated images. Start with Heidegger and Ihde, then Flusser and the photographic case. This divider is a transition within the existing lecture budget, not an extra teaching block.'))
 S.append(figure_slide('HEIDEGGER · EQUIPMENT AND TECHNOLOGICAL REVEALING',
                       'Heidegger: a tool is more than an object.', M.tool_encounter(), bg=PAPER,
                       caption='A way of revealing—not a synonym for photographic framing.',
-                      notes='Keep two accounts distinct: Being and Time (1927) examines equipment in practical involvement (ready-to-hand) and objects considered in inspection (present-at-hand); breakdown may interrupt use but does not simply define presence-at-hand. The Question Concerning Technology (1954) examines modern technology as enframing, a mode of revealing that orders things as resources or standing-reserve. Enframing is not the camera crop introduced earlier, nor merely a property of a device. These are introductory distinctions, not identical to Ihde\'s categories. Lion thesis Chapter 2 and Chapter 3.1 situate the phenomenological background; sources: https://plato.stanford.edu/entries/heidegger/ and https://giovannilion.link/thesis/3-methodology.html#sec:technological-mediation . Spend around two minutes; avoid a history-of-philosophy detour.'))
+                      notes='Keep two accounts distinct: Being and Time (1927) examines equipment in practical involvement (ready-to-hand) and objects considered in inspection (present-at-hand); breakdown may interrupt use but does not simply define presence-at-hand. The Question Concerning Technology (1954) examines modern technology as enframing, a mode of revealing that orders things as resources or standing-reserve. Enframing is not a photographic crop, nor merely a property of a device. These are introductory distinctions, not identical to Ihde\'s categories. Lion thesis Chapter 2 and Chapter 3.1 situate the phenomenological background; sources: https://plato.stanford.edu/entries/heidegger/ and https://giovannilion.link/thesis/3-methodology.html#sec:technological-mediation . Spend around two minutes; avoid a history-of-philosophy detour.'))
 S.append(figure_slide('IHDE · POSTPHENOMENOLOGY AND TECHNOLOGICAL MEDIATION',
                       'Ihde: technology mediates our world.', M.mediation_relations(), bg=PAPER,
                       caption='Same camera. Different relations—depending on how you use it.',
                       notes='Source: Don Ihde, Technology and the Lifeworld (1990), as discussed in Lion thesis Chapter 3.1: https://giovannilion.link/thesis/3-methodology.html#sec:technological-mediation . The four relations are embodiment, hermeneutic, alterity and background. Use two situated examples: looking through a viewfinder towards a scene; interpreting a photograph as a representation. Neither permanently classifies all photography. Interacting with a camera menu or an agent may foreground the tool as quasi-other; background systems shape the situation without focal attention. Technologies amplify and reduce aspects of perception and action, rather than being neutral pipes between a fully fixed person and world. The diagram is a simplified relational schema, not a signal-processing pipeline. Postphenomenology inherits and revises phenomenological questions; do not collapse Ihde with Heidegger, or call Flusser its founder. Spend around two minutes.'))
+S.append(flusser_apparatus())
+S.append(photographic_frame())
 S.append(machine_mediation())
+S.append(cards('THE DESIGNER’S JOB · AFTER THE THEORY', 'The model does not supply your reason for making the image.', [
+    ('INTENT', 'What should the image do?', 'Name the subject, audience, feeling, use and visual choices that matter to you.'),
+    ('PROMPT', 'Make the intent legible.', 'An agent can ask questions, expose ambiguity and help you write a clearer specification.'),
+    ('JUDGEMENT', 'Decide what happens next.', 'You select, critique, revise or reject the result. The model does not own that decision.'),
+], text_size=23,
+notes='After the philosophical and photographic examples, return to the designer\'s reason for making an image. Position the language agent as a prompt clarifier, not an autonomous creative director. Students remain the source of the idea and the judge of the output.'))
+
+S.append(section('01 · MACHINE A · PROCEDURAL IMAGES', 'Machine A: images from rules.',
+                 'Procedures · Bense · Nake · the computer-art debate', bg='#246E70',
+                 notes='Name the first image-making route before the five history slides. Machine A executes explicit instructions; rules may include controlled randomness. Keep this divider within the existing six-minute history block.'))
 S.extend(H.slides())
 
-S.append(section('IMAGE MODELS · A SHORT LINEAGE',
-                 'How did words begin to guide image generation?',
+S.append(section('02 · MACHINE B · LEARNED IMAGES',
+                 'Machine B: images from learned patterns.',
                  'GANs synthesize · CLIP aligns · diffusion / flow models generate', bg=VIOLET,
                  notes='Frame this as a change in how visual models can be conditioned, not as a claim that one architecture simply replaced another. Keep the technical account at the level needed to understand the image-generation tools students will meet.'))
 
@@ -262,7 +268,7 @@ S.append(question('short_answer', 'When would a convincing image still fail your
                   eyebrow_text='REFLECTION SEED 1 · INTENT AND APPEARANCE',
                   notes='Allow roughly three minutes within the lecture, not an extra quiz. Reflection seed: distinguish visual plausibility, matching words and serving a purpose. Use evidence from a previous experiment or a specific example just shown; state which requirement matters and why. CLIP alignment is not image generation or a guarantee of exact count, identity or meaning. Connect Bense/Nake\'s critique of novelty to a present design decision without equating the historical systems. There is no preferred pro- or anti-AI answer. These ClassPoint responses can become starting claims for the Week 7 reflection, not finished paragraphs or new assessment requirements.'))
 
-S.append(figure_slide('AGENTS · IMAGE UNDERSTANDING + GENERATION AS TOOLS',
+S.append(figure_slide('MACHINE A+B · AGENTS COORDINATE TOOLS',
                       'The agent can look, make, and look again.', F.agent_image_tools(),
                       caption='The student supplies the intent and decides whether the result is worth keeping.',
                       notes='Bridge from model capability to interaction. An agent can inspect an image with a vision tool, draft or revise a prompt, call an image-generation/editing tool, and inspect the result. The agent coordinates tools; it does not own the design intention or decide what counts as success. Easel Client is the lecturer demo. Student tool access and the installed app configuration still require a pre-class check.'))
@@ -290,12 +296,13 @@ S.append(video_discussion())
 S.extend(C.slides())
 
 S.append(content('AFTER THE BREAK · EASEL SETUP', 'Install. Open. Check.', [
-    'Download the package for your OS from github.com/venetanji/easel-client/releases.',
+    '[Download Easel Studio for your OS](https://github.com/venetanji/easel-client/releases).',
     'Open Easel Studio. Create one project for your personal mark.',
     'Use the course-approved configuration; test a canvas and one image call.',
-    'If setup fails, pair on a working device. Keep your own brief and decisions.',
+    'If setup fails: [PolyU GenAI](https://genai.polyu.edu.hk/) for images; Open Design or your working harness.',
+    'Keep the same brief. Pair or use the prepared fallback if needed.',
 ], body_size=29,
-notes='Installation and access checks are outside the 40-minute activity. Current verified release: https://github.com/venetanji/easel-client/releases/tag/v0.0.1. Packaged Windows x64 EXE/ZIP, macOS ARM64 DMG/ZIP and Linux x86_64 AppImage/DEB are listed; no Intel Mac installer was listed on 1 October. Check current releases, actual classroom OS/architecture and permitted installation before class. Release installers do not require the Node.js development workflow. Do not bypass OS or institutional security controls. Student accounts, endpoints and quotas must be course-approved; do not ask for keys in a chat or screenshot. Test HTML/SVG/Canvas, image generation and saved-image reuse. For optional Three.js, verify the bundled offline kit under Settings > Kits and in project settings; no CDN or external URL imports. If no device works, use a TA-prepared browser example and supplied texture; label supplied assets as fallback rather than student-generated evidence.'))
+notes='Installation and access checks are outside the 40-minute activity. Current verified release on 2 October: https://github.com/venetanji/easel-client/releases/tag/v0.0.4. Packaged Windows x64 EXE/ZIP, macOS ARM64 DMG/ZIP and Linux x86_64 AppImage/DEB are listed; no Intel Mac installer was listed on 2 October. Check current releases, actual classroom OS/architecture and permitted installation before class. Release installers do not require the Node.js development workflow. Do not bypass OS or institutional security controls. Student accounts, endpoints and quotas must be course-approved; do not ask for keys in a chat or screenshot. Test HTML/SVG/Canvas, image generation and saved-image reuse. For optional Three.js, verify the bundled offline kit under Settings > Kits and in project settings; no CDN or external URL imports. If installation fails, students can use an already working, permitted Open Design setup or another harness; PolyU GenAI is an image-generation fallback, not a promised code/project or API replacement. Keep the same brief and record which tool supplied each part. Do not require a new account or unverified provider. If no device works, use a TA-prepared browser example and supplied texture; label supplied assets as fallback rather than student-generated evidence.'))
 
 S.append(content('THE SHARED BRIEF · BEFORE THE TIMER',
                  'Make a mark that represents you.', [

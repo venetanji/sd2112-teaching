@@ -68,6 +68,19 @@ class Week05HistoryTests(unittest.TestCase):
                 if hasattr(element, "paras"):
                     self.assertLessEqual(element.y + element.h, 995, slide.title)
 
+    def test_bense_explains_uncertainty_without_using_it_as_a_beauty_score(self):
+        text = slide_text(H.slides()[1])
+        for phrase in ('uncertainty', 'unpredictability', 'beautiful'):
+            self.assertIn(phrase, text)
+        self.assertNotIn('ENTROPY ≠ BEAUTY', text)
+
+    def test_nake_essay_has_visible_author_date_and_clickable_reading(self):
+        slide = H.slides()[4]
+        self.assertIn('FRIEDER NAKE', slide_text(slide))
+        self.assertIn('1971', slide_text(slide))
+        links = [r.url for e in slide.els if hasattr(e, 'paras') for p in e.paras for r in p.runs]
+        self.assertIn('https://dam.org/museum/essays_ui/essays/there-should-be-no-computer-art/', links)
+
     def test_new_slides_do_not_create_classpoint_activities(self):
         for slide in H.slides():
             self.assertFalse(slide.cp)

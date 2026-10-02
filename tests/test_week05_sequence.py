@@ -110,7 +110,7 @@ class Week05SequenceTests(unittest.TestCase):
     def test_theory_break_logo_demo_brief_and_workshop_are_in_order(self):
         slides = [slide_text(slide) for slide in S]
         titles = ("Photography is not a neutral window.",
-                  "How did words begin to guide image generation?",
+                  "Machine B: images from learned patterns.",
                   "The agent can look, make, and look again.",
                   "Same intent. Different kinds of control.",
                   "After the break: make it yours.", "Images, intentions, iterations.",
@@ -122,34 +122,34 @@ class Week05SequenceTests(unittest.TestCase):
         positions = [next(i for i, text in enumerate(slides) if title in text) for title in titles]
         self.assertEqual(positions, sorted(positions))
         self.assertEqual(S[0].title, "Today")
-        self.assertEqual(S[25].title, "After the break: make it yours.")
-        self.assertEqual(S[26].title, "Images, intentions, iterations.")
+        self.assertEqual(S[27].title, "After the break: make it yours.")
+        self.assertEqual(S[28].title, "Images, intentions, iterations.")
 
     def test_photography_mediation_block_precedes_image_generation_history(self):
         titles = (
-            "Photography is not a neutral window.",
-            "Flusser: the camera is part of an apparatus.",
             "Heidegger: a tool is more than an object.",
             "Ihde: technology mediates our world.",
+            "Flusser: the camera is part of an apparatus.",
+            "Photography is not a neutral window.",
             "Same request. Different machines.",
         )
         slides = [slide_text(slide) for slide in S]
         positions = [next(i for i, text in enumerate(slides) if title in text) for title in titles]
         generation_intro = next(
             i for i, text in enumerate(slides)
-            if "How did words begin to guide image generation?" in text
+            if "Machine B: images from learned patterns." in text
         )
         self.assertEqual(positions, list(range(positions[0], positions[0] + 5)))
         self.assertLess(positions[-1], generation_intro)
         self.assertEqual(positions[0], 2)
-        self.assertEqual(len(S), 45)
+        self.assertEqual(len(S), 47)
 
     def test_mediation_slides_have_evidence_and_course_machine_notation(self):
         titles = (
-            "Photography is not a neutral window.",
-            "Flusser: the camera is part of an apparatus.",
             "Heidegger: a tool is more than an object.",
             "Ihde: technology mediates our world.",
+            "Flusser: the camera is part of an apparatus.",
+            "Photography is not a neutral window.",
             "Same request. Different machines.",
         )
         slides = [next(slide for slide in S if title in slide_text(slide)) for title in titles]
@@ -171,10 +171,28 @@ class Week05SequenceTests(unittest.TestCase):
     def test_lesson_plan_maps_classpoint_questions_after_inserted_block(self):
         from pathlib import Path
         plan = Path(__file__).resolve().parents[1].joinpath("lessons/week05-lesson-plan.md").read_text()
-        expected = {23, 36, 40, 42}
+        expected = {25, 38, 42, 44}
         rows = [line for line in plan.splitlines() if line.startswith("| ") and "| Short answer |" in line]
         mapped = {int(line.split("|")[1].strip()) for line in rows}
         self.assertEqual(mapped, expected)
+
+    def test_roadmap_and_chapters_name_images_and_both_machines(self):
+        text = slide_text(S[0])
+        for phrase in ('Images and technology', 'Machine A', 'Machine B', 'Agents', 'Activated'):
+            self.assertIn(phrase, text)
+        self.assertEqual(S[1].title, 'Images and technology.')
+        self.assertEqual(S[7].title, 'The model does not supply your reason for making the image.')
+        self.assertEqual(S[8].title, 'Machine A: images from rules.')
+        self.assertEqual(S[8].bg, '#246E70')
+        self.assertEqual(S[14].title, 'Machine B: images from learned patterns.')
+
+    def test_setup_links_and_fallbacks_are_findable_without_speaker_notes(self):
+        slide = next(s for s in S if s.title == 'Install. Open. Check.')
+        links = [r.url for e in slide.els if hasattr(e, 'paras') for p in e.paras for r in p.runs if r.url]
+        self.assertIn('https://github.com/venetanji/easel-client/releases', links)
+        self.assertIn('https://genai.polyu.edu.hk/', links)
+        for phrase in ('Open Design', 'working harness', 'same brief'):
+            self.assertIn(phrase, slide_text(slide))
 
     def test_workshop_timing_and_machine_roles_are_explicit(self):
         slides = [slide_text(slide) for slide in S]
@@ -256,14 +274,14 @@ class Week05SequenceTests(unittest.TestCase):
             self.assertIn(phrase, text)
 
     def test_new_history_and_case_blocks_are_integrated_at_the_approved_positions(self):
-        self.assertEqual([s.title for s in S[7:12]], [
+        self.assertEqual([s.title for s in S[9:14]], [
             'Machine A: design the procedure.',
             'Bense: can aesthetic form be described systematically?',
             'Nake: the artist programs possibilities.',
             'A new machine. A familiar argument.',
             'There should be no Computer Art.',
         ])
-        self.assertEqual([s.title for s in S[30:33]], [
+        self.assertEqual([s.title for s in S[32:35]], [
             'The brief emerged through choices.',
             'A better prompt was not always the right repair.',
             'What did the agent actually contribute?',

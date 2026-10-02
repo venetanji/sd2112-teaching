@@ -83,7 +83,6 @@ def slides():
     )
     s2.els += [
         T(120, 330, 760, 50, 'BENSE · INFORMATION + FORM', 'monomed', 25, FOOTER_COLOR),
-        T(120, 925, 1680, 35, 'GENERATIVE AESTHETICS · FROM DESCRIBING FORM TO DEFINING PROCEDURES', 'monomed', 22, ORANGE),
         Rect(120, 390, 760, 270, '#FFFFFF'),
         T(160, 425, 680, 72, 'Describe relations.', 'xbold', 44, INK),
         T(160, 520, 680, 112, 'A systematic account can ask\nhow elements are organized.', 'body', 32, INK, lh=1.25),
@@ -94,7 +93,8 @@ def slides():
         Rect(120, 705, 1680, 4, ORANGE),
         T(120, 746, 1680, 90, 'Description can sharpen a question. It does not decide what is beautiful.',
           'xbold', 36, INK),
-        T(120, 865, 1680, 45, 'INFORMATION ≠ BEAUTY     ·     ENTROPY ≠ BEAUTY', 'monomed', 24, FOOTER_COLOR),
+        T(120, 851, 1680, 86, 'Entropy measures uncertainty across possible outcomes.\nMore unpredictability does not make an image more beautiful.', 'body', 30, FOOTER_COLOR, lh=1.2),
+        T(120, 955, 1680, 30, 'GENERATIVE AESTHETICS · FROM DESCRIBING FORM TO DEFINING PROCEDURES', 'monomed', 22, ORANGE),
     ]
 
     s3 = _base(
@@ -136,8 +136,10 @@ def slides():
         Rect(120, 694, 1680, 4, ORANGE),
         T(120, 738, 1680, 72, 'Critique the mystification—not the possibility of making with computers.',
           'xbold', 35, INK),
-        T(120, 850, 1680, 50, 'A CATEGORY CAN BE FASHIONABLE; A PROCEDURE CAN STILL MATTER.',
-          'monomed', 22, FOOTER_COLOR),
+        T(120, 850, 1680, 40, 'FRIEDER NAKE · COMPUTER ARTS SOCIETY · OCTOBER 1971',
+          'monomed', 24, FOOTER_COLOR),
+        T(120, 915, 1680, 55, '[Read the original: There should be no Computer Art](https://dam.org/museum/essays_ui/essays/there-should-be-no-computer-art/)',
+          'bold', 30, FOOTER_COLOR),
     ]
 
     for slide in (s1, s2, s3, s4, s5):
