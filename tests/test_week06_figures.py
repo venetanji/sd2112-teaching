@@ -9,7 +9,8 @@ from deck import week06_figures as F
 NS = '{http://www.w3.org/2000/svg}'
 FIGURES = ('w06_waveform', 'w06_spectrogram_how', 'w06_midi',
            'w06_grid_score', 'w06_generate_test', 'w06_two_roads', 'w06_sound_spec',
-           'w06_written_score', 'w06_strudel_pattern')
+           'w06_written_score', 'w06_strudel_pattern',
+           'w06_analysis_still', 'w06_musicgen')
 
 
 def text_bounds(label):
@@ -38,6 +39,17 @@ class Week06FiguresTests(unittest.TestCase):
                 with Image.open(png) as image:
                     self.assertEqual(image.size, (int(root.attrib['width']) * 2,
                                                   int(root.attrib['height']) * 2))
+
+    def test_four_layer_figures_match_the_starter_roles(self):
+        for layer, expected in [('Rhythm', 'rest'), ('Bass', 'G2'),
+                                ('Harmony', 'C3 + E3 + G3'), ('Melody', 'B4')]:
+            svg, _ = F.w06_layer(layer)
+            self.assertIn(expected, svg)
+            root = ET.fromstring(svg)
+            for label in root.iter(NS + 'text'):
+                x0, y0, x1, y1 = text_bounds(label)
+                self.assertTrue(8 <= x0 < x1 <= 792, (layer, label.text))
+                self.assertTrue(8 <= y0 < y1 <= 592, (layer, label.text))
 
     def test_labels_are_legible_and_within_figure(self):
         for name, (svg, _) in self.rendered.items():
@@ -136,7 +148,8 @@ class Week06FiguresTests(unittest.TestCase):
 
     def test_strudel_still_matches_the_four_note_sine_pattern(self):
         from deck.week06 import STR_CODE
-        self.assertIn(".note('c4 e4 g4 b4')", STR_CODE)
+        self.assertIn('note("c4 e4 g4 b4")', STR_CODE)
+        self.assertIn('stack(rhythm, bass, harmony, melody)', STR_CODE)
         self.assertIn(".s('sine')", STR_CODE)
         svg = self.rendered['w06_strudel_pattern'][0]
         for text in ('C4', 'E4', 'G4', 'B4', 'sine', 'One cycle'):

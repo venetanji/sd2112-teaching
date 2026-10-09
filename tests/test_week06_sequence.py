@@ -1,13 +1,21 @@
 """Regressions for the approved theory-first, one-result sound workshop."""
 import importlib.util
 from pathlib import Path
-import re
 import runpy
 import unittest
 from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
+DEMO = "Make and export a demo you can explain."
+REFERENCE = "Transform your demo\u2014not an unrelated prompt."
+REVISE = "What did the reference actually change?"
+SAVE = "Check the final result\u2014not just the preview."
+COLLECT = "Submit your final playable result."
+QUESTIONS = (
+    "What made this sound yours: the demo, the prompt, or the listening decision?",
+    "Which choice would you reclaim from the model\u2014and why does it matter to your listener?",
+)
 
 
 def slide_text(slide):
@@ -40,16 +48,22 @@ class Week06SequenceTests(unittest.TestCase):
         from deck.week06 import S
         self.slides = S
 
-    def text(self, number, notes=False):
-        slide = self.slides[number - 1]
+    def slide(self, title):
+        matches = [slide for slide in self.slides if slide.title == title]
+        self.assertEqual(len(matches), 1, title)
+        return matches[0]
+
+    def titled_text(self, title, notes=False):
+        slide = self.slide(title)
         return slide_text(slide) + (" " + slide.notes if notes else "")
 
-    def test_approved_sequence_has_46_slides(self):
-        self.assertEqual(len(self.slides), 46)
+    def test_approved_sequence_has_50_slides(self):
+        self.assertEqual(len(self.slides), 50)
 
     def test_only_two_deep_short_answers_use_classpoint(self):
         activities = [(i, slide.cp) for i, slide in enumerate(self.slides, 1) if slide.cp]
-        self.assertEqual([i for i, _ in activities], [18, 26])
+        self.assertEqual([i for i, _ in activities], [45, 46])
+        self.assertEqual(tuple(self.slides[i - 1].title for i, _ in activities), QUESTIONS)
         for number, activity in activities:
             self.assertEqual(activity["type"], "short_answer", number)
             self.assertFalse(activity.get("caption_required", False), number)
@@ -57,51 +71,89 @@ class Week06SequenceTests(unittest.TestCase):
             self.assertIn("evidence", self.slides[number - 1].notes.lower())
 
     def test_theory_break_demo_setup_brief_then_making_are_in_order(self):
-        for number, pattern in (
-            (30, r"break"), (32, r"easel"), (33, r"install|setup|open|check"),
-            (34, r"brief|product|moment"), (36, r"40\s*min"),
-            (37, r"rule|code|strudel"), (38, r"generat|learned|suno"),
-            (39, r"A\s*\+\s*B|hybrid|combin|timeline"),
-            (40, r"listen|review|save"),
+        # Positions here are the explicitly approved chapter/order contract.
+        for number, title in (
+            (3, "A sound changes\nwhat you notice\nand what you do."),
+            (13, "MIDI describes events. It contains no sound."),
+            (14, "Compose the procedure."), (20, "Fixed rules. Variable outcomes."),
+            (21, "Generate from patterns."), (28, "Permission is not a copyright guarantee."),
+            (29, "Coordinate both machines."),
+            (31, "Keep an intention. Let the arrangement change."),
+            (32, "Break.\nTen minutes."), (33, "Your demo.\nA new arrangement."),
+            (34, "Play \u2192 export \u2192 reference \u2192 listen."),
+            (35, "Choose a demo tool. Check the reference route."),
+            (36, "Make a sound for one identity and moment."),
+            (37, "Be precise about intent. Honest about control."),
+            (38, "Demo \u2192 exported reference \u2192 transformation \u2192 save."),
+            (39, DEMO), (40, REFERENCE), (41, REVISE), (42, SAVE), (43, COLLECT),
+            (44, "A result is not the whole creative process."),
+            (47, "Explain the difference before choosing an answer."),
+            (48, "Thirty seconds of sound."),
+            (49, "Turn listening into an evidence-led argument."),
+            (50, "Rules. Patterns.\nYour listening."),
         ):
             with self.subTest(slide=number):
-                self.assertRegex(self.text(number).lower(), pattern.lower())
-        self.assertTrue(all(slide.cp is None for slide in self.slides[29:41]))
+                self.assertEqual(self.slides[number - 1].title, title)
+        self.assertTrue(all(slide.cp is None for slide in self.slides[:44]))
 
-    def test_workshop_protects_10_10_15_5_minutes(self):
-        for number, minutes in ((37, 10), (38, 10), (39, 15), (40, 5)):
-            with self.subTest(slide=number):
-                self.assertRegex(self.text(number).lower(), rf"\b{minutes}\s*min")
-        self.assertIn("40", self.text(36))
+    def test_workshop_protects_15_15_5_5_minutes(self):
+        for title, minutes in ((DEMO, 15), (REFERENCE, 15), (REVISE, 5), (SAVE, 5)):
+            with self.subTest(title=title):
+                self.assertRegex(self.titled_text(title).lower(), rf"\b{minutes}\s*min")
+        overview = self.titled_text(
+            "Demo \u2192 exported reference \u2192 transformation \u2192 save.", notes=True)
+        self.assertRegex(overview.lower(), r"40\s*min")
+        self.assertIn("15 + 15 + 5 + 5 = 40", overview)
 
     def test_setup_has_a_clickable_easel_release_link(self):
+        setup = self.slide("Choose a demo tool. Check the reference route.")
         self.assertIn(
             "https://github.com/venetanji/easel-client/releases",
-            slide_links(self.slides[32]),
+            slide_links(setup),
         )
-        self.assertNotIn("v0.0.4", self.text(33))
-        self.assertRegex(self.text(33, notes=True).lower(), r"pre.class|before class")
+        self.assertNotIn("v0.0.4", slide_text(setup))
+        self.assertRegex(setup.notes.lower(), r"pre.class|before class")
+        self.assertIn("Gio", setup.notes)
+        self.assertRegex(setup.notes.lower(), r"verif|test")
 
     def test_only_the_final_playable_result_is_collected(self):
-        result = self.text(41).lower()
+        result_slide = self.slide(COLLECT)
+        result = slide_text(result_slide).lower()
         self.assertRegex(result, r"one|single")
         self.assertRegex(result, r"playable|listen")
         self.assertIn("canvas", result)
         self.assertRegex(result, r"file|link")
-        self.assertIsNone(self.slides[40].cp)
-        for number in (37, 38, 39):
-            self.assertNotRegex(self.text(number).lower(), r"upload|submit")
+        self.assertIsNone(result_slide.cp)
+        self.assertEqual(sum("one final submission" in slide_text(s).lower()
+                             for s in self.slides), 1)
+        for title in (DEMO, REFERENCE, REVISE):
+            self.assertIsNone(self.slide(title).cp)
+        self.assertIn("no compulsory intermediate submission", self.titled_text(DEMO).lower())
+        for title in (REFERENCE, REVISE):
+            self.assertNotRegex(self.titled_text(title).lower(), r"\bsubmit\b|\bsubmission\b")
+        self.assertIn("not separate demo, generation and comparison uploads", result)
         self.assertNotRegex(result, r"classpoint.*audio upload|audio upload.*classpoint")
 
-    def test_hybrid_reuses_saved_audio_without_promising_generation_features(self):
-        hybrid = self.text(39, notes=True).lower()
-        for word in ("intro", "excerpt", "outro", "timeline"):
-            self.assertIn(word, hybrid)
-        self.assertRegex(hybrid, r"trim|fade|gain")
-        self.assertNotRegex(self.text(39).lower(), r"automatic beat.match|auto.beat.match")
+    def test_hybrid_transforms_actual_demo_audio_then_compares_and_revises(self):
+        demo = self.titled_text(DEMO).lower()
+        for phrase in ("strudel", "garageband", "another", "export", "audio file", "replay"):
+            self.assertIn(phrase, demo)
+        reference = self.titled_text(REFERENCE).lower()
+        for phrase in ("easel", "exported audio", "suno reference input", "completed output", "save", "do not duplicate"):
+            self.assertIn(phrase, reference)
+        revision = self.titled_text(REVISE).lower()
+        for phrase in ("original demo", "completed transformation", "preserved", "changed", "edit or revision", "motif", "up to 30 seconds"):
+            self.assertIn(phrase, revision)
+        self.assertIn("no compulsory a/b spliced timeline", revision)
+        self.assertNotRegex(revision, r"automatic beat.match|auto.beat.match")
+        self.assertIn("not a fixed intro/excerpt/outro recipe", self.slide(REVISE).notes.lower())
+        self.assertIn("not a midi file or screenshot", demo)
+        save = self.titled_text(SAVE).lower()
+        for phrase in ("reopen", "plays with sound", "one final result"):
+            self.assertIn(phrase, save)
 
     def test_mock_quiz_is_three_practice_prompts_not_more_classpoint(self):
-        quiz = self.slides[42]
+        quiz = self.slide("Explain the difference before choosing an answer.")
         self.assertIsNone(quiz.cp)
         self.assertRegex(slide_text(quiz).lower(), r"practice|mock")
         self.assertRegex(quiz.notes.lower(), r"answer")
@@ -109,19 +161,19 @@ class Week06SequenceTests(unittest.TestCase):
             self.assertRegex(slide_text(quiz), rf"\b{number}[.)\s]")
 
     def test_challenge_and_reflection_preserve_canvas_and_existing_assessment(self):
-        challenge = self.text(44).lower()
+        challenge = self.titled_text("Thirty seconds of sound.").lower()
         self.assertRegex(challenge, r"up to\s*30|\b30\s*(?:s|sec)")
         self.assertIn("canvas", challenge)
-        reflection = self.text(45, notes=True).lower()
-        for phrase in ("1000", "own", "images", "canvas", "week 7"):
+        reflection = self.titled_text("Turn listening into an evidence-led argument.", notes=True).lower()
+        for phrase in ("1000", "own", "images", "canvas", "week 7", "20%", "unchanged rubric"):
             self.assertIn(phrase, reflection)
         self.assertRegex(reflection, r"three|\b3\b")
         self.assertRegex(reflection, r"weeks?\s*2\s*[-\u2013]\s*6")
         self.assertRegex(reflection, r"ai.writing|ai.*writ|writ.*ai")
-        self.assertNotIn("blackboard", " ".join(self.text(i) for i in range(1, 47)).lower())
+        self.assertNotIn("blackboard", " ".join(slide_text(s) for s in self.slides).lower())
 
     def test_sources_do_not_invent_student_work_or_required_intermediate_captures(self):
-        text = " ".join(self.text(i, notes=True) for i in range(1, 47)).lower()
+        text = " ".join(slide_text(s) + " " + s.notes for s in self.slides).lower()
         self.assertNotRegex(text, r"student (?:said|wrote|submitted)|winning student|best student entries")
         self.assertNotRegex(text, r"caption required|capture [123]|eight mock")
 
@@ -144,15 +196,30 @@ class Week06SequenceTests(unittest.TestCase):
 
     def test_lesson_plan_quotes_the_actual_classpoint_questions(self):
         plan = (ROOT / "lessons/week06-lesson-plan.md").read_text()
-        for number in (18, 26):
-            questions = [
-                " ".join(run.text for paragraph in element.paras
-                         for run in paragraph.runs)
-                for element in self.slides[number - 1].els
-                if hasattr(element, "paras")
-            ]
-            question_text = next(text for text in questions if text.endswith("?"))
-            self.assertIn(question_text, plan)
+        for slide in self.slides:
+            if slide.cp:
+                self.assertIn(slide.title, plan)
+
+    def test_lesson_plan_preserves_timing_and_reference_contract(self):
+        plan = (ROOT / "lessons/week06-lesson-plan.md").read_text().lower()
+        for phrase in ("50 slides", "15 + 15 + 5 + 5 = 40", "slides 1-31",
+                       "slides 3-13", "slides 14-20", "slides 21-28", "slides 29-31",
+                       "export actual audio", "audio reference", "completed transformation",
+                       "recognisable motif", "no compulsory timeline", "privately", "gio"):
+            self.assertIn(phrase, plan)
+        for time, slides in (("0:00-1:00", "1-31"), ("1:00-1:10", "32"),
+                             ("1:10-1:20", "33-34"), ("1:20-1:35", "35-38"),
+                             ("1:35-2:15", "39-43"), ("2:15-3:00", "44-50")):
+            self.assertIn(f"| {time} | {slides} |", plan)
+        self.assertNotRegex(plan, r"46.slide|10\s*\+\s*10\s*\+\s*15\s*\+\s*5")
+
+    def test_lesson_plan_separates_provider_rights_and_instructor_testing(self):
+        plan = (ROOT / "lessons/week06-lesson-plan.md").read_text().lower()
+        for phrase in ("9 october 2026", "original uploads remain yours", "broad provider licence",
+                       "basic", "non-commercial", "pro/premier", "approved download",
+                       "not automatically", "copyright", "hong kong", "easel/provider contract",
+                       "not a verified integration test", "exact input limits"):
+            self.assertIn(phrase, plan)
 
 
 class Week06ReportTests(unittest.TestCase):
@@ -176,26 +243,44 @@ class Week06ReportTests(unittest.TestCase):
         from deck.week06 import S
         urls = ["https://example.invalid/week06-a", "https://example.invalid/week06-b"]
         entries = [{"activity": url, "question": S[number - 1].title}
-                   for url, number in zip(urls, (18, 26))]
+                   for url, number in zip(urls, (45, 46))]
         slides = self.load_with_reports(entries)
-        for number, url in zip((18, 26), urls):
+        for number, url in zip((45, 46), urls):
             self.assertEqual(slides[number - 1].report, url)
             self.assertIn(url, slide_links(slides[number - 1]))
+        for slide in slides:
+            if not slide.cp:
+                self.assertFalse(getattr(slide, "report", None))
+                self.assertFalse(set(urls).intersection(slide_links(slide)))
 
     def test_withheld_reports_never_gain_a_link(self):
         slides = self.load_with_reports([
             {"activity": None, "withheld": "names hidden"},
             {"activity": None, "withheld": "not run in class"},
         ])
-        for number in (18, 26):
+        for number in (45, 46):
             self.assertFalse(getattr(slides[number - 1], "report", None))
             self.assertEqual(slide_links(slides[number - 1]), [])
+
+    def test_null_report_does_not_shift_the_next_matching_link(self):
+        url = "https://example.invalid/week06-b"
+        slides = self.load_with_reports([
+            {"activity": None, "question": QUESTIONS[0]},
+            {"activity": url, "question": QUESTIONS[1]},
+        ])
+        self.assertFalse(getattr(slides[44], "report", None))
+        self.assertEqual(slide_links(slides[44]), [])
+        self.assertEqual(slides[45].report, url)
+        self.assertIn(url, slide_links(slides[45]))
 
     def test_report_count_and_question_drift_fail_the_deck_import(self):
         for entries in (
             [{"activity": None}],
+            [{"activity": None}] * 3,
             [{"activity": None, "question": "A mismatched question"},
              {"activity": None}],
+            [{"activity": None, "question": QUESTIONS[0]},
+             {"activity": None, "question": "A mismatched question"}],
         ):
             with self.subTest(entries=entries), self.assertRaises(ValueError):
                 self.load_with_reports(entries)

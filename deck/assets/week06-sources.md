@@ -47,3 +47,52 @@
   experiment. The three-state transition table is handwritten for this course;
   it is Machine A, not evidence of learning. Neither MusicGen nor GPT is
   presented as a first-order Markov lookup table.
+
+## October 2026 interactive revision
+
+- `deck/week06_analysis.js` is a course-owned p5/native Web Audio instrument,
+  not a microphone stream or an equalizer. A quiet oscillator feeds the audible
+  output and a 2048-point `AnalyserNode` FFT (Blackman window, no smoothing).
+  Display: waveform, log-frequency spectrum, and perspective waterfall of
+  roughly 60 ms analysis observations; relative dBFS is not perceived loudness.
+  The static twin is a labelled analytic illustration of the default 220 Hz
+  sine, not a recorded measurement or the initial silent browser state.
+  API: https://webaudio.github.io/web-audio-api/#AnalyserNode
+- Four native-synth Strudel roles share `setcpm(100/4)`: rhythm uses short C2
+  attacks/rests, bass C2 C2 G2 C2, harmony simultaneous C3 E3 G3, and melody
+  C4 E4 G4 B4. Each online editor link includes that part and earlier parts;
+  the complete starter stacks all four. These are modern teaching examples,
+  not the historical Illiac Suite. The still beside the combined code depicts
+  its melody part, not all voices. Online REPL code is not the Easel wrapper.
+  The public editor requires double quotes for parsed mini-notation; single
+  quotes leave multi-note text literal. Compiler/query checks on 9 October
+  confirmed 2 rhythm attacks, 4 bass notes, 3 simultaneous harmony notes and
+  4 melody notes in one cycle. Seed links use percent-encoded UTF-8 Base64
+  fragments, matching the official Share format.
+- Historical Riffusion UI screenshot, unmodified, from creator repository:
+  https://github.com/riffusion/riffusion-app-hobby/blob/f961d034997adcf830c9f206fe8997ed4c0b1247/public/about/web_app_screenshot.png
+  Commit dated 29 November 2022; Hayk Martiros and Seth Forsgren. MIT notice
+  retained in `week06/RIFFUSION-LICENSE.txt`; repository licence retrieved from
+  https://github.com/riffusion/riffusion-app-hobby/blob/main/LICENSE .
+- Suno public logged-out landing-page screenshot, checked 9 October 2026:
+  https://suno.com/ . Used for attributed classroom product identification,
+  not evidence of an Easel interface, audio upload success or generated music.
+  Suno retains its trademarks and website rights; this is not MIT-licensed.
+- Suno consumer rights checked 9 October 2026 against controlling terms:
+  https://suno.com/terms-of-service (revised 10 August; effective 3 September
+  2026). Original submissions retain their ownership, with a broad provider
+  licence; Basic output is personal/non-commercial, paid output rights remain
+  subject to the terms including permitted downloads. No guaranteed statutory
+  copyright or uniqueness; consumer plans do not establish Easel/API rights.
+  No automatic retroactive free-song upgrade:
+  https://help.suno.com/en/articles/2425729
+  Own rough-demo/audio uploads and reference influence:
+  https://help.suno.com/en/articles/6141569
+  https://help.suno.com/en/articles/6141377
+  These consumer interfaces/limits do not prove Easel support. Gio owns the
+  local integration and classroom save/upload/generate/reopen smoke test.
+- Hong Kong copyright uncertainty, not a US-law shortcut: official IPD
+  consultation, 8 July 2024, PDF pages 10 and 16–17, discusses arrangements
+  necessary for computer-generated works and fact-specific originality/authorship:
+  https://www.ipd.gov.hk/filemanager/ipd/en/share/consultation-papers/Eng-Copyright-and-AI-Consultation-Paper-20240708.pdf
+  This dated consultation is not a legal opinion or proof of every later change.

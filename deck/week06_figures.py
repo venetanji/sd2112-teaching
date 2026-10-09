@@ -14,7 +14,74 @@ from deckgen.figures import Canvas, INK, ORANGE, MUTED, LINE, TEAL
 
 __all__ = ['w06_waveform', 'w06_spectrogram_how', 'w06_midi',
            'w06_grid_score', 'w06_generate_test', 'w06_two_roads', 'w06_sound_spec',
-           'w06_written_score', 'w06_strudel_pattern']
+           'w06_written_score', 'w06_strudel_pattern',
+           'w06_analysis_still', 'w06_layer', 'w06_musicgen']
+
+
+def w06_analysis_still(name='w06-analysis', w=1200, h=700):
+    """Labelled illustration of the live instrument's default 220 Hz sine."""
+    c = Canvas(w, h, bg=WHITE)
+    _label(c, 40, 35, 'ONE SOUND / THREE VIEWS', 28)
+    _label(c, 40, 80, 'Waveform: 220 Hz sine / signal amplitude', 24)
+    c.line(40, 145, 1160, 145, LINE, 2)
+    points = [(40 + i * 1120 / 700, 145 - 56 * math.sin(2 * math.pi * 220 * i / 700 * 0.043)) for i in range(701)]
+    for a, b in zip(points, points[1:]):
+        c.line(*a, *b, TEAL, 2)
+    _label(c, 40, 220, 'Spectrum: frequency / relative level (not loudness)', 24)
+    peak = math.log(220 / 80) / math.log(8000 / 80)
+    for i in range(72):
+        magnitude = math.exp(-((i / 71 - peak) / 0.022) ** 2)
+        c.rect(40 + i * 1120 / 72, 330 - magnitude * 75, 12, magnitude * 75, fill=TEAL)
+    for hz in (80, 220, 1000, 8000):
+        bin_index = math.log(hz / 80) / math.log(100) * 71
+        tick = f'{hz / 1000:g}k Hz' if hz >= 1000 else f'{hz} Hz'
+        _label(c, 40 + bin_index * 1120 / 72 + 6, 354, tick, 22, anchor='middle')
+    _label(c, 40, 398, 'Waterfall: successive windows recede into the past', 24)
+    for row in range(41, -1, -1):
+        depth = row / 41
+        pts = [(65 + depth * 135 + i * 1030 / 71 * (1 - depth * 0.28),
+                570 - depth * 110 - math.exp(-((i / 71 - peak) / 0.022) ** 2) * 55) for i in range(72)]
+        for a, b in zip(pts, pts[1:]):
+            c.line(*a, *b, TEAL, 1.5)
+    _label(c, 40, 592, 'NOW', 22)
+    _label(c, 1050, 450, 'PAST', 22)
+    _label(c, 40, 642, 'HTML: PLAY / LOWER / HIGHER / SINE > TRIANGLE > SAWTOOTH', 24)
+    _label(c, 40, 676, 'Illustrative still, not a recording or measured FFT capture.', 22)
+    return c.finish(name)
+
+
+def w06_layer(layer, name=None, w=800, h=600):
+    """Compact musical roles matching the native-synth Strudel starter."""
+    c = Canvas(w, h, bg=WHITE)
+    labels = {
+        'Rhythm': ('c2', 'rest', 'c2', 'rest'),
+        'Bass': ('C2', 'C2', 'G2', 'C2'),
+        'Harmony': ('C3 + E3 + G3',),
+        'Melody': ('C4', 'E4', 'G4', 'B4'),
+    }[layer]
+    _label(c, 40, 55, layer.upper(), 34)
+    _label(c, 40, 115, 'One cycle = four beats at 100 BPM', 26)
+    cell = 720 / len(labels)
+    for i, text in enumerate(labels):
+        c.rect(40 + i * cell + 3, 200, cell - 6, 130, fill=PAPER if text == 'rest' else PALE_TEAL, stroke=LINE, width=2)
+        _label(c, 40 + (i + 0.5) * cell, 265, text, 25, anchor='middle')
+    for i in range(4):
+        _label(c, 40 + (i + 0.5) * 180, 370, f'beat {i + 1}', 24, anchor='middle')
+    _arrow(c, 40, 415, 760, 415)
+    _label(c, 40, 475, 'Separate role. Shared pulse.', 29)
+    _label(c, 40, 532, 'Open the linked editor. Change one part.', 26)
+    return c.finish(name or 'w06-layer-' + layer.lower())
+
+
+def w06_musicgen(name='w06-musicgen', w=800, h=640):
+    c = Canvas(w, h, bg=WHITE)
+    _node(c, 80, 25, 640, 135, ['AUDIO CODEC / TRAINING', 'Audio > discrete codes'], PALE_TEAL)
+    _arrow(c, 400, 173, 400, 225, ORANGE)
+    _node(c, 80, 240, 640, 135, ['TRANSFORMER / GENERATION', 'Text conditions predicted codes'], PAPER)
+    _arrow(c, 400, 388, 400, 440, ORANGE)
+    _node(c, 80, 455, 640, 135, ['CODEC DECODER', 'Predicted codes > waveform'], PALE_ORANGE)
+    _label(c, 400, 618, 'Audio codes are not literal musical notes.', 25, anchor='middle')
+    return c.finish(name)
 
 WHITE = '#FFFFFF'
 PAPER = '#F4F4F2'
