@@ -12,7 +12,7 @@ OPENAI = "https://openai.com/index/gpt-6-for-everyone/"
 MOTION = "https://claude.com/resources/articles/dashboards-and-motion"
 
 def news_slides(course="SD5913"):
-    """Four optional discussion slides; no ClassPoint/quiz activity IDs."""
+    """Seven optional discussion slides; no ClassPoint/quiz activity IDs."""
     design = course == "SD2112"
     rows = [
         ("13 OCT 2026 · GOOGLE", "Gemini 4 Argon", [
@@ -55,6 +55,45 @@ def news_slides(course="SD5913"):
          "Proprietary product beta. Optional: show the official explainer example. "
          "Discuss timing and editability without claiming a classroom result. "
          "No student subscription or live generation is required."),
+        ("STATUS CHECK · 14 OCT 2026 · MELTY", "Games become remix material", [
+            "Windows launcher for mods and mashups of games you already own.",
+            "Give Claude Code or Codex its instructions to build and publish a mashup.",
+            "Free download; compatibility and safety claims need checking per mod.",
+        ], "What makes a mashup a new creative work?" if design else
+           "Which behaviours would you test before sharing a game mod?",
+         "https://melty.gg/", "Melty: examples + requirements",
+         "The official page provides no exact launch date; 14 October is our status-check "
+         "date, not a release date. Show the page examples rather than installing in class. "
+         "Owning a game does not by itself resolve permissions to redistribute assets. "
+         "Do not infer that Melty uses REA or that arbitrary game pairs work."),
+        ("11 OCT 2026 · PHOTOCRAFT 0.7.0", "Rebuilding creative tools", [
+            "ArtCraft lists 13 Rust creative apps, from image editing to audio.",
+            "PhotoCraft 0.7.0: downloadable desktop builds; Apache-2.0 source.",
+            "The lineup is early alpha / in development; familiar UI is not feature parity.",
+        ], "What must a replacement preserve: habits, files or results?" if design else
+           "How would you test file compatibility beyond a similar interface?",
+         "https://getartcraft.com/apps", "ArtCraft: lineup + application links",
+         "Concrete release: https://github.com/storytold/photocraft/releases/tag/v0.7.0 "
+         "published 11 October 2026. License verified from the PhotoCraft repository; "
+         "do not assume every app has that same license. The site advertises agent access "
+         "via CLI, JSON or MCP. These apps are not classroom-tested replacements. "
+         "No evidence here establishes that ArtCraft uses REA."),
+        ("11 OCT 2026 · REA 6.4.0", "If agents can inspect software...", [
+            "REA connects agents to app / binary analysis through MCP and a CLI.",
+            "MIT-licensed tool; 6.4 adds Android inspection and analysis improvements.",
+            "Evidence can support reimplementation; inferred behaviour still needs tests.",
+        ], "Where is your line between inspiration, compatibility and copying?" if design else
+           "What evidence separates a compatible implementation from a clone?",
+         "https://github.com/morluto/rea", "REA: source, examples + limitations",
+         "Release: https://github.com/morluto/rea/releases/tag/rea-agents-6.4.0 "
+         "published 11 October 2026. Native analysis needs a supported provider such as "
+         "Ghidra, Hopper or IDA; a tool's MIT license grants no rights over its targets. "
+         "Discussion: distinguish observing behaviour, independently implementing a feature, "
+         "copying source/assets, and bypassing access controls. Ask who benefits, who is credited, "
+         "and which permissions need checking. This is an ethics/design discussion, not legal advice. "
+         "Optional safe exercise: observe a teacher-owned toy interface, write an input/output "
+         "specification and edge-case tests, then implement independently without viewing source. "
+         "Do not claim this proves a legal clean-room process."),
     ]
     slides = []
     for date, heading, points, prompt, url, label, note in rows:

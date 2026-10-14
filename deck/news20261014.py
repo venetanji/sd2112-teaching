@@ -9,7 +9,7 @@ from news_20261014 import news_slides
 
 S = [title("SD2112 · NEWS · 14 OCTOBER 2026", "What changed this week?",
            "Agents, interactive answers and editable motion", size=100,
-           notes="Optional four-minute opener for the next session. Keep the full "
+           notes="Optional four-minute selection from seven news slides for the next session. Keep the full "
                  "30-minute, 40-question quiz and the existing brainstorming, team "
                  "formation and team video-mark activity. News is not new assessed "
                  "quiz content. No changes to numbering, deadlines or rubrics.")]
