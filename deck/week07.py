@@ -7,14 +7,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from deckgen import attach_reports
 from deckgen.layouts import title, agenda, statement, content, activity, question, end, finalize
 from course import SITE, footer
+from news_20261014 import news_slides
 from week07_recap import recap_slides
 
 FOOTER = footer(7)
 S = []
 
 S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 07',
-    'AI + X.', 'Recap. Mid-term quiz. Your team and product.',
-    notes='Class starts at 11:30. Review the twenty selected concept slides from Weeks 1-6 in fifteen minutes, then take ClassPoint questions until noon. The Canvas quiz remains 12:00-12:30. No quiz questions or answer keys belong in this public deck.'))
+    'AI + X.', 'This week in AI. Recap. Quiz. Your team and product.',
+    notes='This week in AI opens this same Week 7 deck; choose news slides as an optional pre-class opener. Class starts at 11:30 with the twenty-slide recap, then ClassPoint questions from 11:45 until noon. The Canvas quiz remains 12:00-12:30. No quiz questions or answer keys belong in this public deck.'))
+NEWS = news_slides('SD2112')
+S.extend(NEWS)
 S.append(agenda('WEEK 7 / RECAP THEN QUIZ THEN TEAMS', [
     '11:30-11:45 / Weeks 1-6 / twenty key concept slides',
     '11:45-12:00 / ask me anything / send your questions',
@@ -24,7 +27,7 @@ S.append(agenda('WEEK 7 / RECAP THEN QUIZ THEN TEAMS', [
     'Step 2 / twenty minutes / one product image per team',
 ], notes='Fifteen-minute recap, then fifteen minutes for questions before the noon test. Team formation and registration are included in Step 1, not separate timed activities. The two workshop steps total forty minutes including both submissions.'))
 
-RECAP = recap_slides()
+RECAP = recap_slides(first_number=len(S) + 1)
 S.extend(RECAP)
 S.append(question('short_answer', 'Ask me anything.',
     hint='What would you like to clarify?\nSend your questions on ClassPoint until 12:00.',

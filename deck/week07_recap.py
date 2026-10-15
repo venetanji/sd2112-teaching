@@ -42,7 +42,7 @@ SELECTION = {
 }
 
 
-def recap_slides():
+def recap_slides(first_number):
     slides = []
     for week, titles in SELECTION.items():
         source = import_module(f'week{week:02d}').S
@@ -58,7 +58,7 @@ def recap_slides():
             slide.cp = None
             slide.report = ''
             slide.notes = f'Week {week} concept recap before the quiz. ' + slide.notes
-            add_chrome(slide, len(slides) + 3, f'SD2112 / WEEK 07 / RECAP WEEK {week:02d}')
+            add_chrome(slide, len(slides) + first_number, f'SD2112 / WEEK 07 / RECAP WEEK {week:02d}')
             slide.chrome = False
             slides.append(slide)
     return slides

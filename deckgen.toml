@@ -7,7 +7,7 @@ name   = "Artificial Intelligence in Design"
 year   = "2026/27"
 school = "PolyU School of Design"
 footer = "SD2112 · AI IN DESIGN"
-decks  = ["week01", "week02", "week03", "week04", "week05", "week06", "week07", "news20261014"]
+decks  = ["week01", "week02", "week03", "week04", "week05", "week06", "week07"]
 artifact = "sd2112-powerpoints"
 
 [[nav]]
@@ -53,7 +53,3 @@ href  = "syllabus.html"
 src   = "SD2112-syllabus-2026.md"
 out   = "syllabus.html"
 title = "SD2112 · Syllabus 2026/27"
-
-[[nav]]
-label = "AI news · 14 October 2026"
-href = "news20261014/"

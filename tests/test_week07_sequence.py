@@ -17,8 +17,8 @@ def slide_text(slide):
 class Week07Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        from deck.week07 import DECK, RECAP, S
-        cls.slides, cls.deck, cls.recap = S, DECK, RECAP
+        from deck.week07 import DECK, NEWS, RECAP, S
+        cls.slides, cls.deck, cls.news, cls.recap = S, DECK, NEWS, RECAP
 
     def slide(self, title):
         matches = [s for s in self.slides if s.title == title]
@@ -29,9 +29,9 @@ class Week07Tests(unittest.TestCase):
         from week07_recap import SELECTION
         self.assertEqual(set(SELECTION), set(range(1, 7)))
         self.assertEqual(len(self.recap), 20)
-        self.assertEqual(self.slides[2:22], self.recap)
+        self.assertEqual(self.slides[9:29], self.recap)
         quiz = self.slide('Mid-term quiz.\n12:00-12:30.')
-        self.assertEqual(self.slides.index(quiz), 23)
+        self.assertEqual(self.slides.index(quiz), 30)
         for phrase in ('Canvas', 'Weeks 1-6', '10%', '12:00-12:30'):
             self.assertIn(phrase.lower(), slide_text(quiz).lower())
         self.assertLess(self.slides.index(quiz), self.slides.index(self.slide('One concept. One product image.')))
@@ -50,7 +50,7 @@ class Week07Tests(unittest.TestCase):
 
     def test_question_inbox_follows_recap_until_noon_before_quiz(self):
         inbox = self.slide('Ask me anything.')
-        self.assertEqual(self.slides.index(inbox), 22)
+        self.assertEqual(self.slides.index(inbox), 29)
         self.assertEqual(inbox.cp['type'], 'short_answer')
         self.assertTrue(inbox.cp['multiple'])
         for phrase in ('11:45-12:00', 'ClassPoint', 'until 12:00'):
@@ -106,12 +106,24 @@ class Week07Tests(unittest.TestCase):
         for phrase in ('20%', '1000', 'at least three', 'Weeks 2-6', 'images', 'Canvas', 'AI-writing process note'):
             self.assertIn(phrase, reflection)
 
-    def test_week_and_news_are_registered_and_report_hook_is_retained(self):
+    def test_news_opens_week_seven_instead_of_a_separate_deck(self):
+        from news_20261014 import news_slides
+        self.assertEqual(len(self.news), 7)
+        self.assertEqual(self.slides[1:8], self.news)
+        self.assertEqual([s.title for s in self.news], [s.title for s in news_slides('SD2112')])
+        self.assertFalse(any(s.cp for s in self.news))
+        self.assertTrue(all('not assessed' in s.notes for s in self.news))
+        self.assertLess(self.slides.index(self.news[-1]), self.slides.index(self.recap[0]))
+
+    def test_only_week_seven_is_registered_and_report_hook_is_retained(self):
         config = tomllib.loads((ROOT / 'deckgen.toml').read_text(encoding='utf-8'))
-        for name in ('week07', 'news20261014'):
-            self.assertIn(name, config['course']['decks'])
-            self.assertTrue(any(n['href'] == name + '/' for n in config['nav']))
+        self.assertIn('week07', config['course']['decks'])
+        self.assertTrue(any(n['href'] == 'week07/' for n in config['nav']))
+        self.assertNotIn('news20261014', config['course']['decks'])
+        self.assertFalse(any(n['href'] == 'news20261014/' for n in config['nav']))
+        self.assertFalse((ROOT / 'deck/news20261014.py').exists())
         site = (ROOT / 'site/index.html').read_text(encoding='utf-8')
+        self.assertNotIn('href="news20261014/"', site)
         self.assertIn('href="week07/"', site)
         self.assertIn('week07/SD2112-week07.pdf', site)
         source = (ROOT / 'deck/week07.py').read_text(encoding='utf-8')
@@ -128,6 +140,8 @@ class Week07Tests(unittest.TestCase):
                     self.assertIn('WEEK 07', slide_text(slide))
                     for name in ('chrome-footer', 'chrome-num'):
                         self.assertEqual(sum(getattr(e, 'name', '') == name for e in slide.els), 1)
+                    number = next(e for e in slide.els if getattr(e, 'name', '') == 'chrome-num')
+                    self.assertEqual(number.paras[0].runs[0].text, f'{self.slides.index(slide) + 1:02d}')
                 for el in slide.els:
                     if all(hasattr(el, a) for a in ('x', 'y', 'w', 'h')):
                         self.assertGreaterEqual(el.x, 0)

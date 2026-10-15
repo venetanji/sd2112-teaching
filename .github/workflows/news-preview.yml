@@ -1,10 +1,14 @@
-name: Check dated AI news
+name: Check Week 7 and AI news
 on:
   pull_request:
     paths:
-      - 'deck/news_20261014.py'
-      - 'deck/news20261014.py'
-      - 'tests/test_news_20261014.py'
+      - 'deck/*.py'
+      - 'deck/assets/**'
+      - 'tests/**'
+      - 'lessons/week07-lesson-plan.md'
+      - 'site/**'
+      - 'deckgen.toml'
+      - 'requirements.txt'
       - '.github/workflows/news-preview.yml'
 permissions:
   contents: read
@@ -17,14 +21,16 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r requirements.txt
-      - name: Check news content
-        run: python -m unittest discover -s tests -p 'test_news_20261014.py' -v
-      - name: Build HTML and check overflow
-        run: deckgen build news20261014 --site --no-pdf
+      - name: Check course content and Week 7 sequence
+        run: python -m unittest discover -s tests -v
+      - name: Build Week 7 HTML and PowerPoints and check overflow
+        run: deckgen build week07 --no-pdf
       - uses: actions/upload-artifact@v4
         with:
-          name: news20261014-news-preview
+          name: week07-preview
           path: |
             _site/
             export/preview/
+            export/week07*.pptx
+            export/week07-activities.json
           retention-days: 7
