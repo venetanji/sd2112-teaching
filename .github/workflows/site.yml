@@ -56,15 +56,13 @@ jobs:
         deck: ${{ fromJson(needs.decks.outputs.decks) }}
     steps:
       - uses: actions/checkout@v4
-      # The key covers the deck source, its own figures, shared figures, cross-week answer
-      # links, interactives, vendor scripts, course facts and assets, site styles, config,
-      # the deckgen pin, and this workflow (the Playwright pin). A report update can
-      # invalidate several PDFs; that is preferable to publishing stale answer links.
+      # Week 7 reuses earlier slides, so hash every deck's Python sources and helpers.
+      # Reports, assets, styles and toolchain inputs also invalidate cached PDFs.
       - id: cache
         uses: actions/cache@v4
         with:
           path: pdf
-          key: pdf-${{ matrix.deck }}-${{ hashFiles(format('deck/{0}.py', matrix.deck), format('deck/{0}_figures.py', matrix.deck), 'deck/*-reports.json', 'deck/figures.py', 'deck/course.py', 'deck/assets/**', 'deck/interactives/**', 'deck/vendor/**', 'site/vendor/**', 'deckgen.toml', 'requirements.txt', '.github/workflows/site.yml') }}
+          key: pdf-${{ matrix.deck }}-${{ hashFiles('deck/*.py', 'deck/*-reports.json', 'deck/assets/**', 'deck/interactives/**', 'deck/vendor/**', 'site/vendor/**', 'deckgen.toml', 'requirements.txt', '.github/workflows/site.yml') }}
       - if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/setup-python@v5
         with:
