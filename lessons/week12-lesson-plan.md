@@ -1,14 +1,14 @@
 # SD2112 · Week 12 lesson plan
 
-**Language interfaces, calibrated trust and the mock poster review** · planning draft · October 21, 2026
+**Ethics II: agency, trust, accountability and the mock showcase review** · planning draft · October 21, 2026
 
 ## Status and continuity
 
-This plan preserves the current syllabus's language-interface/trust focus and the discussed mock-poster preparation. It builds on Week 8 humanizing AI, Week 9 recommendation/bias decisions, Week 10 reframing/tests and Week 11 research/curation. It should not repeat the whole Week 8 empathy/sycophancy lecture.
+The latest direction is for Weeks 11–12 to focus more on ethics and related issues. This Week 12 option uses language interfaces and agents as a concrete setting for agency, trust and accountability, then applies those questions to a mock showcase review. Historical slides may be updated or replaced and supplemented with more recent papers; they are not immutable. It builds on Week 8 humanizing AI, Week 9 recommendation/bias decisions, Week 10 reframing/tests and Week 11 research/curation. It should not repeat the whole Week 8 empathy/sycophancy lecture.
 
 No finished Week 12 deck exists on current main. The unmerged [PR #3](https://github.com/venetanji/sd2112-teaching/pull/3) contains an older deck/plan with useful mechanisms but unconfirmed Blackboard, printing and final-quiz instructions. Treat it as source material, not approved logistics. Week 8 PR #21 is separate active work and remains untouched.
 
-Historical PDF pointers from the earlier review: Week 12 pages 46–49 revisit Yu et al.; 55–59 language interfaces; 60–63 curators/guardrails; 64–66 authorship/ownership; 67–69 poster preparation. Inspect originals and reconcile any new instructor materials before reuse.
+The original 70-page 2025 Week 12 PDF has now been recovered and visually inspected. Pages 8–53 broadly recap the course; pages 54–66 provide the distinctive closing synthesis on language interfaces, rules/data, curation and authorship/ownership; pages 67–69 concern the fair and research. Page 27 is a thought/action/observation loop, not a literal agent prompt template. Page 29 depicts a diffusion pipeline, not an autonomous agent. The old four-group feedback instruction and 2025 exam date on pages 4–5 must not silently become 2026 requirements.
 
 ## Purpose
 
@@ -21,6 +21,8 @@ Learning goals:
 - Identify what a person can inspect, correct, approve, refuse or undo.
 - Use the existing rubric to improve the poster, video and mediation-brief story.
 - State a prioritized final revision and an unresolved evidence gap honestly.
+
+Additional ethics outcome: identify affected people and competing values, explain who can contest an outcome, and state who remains accountable when the product fails.
 
 ## Proposed three-hour run of show
 
@@ -40,7 +42,7 @@ These are proposed timings. The rotation count depends on the actual team count 
 
 ## Slide construction plan
 
-1. Language interfaces and calibrated trust.
+1. Ethics II: agency, trust and accountability.
 2. What did your evidence/curation audit change?
 3. What must a person understand before relying on your product?
 4. One request through explicit rules, generation and a hybrid.
@@ -51,13 +53,13 @@ These are proposed timings. The rotation count depends on the actual team count 
 9. A clear boundary: read-only preview, confirmation, result and recovery.
 10. Transparency of use versus visibility of origins/effects.
 11. A convenient interface can hide consequential choices.
-12. Explanation versus faithful evidence; a plausible rationale can mislead.
-13. User control: inspect, correct, refuse, override and leave.
+12. Cecil et al.: do explanations improve error detection or merely persuade? Distinguish the tested advice task from universal claims.
+13. Sharma et al.: independence from helpers versus privacy from providers; accessible inspect, redact, refuse and leave controls.
 14. Uncertainty and escalation: what the product should not claim to handle.
 15. Testing boundaries: ordinary, ambiguous and failure situations.
 16. Worked comparison: same product promise, two different interface contracts.
 17. Keep the user's goal visible, not just the model's response.
-18. Mock review: use the actual project brief and rubric.
+18. Mock review: use the actual project brief and rubric, including research and ethical/sociological impact.
 19. Break.
 20. Teams select three low-risk scenarios for their own product.
 21. Walk through the interface; label simulated model behaviour.
@@ -89,6 +91,7 @@ Each reviewer records:
 
 - What product is this, for whom, and what does the AI decide?
 - Which source supports its central claim, and what limitation is acknowledged?
+- Who benefits or bears a failure, which values conflict, who can contest the result, and who remains answerable?
 - What relationship, data dependency, bias or consequence matters?
 - What control or guardrail addresses the concern, and what evidence is still missing?
 - What is hard to understand from the poster/video/brief alone?
@@ -110,10 +113,31 @@ Source reuse: [old Week 12 deck](https://github.com/venetanji/sd2112-teaching/bl
 
 Allocate facilitation, technical preflight and feedback-recording responsibilities; do not assume named staff have accepted them. Confirm the actual team count, room layout, display access and accessibility needs. If ClassPoint is chosen, verify anonymity and export settings rather than promising them from the plan.
 
-Use the current syllabus's project components: A0 poster, 3–5 minute video and one-page mediation brief, together worth 40% of the course. Final quiz is 20% on the whole course in Week 13. Confirm question count, duration, platform, permitted resources, accessibility/accommodations and contingency arrangements before writing operational slides. The midterm's 40-question/30-minute/open-book rules and the old PR's 30-question/35-minute rules are not authority for the final.
+Use the current syllabus's project components: A0 poster, 3–5 minute video and one-page mediation brief, together worth 40% of the course. The published syllabus also lists a 20% whole-course final quiz in Week 13, but the latest direction is showcase-first. Reconcile that policy item explicitly before announcing any quiz or writing operational instructions. If retained, confirm question count, duration, platform, permitted resources, accessibility/accommodations and contingencies. The midterm's 40-question/30-minute/open-book rules and the old PR's 30-question/35-minute rules are not authority for the final.
 
 No assessment/deadline changes, deck rendering, live-system test, merge or deployment are part of this planning document. Keep public repository content limited to planning and sources, not student work or quiz answers.
 
 ## Existing syllabus milestone to reconcile
 
 The current syllabus lists final poster and video ready in Week 12. This formative mock review does not cancel that existing milestone or move its deadline; confirm the actual Canvas instructions before teaching.
+
+## Ethics-led discussion options and recent evidence
+
+Recommended question: **what may the product invite a person to trust or delegate, and who remains answerable?** Contrast beneficial support with over-reliance, manipulative affirmation and opaque action. Alternative focus: **what meaningful choice remains when the interface is effortless?** Use disclosure, refusal, correction and recovery as concrete design questions, not a universal checklist that proves safety.
+
+Candidate recent readings already discussed for the course:
+
+- Cheng et al. (2026), **Sycophantic AI decreases prosocial intentions and promotes dependence**, https://doi.org/10.1126/science.aec8352 . Use the final study version and measured outcomes; do not infer universal long-term effects. If covered in Week 8, revisit only the product-accountability implication.
+- Maheshka, Folk & Dunn (2026), **Harnessing Artificial Intelligence to Facilitate Difficult Conversations**, https://doi.org/10.1177/19485506261444068 . A complementary example of support for real-world human interaction; not proof of better conversation quality or superiority to human preparation.
+- Wenger, Cameron & Inzlicht (2026), **People choose to receive human empathy despite rating AI empathy higher**, https://doi.org/10.1038/s44271-025-00387-3 . Distinguish response rating, chosen relationship and clinical effectiveness.
+
+Choose the strongest pair for the students' actual projects, avoid reteaching all Week 8 studies, and add fresher relevant research where it improves the question. The mock review should ask who gains, who can contest the result, who bears a failure and which claim lacks evidence. No source choice or ethical position is a newly assessed requirement.
+
+## Selected research refresh: calibrated reliance and accessible privacy
+
+Use these non-Week-8 examples as the preferred ethics pair; the empathy/sycophancy papers above remain optional continuity. Use one excerpt plus one background reading, not an additional mandatory reading load.
+
+- Cecil, Lermer, Hudecek, Sauer & Gaube (2024), **Explainability does not mitigate the negative impact of incorrect AI advice in a personnel selection task**, Scientific Reports: https://doi.org/10.1038/s41598-024-60220-5 . Five preregistered experiments found that incorrect advice harmed performance; the tested heatmap/chart explanations did not reliably reduce overreliance. This does not mean all explanations are useless. Discussion: does an explanation help people catch errors, or merely persuade them? In a fictional low-stakes classroom scenario, test whether people reject deliberately wrong advice rather than measuring trust alone. Do not perform real personnel selection or infer employment decisions from student data.
+- Sharma et al. (2025), **“Before, I Asked My Mom, Now I Ask ChatGPT”: Visual Privacy Management with Generative AI for Blind and Low-Vision People**, ASSETS: https://doi.org/10.1145/3663547.3746335 ; author preprint: https://arxiv.org/html/2507.00286v2 . Interviews with 21 blind and low-vision participants explore privacy/independence trade-offs and desired retention, redaction and accessibility controls. These are experiences and preferences, not tested safeguard efficacy. Discussion: can AI increase privacy from helpers while reducing privacy from providers? Sketch an accessible capture-review-share flow with nonvisual privacy feedback and attention to bystander data. Use fictional images/data rather than collecting private material.
+
+Integrate at the explanation/control discussion and mock-review prompts, replacing generic examples rather than extending class time. Proposed controls and tests are teaching hypotheses, not validated remedies. Review who benefits, who can contest a result, who bears failure and what evidence is missing.
