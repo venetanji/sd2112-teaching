@@ -1,143 +1,142 @@
-# SD2112 · Week 12 lesson plan
+# SD2112 / Week 12 lesson plan
 
-**Ethics II: agency, trust, accountability and the mock showcase review** · planning draft · October 21, 2026
+**Ethics II: calibrated reliance, accessible privacy, delegation and accountability** / draft for instructor review / 21 October 2026
 
 ## Status and continuity
 
-The latest direction is for Weeks 11–12 to focus more on ethics and related issues. This Week 12 option uses language interfaces and agents as a concrete setting for agency, trust and accountability, then applies those questions to a mock showcase review. Historical slides may be updated or replaced and supplemented with more recent papers; they are not immutable. It builds on Week 8 humanizing AI, Week 9 recommendation/bias decisions, Week 10 reframing/tests and Week 11 research/curation. It should not repeat the whole Week 8 empathy/sycophancy lecture.
+Actual source: `deck/week12.py`, with original editable native diagrams in `deck/week12_figures.py`. There are **34 slides: 30 in the timed route and four reference slides**. Native speaker notes are reproduced in `lessons/week12-speaker-notes.md`. The primary-text claim/version ledger is `lessons/week12-evidence-ledger.md`; build and inspection evidence is in `lessons/week12-verification.md`. This is local draft work for PR #25, not a publication, deployment or approved change to assessment.
 
-No finished Week 12 deck exists on current main. The unmerged [PR #3](https://github.com/venetanji/sd2112-teaching/pull/3) contains an older deck/plan with useful mechanisms but unconfirmed Blackboard, printing and final-quiz instructions. Treat it as source material, not approved logistics. Week 8 PR #21 is separate active work and remains untouched.
-
-The original 70-page 2025 Week 12 PDF has now been recovered and visually inspected. Pages 8–53 broadly recap the course; pages 54–66 provide the distinctive closing synthesis on language interfaces, rules/data, curation and authorship/ownership; pages 67–69 concern the fair and research. Page 27 is a thought/action/observation loop, not a literal agent prompt template. Page 29 depicts a diffusion pipeline, not an autonomous agent. The old four-group feedback instruction and 2025 exam date on pages 4–5 must not silently become 2026 requirements.
-
-## Purpose
-
-Students should make their product's capabilities, limits and consequential actions legible. They then test whether another team can understand the product, evidence and trade-offs from its communication without an oral rescue.
+Week 11's evidence/curation audit becomes a question about what a product invites people to rely on. Week 5/8 mediation remains the vocabulary, but Week 8's full empathy/sycophancy lecture is not repeated. Machine A, Machine B and the harness are recalled only to locate consequential choices and permission. Non-chatbot products, services, recommenders, classifiers, objects and installations are valid throughout.
 
 Learning goals:
 
-- Distinguish a rule-based response, generated response and tool-mediated action.
-- Explain why fluent language or an explanation is not by itself proof of correctness.
-- Identify what a person can inspect, correct, approve, refuse or undo.
-- Use the existing rubric to improve the poster, video and mediation-brief story.
-- State a prioritized final revision and an unresolved evidence gap honestly.
+- Distinguish an answer, a tool proposal and a consequential action.
+- Evaluate advice using task performance, not trust or confidence alone.
+- Explain accessibility/privacy trade-offs without treating interview preferences as tested protection.
+- Name affected people, competing values, a contestation route and an accountable role.
+- Improve existing project communication using a bounded peer walkthrough and formative review.
 
-Additional ethics outcome: identify affected people and competing values, explain who can contest an outcome, and state who remains accountable when the product fails.
+The visible ethical argument is not a checklist that certifies safety: independence and access can conflict with privacy and reliability; non-users can bear consequences; delegation does not remove the deploying organization's responsibility to investigate and repair. Teams must justify their own trade-offs and acknowledge untested assumptions.
 
-## Proposed three-hour run of show
+## Exactly three hours
 
-| Minutes | Segment | Proposed slides |
+| Relative minutes | Duration | Segment | Actual slides |
+|---|---|---|---|
+| 0-10 | 10 | Reconnect | 1-3 |
+| 10-40 | 30 | Rules, generation and delegation | 4-10 |
+| 40-65 | 25 | Reliance and accessible privacy | 11-16 |
+| 65-75 | 10 | Worked example and review brief | 17-19 |
+| 75-90 | 15 | Break | 20 |
+| 90-120 | 30 | Interface walkthrough | 21-23 |
+| 120-155 | 35 | Mock review | 24-27 |
+| 155-175 | 20 | Revision | 28-29 |
+| 175-180 | 5 | Close | 30 |
+
+Total: **180 minutes**. Slides 31-34 are a reference shelf, not additional lecture time. If late, reduce spoken lecture detail; protect the 15-minute break, 30-minute interface walkthrough, 35-minute mock review and 20-minute revision. Slides within a workshop block are reference screens within the same timer, not separate timed activities.
+
+## Actual slide map
+
+<!-- slide-map:start -->
+
+| Slide | Actual title | Block |
 |---|---|---|
-| 0–10 | Current project question and evidence gap | 1–3 |
-| 10–40 | Rules, generation and action | 4–9 |
-| 40–65 | Trust, transparency and product boundaries | 10–15 |
-| 65–75 | Worked example and mock-review brief | 16–18 |
-| 75–90 | Break | 19 |
-| 90–120 | Interface walkthrough/test on the team's product | 20–22 |
-| 120–155 | Mock poster review in paired rotations | 23–25 |
-| 155–175 | Revise and prioritize | 26–27 |
-| 175–180 | Confirm next-step questions | 28 |
+| 1 | Trust is not / the target. | 0-10 |
+| 2 | Evidence -> boundary -> revision. | 0-10 |
+| 3 | What should a person NOT delegate to your product? | 0-10 |
+| 4 | "Find an available workshop slot." | 10-40 |
+| 5 | A sentence can become a commitment. | 10-40 |
+| 6 | A tool result becomes the next input. | 10-40 |
+| 7 | Make permission specific. | 10-40 |
+| 8 | Easy to use. Hard to see through. | 10-40 |
+| 9 | A better prompt is not the whole design. | 10-40 |
+| 10 | Delegation does not erase responsibility. | 10-40 |
+| 11 | An explanation did not fix wrong advice here. | 40-65 |
+| 12 | Test rejection of an error - not trust alone. | 40-65 |
+| 13 | Private from a helper. Exposed to whom? | 40-65 |
+| 14 | Privacy controls must be usable before sharing. | 40-65 |
+| 15 | Design the moment it should stop. | 40-65 |
+| 16 | Name the trade-off - and who can contest it. | 40-65 |
+| 17 | Same promise. A different contract. | 65-75 |
+| 18 | Review the project you already owe. | 65-75 |
+| 19 | Can the work speak without an oral rescue? | 65-75 |
+| 20 | Break. / Fifteen minutes. | 75-90 |
+| 21 | Walk through three low-risk situations. | 90-120 |
+| 22 | Show the next action. Do not explain it away. | 90-120 |
+| 23 | One observation. One bounded revision. | 90-120 |
+| 24 | Paired review. Then swap roles. | 120-155 |
+| 25 | Read the poster before the pitch. | 120-155 |
+| 26 | Who benefits? Who can challenge it? | 120-155 |
+| 27 | Does the same product appear in all three? | 120-155 |
+| 28 | Choose the change that matters most. | 155-175 |
+| 29 | A stronger claim can be a narrower claim. | 155-175 |
+| 30 | What will you change - and who can contest the result? | 175-180 |
+| 31 | Cecil et al. / evidence card | Reference shelf |
+| 32 | Sharma et al. / evidence card | Reference shelf |
+| 33 | Read the mechanism. Keep the limits. | Reference shelf |
+| 34 | Carry forward the question - not old logistics. | Reference shelf |
 
-These are proposed timings. The rotation count depends on the actual team count and room. Do not announce a fixed room map, mock-review print format or visiting list before confirmation. The final poster remains A0 under the existing syllabus.
+<!-- slide-map:end -->
 
-## Slide construction plan
+## Reflective question / report map
 
-1. Ethics II: agency, trust and accountability.
-2. What did your evidence/curation audit change?
-3. What must a person understand before relying on your product?
-4. One request through explicit rules, generation and a hybrid.
-5. ELIZA: inspect a written rule rather than anthropomorphizing its mechanism.
-6. Generated responses: flexibility with uncertain correctness.
-7. Agent loop: observe, decide, use a tool, inspect the result.
-8. Answering versus acting: which step changes something for the person?
-9. A clear boundary: read-only preview, confirmation, result and recovery.
-10. Transparency of use versus visibility of origins/effects.
-11. A convenient interface can hide consequential choices.
-12. Cecil et al.: do explanations improve error detection or merely persuade? Distinguish the tested advice task from universal claims.
-13. Sharma et al.: independence from helpers versus privacy from providers; accessible inspect, redact, refuse and leave controls.
-14. Uncertainty and escalation: what the product should not claim to handle.
-15. Testing boundaries: ordinary, ambiguous and failure situations.
-16. Worked comparison: same product promise, two different interface contracts.
-17. Keep the user's goal visible, not just the model's response.
-18. Mock review: use the actual project brief and rubric, including research and ethical/sociological impact.
-19. Break.
-20. Teams select three low-risk scenarios for their own product.
-21. Walk through the interface; label simulated model behaviour.
-22. Revise one capability claim, control or fallback.
-23. Mock review: explain the product from the poster before hearing its pitch.
-24. Trace one product claim to the research and one risk to a design response.
-25. Examine the video/brief connection and record feedback.
-26. Prioritize revisions: essential correction, evidence gap, communication improvement.
-27. State what remains uncertain; do not overclaim what a classroom test proves.
-28. Final-event readiness questions and verified instructions only.
+| Actual slide | Exact question | Native type | Classroom alternative |
+|---|---|---|---|
+| 3 | What should a person NOT delegate to your product? | short_answer | Oral discussion or private team notes |
+| 30 | What will you change - and who can contest the result? | short_answer | Oral share or private team notes |
 
-## Activity A: a language/interface contract, 30 minutes
+These are brief formative discussions, not new assessed uploads. Two optional ClassPoint short answers are emitted; activity slides 21/24/28 do not collect artifacts. Default settings are named, single response; do not promise anonymity. Check actual classroom add-in/privacy settings before use. `attach_reports(S, ... / 'week12-reports.json')` runs before `finalize`; a missing/empty map is a safe pre-class no-op. Do not create fictitious live activity IDs. Later public answer links must withhold anonymous/private activities under the existing course policy.
 
-Use the team's real concept; do not require every product to acquire a chatbot. For non-conversational products, examine the explanations, labels and controls around the AI decision.
+## Activity A / interface walkthrough / 30 minutes
 
-1. Choose an ordinary request, an ambiguous request and a situation outside the intended scope. Avoid sensitive personal disclosures or unsafe tasks.
-2. For each, show what the person sees, what the system is allowed to do and what happens when it cannot continue reliably.
-3. Compare the response/decision with the promised capability. Label generated, simulated and manually scripted behaviour accurately.
-4. Ask another person to explain the next action and available control. Record observed confusion separately from interpretation.
-5. Change one interface element or promise. Keep the research rationale and test limitation beside it.
+Relative 90-120. Use the team's actual concept without requiring a chat interface. For an installation, examine the operator controls and feedback; for a recommender, examine labels, evidence and overrides.
 
-No live third-party action, account creation or new subscription is required. Paper response cards and static screens are a complete fallback. A friendly response, a disclaimer or a prompt alone does not establish safety.
+1. **0-5:** choose ordinary, ambiguous and out-of-scope situations with fictional, low-risk data.
+2. **5-20:** reviewer walks through paper/static screens; a teammate plays the system; an observer records visible choices and confusion. Combine roles if needed.
+3. **20-25:** separate observation from interpretation. What evidence was inspected? Could the reviewer refuse, correct or recover?
+4. **25-30:** revise one claim, control or fallback; state what remains untested.
 
-## Activity B: mock poster review, 35 minutes
+Label all scripted/manual model behavior **SIMULATION**. If a local prototype is available, distinguish actual output from manual intervention and restrict it to fictional data/read-only operations. No third-party action, account creation, subscription, cloud upload, booking, payment or private personal input. Paper cards/static screens are a complete workflow. Do not simulate disability; accessibility evaluation needs appropriate affected participants and consent, not blindfolded sighted peers. A classroom peer walkthrough is not safety, access or usability validation.
 
-Use available draft posters, concept boards or readable digital layouts. Printed drafts can help but are not compulsory unless the instructor confirms this separately. Pair teams, then swap roles; add another pairing only if time and room allow.
+Prepared no-network example: fictional Room C has eight seats; twelve people need a room; a card explicitly labelled SIMULATION incorrectly recommends Room C. A reviewer checks the visible rule, rejects or questions the advice, and explains what evidence they used. This is not a replication of the personnel-selection experiments and not a measurement of general trust.
 
-Each reviewer records:
+## Activity B / mock review / 35 minutes
 
-- What product is this, for whom, and what does the AI decide?
-- Which source supports its central claim, and what limitation is acknowledged?
-- Who benefits or bears a failure, which values conflict, who can contest the result, and who remains answerable?
-- What relationship, data dependency, bias or consequence matters?
-- What control or guardrail addresses the concern, and what evidence is still missing?
-- What is hard to understand from the poster/video/brief alone?
+Relative 120-155. Available draft posters/concept boards/readable layouts suffice for feedback; printing is not compulsory. Use an existing video or a storyboard/static frames and acknowledge that playback/pacing/audio remain untested when appropriate.
 
-Reviewers give one strength and one specific revision. This is formative feedback, not a new grading scheme or promise of a particular mark. Do not collect student names or publish draft work without authorization.
+- **0-3:** pair teams and open readable materials; adapt a local cluster for odd team counts/access needs without inventing a fixed four-group rotation.
+- **3-15:** Team A reviews Team B: three minutes silent/accessible poster inspection; four minutes evidence and ethics; five minutes video/storyboard, brief and clarification.
+- **15-27:** swap roles using the same twelve-minute structure.
+- **27-35:** synthesize one strength, one specific revision and one unresolved question for each team.
 
-## Reading and source register
+Review questions: What product is it, for whom, and what does AI decide? What is built versus simulated? Which source supports its claim and what are the task/population/outcome limits? Who benefits, who bears failure, which values conflict, who can contest it and who remains answerable? Does the proposed response address a real risk, and what could show it fails? Do poster, video and mediation brief describe the same relation, data, bias and guardrails?
 
-- Weizenbaum (1966), **ELIZA—a computer program for the study of natural language communication between man and machine**: https://doi.org/10.1145/365153.365168 . Historical mechanism, not a current therapeutic product.
-- Yao et al., **ReAct: Synergizing Reasoning and Acting in Language Models**: https://arxiv.org/abs/2210.03629 . Mechanism source for interleaving reasoning/action; not proof that any deployed agent acts safely.
-- Van Den Eede (2011), **In Between Us: On the Transparency and Opacity of Technological Mediation**: https://doi.org/10.1007/s10699-010-9190-y . Theory anchor for the two senses of transparency.
-- Turpin et al. (2023), **Language Models Don't Always Say What They Think: Unfaithful Explanations in Chain-of-Thought Prompting**: https://arxiv.org/abs/2305.04388 . Use the tested context and distinction between rationale and faithful explanation; avoid claiming every explanation is false.
-- Mitchell et al. (2019), **Model Cards for Model Reporting**: https://arxiv.org/abs/1810.03993 . Documentation questions about intended use and evaluation, not a certification of safety.
-- Yu et al. (2025), **Exploring cognitive presence patterns in GenAI-integrated six-hat thinking technique scaffolded discussion**: https://doi.org/10.1186/s41239-025-00545-x . Optional continuity with Week 11, not a replacement for project-specific evidence.
+Feedback stays in private team working notes. No student names, draft work, grades or responses enter this public repository. Do not promise a mark or create a new rubric/submission. More pairings are optional only if genuine spare time/room exists; do not displace revision.
 
-Source reuse: [old Week 12 deck](https://github.com/venetanji/sd2112-teaching/blob/83733ca09969da3439c251260a45549a16f12e71/deck/week12.py). Verify any retained incident, model-performance figure or legal assertion against a current primary source. Do not carry forward its assumed final-quiz format or printing schedule.
+## Activity C / revision / 20 minutes
 
-## Before class and before final-event instructions
+Relative 155-175: five minutes compare notes, ten minutes make one essential correction, five minutes identify a remaining evidence gap and communication improvement. Prefer correcting misleading claims or consequential boundaries before decorative polish. Assign a team action owner in working notes if useful. Narrow a claim only when the narrower version is actually supported; do not fabricate a citation or user test. No new deadline, grade or upload.
 
-Allocate facilitation, technical preflight and feedback-recording responsibilities; do not assume named staff have accepted them. Confirm the actual team count, room layout, display access and accessibility needs. If ClassPoint is chosen, verify anonymity and export settings rather than promising them from the plan.
+## Selected evidence and reading load
 
-Use the current syllabus's project components: A0 poster, 3–5 minute video and one-page mediation brief, together worth 40% of the course. The published syllabus also lists a 20% whole-course final quiz in Week 13, but the latest direction is showcase-first. Reconcile that policy item explicitly before announcing any quiz or writing operational instructions. If retained, confirm question count, duration, platform, permitted resources, accessibility/accommodations and contingencies. The midterm's 40-question/30-minute/open-book rules and the old PR's 30-question/35-minute rules are not authority for the final.
+One prepared excerpt/evidence card plus one background reading; no additional compulsory reading load is imposed. Descriptive attributed links are visible on research slides and the reference shelf.
 
-No assessment/deadline changes, deck rendering, live-system test, merge or deployment are part of this planning document. Keep public repository content limited to planning and sources, not student work or quiz answers.
+- [Cecil et al. (2024), Scientific Reports](https://doi.org/10.1038/s41598-024-60220-5): five controlled online experiments, fictional CV advice, 1,403 students/HRM employees. Wrong advice harmed trial-level accuracy; tested heatmaps/charts did not reliably reduce overreliance. Advice quality/confidence are distinct outcomes. Not universal evidence against explanations or a test of real hiring.
+- [Sharma et al. (2025), ASSETS record](https://doi.org/10.1145/3663547.3746335); [consulted author preprint v2](https://arxiv.org/html/2507.00286v2): interviews with 21 US BLV GenAI users. Independence, helpers/providers and others' privacy; experiences/preferences, not tested control efficacy. Full author version read; final typeset text not compared.
+- [Yao et al., ReAct, ICLR 2023 / v3](https://arxiv.org/abs/2210.03629v3): primary mechanism for interleaved reasoning/action/observation, not proof of safe delegation.
+- [Mitchell et al., Model Cards, 2019 / v2](https://arxiv.org/abs/1810.03993v2): primary documentation framework, not a certificate or new required report.
 
-## Existing syllabus milestone to reconcile
+The syllabus's Van Den Eede reading remains background; its full text was not newly retrieved, so the deck labels its transparency distinction as a working design distinction rather than attributing detailed claims to an unread text. ELIZA and contemporary incidents are not used. Optional Week 8 empathy/sycophancy sources are not retaught.
 
-The current syllabus lists final poster and video ready in Week 12. This formative mock review does not cancel that existing milestone or move its deadline; confirm the actual Canvas instructions before teaching.
+## Archive comparison and retained synthesis
 
-## Ethics-led discussion options and recent evidence
+The 2025 Week 12 PDF has **70 pages**. Positions 54-69 were extracted and rendered: language as interface, rules/data, designer as curator, authorship/ownership, then fair/research logistics. Positions 27 and 29 were separately rendered: page 27 is a thought/action/observation loop under an imprecise "Agent prompt" title; page 29 is diffusion, not agents. New diagrams are original native elements, not copied screenshots or assertions of faithful internal cognition.
 
-Recommended question: **what may the product invite a person to trust or delegate, and who remains answerable?** Contrast beneficial support with over-reliance, manipulative affirmation and opaque action. Alternative focus: **what meaningful choice remains when the interface is effortless?** Use disclosure, refusal, correction and recovery as concrete design questions, not a universal checklist that proves safety.
+The editable OneDrive Week 12 deck has **71 slides**, including Ask Me Anything at 54; subsequent synthesis is shifted by one (PDF54 -> PPTX55). Retain the designer's curation/accountability question and process disclosure, not unverified Ihde language claims, universal "ultimate interface" predictions or legal ownership assertions. Do not carry over the 2025 exam date, four-group requirement, shared board link or upload date. Old PR #3 remains historical background, not tooling or operational authority; no logistics are copied from it.
 
-Candidate recent readings already discussed for the course:
+## Existing assessment and instructor decisions
 
-- Cheng et al. (2026), **Sycophantic AI decreases prosocial intentions and promotes dependence**, https://doi.org/10.1126/science.aec8352 . Use the final study version and measured outcomes; do not infer universal long-term effects. If covered in Week 8, revisit only the product-accountability implication.
-- Maheshka, Folk & Dunn (2026), **Harnessing Artificial Intelligence to Facilitate Difficult Conversations**, https://doi.org/10.1177/19485506261444068 . A complementary example of support for real-world human interaction; not proof of better conversation quality or superiority to human preparation.
-- Wenger, Cameron & Inzlicht (2026), **People choose to receive human empathy despite rating AI empathy higher**, https://doi.org/10.1038/s44271-025-00387-3 . Distinguish response rating, chosen relationship and clinical effectiveness.
+Keep the **A0 poster, 3-5 minute video and one-page mediation brief**, together **40% of the course**. Existing project rubric proportions are research/context 30%, ethical/sociological impact 30%, communication/poster 20%, video 10%, collaboration/process 10%. Mock feedback does not add assessment criteria or change those proportions.
 
-Choose the strongest pair for the students' actual projects, avoid reteaching all Week 8 studies, and add fresher relevant research where it improves the question. The mock review should ask who gains, who can contest the result, who bears a failure and which claim lacks evidence. No source choice or ethical position is a newly assessed requirement.
+The syllabus still lists final poster/video ready in Week 12. This mock review does not cancel that milestone or move its deadline: confirm actual Canvas instructions. The syllabus also still lists a 20% whole-course final quiz in Week 13, while the latest direction is showcase-first. **Instructor must reconcile that policy before any announcement. Neither announce a final-quiz format nor cancel it.** Midterm and 2025 quiz rules are not authority for this decision.
 
-## Selected research refresh: calibrated reliance and accessible privacy
-
-Use these non-Week-8 examples as the preferred ethics pair; the empathy/sycophancy papers above remain optional continuity. Use one excerpt plus one background reading, not an additional mandatory reading load.
-
-- Cecil, Lermer, Hudecek, Sauer & Gaube (2024), **Explainability does not mitigate the negative impact of incorrect AI advice in a personnel selection task**, Scientific Reports: https://doi.org/10.1038/s41598-024-60220-5 . Five preregistered experiments found that incorrect advice harmed performance; the tested heatmap/chart explanations did not reliably reduce overreliance. This does not mean all explanations are useless. Discussion: does an explanation help people catch errors, or merely persuade them? In a fictional low-stakes classroom scenario, test whether people reject deliberately wrong advice rather than measuring trust alone. Do not perform real personnel selection or infer employment decisions from student data.
-- Sharma et al. (2025), **“Before, I Asked My Mom, Now I Ask ChatGPT”: Visual Privacy Management with Generative AI for Blind and Low-Vision People**, ASSETS: https://doi.org/10.1145/3663547.3746335 ; author preprint: https://arxiv.org/html/2507.00286v2 . Interviews with 21 blind and low-vision participants explore privacy/independence trade-offs and desired retention, redaction and accessibility controls. These are experiences and preferences, not tested safeguard efficacy. Discussion: can AI increase privacy from helpers while reducing privacy from providers? Sketch an accessible capture-review-share flow with nonvisual privacy feedback and attention to bystander data. Use fictional images/data rather than collecting private material.
-
-Integrate at the explanation/control discussion and mock-review prompts, replacing generic examples rather than extending class time. Proposed controls and tests are teaching hypotheses, not validated remedies. Review who benefits, who can contest a result, who bears failure and what evidence is missing.
+Before teaching, confirm actual team count, room/pairing, displays, accessibility requirements, local playback and facilitation roles without assuming named staff accepted tasks. Check ClassPoint add-in/report/privacy settings if used; oral/team-note alternatives remain complete. Confirm review material access and feedback privacy. No new room map, print requirement, visitor list, deadline, grade, submission platform or live-system capability is approved by this draft.
