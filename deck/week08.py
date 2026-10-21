@@ -49,9 +49,13 @@ S.append(content('0-10 / FROM WEEK 7 TO WEEK 8', 'Your concept is a starting cla
     'Today: research -> product decision -> a revised scope and a test.',
     'Work in your team notes. No new ClassPoint upload today.',
 ], body_size=36, notes='Recall Week 7: one concept text and one image, teams already formed. Do not recollect or publish them. Ask teams to open their own material privately. This workshop informs the existing formal one-page group proposal; it does not cancel or replace it. The syllabus still specifies that proposal for Week 8. Confirm actual Canvas instructions/deadline before teaching; do not invent one.'))
-S.append(statement('What relationship\ndoes your product\ninvite?', eyebrow_text='DISCUSS / TOOL? ADVISER? TEAMMATE? COMPANION? AUTHORITY?',
-    size=104, bg=PAPER,
-    notes='Two-minute pair discussion within the ten-minute opening. Ask for one product feature and the expectation it invites, not a personal story. The list is deliberately open, not a classification test. A recommender with no face can still feel authoritative. Transition: the relation is not simply a property of the object.'))
+S.append(content('NEWS / 15 OCTOBER 2026 / OPTIONAL TWO-MINUTE OPENER',
+    'Directing an AI-generated scene', [
+    'Kling 4.0: up to 30 seconds, 15 reference assets and 10 keyframes.',
+    'Vendor report, not independent evidence of reliable continuity.',
+    'What can you direct? What would you still need to test?',
+    '[Kuaishou launch announcement](https://ir.kuaishou.com/news-releases/news-release-details/kling-ai-officially-launches-next-generation-kling-40-raising)',
+], body_size=35, notes='Optional two minutes within the existing 0-10 opening, replacing the previous pair discussion rather than adding time. Kuaishou dates the actual launch to 15 October 2026; the page is dated 17 October and the dateline 16 October. Rechecked primary release 21 October. Reference/keyframe limits and continuity statements are vendor claims, not independent performance evidence. Account availability and cost are not guaranteed; preflight separately before any live use. The release describes enterprise API access and two-minute video extensions as upcoming, not available classroom features. No live generation, signup or payment is needed: discuss a storyboard or owned reference image. Ask which controls express human intent and what testing would establish that output follows it. Then return to the existing project question: what relationship does your product invite, and what does the person still decide? If skipped, use that relationship question for the same two-minute pair discussion. Preserve the 15-minute break, 40-minute research and 25-minute revision blocks. The optional MultiLangBench item remains a source-reading extension, not another timed slide.'))
 
 # 10-30 minutes: re-use the established Week 5 framework and diagram.
 S.append(figure_slide('10-30 / MEDIATION RECAP', 'Technology shapes the relation.', M.mediation_relations(),

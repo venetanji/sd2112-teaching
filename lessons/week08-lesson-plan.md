@@ -58,7 +58,7 @@ The syllabus specifies a three-hour lecture/workshop block. The following relati
 
 1. **Humanizing AI.** Central question: what changes when the model inside a product becomes a perceived other?
 2. **Where your project is now.** Reuse existing concepts/images as context, without collecting or publishing new student material.
-3. **What relationship does this product invite?** Brief discussion. Keep responses open-ended.
+3. **Directing an AI-generated scene.** Optional two-minute Kling 4.0 news discussion within the opening ten minutes. Contrast vendor claims with evidence and ask what a designer can control/test. If skipped, retain the previous relationship question. This replaces that pair discussion, not the protected research or break time.
 4. **Mediation recap.** Reuse the course's established Ihde/Verbeek diagrams and vocabulary; distinguish the relation from the device itself.
 5. **Alterity.** Explain experiencing technology as an apparent other; do not assert that apparent agency proves consciousness.
 6. **Cues and expectations.** Voice, turn-taking, memory claims, naming, emotional language and human-like presentation. Label examples as design analysis, not study findings.

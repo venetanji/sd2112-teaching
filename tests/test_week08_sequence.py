@@ -17,6 +17,18 @@ class Week08Tests(unittest.TestCase):
         from deck.week08 import S, DECK, MAIN_SLIDE_COUNT
         cls.slides, cls.deck, cls.main_count = S, DECK, MAIN_SLIDE_COUNT
 
+    def test_weekly_news_is_in_opening_without_extra_time(self):
+        opening = self.slides[2]
+        visible = text(opening)
+        for phrase in ('Kling 4.0', '15 October 2026', 'Vendor', 'keyframes'):
+            self.assertIn(phrase.lower(), visible.lower())
+        self.assertIn('two minutes within', opening.notes)
+        self.assertIn('not independent', opening.notes)
+        self.assertIn('not guaranteed', opening.notes)
+        self.assertTrue(any('ir.kuaishou.com' in (r.url or '')
+                            for e in opening.els if hasattr(e, 'paras')
+                            for p in e.paras for r in p.runs))
+
     def test_main_route_and_break_preserve_the_recovered_budget(self):
         self.assertEqual(self.main_count, 32)
         self.assertEqual(len(self.slides), 42)

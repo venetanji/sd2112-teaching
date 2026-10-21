@@ -10,9 +10,9 @@ Three-hour class. Research -> AI product -> existing student project. Main route
 
 Recall Week 7: one concept text and one image, teams already formed. Do not recollect or publish them. Ask teams to open their own material privately. This workshop informs the existing formal one-page group proposal; it does not cancel or replace it. The syllabus still specifies that proposal for Week 8. Confirm actual Canvas instructions/deadline before teaching; do not invent one.
 
-## 03 / What relationship does your product invite?
+## 03 / Directing an AI-generated scene
 
-Two-minute pair discussion within the ten-minute opening. Ask for one product feature and the expectation it invites, not a personal story. The list is deliberately open, not a classification test. A recommender with no face can still feel authoritative. Transition: the relation is not simply a property of the object.
+Optional two minutes within the existing 0-10 opening, replacing the previous pair discussion rather than adding time. Kuaishou dates the actual launch to 15 October 2026; the page is dated 17 October and the dateline 16 October. Rechecked primary release 21 October. Reference/keyframe limits and continuity statements are vendor claims, not independent performance evidence. Account availability and cost are not guaranteed; preflight separately before any live use. The release describes enterprise API access and two-minute video extensions as upcoming, not available classroom features. No live generation, signup or payment is needed: discuss a storyboard or owned reference image. Ask which controls express human intent and what testing would establish that output follows it. Then return to the existing project question: what relationship does your product invite, and what does the person still decide? If skipped, use that relationship question for the same two-minute pair discussion. Preserve the 15-minute break, 40-minute research and 25-minute revision blocks. The optional MultiLangBench item remains a source-reading extension, not another timed slide.
 
 ## 04 / Technology shapes the relation.
 

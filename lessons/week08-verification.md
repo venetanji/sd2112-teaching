@@ -1,5 +1,19 @@
 # Week 8 implementation and verification
 
+## Current review-fix verification: 21 October 2026
+
+The current export has **42 slides**. Slide 3 now integrates the dated Kling 4.0 news discussion as an optional two-minute replacement within the existing ten-minute opening. No slides or minutes were added; the 15-minute break, 40-minute research and 25-minute revision remain protected. The primary release was rechecked on 21 October; vendor claims and upcoming API/extension availability stay qualified.
+
+- New regression failed against the previous source before the fix. Full repository suite now passes: **110 tests** (`python -m unittest discover -s tests`). Existing Deckgen image ResourceWarnings remain; they are not new failures.
+- `deckgen build week08 --no-pdf` passed with pinned Deckgen v0.11.2 (`9990546c01865807e6aaac5aaa50977b4b6b916a`). HTML, both PPTX variants, native previews and companion documents were generated; no text-overflow failure.
+- Inspected the changed generator-native previews. This is not Microsoft PowerPoint/ClassPoint or full browser/mobile certification.
+- The attempted full PDF build could not launch local Chromium: the execution sandbox rejects its socket call (`Operation not permitted`). PDF rendering is not claimed for these changed sources; the affected-week CI build must verify it. No security restriction was bypassed.
+- Generated exports, screenshots and local logs remain outside version control. No merge, production deployment or assessment-platform change.
+
+## Prior authoring evidence (historical)
+
+The record below describes the previous source/export version and is retained for provenance. Its full PDF/browser checks do not certify the changed output above.
+
 Prepared 21 October 2026 for draft PR #21. Local source implementation, not a merge, release, deployment or confirmation of a dated class timetable.
 
 ## Produced
