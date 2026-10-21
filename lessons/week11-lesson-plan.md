@@ -1,14 +1,14 @@
 # SD2112 · Week 11 lesson plan
 
-**Research, curation and authorship: make the project's argument visible** · planning draft · October 21, 2026
+**Ethics I: evidence, curation, authorship and responsibility** · planning draft · October 21, 2026
 
 ## Status and continuity
 
-This is a proposed lesson/slide plan, not a finished deck or new assignment. Week 11 combines the discussed research-literacy thread with the current syllabus's curation/authorship and poster-lab focus. Research started in Week 8; it must not be postponed until this session. Teams bring their accumulated evidence and the findings of the proposed Week 10 reframing/test session, whatever fidelity they reached.
+The latest direction is for Weeks 11–12 to focus more on ethics and related issues. This is an evidence-led option for Week 11, not a settled final selection, finished deck or new assignment. Historical slides may be freely updated and supplemented with newer papers; fidelity to old slides is not the objective. Week 11 combines the discussed research-literacy thread with the current syllabus's curation/authorship and poster-lab focus. Research started in Week 8; it must not be postponed until this session. Teams bring their accumulated evidence and the findings of the proposed Week 10 reframing/test session, whatever fidelity they reached.
 
 Current main has Weeks 1–7. The [old whole-course PR #3](https://github.com/venetanji/sd2112-teaching/pull/3) contains an unmerged Week 11 deck and plan, but its assumed prototype completion, same-night deadlines, legal case status and Blackboard logistics are not current instructions. [Week 8 PR #21](https://github.com/venetanji/sd2112-teaching/pull/21) is separate active work and must remain untouched.
 
-The earlier historical-PDF review identified research literacy/paper reading on Week 11 pages 7–19, copyright on 20–25 and project research on page 28. Additional instructor-supplied slides may change the source selection; reconcile them before building.
+The original 29-page 2025 Week 11 PDF has now been recovered and visually inspected: pages 8–19 cover the six-hat/cognitive-presence paper, 20–25 copyright cases and 26–28 poster/research activity. Page 13 is an annotated group-chat data-collection interface; page 14 compares epistemic networks, not raw test scores. Do not generalize the study to all students. Page 4 asks individuals to give feedback to four other groups; that historical instruction is not automatically a new 2026 assessment rule. Page 5 carries a 2025 exam date that must not transfer.
 
 ## Purpose and learning outcomes
 
@@ -20,7 +20,7 @@ By the end they should be able to:
 - Separate evidence, interpretation and unresolved assumptions in their project story.
 - Justify why an output or dataset item was included or rejected.
 - Distinguish psychological ownership, credited contribution, reuse permission and legal copyright.
-- Improve how the poster and mediation brief communicate the decision inside the product.
+- Identify affected people, competing values and who remains accountable, then make that ethical argument visible in the poster and mediation brief.
 
 ## Proposed three-hour run of show
 
@@ -39,14 +39,14 @@ All timings and slide slots are suggestions, not an agreed timetable.
 
 ## Slide construction plan
 
-1. Make the argument visible.
-2. What changed after evidence and testing? Do not assume every test succeeded.
+1. Ethics I: whose evidence, whose material, whose responsibility?
+2. What changed after evidence and testing, and who benefits or bears the consequences? Do not assume every test succeeded.
 3. The chain: question → source → finding → limitation → design decision.
 4. Anatomy of a paper: research question, method, result and discussion.
 5. What the abstract leaves out; inspect one relevant methods/results passage.
 6. Who and what were studied? Population and setting affect transfer.
-7. Reading Yu et al.: distinguish the educational context and measures from our design classroom.
-8. Disagreement between sources: compare constructs and contexts before choosing a winner.
+7. Reading Naqvi et al.: creative agency and ownership across experience levels; distinguish interviews from causal evidence.
+8. Compare Doshi/Hauser: individual quality versus collective diversity; distinguish story-writing experiments from design-studio claims.
 9. Citation audit: can another reader find the passage that supports the claim?
 10. Curation is a design decision: inclusion, exclusion and justification.
 11. Compare three outputs against a stated criterion rather than “looks good.”
@@ -78,7 +78,7 @@ Then choose one output, image or example in the team's material. Explain why it 
 
 ### Peer reading and revision, 25 minutes
 
-Exchange a readable concept/argument with another team. The authoring team first listens. The reviewing team states the product, the AI decision and the evidence it understood, then asks one substantive evidence question and one communication question. The authors record the mismatch and revise one element. Feedback does not determine marks.
+Exchange a readable concept/argument with another team. The authoring team first listens. The reviewing team states the product, the AI decision and the evidence it understood, then asks one substantive evidence question and one communication question. The reviewers also name one affected person or group, a competing value and who could contest the choice or bear a failure. The authors record the mismatch and revise one element, including the unresolved trade-off. Feedback does not determine marks.
 
 ### Debrief, 15 minutes
 
@@ -110,3 +110,20 @@ Reconcile new instructor slides and actual Week 10 outcomes. Check quotations an
 ## Existing syllabus milestone to reconcile
 
 The current syllabus lists a draft poster and one-page mediation brief in Week 11. Calling this activity formative does not cancel those existing milestones or move their deadlines; confirm the actual Canvas instructions before teaching.
+
+## Ethics-led options for instructor review
+
+Use one main ethical question to organize the lecture rather than compressing every issue into a checklist. Recommended option: **who gets represented, credited and heard when an AI product is designed?** Connect research quality, dataset inclusion, hidden labour, consent, curation and authorship to the team's choices. Alternative emphasis: **who benefits and who bears the error?** Carry Week 9's evidence into an accountability map and compare responses rather than repeating the recommendation mechanism.
+
+A newer-paper discussion can pair the 2026 Joshi/Vogel ownership study with Cao et al. (2026), **Understanding U.S. Users' Security and Privacy Transparency Needs for Consumer-Facing Generative AI**, https://www.usenix.org/conference/soups2026/presentation/cao . The latter is a qualitative interview/design-session study with 21 U.S. users, not a representative prevalence estimate. Ask what an actionable disclosure would change in the team's product. These are candidate readings, not a new mandatory reading list. Select passages and check fit before building; further recent papers may replace weaker historical examples.
+
+The poster/brief activity should make the ethical argument visible: name affected people, evidence, competing values, design choice and remaining uncertainty. Good communication cannot substitute for adequate research or resolve an ethical trade-off by itself.
+
+## Selected research refresh: creative agency and collective diversity
+
+Use one short excerpt and one background/comparison paper; do not add a full-paper quota. These recent design/creativity studies can replace weaker historical examples in slide slots 7–8 and 10–15, while retaining Yu et al. as optional continuity rather than the main ethics anchor.
+
+- Naqvi, He & Kaur (2025), **Catalyst for Creativity or a Hollow Trend?: A Cross-Level Perspective on The Role of Generative AI in Design**, CHI: https://doi.org/10.1145/3706598.3713233 ; author text: https://harmanpk.github.io/Papers/CHI2025_GenAI-Design.pdf . Twenty-eight artifact-based interviews across junior/senior students and professionals explore differing views of creativity, skills and ownership. This qualitative, US-only, self-selected sample is not causal evidence of skill loss. Discussion: which decisions must stay visible and controllable for a design to feel yours? Activity: annotate reference, generation, selection and revision decisions, then propose a process-history interface. This is not a copyright guarantee.
+- Doshi & Hauser (2024), **Generative AI enhances individual creativity but reduces the collective diversity of novel content**, Science Advances: https://doi.org/10.1126/sciadv.adn5290 . In a randomized short-story experiment, AI ideas improved rated stories while assisted stories became more similar. Eight-sentence stories, nonprofessional writers and no iterative chat limit transfer to a design studio. Discussion: can each concept improve while the class's collective diversity narrows? Activity: compare individual quality with portfolio diversity and propose a test of independent ideation before suggestions, without claiming that intervention is already proven.
+
+The ethical trade-off is agency and credit alongside collective variety, not simply whether AI is “good” or “bad.” Ask whose perspective the portfolio leaves out and what evidence would change the team's choice.
