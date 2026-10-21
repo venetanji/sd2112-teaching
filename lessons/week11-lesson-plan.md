@@ -1,10 +1,10 @@
 # SD2112 · Week 11 lesson plan
 
-**Ethics I: evidence, curation, authorship and responsibility** · planning draft · October 21, 2026
+**Ethics I: evidence, curation, authorship and responsibility** · implemented draft for PR #24 · October 21, 2026
 
 ## Status and continuity
 
-The latest direction is for Weeks 11–12 to focus more on ethics and related issues. This is an evidence-led option for Week 11, not a settled final selection, finished deck or new assignment. Historical slides may be freely updated and supplemented with newer papers; fidelity to old slides is not the objective. Week 11 combines the discussed research-literacy thread with the current syllabus's curation/authorship and poster-lab focus. Research started in Week 8; it must not be postponed until this session. Teams bring their accumulated evidence and the findings of the proposed Week 10 reframing/test session, whatever fidelity they reached.
+The latest direction is for Weeks 11–12 to focus more on ethics and related issues. This is an implemented evidence-led draft for Week 11, pending instructor review; it is not a new assignment. Historical slides may be freely updated and supplemented with newer papers; fidelity to old slides is not the objective. Week 11 combines the discussed research-literacy thread with the current syllabus's curation/authorship and poster-lab focus. Research started in Week 8; it must not be postponed until this session. Teams bring their accumulated evidence and the findings of the proposed Week 10 reframing/test session, whatever fidelity they reached.
 
 Current main has Weeks 1–7. The [old whole-course PR #3](https://github.com/venetanji/sd2112-teaching/pull/3) contains an unmerged Week 11 deck and plan, but its assumed prototype completion, same-night deadlines, legal case status and Blackboard logistics are not current instructions. [Week 8 PR #21](https://github.com/venetanji/sd2112-teaching/pull/21) is separate active work and must remain untouched.
 
@@ -22,11 +22,11 @@ By the end they should be able to:
 - Distinguish psychological ownership, credited contribution, reuse permission and legal copyright.
 - Identify affected people, competing values and who remains accountable, then make that ethical argument visible in the poster and mediation brief.
 
-## Proposed three-hour run of show
+## Three-hour run of show / implemented draft
 
-All timings and slide slots are suggestions, not an agreed timetable.
+The implemented deck uses exactly 180 relative minutes. Actual clock times and current Canvas milestones still require instructor confirmation.
 
-| Minutes | Segment | Proposed slides |
+| Minutes | Segment | Actual slides |
 |---|---|---|
 | 0–15 | Recover the project's current question and changed decision | 1–3 |
 | 15–45 | Read a paper as an argument, not a quotation bank | 4–9 |
@@ -37,36 +37,42 @@ All timings and slide slots are suggestions, not an agreed timetable.
 | 140–165 | Peer reading and revision of one communication element | 24–26 |
 | 165–180 | Compare revisions and prepare for mock review | 27–28 |
 
-## Slide construction plan
+## Actual slide map
 
-1. Ethics I: whose evidence, whose material, whose responsibility?
-2. What changed after evidence and testing, and who benefits or bears the consequences? Do not assume every test succeeded.
-3. The chain: question → source → finding → limitation → design decision.
-4. Anatomy of a paper: research question, method, result and discussion.
-5. What the abstract leaves out; inspect one relevant methods/results passage.
-6. Who and what were studied? Population and setting affect transfer.
-7. Reading Naqvi et al.: creative agency and ownership across experience levels; distinguish interviews from causal evidence.
-8. Compare Doshi/Hauser: individual quality versus collective diversity; distinguish story-writing experiments from design-studio claims.
-9. Citation audit: can another reader find the passage that supports the claim?
-10. Curation is a design decision: inclusion, exclusion and justification.
-11. Compare three outputs against a stated criterion rather than “looks good.”
-12. Dataset choice: whose examples, what commonality, what missing variation?
-13. Documentation: purpose, provenance, permission and limitations.
-14. Authorship map: generating, selecting, arranging, modifying and taking responsibility.
-15. Felt ownership versus legal rights: use the Joshi/Vogel study without conflating them.
-16. Copyright and reuse: jurisdiction, source licence and human contribution require separate questions; no universal verdict from a prompt length.
-17. Break.
-18. Poster story: person/need, evidence, AI decision, consequences and limits.
-19. Mediation brief: relationship, data, bias and guardrails in the team's own product.
-20. Video: make the product decision and its consequences visible; keep the existing 3–5 minute requirement.
-21. Team audit: identify one unsupported claim and one under-explained choice.
-22. Trace the claim back to the source; revise wording to match its evidence.
-23. Record one selection/rejection decision and the provenance of the material.
-24. Peer reading without the team's explanation: what does the reader understand?
-25. Ask for one evidence question and one communication question.
-26. Revise the poster element or brief paragraph, not merely its decoration.
-27. Compare before/after and unresolved evidence gaps.
-28. Prepare for the mock review using the current brief, not a newly invented deadline.
+All 28 slides are in `deck/week11.py`; substantive native notes are mirrored in `week11-speaker-notes.md`. Source access and claim boundaries are in `week11-evidence-ledger.md`. The conceptual curation comparison on slide 11 is original native text/shapes, not a generated or measured result.
+
+| Slide | Actual title |
+|---|---|
+| 1 | Whose design? |
+| 2 | What changed, and for whom? |
+| 3 | A good-looking output is not enough. |
+| 4 | Follow the chain, not the quotation. |
+| 5 | Different experience. Different values. |
+| 6 | A participant claim is not a legal rule. |
+| 7 | Better rated stories. More similar stories. |
+| 8 | Control and variety are not the same goal. |
+| 9 | Could another reader check your inference? |
+| 10 | Selection changes what the world gets to see. |
+| 11 | Three candidates. One stated criterion. |
+| 12 | A coherent set can hide an absence. |
+| 13 | Make the material traceable. |
+| 14 | Name the work behind the output. |
+| 15 | Feeling yours is not having rights. |
+| 16 | Separate expression, permission and credit. |
+| 17 | Break. 15 minutes. |
+| 18 | Make the inference visible. |
+| 19 | Name the relation and the responsible actor. |
+| 20 | Show a decision and its consequences. |
+| 21 | Find one claim and one choice. |
+| 22 | Narrow the claim until it fits. |
+| 23 | Make the curation decision inspectable. |
+| 24 | Let the argument travel without you. |
+| 25 | What did you understand - and miss? |
+| 26 | Revise the argument, not just the decoration. |
+| 27 | What became more defensible? |
+| 28 | Research. Choice. Responsibility. |
+
+There are **zero ClassPoint activities**: all discussion/audit/revision work stays in the existing project workspace. `attach_reports` is retained as a safe empty/missing pre-class hook; there are no invented answer IDs. This does not cancel the existing Week 11 draft poster and mediation-brief milestone.
 
 ## Activity protocol
 
@@ -103,9 +109,9 @@ The current syllabus's group project remains 40% of the course: A0 poster, 3–5
 
 Before class, allocate technical and facilitation support rather than claiming named staff have accepted tasks. Confirm current Canvas milestones, what teams have available, accessible reading routes and any print/equipment needs. Before the next session, confirm mock-review format through the approved class channel. No new printing deadline is set here.
 
-## Verification before implementation
+## Implementation verification
 
-Reconcile new instructor slides and actual Week 10 outcomes. Check quotations and source versions, refresh legal material if retained, and keep private student artifacts out of the repository. Preserve the established course visual style and inspect every slide and export after implementation. This change produces planning text only; no deck rendering, live activity test or full-course build is claimed.
+See `week11-verification.md` for exact build/test/browser/native checks and remaining instructor decisions. The draft implements 28 slides, full notes, a primary-source claim ledger and regression tests. Local exports are not a deployment. Historical 2025 sources informed the update; legal case summaries, exam dates, board instructions and four-group feedback quotas were not carried forward.
 
 ## Existing syllabus milestone to reconcile
 
@@ -127,3 +133,10 @@ Use one short excerpt and one background/comparison paper; do not add a full-pap
 - Doshi & Hauser (2024), **Generative AI enhances individual creativity but reduces the collective diversity of novel content**, Science Advances: https://doi.org/10.1126/sciadv.adn5290 . In a randomized short-story experiment, AI ideas improved rated stories while assisted stories became more similar. Eight-sentence stories, nonprofessional writers and no iterative chat limit transfer to a design studio. Discussion: can each concept improve while the class's collective diversity narrows? Activity: compare individual quality with portfolio diversity and propose a test of independent ideation before suggestions, without claiming that intervention is already proven.
 
 The ethical trade-off is agency and credit alongside collective variety, not simply whether AI is “good” or “bad.” Ask whose perspective the portfolio leaves out and what evidence would change the team's choice.
+
+## Instructor decisions before teaching
+
+- Reconcile the actual Week 10 outcomes and current team evidence; do not assume successful prototypes.
+- Confirm current Canvas draft poster/brief milestones and Week 12 mock-review arrangements; no dates or submission routes are changed here.
+- Keep the bounded U.S. report example or obtain current local primary guidance if a Hong Kong legal discussion is desired. The deck does not give local legal clearance.
+- Confirm classroom fonts and projection/accessibility; no physical PowerPoint or ClassPoint add-in session has been tested. No collection activities are configured.
