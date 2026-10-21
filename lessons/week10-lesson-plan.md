@@ -1,6 +1,6 @@
 # SD2112 · Week 10 lesson plan
 
-**Reframe, prototype, test: the Double Diamond with evidence** · planning draft · October 21, 2026
+**Reframe, prototype, test: the Double Diamond with evidence** · implemented slide draft · October 21, 2026
 
 ## Status and intent
 
@@ -40,43 +40,58 @@ Historical source pointers: last year's Week 8 pages 27–29 introduced Double D
 
 The 15-minute ESFQ slot is reserved provisionally; its placement below is not confirmed. If it moves, move it rather than shortening it. If it does not occur, use the reserved time for revision and facilitator feedback.
 
-| Minutes | Segment | Proposed slides |
+| Minutes | Segment | Actual slides |
 |---|---|---|
-| 0–15 | School ESFQ, if confirmed | Holding slide only |
-| 15–30 | Purpose, evidence check and Double Diamond recap | 1–5 |
-| 30–55 | Discover/Define: revisit evidence and reframe | 6–9 |
-| 55–75 | Develop: alternatives and test selection | 10–12 |
-| 75–90 | Break | 13 |
-| 90–115 | Build the smallest useful prototype | 14–16 |
-| 115–145 | Peer walkthrough/test and observations | 17–19 |
-| 145–165 | Revise and identify further evidence needed | 20–21 |
-| 165–180 | Share a changed decision and record next steps | 22–23 |
+| 0-15 | Provisional school ESFQ reserve | 1 |
+| 15-30 | Framing | 2-6 |
+| 30-55 | Reframe | 7-10 |
+| 55-75 | Develop | 11-13 |
+| 75-90 | Break | 14 |
+| 90-115 | Prototype | 15-17 |
+| 115-145 | Test | 18-20 |
+| 145-165 | Revise | 21-22 |
+| 165-180 | Share | 23-24 |
 
-## Proposed slide construction plan
+## Actual native slide map
 
-1. Reframe, prototype, test.
-2. What exists today? A concept, sketch and working interface are valid starting points.
-3. Evidence versus assumption: display a clear worked example.
-4. The two diamonds and four phases, with source attribution.
-5. Iteration: new evidence can send the team back to the problem.
-6. Discover: which person, context and need does the project address?
-7. Read the evidence again: strongest relevant finding and most important transfer limit.
-8. Define: write a narrower problem question without assuming AI is the answer.
-9. Decision checkpoint: what changed from the previous concept, and why?
-10. Develop: sketch two meaningfully different responses to the question.
-11. Pick the risky assumption, not the prettiest screen.
-12. Test contract: participant/context, task, comparison, observation and failure condition.
-13. Break.
-14. Choose fidelity: paper sequence, role-play, clickable flow or existing prototype.
-15. Model capability versus interface behaviour: label simulated outputs honestly.
-16. Make the human control/fallback visible.
-17. Test briefing: neutral task instructions and voluntary participation.
-18. Observe before explaining: capture what happened, not what the designer hoped.
-19. Limits: classmates are not automatically representative intended users.
-20. Deliver/iterate: revise one decision based on observation.
-21. What needs external research or a different participant group next?
-22. Share the before/after decision and its evidence.
-23. Save the learning for the research story, poster and mediation brief.
+The deck has 25 slides: 24 in the timed run (including the holding slide) and one untimed reference shelf. Each activity timer covers its following support slides, not additional time.
+
+| Slide | Actual title |
+|---|---|
+| 1 | School ESFQ: if confirmed. |
+| 2 | Reframe. Prototype. Test. |
+| 3 | Start where your project is. |
+| 4 | A plausible idea is not a finding. |
+| 5 | Two diamonds. Four kinds of work. |
+| 6 | AI can enter more than one phase. |
+| 7 | Reopen the problem, not just the file. |
+| 8 | Read the passage again. |
+| 9 | Change the question. |
+| 10 | Keep the disagreement. |
+| 11 | Two responses. One uncertainty. |
+| 12 | Test the decision, not the decoration. |
+| 13 | Decide what would change your mind. |
+| 14 | Break. 15 minutes. |
+| 15 | Build only enough to learn. |
+| 16 | Three cards are enough. |
+| 17 | Can the person say no? |
+| 18 | Give the task. Then watch. |
+| 19 | Do not teach the answer. |
+| 20 | Observation is not interpretation. |
+| 21 | Change one consequential decision. |
+| 22 | Who still needs to be heard? |
+| 23 | One changed decision. Its evidence. |
+| 24 | Keep the learning, not just the screen. |
+| 25 | Framework. Study. Mediation. |
+
+## Materials and collection contract
+
+- `deck/week10.py` is the native source; `deck/week10_figures.py` draws the attributed framework adaptation.
+- Detailed facilitation script: `lessons/week10-speaker-notes.md`, generated from the actual native speaker notes.
+- Claim/access ledger and prepared offline card: `lessons/week10-references.md`.
+- Zero ClassPoint activities and no new upload. `attach_reports` is retained before finalization; a missing report file is a safe no-op. No fabricated reports are created.
+- Three-card paper/manual fallback is on slide 16; all AI responses are visibly simulated. Voluntary peer test protocol is on slides 18-20.
+- Local build/QA evidence and unresolved delivery checks: `lessons/week10-verification.md`.
 
 ## Detailed team protocol
 
@@ -112,7 +127,7 @@ Change one design decision, retain one finding that did not support the team's e
 
 ## Review gates
 
-Confirm the actual calendar, coverage, ESFQ slot and team starting points. Reconcile new instructor-supplied materials. Preserve the existing assessment brief and deadlines. Build/render only in a later authorized implementation pass, with the established course style and current toolchain; no deck has been produced by this planning change. Keep student records and test notes out of the public repository.
+Confirm the actual calendar, coverage, ESFQ slot and team starting points. Reconcile new instructor-supplied materials. Preserve the existing assessment brief and deadlines. The authorized implementation pass now provides a 25-slide native deck, synchronized notes and local builds. This remains an uncommitted local draft, not a deployment or accepted facilitation rota. See `week10-verification.md` for actual checks and remaining classroom verification. Keep student records and test notes out of the public repository.
 
 ## Existing syllabus milestone to reconcile
 
