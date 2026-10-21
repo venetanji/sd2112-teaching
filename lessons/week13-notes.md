@@ -1,10 +1,10 @@
 # SD2112 Week 13 - instructor notes companion
 
-Review draft, 21 October 2026. Companion to `deck/week13.py`: 28 main-route slides and four instructor-review appendix slides. Every slide also carries substantive speaker notes in the source and exports. This document is not an operational announcement or a new assessment brief.
+Review draft, 21 October 2026. Companion to `deck/week13.py`: 28 main-route slides, with four staff-only readiness/provenance sections in this document, outside the deck exports. Every slide also carries substantive speaker notes in the source and exports. This document is not an operational announcement or a new assessment brief.
 
 ## Before using the deck
 
-Read the readiness gates in the lesson plan. The showcase is the primary design direction; the published 20% final quiz remains unresolved, not cancelled. Do not project the appendix as if its unconfirmed variables were student instructions. Do not dismiss the class at the closing slide before any retained assessment. No quiz bank, answer key, student artifact, private feedback or platform setting belongs in this public repository.
+Read the readiness gates in the lesson plan. The showcase is the primary design direction; the published 20% final quiz remains unresolved, not cancelled. The exported deck ends at slide 28; the staff gates below are not included in student navigation or exports. Do not dismiss the class at the closing slide before any retained assessment. No quiz bank, answer key, student artifact, private feedback or platform setting belongs in this public repository.
 
 The main route is a set of facilitation materials, not a promise that every slide is a separate timed activity. Use the actual confirmed schedule. Revisit slide 12 manually when needed; it has no timer or automatic transition. Slide 14 is a manual break hold, not a clock. No new ClassPoint activity or collection is configured; discussion is spoken, with optional private team working notes only.
 
@@ -48,23 +48,23 @@ This is a conceptual bridge from the showcase, not a restriction of the syllabus
 | 27. Keep the argument and the evidence together. | Close the public project guidance while preserving privacy. | No new deadline, penalty, reattempt or replacement submission. If a quiz remains, transition to separately approved instructions rather than ending the session. |
 | 28. Design the choice. Own the consequence. | End the conceptual route. | Instructor-authored statement, not a quotation. It does not certify completion of all assessed activity. |
 
-## Instructor review appendix: slides 29-32
+## Separate instructor readiness record
 
-29 asks for the authorized resolution of the existing quiz item. 30 asks for equitable and feasible fair logistics, using only the conditional reserve `180 - Q - A - 15` if the quiz stays here. 31 separates build QA from real room, platform, playback and access testing. 32 documents the actual historical archive and the limits of its rendering/provenance.
+Gate 1 asks for the authorized resolution of the existing quiz item. Gate 2 asks for equitable and feasible fair logistics, using only the conditional reserve `180 - Q - A - 15` if the quiz stays here. Gate 3 separates build QA from real room, platform, playback and access testing. The provenance section documents the actual historical archive and the limits of its rendering/provenance.
 
 Do not turn these gates into student-facing tentative instructions. Before release, record decisions in the lesson plan and replace only the operational statements that those decisions authorize. If the quiz remains, create only approved public instruction/holding material; keep assessed content private. No default Q, A, team count, room, grader count, visit quota, platform or date is established here.
 
 ## Exact Native Speaker Notes
 
-The following transcript matches the editable source and exported notes. The facilitation tables above remain a compact teaching guide.
+This transcript matches all 28 exported slides. Staff-only sections follow separately.
 
 ### 01 / Your product. Your argument.
 
-Showcase-first review draft, not a confirmed operational schedule. Main teaching route ends at slide 28; readiness appendix is for instructor review, not routine projection. The published syllabus still assigns a 20% final quiz in Week 13 after the fair. Its placement and rules require explicit reconciliation; this deck neither cancels it nor supplies a quiz. No assessment questions, answers or student work are included. See the companion notes and readiness gates.
+Showcase-first review draft, not a confirmed operational schedule. Main teaching route ends at slide 28; staff readiness material lives only in the companion instructor notes, outside the exported deck. The published syllabus still assigns a 20% final quiz in Week 13 after the fair. Its placement and rules require explicit reconciliation; this deck neither cancels it nor supplies a quiz. No assessment questions, answers or student work are included. See the companion notes and readiness gates.
 
 ### 02 / Make the decision visible.
 
-Do not infer that this is the entire three-hour schedule. Announce only separately confirmed movements, access/support routes and assessment arrangements. The readiness appendix names the decisions needed before classroom use.
+Do not infer that this is the entire three-hour schedule. Announce only separately confirmed movements, access/support routes and assessment arrangements. The separate instructor record names the decisions needed before classroom use.
 
 ### 03 / Three ways to explain one product.
 
@@ -104,7 +104,7 @@ Optional team working notes, not a new feedback log submission or post-fair revi
 
 ### 12 / Present. Visit. Listen.
 
-Reusable static holding slide, manually revisited as needed. It does not prescribe rounds, staffing or visit counts. Use only with a separately confirmed fair protocol that gives equitable presenting/visiting opportunities. Announce actual support and transition arrangements; do not imply an automatic clock, alarm or scheduled advance.
+This is not a live timer. Reusable static holding slide, manually revisited as needed. It does not prescribe rounds, staffing or visit counts. Use only with a separately confirmed fair protocol that gives equitable presenting/visiting opportunities. Announce actual support and transition arrangements; do not imply an automatic clock, alarm or scheduled advance.
 
 ### 13 / What did someone else make visible?
 
@@ -168,20 +168,44 @@ Do not use this slide to dismiss a class before any retained assessment componen
 
 ### 28 / Design the choice. Own the consequence.
 
-Closing course statement, instructor-authored rather than a quotation. Main route ends here. Readiness appendix follows for instructor review only. Do not announce that all assessed activity is complete until the instructor confirms actual arrangements.
+Closing course statement, instructor-authored rather than a quotation. Main route ends here. Readiness records remain in the separate instructor notes, not the student export. Do not announce that all assessed activity is complete until the instructor confirms actual arrangements.
 
-### 29 / Reconcile the published assessment.
+## Staff-only readiness and provenance
 
-Not student-facing operational instructions. The current draft deliberately contains no assessed content, answer key, platform settings or assumed quiz duration. Do not derive final rules from the midterm or historical Week 14 exam. Remove this review appendix from classroom projection; keep the readiness record in the instructor plan.
+These sections are retained for planning and do not appear in HTML/PDF/PPTX slide exports.
 
-### 30 / Prove the fair fits the confirmed session.
+### Reconcile the published assessment.
+
+- The published syllabus retains a 20% whole-course multiple-choice final quiz in Week 13 after the fair.
+- Showcase-first direction does not silently remove or move that requirement.
+- Obtain an explicit authorized decision before releasing the operational schedule.
+- If retained here: confirm question count, time, platform, resources, attempts, access and incident handling privately.
+
+Not student-facing operational instructions. The current draft deliberately contains no assessed content, answer key, platform settings or assumed quiz duration. Do not derive final rules from the midterm or historical Week 14 exam. Keep this readiness record in the instructor notes; it is excluded from the student deck exports.
+
+### Prove the fair fits the confirmed session.
+
+- Confirm room, actual teams, access, circulation, display/video arrangements and equitable presenting/visiting.
+- Confirm rubric procedure, grader coverage and moderation; do not assume staff or rounds.
+- Only if the quiz remains here: reserve Q working minutes and A access/instruction/recovery minutes at the end.
+- With a provisional 15-minute break, showcase + synthesis + transitions must fit 180 - Q - A - 15.
 
 Conditional reserve equation only, not a universal classroom schedule or a chosen Q/A. If an authorized revision moves/removes the component, record it before reallocating time. Include setup/transition and equitable access, not just speaking time. Check room/team feasibility before duplicating the manual holding slide into confirmed rounds.
 
-### 31 / Test the actual delivery conditions.
+### Test the actual delivery conditions.
+
+- Confirm existing submission route, deadlines, printing and approved failure contingencies; add no new deliverables.
+- Test classroom display, captions/audio, offline playback and an accessible nonmovement route.
+- Confirm feedback handling and consent. Keep student work and assessment content out of public artifacts.
+- If a quiz is retained: preflight approved settings with authorized test data and confirm private support/recovery.
 
 Build and browser checks do not verify physical room access, classroom PowerPoint font resolution, playback audibility, ClassPoint add-in or actual assessment-platform settings. No ClassPoint collection is configured in this deck; feedback remains spoken/formative. Resources are public reading links, not a feedback/submission destination.
 
-### 32 / What the archive actually contains.
+### What the archive actually contains.
+
+- Editable Week 13 archive: five slides, one notes part; embedded created/modified timestamps are in 2025.
+- It includes a poster fair and feedback, plus an old Week 14 exam announcement and obsolete logistics.
+- Reuse: the fair/feedback intent only. No old dates, room, tool, visit quota or exam settings are carried forward.
+- Synthesis background: 2025 Master and Week 12 PDF positions 54-69; see the source ledger for limits.
 
 All five slide XML parts and the sole notes XML were inspected; the notes contain only a slide number. The file name alone is not provenance: core metadata and explicit 2025 dates support dating, not proof of live delivery or final approval. Original package rendering unavailable without an Office renderer; a labelled XML-based visual reconstruction was reviewed, not claimed as an original PowerPoint screenshot. See lessons/week13-sources.md and ignored QA evidence.

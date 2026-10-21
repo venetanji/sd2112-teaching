@@ -13,15 +13,15 @@ VERBEEK = 'https://doi.org/10.1145/2751314'
 THESIS = 'https://giovannilion.link/thesis/2-Litreview.html'
 S = []
 
-S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 13 / REVIEW DRAFT',
+S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 13',
     'Your product.\nYour argument.', 'Showcase / evidence / responsibility',
-    notes='Showcase-first review draft, not a confirmed operational schedule. Main teaching route ends at slide 28; readiness appendix is for instructor review, not routine projection. The published syllabus still assigns a 20% final quiz in Week 13 after the fair. Its placement and rules require explicit reconciliation; this deck neither cancels it nor supplies a quiz. No assessment questions, answers or student work are included. See the companion notes and readiness gates.'))
+    notes='Showcase-first review draft, not a confirmed operational schedule. Main teaching route ends at slide 28; staff readiness material lives only in the companion instructor notes, outside the exported deck. The published syllabus still assigns a 20% final quiz in Week 13 after the fair. Its placement and rules require explicit reconciliation; this deck neither cancels it nor supplies a quiz. No assessment questions, answers or student work are included. See the companion notes and readiness gates.'))
 S.append(content('SHOWCASE / THE ROUTE', 'Make the decision visible.', [
     'Present the product: who it is for, what the AI does, and why it matters.',
     'Encounter other work: ask about evidence, consequences and control.',
     'Compare what we learned: rules, examples, mediation and the designer\'s role.',
-    'This draft supplies the discussion route, not a room or rotation schedule.',
-], body_size=36, notes='Do not infer that this is the entire three-hour schedule. Announce only separately confirmed movements, access/support routes and assessment arrangements. The readiness appendix names the decisions needed before classroom use.'))
+    'Follow the teaching team\'s confirmed presenting and visiting arrangements.',
+], body_size=36, notes='Do not infer that this is the entire three-hour schedule. Announce only separately confirmed movements, access/support routes and assessment arrangements. The separate instructor record names the decisions needed before classroom use.'))
 S.append(cards('EXISTING GROUP PROJECT / 40% OF THE COURSE', 'Three ways to explain one product.', [
     ('A0 POSTER', 'Research + concept.', 'Who is it for? What problem and evidence shaped the product? Make the AI action legible.'),
     ('3-5 MINUTE VIDEO', 'A moment of use.', 'Show the person, the interaction and the implications. Label simulation rather than implying a tested working model.'),
@@ -78,8 +78,8 @@ S.append(content('SHOWCASE / MANUAL HOLDING VIEW', 'Present. Visit. Listen.', [
     'Presenters: explain one person, one AI action and one consequence.',
     'Visitors: identify a specific strength and ask a substantive question.',
     'Keep paths and displays accessible. Ask the teaching team if movement or playback is difficult.',
-    'Wait for the instructor\'s announced transition. This slide is not a live timer.',
-], body_size=37, notes='Reusable static holding slide, manually revisited as needed. It does not prescribe rounds, staffing or visit counts. Use only with a separately confirmed fair protocol that gives equitable presenting/visiting opportunities. Announce actual support and transition arrangements; do not imply an automatic clock, alarm or scheduled advance.'))
+    'Listen for the teaching team\'s cue before changing roles.',
+], body_size=37, notes='This is not a live timer. Reusable static holding slide, manually revisited as needed. It does not prescribe rounds, staffing or visit counts. Use only with a separately confirmed fair protocol that gives equitable presenting/visiting opportunities. Announce actual support and transition arrangements; do not imply an automatic clock, alarm or scheduled advance.'))
 S.append(content('DEBRIEF / FROM ENCOUNTER TO INSIGHT', 'What did someone else make visible?', [
     'Which part of the product did a visitor understand differently from your intention?',
     'Was the difficulty in the claim, the model, the evidence or the interaction?',
@@ -170,32 +170,34 @@ S.append(content('FINISH / EXISTING ARRANGEMENTS ONLY', 'Keep the argument and t
     'Use the approved project brief and the instructor\'s confirmed Canvas instructions.',
     'Do not post classmates\' work, feedback or identifiers without permission.',
     'If display, playback or access fails, tell the teaching team; use the confirmed contingency.',
-    'This draft announces no new submission, deadline, penalty or assessment rule.',
+    'Check the confirmed instructions before leaving or submitting work.',
 ], body_size=36, notes='Do not use this slide to dismiss a class before any retained assessment component. The published 20% final quiz still needs explicit reconciliation. Confirm completion/support and assessment instructions through the approved channel; do not promise retakes, replacement submissions or grade adjustments.'))
 S.append(end('Design the choice.\nOwn the consequence.', 'A product is an argument about how people should live.',
     'SD2112 / WEEK 13 / ' + SITE,
-    notes='Closing course statement, instructor-authored rather than a quotation. Main route ends here. Readiness appendix follows for instructor review only. Do not announce that all assessed activity is complete until the instructor confirms actual arrangements.'))
+    notes='Closing course statement, instructor-authored rather than a quotation. Main route ends here. Readiness records remain in the separate instructor notes, not the student export. Do not announce that all assessed activity is complete until the instructor confirms actual arrangements.'))
 
 MAIN_SLIDE_COUNT = len(S)
-S.append(content('INSTRUCTOR REVIEW ONLY / READINESS GATE 1', 'Reconcile the published assessment.', [
+# Staff material is retained for the notes companion, never passed to finalize.
+STAFF_SLIDES = []
+STAFF_SLIDES.append(content('INSTRUCTOR REVIEW ONLY / READINESS GATE 1', 'Reconcile the published assessment.', [
     'The published syllabus retains a 20% whole-course multiple-choice final quiz in Week 13 after the fair.',
     'Showcase-first direction does not silently remove or move that requirement.',
     'Obtain an explicit authorized decision before releasing the operational schedule.',
     'If retained here: confirm question count, time, platform, resources, attempts, access and incident handling privately.',
-], body_size=34, notes='Not student-facing operational instructions. The current draft deliberately contains no assessed content, answer key, platform settings or assumed quiz duration. Do not derive final rules from the midterm or historical Week 14 exam. Remove this review appendix from classroom projection; keep the readiness record in the instructor plan.'))
-S.append(content('INSTRUCTOR REVIEW ONLY / READINESS GATE 2', 'Prove the fair fits the confirmed session.', [
+], body_size=34, notes='Not student-facing operational instructions. The current draft deliberately contains no assessed content, answer key, platform settings or assumed quiz duration. Do not derive final rules from the midterm or historical Week 14 exam. Keep this readiness record in the instructor notes; it is excluded from the student deck exports.'))
+STAFF_SLIDES.append(content('INSTRUCTOR REVIEW ONLY / READINESS GATE 2', 'Prove the fair fits the confirmed session.', [
     'Confirm room, actual teams, access, circulation, display/video arrangements and equitable presenting/visiting.',
     'Confirm rubric procedure, grader coverage and moderation; do not assume staff or rounds.',
     'Only if the quiz remains here: reserve Q working minutes and A access/instruction/recovery minutes at the end.',
     'With a provisional 15-minute break, showcase + synthesis + transitions must fit 180 - Q - A - 15.',
 ], body_size=33, notes='Conditional reserve equation only, not a universal classroom schedule or a chosen Q/A. If an authorized revision moves/removes the component, record it before reallocating time. Include setup/transition and equitable access, not just speaking time. Check room/team feasibility before duplicating the manual holding slide into confirmed rounds.'))
-S.append(content('INSTRUCTOR REVIEW ONLY / READINESS GATE 3', 'Test the actual delivery conditions.', [
+STAFF_SLIDES.append(content('INSTRUCTOR REVIEW ONLY / READINESS GATE 3', 'Test the actual delivery conditions.', [
     'Confirm existing submission route, deadlines, printing and approved failure contingencies; add no new deliverables.',
     'Test classroom display, captions/audio, offline playback and an accessible nonmovement route.',
     'Confirm feedback handling and consent. Keep student work and assessment content out of public artifacts.',
     'If a quiz is retained: preflight approved settings with authorized test data and confirm private support/recovery.',
 ], body_size=34, notes='Build and browser checks do not verify physical room access, classroom PowerPoint font resolution, playback audibility, ClassPoint add-in or actual assessment-platform settings. No ClassPoint collection is configured in this deck; feedback remains spoken/formative. Resources are public reading links, not a feedback/submission destination.'))
-S.append(content('INSTRUCTOR REVIEW ONLY / HISTORICAL PROVENANCE', 'What the archive actually contains.', [
+STAFF_SLIDES.append(content('INSTRUCTOR REVIEW ONLY / HISTORICAL PROVENANCE', 'What the archive actually contains.', [
     'Editable Week 13 archive: five slides, one notes part; embedded created/modified timestamps are in 2025.',
     'It includes a poster fair and feedback, plus an old Week 14 exam announcement and obsolete logistics.',
     'Reuse: the fair/feedback intent only. No old dates, room, tool, visit quota or exam settings are carried forward.',

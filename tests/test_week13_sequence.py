@@ -16,17 +16,28 @@ def text(slide):
 class Week13Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        from deck.week13 import S, DECK, MAIN_SLIDE_COUNT
+        from deck.week13 import S, DECK, MAIN_SLIDE_COUNT, STAFF_SLIDES
         cls.slides, cls.deck, cls.main = S, DECK, MAIN_SLIDE_COUNT
+        cls.staff = STAFF_SLIDES
 
     def slide(self, title):
         matches = [s for s in self.slides if s.title == title]
         self.assertEqual(len(matches), 1, title)
         return matches[0]
 
+    def test_student_exports_exclude_staff_readiness_material(self):
+        self.assertEqual(len(self.deck['slides']), 28)
+        exported = ' '.join(text(s) for s in self.deck['slides'])
+        self.assertNotIn('INSTRUCTOR REVIEW ONLY', exported)
+        for phrase in ('Reconcile the published assessment', 'READINESS GATE',
+                       'This draft supplies', 'not a live timer',
+                       'This draft announces'):
+            self.assertNotIn(phrase, exported)
+
     def test_actual_route_and_instructor_appendix(self):
-        self.assertEqual((len(self.slides), self.main), (32, 28))
-        for s in self.slides[self.main:]:
+        self.assertEqual((len(self.slides), self.main), (28, 28))
+        self.assertEqual(len(self.staff), 4)
+        for s in self.staff:
             self.assertIn('INSTRUCTOR REVIEW ONLY', text(s))
         order = ['Can I understand the product?', 'A campus route recommender.',
                  'Notice. Interpret. Ask.', 'Present. Visit. Listen.',
@@ -76,7 +87,8 @@ class Week13Tests(unittest.TestCase):
 
     def test_manual_holds_have_no_fake_timing(self):
         hold = self.slide('Present. Visit. Listen.')
-        self.assertIn('not a live timer', text(hold))
+        self.assertIn('cue', text(hold))
+        self.assertIn('not a live timer', hold.notes)
         self.assertIn('manually', hold.notes)
         self.assertIn('Static', self.slide('Pause.\nReturn on cue.').notes)
         for s in self.slides:
@@ -84,14 +96,14 @@ class Week13Tests(unittest.TestCase):
         self.assertNotIn('countdown', text(hold).lower())
 
     def test_published_quiz_remains_unresolved_without_invented_rules(self):
-        t = text(self.slide('Reconcile the published assessment.'))
+        t = text(next(s for s in self.staff if s.title == 'Reconcile the published assessment.'))
         for phrase in ('20%', 'whole-course', 'Week 13', 'authorized decision'):
             self.assertIn(phrase, t)
         main_text = ' '.join(text(s) for s in self.slides[:self.main])
         for banned in ('30-question', '35-minute', '26 teams', 'five graders', 'four rounds',
                        'peer prize', 'Blackboard', '11:30', 'Z209'):
             self.assertNotIn(banned, main_text)
-        conditional = text(self.slide('Prove the fair fits the confirmed session.'))
+        conditional = text(next(s for s in self.staff if s.title == 'Prove the fair fits the confirmed session.'))
         self.assertIn('Only if', conditional)
         self.assertIn('180 - Q - A - 15', conditional)
         self.assertNotIn('Q =', conditional)
@@ -138,12 +150,25 @@ class Week13Tests(unittest.TestCase):
             self.assertIn(f'### {i:02d} / ' + slide.title.replace('\n', ' '), notes)
             self.assertIn(slide.notes, notes)
 
+    def test_staff_record_preserves_all_readiness_text_outside_export(self):
+        notes = (ROOT / 'lessons/week13-notes.md').read_text()
+        for slide in self.staff:
+            self.assertIn(slide.title, notes)
+            self.assertIn(slide.notes, notes)
+            for el in slide.els:
+                if hasattr(el, 'paras'):
+                    for para in el.paras:
+                        phrase = ''.join(run.text for run in para.runs)
+                        if phrase and not phrase.startswith('INSTRUCTOR REVIEW ONLY'):
+                            self.assertIn(phrase, notes)
+        self.assertTrue(all(s not in self.deck['slides'] for s in self.staff))
+
     def test_week13_registration_and_document_synchronization(self):
         config = tomllib.loads((ROOT / 'deckgen.toml').read_text())
         self.assertIn('week13', config['course']['decks'])
         self.assertFalse(any('week13' in n['href'] for n in config['nav']))
         plan = (ROOT / 'lessons/week13-lesson-plan.md').read_text()
-        for phrase in ('28 main-route', '32 slides', '180 - Q - A - 15', 'Unresolved', 'formative'):
+        for phrase in ('28 main-route', 'four staff-only', '180 - Q - A - 15', 'Unresolved', 'formative'):
             self.assertIn(phrase, plan)
         for name in ('week13-notes.md', 'week13-sources.md', 'week13-verification.md'):
             self.assertTrue((ROOT / 'lessons' / name).exists())

@@ -1,5 +1,20 @@
 # SD2112 Week 13 - verification record
 
+## Current review-fix verification: 21 October 2026
+
+The current export has **28 slides**. The four staff-only readiness/provenance sections are retained in `week13-notes.md` and separate source objects, never included in the exported deck. The old 32-slide output below is historical, not the current student artifact. Student-facing production disclaimers were replaced with useful actions.
+
+- New regression failed against the previous source before the fix. Full repository suite now passes: **114 tests** (`python -m unittest discover -s tests`). Existing Deckgen image ResourceWarnings remain; they are not new failures.
+- `deckgen build week13 --no-pdf` passed with pinned Deckgen v0.11.2 (`9990546c01865807e6aaac5aaa50977b4b6b916a`). HTML, both PPTX variants, native previews and companion documents were generated; no text-overflow failure.
+- Inspected the changed generator-native previews. This is not Microsoft PowerPoint/ClassPoint or full browser/mobile certification.
+- A local PDF preflight using the Week 8 build could not launch Chromium: the execution sandbox rejects its socket call (`Operation not permitted`). PDF rendering is not claimed for these changed sources; the affected-week CI build must verify it. No security restriction was bypassed.
+- Generated exports, screenshots and local logs remain outside version control. No merge, production deployment or assessment-platform change.
+- Independently inspected both PPTX packages: 28 slides and 28 exact source-note matches in each; no staff gate text. Generated HTML has exactly 28 sections and no staff gates. The staff companion preservation test covers every retained staff paragraph and note.
+
+## Prior authoring evidence (historical)
+
+The record below describes the previous source/export version and is retained for provenance. Its full PDF/browser checks do not certify the changed output above.
+
 Local review draft, 21 October 2026, branch `docs/week13-planning`, isolated `week13-worktree`. Initial tracked worktree status was clean. No commit, push, PR update, merge or deployment was performed. This is actual built teaching material, not a plan-only result; operational readiness is separate.
 
 ## Scope and outputs

@@ -63,9 +63,9 @@ Once the assessment decision, team count and room are confirmed (and Q/A only if
 
 No numerical quiz duration, question count or round allocation is assumed in this draft. Do not finalize the timed deck until the assessment decision and showcase logistics are confirmed; quiz values are required only if that component remains.
 
-## Built draft route: 32 slides, not a finalized timetable
+## Built draft route: 28 slides, not a finalized timetable
 
-`deck/week13.py` now provides 28 main-route slides and four clearly marked instructor-review appendix slides. The draft is useful before logistics are confirmed: the fair prompts, fictional worked example, critique protocol and course synthesis are substantive teaching content. It does not provide an invented operational schedule.
+`deck/week13.py` now provides 28 main-route slides. The four staff-only readiness/provenance sections remain in `lessons/week13-notes.md` and are excluded from every student deck export. The draft is useful before logistics are confirmed: the fair prompts, fictional worked example, critique protocol and course synthesis are substantive teaching content. It does not provide an invented operational schedule.
 
 | Slides | Actual content | Facilitation boundary |
 | --- | --- | --- |
@@ -77,7 +77,7 @@ No numerical quiz duration, question count or round allocation is assumed in thi
 | 15-18 | Course question, rules/examples/A+B, tool versus product, native mediation diagram | Conceptual connection, not a claim that selected concepts exhaust exam scope. |
 | 19-24 | Agency, data/bias, evidence/impact, curation, language, authorship/ownership | Design questions and bounded claims; no universal safety/legal claims. |
 | 25-28 | Spoken closing reflection, attributed clickable resources, existing arrangements and closing | Does not dismiss class before any retained assessment. |
-| 29-32 | Instructor-only assessment/logistics/testing/provenance readiness appendix | Review material, not student-facing tentative instructions. |
+| Separate instructor notes | Assessment/logistics/testing/provenance readiness | Excluded from student HTML, PDF and PPTX. |
 
 The main route ends at slide 28. The companion `lessons/week13-notes.md` explains each slide's teaching move and limits. `lessons/week13-sources.md` records the archive and synthesis provenance. `lessons/week13-verification.md` records actual build/visual checks and what remains untested.
 
@@ -128,4 +128,4 @@ This repository plan deliberately contains no assessed question bank, answer key
 
 ## Readiness and implementation boundary
 
-The substantive 32-slide draft is implemented and locally built for review; see the verification record for evidence and remaining QA limits. Operational release remains gated on the explicit decisions above. Do not describe unconfirmed settings as defaults or treat a local build as deployment. This work does not prepare a live quiz, alter assessment settings, contact staff/students, publish student work, commit, push, merge or deploy. Classroom testing and authorized logistics are still required.
+The substantive 28-slide student route is implemented for review; the previous 32-slide export is superseded; see the verification record for evidence and remaining QA limits. Operational release remains gated on the explicit decisions above. Do not describe unconfirmed settings as defaults or treat a local build as deployment. This work does not prepare a live quiz, alter assessment settings, contact staff/students, publish student work, commit, push, merge or deploy. Classroom testing and authorized logistics are still required.
