@@ -8,7 +8,7 @@ This draft follows the latest intended sequence: Week 8 humanizing AI, Week 9 re
 
 Current main contains Weeks 1–7. Week 8 is being developed separately in [PR #21](https://github.com/venetanji/sd2112-teaching/pull/21); do not edit that branch to implement this plan. Old [PR #3](https://github.com/venetanji/sd2112-teaching/pull/3) contains an unmerged Week 9 bias/privacy deck and Week 10 recommendation deck. Reuse ideas selectively, not those weeks' obsolete tooling, assumed submissions, Blackboard deadlines or slide numbers.
 
-Historical slide pointers from the earlier PDF review: Week 9 pages 23–37 cover recommendations, embeddings, filtering and echo chambers; pages 38–45 cover bias, labour and consequences; pages 47–49 propose platform redesign. Inspect the original before reusing visuals. Any additional later slides supplied by the instructor must be reconciled before deck construction.
+The original 50-page 2025 Week 9 PDF has now been recovered and visually inspected. Historical slide pointers: Week 9 pages 23–37 cover recommendations, embeddings, filtering and echo chambers; pages 38–45 cover bias, labour and consequences; pages 47–49 propose platform redesign. Pages 40–41 are image-heavy face-recognition/AJL material and belong in the bias discussion. Page 49 proposes a diversity slider and explore-new-spaces button. Update these historical examples with the research below rather than treating the old deck as immutable.
 
 ## Purpose
 
@@ -70,8 +70,8 @@ These are proposed slots, not existing slide numbers.
 13. Four entry points for bias: collection, labels, objectives and interaction.
 14. Human labour: who labels, moderates, maintains and absorbs errors?
 15. Privacy and control: which data is necessary, retained or inferred?
-16. Research example: a recommendation-system paper and its actual context.
-17. Research example: an audit or documentation paper; distinguish measured disparities from a general claim about all systems.
+16. Gauthier et al.: randomized feed intervention, changed follow choices, and limits on generalization.
+17. Glickman/Sharot: controlled human–AI feedback-loop experiments; distinguish a mechanism from a live recommender effect size.
 18. Evidence limits: filter-bubble claims depend on platform, population, measure and time.
 19. Break.
 20. Demo: rank a small synthetic set under two explicit objectives or feature weightings.
@@ -131,3 +131,12 @@ Source reuse: [old Week 9 source](https://github.com/venetanji/sd2112-teaching/b
 ## Existing syllabus milestone to reconcile
 
 The current syllabus lists a Week 9 concept board and bias register. This revised sequence does not cancel or reschedule those existing milestones; reconcile their scope and actual Canvas instructions before teaching.
+
+## Selected research refresh: recommendations and feedback loops
+
+Use one short methods/results excerpt in class and the second paper as background or a comparison, not two compulsory full-paper homework readings.
+
+- Gauthier, Hodler, Widmer & Zhuravskaya (2026), **The political effects of X’s feed algorithm**, Nature: https://doi.org/10.1038/s41586-026-10098-2 . A randomized seven-week US X experiment conducted in 2023 found that activating the algorithmic feed shifted some policy attitudes and follow choices; switching it off was not symmetric. It found no significant effect on self-reported partisanship or affective polarization. The platform/time-specific setting and largely self-reported compliance limit transfer. Do not summarize this as “all algorithms radicalize.” Discussion: if recommendations change whom I follow, what should “reset recommendations” reset? Proposed design exercise: distinguish feed mode, history and following controls, then choose an outcome beyond engagement.
+- Glickman & Sharot (online 2024; 2025 issue), **How human–AI feedback loops alter human perceptual, emotional and social judgements**, Nature Human Behaviour: https://doi.org/10.1038/s41562-024-02077-2 . Controlled experiments show that biased AI can amplify subsequent human bias, while accurate AI can improve judgement. This supports a feedback-loop mechanism, not a real-world recommender effect size. Discussion: when does a recommendation stop reflecting preference and start teaching it? Map choice → data → recommendation → changed judgement and identify a test point.
+
+Use these at slide slots 16–17, then carry their limitations into the platform-redesign exercise. Proposed controls are design hypotheses, not proven remedies. Retain the historical audit/documentation readings as supporting material rather than adding another lecture block.
