@@ -1,8 +1,10 @@
 # SD2112 · Week 13 lesson plan
 
-**Poster fair, course synthesis and final quiz** · planning draft · October 21, 2026
+**Showcase: product, research and ethical argument** · planning draft · October 21, 2026
 
-## Status: known commitments and unresolved logistics
+## Status: showcase direction and policy item to reconcile
+
+The latest explicit direction calls Week 13 the showcase. Plan around that showcase first; do not introduce or announce an additional quiz from historical slides. Separately, the current published syllabus still contains a Week 13 final-quiz requirement. Its continued placement and operation must be explicitly reconciled with the instructor before the operational deck is finalized. The latest showcase description alone does not silently amend an assessment policy.
 
 The current [SD2112 syllabus](https://github.com/venetanji/sd2112-teaching/blob/7596f50f620d5000ad32445ab3851aec29dc67da/syllabus/SD2112-syllabus-2026.md) establishes:
 
@@ -18,7 +20,7 @@ Current main contains Weeks 1–7. Week 8's active PR #21 and other weekly plans
 
 ## Purpose
 
-Give each team a fair opportunity to explain the product and its evidence, give peers a useful way to engage with it, and close the course's conceptual arc before the final quiz. Operational reliability and equitable access matter more than adding another workshop or unannounced competition.
+Give each team a fair opportunity to explain the product and its evidence, give peers a useful way to engage with it, and close the course's conceptual arc. The syllabus quiz item remains a separate unresolved policy/logistics question. Operational reliability and equitable access matter more than adding another workshop or unannounced competition.
 
 A visitor should be able to understand:
 
@@ -36,36 +38,36 @@ A visitor should be able to understand:
 - Confirm actual team count and the presentation/visiting rotation. Do not assume everybody can circulate or hear equally in the same way.
 - Confirm assessment procedures, grader allocation and any moderation process under the approved rubric. The plan does not assign grades or create an additional criterion.
 - Confirm where and when the existing three deliverables are submitted, printing support and acceptable contingencies.
-- Confirm final-quiz content blueprint and operational rules with the authorized teaching team, including access needs and failure procedures.
+- Only if retained after explicit policy reconciliation, confirm final-quiz content blueprint and operational rules with the authorized teaching team, including access needs and failure procedures.
 - Confirm who communicates the instructions. No message is sent or colleague commitment made by this document.
 
 ### Technical/facilitation tasks to allocate
 
 - Test a representative video, projector/display and sound arrangement. Have an offline playback fallback where the authorized files can be held securely.
-- Test the quiz in the selected platform through an appropriate practice route, not against live student attempts. Verify availability, settings, export and recovery.
+- Only if a quiz is confirmed for this session, test it in the selected platform through an appropriate practice route, not against live student attempts. Verify availability, settings, export and recovery.
 - Prepare a simple rotation display and timing method based on confirmed numbers. A static PowerPoint timer image is not a live clock.
 - Keep grades, student identifiers, assessment responses and quiz answers out of the public repository and public preview artifacts.
 - Confirm whether feedback is anonymous and how it will be shared. Do not promise anonymity if the collection tool exposes identifiers.
 
-## Timing model, not a fixed timetable
+## Showcase timing, with a conditional assessment reserve
 
-Do not lock the fair into the old 35-minute quiz assumption. Let **Q** be the confirmed final-quiz working time and **A** the confirmed access/instruction/recovery allowance. Reserve both at the end first. A provisional 15-minute break is also held. The fair, synthesis and transitions together must fit within **180 − Q − A − 15** minutes.
+Do not lock the showcase into the old 35-minute quiz assumption. First reconcile whether the published final-quiz requirement remains in this session. If the instructor confirms it remains, let **Q** be its confirmed working time and **A** its confirmed access/instruction/recovery allowance, and reserve them at the end. If an authorized assessment revision moves/removes that session component, record that decision before reallocating the time. A provisional 15-minute break is held. Under the quiz-retained option, the showcase, synthesis and transitions must fit within **180 − Q − A − 15** minutes. No change to the assessment is made by this draft.
 
-Once Q, A, team count and room are known:
+Once the assessment decision, team count and room are confirmed (and Q/A only if a quiz remains):
 
 1. Allocate the minimum fair time needed for equitable presenting and visiting opportunities.
 2. Include transition/setup time, not just speaking time.
-3. Keep a short conceptual synthesis before the quiz; reduce optional celebration rather than compromising access or assessment time.
+3. Keep a short conceptual synthesis within the showcase. If a quiz is retained after explicit reconciliation, place synthesis before it and protect confirmed access/assessment time.
 4. Check that each team can be seen under the confirmed grading procedure and that movement is accessible.
 5. Publish the actual schedule only after the instructor confirms it.
 
-No numerical quiz duration, question count or round allocation is assumed in this draft. Do not create a final timed slide deck until those values are known.
+No numerical quiz duration, question count or round allocation is assumed in this draft. Do not finalize the timed deck until the assessment decision and showcase logistics are confirmed; quiz values are required only if that component remains.
 
 ## Proposed slide construction plan
 
 These are provisional operational slots; they are not a built deck.
 
-1. SD2112: poster fair and final quiz.
+1. SD2112 showcase: product, research and ethical argument.
 2. Today's confirmed schedule, filled only after the timing decisions above.
 3. Access and support: where to go for technical/accessibility help, without personal details.
 4. Project components and the existing assessment weights.
@@ -82,12 +84,12 @@ These are provisional operational slots; they are not a built deck.
 15. Mediation and agency: the relationship is a design responsibility.
 16. Data, evidence and bias: what supports the claim and who bears the error?
 17. The designer's contribution: framing, curation, choices, guardrails and communication.
-18. Final quiz instructions, containing only confirmed rules.
-19. Assessment holding/timing slide, without questions or answers in the public deck.
-20. Completion and support instructions, confirmed for the chosen platform.
+18. Conditional assessment instructions only if the instructor confirms the syllabus quiz remains here; otherwise omit after the authorized policy decision.
+19. Conditional assessment holding/timing slide, only for a confirmed quiz; no questions or answers in the public deck.
+20. Completion and support instructions for the confirmed showcase/submission arrangements; include assessment-platform instructions only if applicable.
 21. Closing reflection and where verified course resources remain available.
 
-The course synthesis is not an announcement that only the concepts named here are examinable. The quiz blueprint must match material actually taught and the approved whole-course scope.
+The course synthesis is not an announcement that only the concepts named here are examinable. If a quiz is retained, its blueprint must match material actually taught and the approved whole-course scope.
 
 ## Fair protocol for review
 
@@ -98,7 +100,7 @@ The course synthesis is not an announcement that only the concepts named here ar
 - Do not display private student information. Feedback should not solicit sensitive personal disclosures.
 - If a display or video fails, follow the instructor's confirmed contingency; do not invent a penalty or allow an unapproved replacement submission.
 
-## Final-quiz planning checklist
+## Conditional final-quiz checklist: do not activate before reconciliation
 
 This repository plan deliberately contains no assessed question bank, answer key or student responses.
 
