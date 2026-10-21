@@ -1,36 +1,71 @@
-name: Check Week 7 and AI news
+name: Check teaching drafts
 on:
   pull_request:
     paths:
-      - 'deck/*.py'
-      - 'deck/assets/**'
+      - 'deck/**'
       - 'tests/**'
-      - 'lessons/week07-lesson-plan.md'
+      - 'lessons/**'
       - 'site/**'
+      - 'scripts/**'
       - 'deckgen.toml'
       - 'requirements.txt'
       - '.github/workflows/news-preview.yml'
 permissions:
   contents: read
+concurrency:
+  group: teaching-draft-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 jobs:
   preview:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install -r requirements.txt
-      - name: Check course content and Week 7 sequence
-        run: python -m unittest discover -s tests -v
-      - name: Build Week 7 HTML and PowerPoints and check overflow
-        run: deckgen build week07 --no-pdf
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install the pinned deck toolchain
+        run: pip install -r requirements.txt
+      - name: Install the pinned PDF browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/deck-browser" --no-save --package-lock=false playwright@1.56.1
+          node "$RUNNER_TEMP/deck-browser/node_modules/playwright/cli.js" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/deck-browser/node_modules" >> "$GITHUB_ENV"
+      - name: Check the complete repository test suite
+        run: |
+          python -m unittest discover -s tests -v
+          if test -f tests/exercises.test.py; then python tests/exercises.test.py; fi
+      - name: Validate the registration union and select affected weeks
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: python scripts/check_deck_registration.py --base "$BASE_SHA" --output selected-decks.json
+      - name: Build affected HTML, PDF, PowerPoints and previews
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          decks = json.load(open('selected-decks.json'))
+          if not decks:
+              raise SystemExit('No registered decks selected')
+          subprocess.run(['deckgen', 'build', *decks], check=True)
+          PY
+      - name: Require the selected export artifacts
+        run: python scripts/verify_deck_artifacts.py selected-decks.json
       - uses: actions/upload-artifact@v4
         with:
-          name: week07-preview
+          name: teaching-draft-${{ github.event.pull_request.number }}-${{ github.sha }}
+          if-no-files-found: error
           path: |
+            selected-decks.json
             _site/
             export/preview/
-            export/week07*.pptx
-            export/week07-activities.json
+            export/*.pptx
+            export/*-activities.json
           retention-days: 7
