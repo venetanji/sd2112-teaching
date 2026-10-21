@@ -38,6 +38,8 @@ class Week08Tests(unittest.TestCase):
         self.assertIn('3. **Directing an AI-generated scene.**', plan)
         self.assertIn('replacing the previous pair prompt', plan)
         self.assertEqual(len(self.summaries), 9)
+        news = (ROOT / 'lessons/week08-news-20261021.md').read_text()
+        self.assertIn('37 main-route plus 11 untimed appendix/reference slides (48 total)', news)
 
     def test_main_route_and_protected_budgets(self):
         self.assertEqual((self.main_count, len(self.slides)), (37, 48))
