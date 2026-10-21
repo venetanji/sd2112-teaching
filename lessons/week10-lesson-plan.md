@@ -4,7 +4,7 @@
 
 ## Status and intent
 
-The latest discussion moves substantial Double Diamond work to the session intended for November 6, when Giovanni will not teach. This is a proposed facilitation plan for review, not a confirmed staff rota or dated timetable. Coverage and the school's 15-minute ESFQ arrangement remain unconfirmed. Do not contact or assign colleagues through this document.
+Giovanni has explicitly confirmed he is absent in Week 10. The session is to be interactive, centered on Double Diamond reframing, prototyping and testing, rather than a substitute lecture. The earlier discussion places it on November 6; the dated timetable still needs confirmation. This is a proposed facilitation plan for review, not a confirmed staff rota or dated timetable. Coverage and the school's 15-minute ESFQ arrangement remain unconfirmed. Do not contact or assign colleagues through this document.
 
 The current syllabus's Week 10 recommendation topic is being considered earlier, in Week 9. This draft preserves that intended sequence without modifying the syllabus, existing project milestones or assessments. The unmerged [whole-course PR #3](https://github.com/venetanji/sd2112-teaching/pull/3) does not implement this new workshop: its Week 10 is a recommendation lecture. Week 8 work in [PR #21](https://github.com/venetanji/sd2112-teaching/pull/21) stays separate and untouched.
 
@@ -26,7 +26,7 @@ Students should leave able to explain:
 - Verbeek (2015), **Beyond Interaction**: https://ris.utwente.nl/ws/files/6973415/p26-verbeek.pdf . Keep the relationship and consequences in view while changing the interface.
 - Each team's research from Weeks 8–9: relevant passages and limitations, not merely a bibliography. The Week 8 register retains cognitive-surrender, sycophancy, beneficial-use and transparency studies; use only those that fit the team's product.
 
-Historical source pointers: last year's Week 8 pages 27–29 introduced Double Diamond. Last year's Week 10 had recap material and a guest slide; that is not evidence of a newly booked guest. Inspect any newly supplied slides before reuse.
+Historical source pointers: last year's Week 8 pages 27–29 introduced Double Diamond. Last year's Week 10 had recap material and a guest slide; that is not evidence of a newly booked guest. The original 19-page 2025 Week 10 PDF has now been recovered and visually inspected: page 5 is a Scrum/Git/Docker title, pages 6–16 recap recommendations/bias, and page 18 introduces Ball Cheung. This is not evidence of a full technical lecture or a current guest booking.
 
 ## Before class: allocate and confirm
 
