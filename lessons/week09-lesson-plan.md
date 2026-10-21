@@ -1,14 +1,14 @@
 # SD2112 · Week 9 lesson plan
 
-**Recommendations, bias and the decisions inside a feed** · planning draft · October 21, 2026
+**Recommendations, bias and the decisions inside a feed** · implemented local slide draft · October 21, 2026
 
 ## Status and source reconciliation
 
-This draft follows the latest intended sequence: Week 8 humanizing AI, Week 9 recommendations/bias, Week 10 Double Diamond reframing/testing. It is a plan for review, not a built deck, a timetable announcement or a syllabus amendment. October 30 is an inferred date, not independently confirmed.
+This draft follows the latest intended sequence: Week 8 humanizing AI, Week 9 recommendations/bias, Week 10 Double Diamond reframing/testing. It now has a 31-slide native Deckgen implementation for review, not a timetable announcement or a syllabus amendment. October 30 is an inferred date, not independently confirmed.
 
 Current main contains Weeks 1–7. Week 8 is being developed separately in [PR #21](https://github.com/venetanji/sd2112-teaching/pull/21); do not edit that branch to implement this plan. Old [PR #3](https://github.com/venetanji/sd2112-teaching/pull/3) contains an unmerged Week 9 bias/privacy deck and Week 10 recommendation deck. Reuse ideas selectively, not those weeks' obsolete tooling, assumed submissions, Blackboard deadlines or slide numbers.
 
-The original 50-page 2025 Week 9 PDF has now been recovered and visually inspected. Historical slide pointers: Week 9 pages 23–37 cover recommendations, embeddings, filtering and echo chambers; pages 38–45 cover bias, labour and consequences; pages 47–49 propose platform redesign. Pages 40–41 are image-heavy face-recognition/AJL material and belong in the bias discussion. Page 49 proposes a diversity slider and explore-new-spaces button. Update these historical examples with the research below rather than treating the old deck as immutable.
+The original 50-page 2025 Week 9 PDF has now been recovered and visually inspected. Historical slide pointers: Week 9 pages 23–37 cover recommendations, embeddings, filtering and echo chambers; pages 38–45 cover bias, labour and consequences; pages 47–49 propose platform redesign. Pages 40–41 are image-heavy facial-analysis/AJL material and belong in the bias discussion; the cited Gender Shades study audits binary gender classification, not face identification. Page 49 proposes a diversity slider and explore-new-spaces button. Update these historical examples with the research below rather than treating the old deck as immutable.
 
 ## Purpose
 
@@ -35,11 +35,11 @@ The instructor should allocate these tasks; names in earlier plans do not establ
 
 Do not assume every team already has a prototype or has submitted a formal proposal. A sketch and a defined product decision are enough to enter the activity.
 
-## Proposed three-hour run of show
+## Implemented three-hour run of show
 
 Relative timings are a planning allocation. Optional news is coordinated separately and must not consume the protected project work without an explicit adjustment.
 
-| Minutes | Segment | Proposed slides |
+| Minutes | Segment | Actual slides |
 |---|---|---|
 | 0–10 | Reconnect to evidence and the current product decision | 1–3 |
 | 10–35 | How recommendations work | 4–9 |
@@ -51,38 +51,41 @@ Relative timings are a planning allocation. Optional news is coordinated separat
 | 135–165 | Redesign one recommendation/decision and specify a test | 24–26 |
 | 165–180 | Compare revisions, record limits and next steps | 27–28 |
 
-## Slide construction plan
+## Actual slide map
 
-These are proposed slots, not existing slide numbers.
+The main route retains the plan's 28 slots and protected timing. Slides 29-31 form an untimed reference shelf; use only as needed, never at the expense of break/research/project work.
 
-1. The recommendation is part of the product.
-2. Week 8 connection: what relationship and expectation did the team identify?
-3. Today's question: what is selected for this person, and by whose objective?
-4. Feed anatomy: pool → candidates → ranking → presentation → feedback.
-5. Content-based filtering: item features and similarity.
-6. Embeddings: what is near depends on the representation.
-7. Collaborative filtering: the user–item pattern, with a small readable matrix.
-8. Cold start and sparse evidence: what can the system honestly infer?
-9. Check understanding: distinguish a recommendation from an explanation of it.
-10. Value versus proxy: what is easy to measure, and what does the user actually want?
-11. Feedback loops: the screen changes the data used to make the next screen.
-12. Exploration and exposure: why diversity is a design choice, not a magic guarantee.
-13. Four entry points for bias: collection, labels, objectives and interaction.
-14. Human labour: who labels, moderates, maintains and absorbs errors?
-15. Privacy and control: which data is necessary, retained or inferred?
-16. Gauthier et al.: randomized feed intervention, changed follow choices, and limits on generalization.
-17. Glickman/Sharot: controlled human–AI feedback-loop experiments; distinguish a mechanism from a live recommender effect size.
-18. Evidence limits: filter-bubble claims depend on platform, population, measure and time.
-19. Break.
-20. Demo: rank a small synthetic set under two explicit objectives or feature weightings.
-21. Compare what changed, what stayed hidden and what the demo cannot establish.
-22. Search the team's own question; include alternative explanations and contrary evidence.
-23. Read and log the study population, system, comparator, finding and limitation.
-24. Redesign one decision: objective, data boundary, explanation or user control.
-25. Map who benefits and who may be poorly served; name the missing evidence.
-26. Specify a test that could change the design decision.
-27. Compare two teams' choices and trade-offs without declaring one universal fairness metric.
-28. Save the evidence and carry the open question into the reframing/prototyping session.
+1. **Inside the feed.**
+2. **What did your product promise?**
+3. **Selected for you. By whose objective?**
+4. **The feed is several decisions.**
+5. **Similar to what you liked.**
+6. **Near depends on the representation.**
+7. **Learn from a pattern of choices.**
+8. **What can the system honestly infer?**
+9. **A reason is not the whole mechanism.**
+10. **A click is not the user goal.**
+11. **The next screen changes the next data.**
+12. **Diversity is a decision to specify.**
+13. **Where can a pattern become a problem?**
+14. **Who keeps the system working?**
+15. **Useful does not mean necessary.**
+16. **Changing the feed can change following.**
+17. **People can learn a system's bias.**
+18. **Different studies answer different questions.**
+19. **Break. 15 minutes.**
+20. **Same four items. Two scoring rules.**
+21. **The objective changes the shortlist.**
+22. **Investigate your existing decision.**
+23. **What does the paper actually support?**
+24. **Change one decision inside your product.**
+25. **Who might this revision miss?**
+26. **What result would change your mind?**
+27. **Compare decisions, not ethical slogans.**
+28. **Keep the evidence and the open question.**
+29. **Candidate generation is not ranking.** Reference shelf only.
+30. **Read the design, not just the headline.** Reference shelf only.
+31. **An average can hide a relevant difference.** Reference shelf only.
 
 ## Activity: from evidence to a different decision
 
@@ -120,12 +123,15 @@ Core selection for the instructor, not an instruction that all readings must be 
 
 Source reuse: [old Week 9 source](https://github.com/venetanji/sd2112-teaching/blob/83733ca09969da3439c251260a45549a16f12e71/deck/week09.py), [old Week 10 source](https://github.com/venetanji/sd2112-teaching/blob/83733ca09969da3439c251260a45549a16f12e71/deck/week10.py). Do not copy their unsupported promises, platform logistics or obsolete build commands.
 
-## Review gates before teaching
+## Implementation and review gates before teaching
 
 - Reconcile additional instructor-supplied slides and the final Week 8 work.
 - Verify any contemporary product claim or legal statement from a current primary source. No current legal advice is supplied by this plan.
 - Confirm date, actual project stage, current Canvas milestones and demo accessibility.
-- Build in the current course style; inspect every slide/export, bibliography and ClassPoint mapping. No render or full-course build has been performed for this docs-only plan.
+- Current source: `deck/week09.py`; deterministic demo: `deck/week09_demo.py`. Native notes companion: [week09-speaker-notes.md](week09-speaker-notes.md); primary-claim/access/version ledger and offline cards: [week09-evidence-ledger.md](week09-evidence-ledger.md); truthful build/QA record: [week09-verification.md](week09-verification.md). Target-week builds do not establish a full-course site build or deployment.
+- No ClassPoint collection is added. Slide 9 and closing comparisons are spoken reflections; activities remain existing private team notes. The report-attachment hook is retained and safely no-ops until a legitimate mapping exists; a stale nonempty mapping is rejected.
+- Ranking demo is complete and native/static: all four invented items, two formulas and both result lists are visible. Optional local Python runs identical arithmetic; no browser sketch, service, new account or model is required.
+- All substantive claim boundaries are visible near their findings, with methods/transfer/access detail in native notes and the evidence ledger. Instructor must still check classroom readability, links/network and any actual ClassPoint add-in use separately.
 - Preserve the published assessment requirements unless explicitly revised; do not publish student work or private records.
 
 ## Existing syllabus milestone to reconcile
