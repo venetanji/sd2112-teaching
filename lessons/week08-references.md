@@ -1,6 +1,6 @@
 # Week 8 research register and later-lecture references
 
-Prepared October 21, 2026. This preserves the papers recovered from the October 18–19 planning discussion. It is not a declaration that every paper is assigned reading or fits in one lecture. **R1–R3** are the original Week 8 anchors. **R4–R9** are the discussed refresh and complementary evidence. **R10–R12** are optional extensions; **R13** belongs to the later research-literacy thread.
+Prepared and primary-text audited October 21, 2026. This preserves the papers recovered from the October 18–19 planning discussion. It is not a declaration that every paper is assigned reading or fits in one lecture. The implemented deck preserves 32 timed main slides plus ten untimed appendix slides; R10-R13 remain optional/later readings. **R1–R3** are the original Week 8 anchors. **R4–R9** are the discussed refresh and complementary evidence. **R10–R12** are optional extensions; **R13** belongs to the later research-literacy thread.
 
 Use citations, short attributed excerpts and original diagrams/analysis in the deck. Do not commit full publisher PDFs without checking their reuse terms. Before a slide makes a numerical claim, check the cited version's methods/results and place the limitation next to the claim.
 
@@ -8,7 +8,7 @@ Use citations, short attributed excerpts and original diagrams/analysis in the d
 
 ### R1 · Perceived therapeutic response quality
 
-Hatch, S. G., Goodman, Z. T., Vowels, L., et al. (2025). **When ELIZA meets therapists: A Turing test for the heart and mind.** *PLOS Mental Health*.
+Hatch, S. G., Goodman, Z. T., Vowels, L., Hatch, H. D., Brown, A. L., Guttman, S., Le, Y., Bailey, B., Bailey, R. J., Esplin, C. R., Harris, S. M., Holt, D. P., Jr., McLaughlin, M., O'Connell, P., Rothman, K., Ritchie, L., Top, D. N., Jr., & Braithwaite, S. R. (2025). When ELIZA meets therapists: A Turing test for the heart and mind. *PLOS Mental Health, 2*(2), e0000145. https://doi.org/10.1371/journal.pmen.0000145
 
 - Paper: https://doi.org/10.1371/journal.pmen.0000145
 - Correction: https://doi.org/10.1371/journal.pmen.0000426
@@ -19,7 +19,7 @@ Hatch, S. G., Goodman, Z. T., Vowels, L., et al. (2025). **When ELIZA meets ther
 
 ### R2 · Authorship disclosure and perception
 
-Jain, G., Pareek, S., & Carlbring, P. (2024). **Revealing the source: How awareness alters perceptions of AI and human-generated mental health responses.** *Internet Interventions*, 36, 100745.
+Jain, G., Pareek, S., & Carlbring, P. (2024). Revealing the source: How awareness alters perceptions of AI and human-generated mental health responses. *Internet Interventions, 36*, 100745. https://doi.org/10.1016/j.invent.2024.100745
 
 - Paper: https://doi.org/10.1016/j.invent.2024.100745
 - Historical location: Week 8 PDF, page 38.
@@ -28,7 +28,7 @@ Jain, G., Pareek, S., & Carlbring, P. (2024). **Revealing the source: How awaren
 
 ### R3 · Sycophancy mechanism and evaluation
 
-Sharma, M., Tong, M., Korbak, T., et al. **Towards Understanding Sycophancy in Language Models.** First preprint 2023; ICLR 2024; subsequently revised.
+Sharma, Mrinank; Tong, Meg; Korbak, Tomasz; Duvenaud, David; Askell, Amanda; Bowman, Samuel R.; Cheng, Newton; Durmus, Esin; Hatfield-Dodds, Zac; Johnston, Scott R.; Kravec, Shauna; Maxwell, Timothy; McCandlish, Sam; Ndousse, Kamal; Rausch, Oliver; Schiefer, Nicholas; Yan, Da; Zhang, Miranda; and Perez, Ethan. (2024). *Towards Understanding Sycophancy in Language Models*. International Conference on Learning Representations. Consulted revised arXiv v4 (10 May 2025). https://arxiv.org/abs/2310.13548v4 ; https://arxiv.org/pdf/2310.13548v4 .
 
 - Paper/version history: https://arxiv.org/abs/2310.13548
 - Historical location: Week 8 PDF, page 39.
@@ -39,7 +39,7 @@ Sharma, M., Tong, M., Korbak, T., et al. **Towards Understanding Sycophancy in L
 
 ### R4 · Social sycophancy and consequences
 
-Cheng, M., Lee, C., Khadpe, P., Yu, S., Han, D., & Jurafsky, D. (2026). **Sycophantic AI decreases prosocial intentions and promotes dependence.** *Science*, 391, article aec8352. Published March 26, 2026.
+Cheng, Myra; Lee, Cinoo; Khadpe, Pranav; Yu, Sunny; Han, Dyllan; and Jurafsky, Dan. (2026). Sycophantic AI decreases prosocial intentions and promotes dependence. *Science*, **391**(6792), **eaec8352**. https://doi.org/10.1126/science.aec8352 . Publication 26 March 2026. Note the full article number is **eaec8352**, not just aec8352.
 
 - Paper: https://doi.org/10.1126/science.aec8352
 - Teaching use: connect the mechanism from R3 to interpersonal judgments and willingness to keep using an affirming system.
@@ -48,7 +48,7 @@ Cheng, M., Lee, C., Khadpe, P., Yu, S., Han, D., & Jurafsky, D. (2026). **Sycoph
 
 ### R5 · The supplied cognitive-surrender working paper
 
-Shaw, S. D., & Nave, G. (2026). **Thinking—Fast, Slow, and Artificial: How AI is Reshaping Human Reasoning and the Rise of Cognitive Surrender.** Working paper, dated January 11, 2026; SSRN record posted February 2 and revised February 10, 2026.
+Shaw, Steven D., and Nave, Gideon. (2026, January 11). *Thinking—Fast, Slow, and Artificial: How AI is Reshaping Human Reasoning and the Rise of Cognitive Surrender*. Working paper, PsyArXiv v1. https://doi.org/10.31234/osf.io/yk25n_v1 . Related SSRN record: https://doi.org/10.2139/ssrn.6097646 (not the version directly read).
 
 - SSRN: https://ssrn.com/abstract=6097646
 - DOI: https://doi.org/10.2139/ssrn.6097646
@@ -59,16 +59,16 @@ Shaw, S. D., & Nave, G. (2026). **Thinking—Fast, Slow, and Artificial: How AI 
 
 ### R6 · Immediate loneliness relief
 
-De Freitas, J., et al. **AI Companions Reduce Loneliness.** *Journal of Consumer Research*. First online June 25, 2025; April 2026 issue.
+De Freitas, J., Oguz-Uguralp, Z., Uguralp, A. K., & Puntoni, S. (2026; first published online 2025). AI companions reduce loneliness. *Journal of Consumer Research, 52*(6), 1126–1148. https://doi.org/10.1093/jcr/ucaf040
 
 - Paper: https://doi.org/10.1093/jcr/ucaf040
-- Author-hosted copy: https://www.hbs.edu/faculty/Pages/download.aspx?name=AI+Companions+Reduce+Loneliness+11.7.2025.pdf
+- Author-hosted final published copy: https://www.hbs.edu/ris/Publication%20Files/AI%20Companions%20Reduce%20Loneliness%2011.7.2025_57451c02-8047-4e0d-abfc-55841f64166d.pdf
 - Teaching use: a concrete benefit to compare with reliance risks; ask what feeling heard accomplishes in the measured moment.
 - Limit: immediate relief is not durable treatment. In the recovered review, the seven-day study did not show sustained between-session improvement. Do not describe this as first published in 2026.
 
 ### R7 · Supporting a real human conversation
 
-Maheshka, C., Folk, D., & Dunn, E. (2026). **Harnessing Artificial Intelligence to Facilitate Difficult Conversations.** *Social Psychological and Personality Science*. Published May 5, 2026.
+Maheshka, C., Folk, D., & Dunn, E. (2026). Harnessing artificial intelligence to facilitate difficult conversations. *Social Psychological and Personality Science*, advance online publication, article 19485506261444068. https://doi.org/10.1177/19485506261444068 (publisher date 5 May 2026).
 
 - Paper: https://doi.org/10.1177/19485506261444068
 - Teaching use: AI as preparation for human engagement, rather than necessarily replacing it.
@@ -77,7 +77,7 @@ Maheshka, C., Folk, D., & Dunn, E. (2026). **Harnessing Artificial Intelligence 
 
 ### R8 · Human choice versus rated AI empathy
 
-Wenger, J. D., Cameron, C. D., & Inzlicht, M. (2026). **People choose to receive human empathy despite rating AI empathy higher.** *Communications Psychology*. Published January 31, 2026.
+Wenger, J. D., Cameron, C. D., & Inzlicht, M. (2026). People choose to receive human empathy despite rating AI empathy higher. *Communications Psychology, 4*, article 19. https://doi.org/10.1038/s44271-025-00387-3
 
 - Paper: https://doi.org/10.1038/s44271-025-00387-3
 - Research-team account: https://emplab.la.psu.edu/2026/01/31/joshua-wenger-publishes-first-author-paper-on-ai-empathy-choice/
@@ -86,19 +86,19 @@ Wenger, J. D., Cameron, C. D., & Inzlicht, M. (2026). **People choose to receive
 
 ### R9 · A supervised therapeutic system, not a generic companion
 
-Heinz, M. V., et al. (2025). **Randomized Trial of a Generative AI Chatbot for Mental Health Treatment.** *NEJM AI*, 2(4).
+Heinz, M. V., Mackin, D. M., Trudeau, B. M., Bhattacharya, S., Wang, Y., Banta, H. A., Jewett, A. D., Salzhauer, A. J., Griffin, T. Z., & Jacobson, N. C. (2025). Randomized trial of a generative AI chatbot for mental health treatment. *NEJM AI, 2*(4), AIoa2400802. https://doi.org/10.1056/AIoa2400802
 
 - Paper: https://doi.org/10.1056/AIoa2400802
 - Research institution: https://home.dartmouth.edu/news/2025/03/first-therapy-chatbot-trial-yields-mental-health-benefits
 - Teaching use: compare an outcome study with the perception studies R1/R2 and with ordinary consumer companions.
 - Conditions: N = 210, waitlist randomized trial, clinician-built and human-supervised system, excluding active suicidality. Access continued through eight weeks.
-- Limit: preserve those conditions and the comparator. Do not generalize to unsupervised consumer chatbots or claim equivalence to human therapy from an alliance rating. The publisher full text was not retrievable in this recovery pass; consult the paper before adding detailed numerical slides.
+- Limit: preserve those conditions and the comparator. Do not generalize to unsupervised consumer chatbots or claim equivalence to human therapy from an alliance rating. Update: full published primary text was reviewed via a public mirror; publisher endpoint remained blocked. Supplementary Appendix and separate disclosures were not obtained. See the benefits evidence audit.
 
 ## Optional extensions discussed for this or later lectures
 
 ### R10 · Privacy transparency
 
-Cao, J., Dong, Y., Zhan, C., Neti, R., Peddinti, S. T., & Emami-Naeini, P. (2026). **Understanding U.S. Users' Security and Privacy Transparency Needs for Consumer-Facing Generative AI.** *SOUPS 2026*, pp. 647–664.
+Cao, Jiaxun; Dong, Yu; Zhan, Chunxi; Neti, Rithvik; Peddinti, Sai Teja; and Emami-Naeini, Pardis. (2026). Understanding U.S. Users' Security and Privacy Transparency Needs for Consumer-Facing Generative AI. In *Twenty-Second Symposium on Usable Privacy and Security (SOUPS 2026)*, pp. 647-664. USENIX Association. https://www.usenix.org/conference/soups2026/presentation/cao ; https://www.usenix.org/system/files/soups2026-cao.pdf .
 
 - Conference paper and slides: https://www.usenix.org/conference/soups2026/presentation/cao
 - The exact title and primary-source link resolve the earlier “Cao, SOUPS 2026” shorthand.
@@ -107,7 +107,7 @@ Cao, J., Dong, Y., Zhan, C., Neti, R., Peddinti, S. T., & Emami-Naeini, P. (2026
 
 ### R11 · Psychological ownership when writing with AI
 
-Joshi, N., & Vogel, D. (2026). **Interaction Techniques that Encourage Longer Prompts Can Improve Psychological Ownership when Writing with AI.** *Graphics Interface 2026*.
+Joshi, Nikhita, and Vogel, Daniel. (2026). Interaction Techniques that Encourage Longer Prompts Can Improve Psychological Ownership when Writing with AI. In *Graphics Interface 2026 (GI 2026)*, June 9-12, Waterloo, Canada, 11 pages. ACM. https://doi.org/10.1145/3831423.3831427 . Consulted author preprint https://arxiv.org/abs/2507.03670v3 (12 July 2026), https://arxiv.org/pdf/2507.03670v3 .
 
 - DOI: https://doi.org/10.1145/3831423.3831427
 - Author preprint/version history: https://arxiv.org/abs/2507.03670
@@ -117,7 +117,7 @@ Joshi, N., & Vogel, D. (2026). **Interaction Techniques that Encourage Longer Pr
 
 ### R12 · Double Diamond and generative AI
 
-Sözen, T., & Börekçi, N. A. G. Z. (2026). **Analyzing the integration of generative AI in the design process through the double-diamond framework.** *AI EDAM*. Published October 6, 2026.
+Sözen, Tuğçe, and Börekçi, Naz A. G. Z. (2026). Analyzing the integration of generative AI in the design process through the double-diamond framework. *AI EDAM*, **40**, e9. Published October 6, 2026. https://doi.org/10.1017/S0890060426100304 . Primary page: https://www.cambridge.org/core/journals/ai-edam/article/analyzing-the-integration-of-generative-ai-in-the-design-process-through-the-doublediamond-framework/F527231A155A48F597CD28E2B1F3B2F0 .
 
 - DOI: https://doi.org/10.1017/S0890060426100304
 - Publisher: https://www.cambridge.org/core/journals/ai-edam/article/analyzing-the-integration-of-generative-ai-in-the-design-process-through-the-doublediamond-framework/F527231A155A48F597CD28E2B1F3B2F0
@@ -126,7 +126,7 @@ Sözen, T., & Börekçi, N. A. G. Z. (2026). **Analyzing the integration of gene
 
 ### R13 · Later-course research literacy and structured discussion
 
-Yu, M., Liu, Z., Long, T., Li, D., Deng, L., Kong, X., & Sun, J. (2025). **Exploring cognitive presence patterns in GenAI-integrated six-hat thinking technique scaffolded discussion: an epistemic network analysis.** *International Journal of Educational Technology in Higher Education*, 22, 48.
+Yu, Manli; Liu, Zhi; Long, Taotao; Li, Dong; Deng, Lei; Kong, Xi; and Sun, Jianwen. (2025). Exploring cognitive presence patterns in GenAI-integrated six-hat thinking technique scaffolded discussion: an epistemic network analysis. *International Journal of Educational Technology in Higher Education*, **22**, 48. https://doi.org/10.1186/s41239-025-00545-x . Primary full PDF: https://educationaltechnologyjournal.springeropen.com/counter/pdf/10.1186/s41239-025-00545-x.pdf .
 
 - Paper: https://doi.org/10.1186/s41239-025-00545-x
 - Historical location: Week 11 PDF, pages 8–19; recurring in Week 12, pages 46–49.
@@ -155,3 +155,17 @@ Yu, M., Liu, Z., Long, T., Li, D., Deng, L., Kong, X., & Sun, J. (2025). **Explo
 ## Recovery verification
 
 The prior discussion supplied the research findings and caveats above. In this recovery pass, primary publication/author records were checked for the identities of Shaw/Nave, Cheng, Maheshka/Folk/Dunn, De Freitas, Sharma, Cao, Joshi/Vogel, Sözen/Börekçi and Yu. The PLOS primary printable record and Wenger's research-team record were also located. This was not a fresh replication or full systematic review of all thirteen studies. Detailed results retained from the previous review should be checked against full text during slide authoring, especially where publisher access was unavailable.
+
+
+## Implementation verification and access update (October 21)
+
+The recovery notes above remain editorial provenance, not the final access ledger. The two evidence audits supersede provisional recovery statements about access and numerical detail:
+
+- [Benefits/full-text audit](week08-evidence-benefits.md): R1, R2, R6, R7, R8, R9.
+- [Risks/extensions/full-text audit](week08-evidence-risks.md): R3, R4, R5, R10-R13, vendor case.
+- Every R1-R13 primary article text was inspected in the versions named in those audits; none is abstract-only in this authoring pass. R7 is an accepted author manuscript, R11 a conference author preprint, R3 revised conference text, and R5 January PsyArXiv v1 (not peer reviewed). R4/R9 published primary PDFs were accessed via public mirrors, not blocked publisher endpoints; supplements were not retrieved. No access control was bypassed or full paper redistributed.
+- R5's January text is not asserted byte-identical to the supplied PDF or February SSRN revision. The deck cites the version actually consulted.
+- R6 is the final **five-study** article, not the earlier six-study working paper; author order/version were corrected here.
+- R2 Table 1 supports a significant disclosed-source difference for authenticity, not professionalism/practicality. A contradictory Discussion sentence is not repeated.
+- Framework sources: Ihde, D. (1990). *Technology and the Lifeworld: From Garden to Earth*. Indiana University Press (established course source, not a newly reviewed full book). Verbeek, P.-P. (2015). Beyond interaction: A short introduction to mediation theory. *Interactions, 22*(3), 26-31. https://doi.org/10.1145/2751314 . Full published six-page author-hosted PDF reviewed: https://ris.utwente.nl/ws/portalfiles/portal/6973415/p26-verbeek.pdf ; printed p.29/PDF position 4 describes the four relations and alterity.
+- Original conceptual diagrams, not fabricated results/figures. Unverified Friend/BBC details omitted; OpenAI account explicitly vendor-reported.

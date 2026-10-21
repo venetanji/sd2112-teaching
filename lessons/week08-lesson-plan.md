@@ -2,7 +2,9 @@
 
 ## Status and scope
 
-Instructor planning draft, recovered from the October 18–19 discussion and prepared for a local slide-building session on October 21, 2026. This is a lesson/slide plan, not a rendered or classroom-tested deck. Proposed slide numbers below are implementation targets.
+Recovered editorial plan from the October 18–19 discussion, implemented on October 21, 2026 in `deck/week08.py` with original conceptual figures in `deck/week08_figures.py`. The 32-slide main route and relative timing below are preserved; ten untimed appendix slides hold the access/version guide and complete references. This remains an instructor draft, not a classroom-tested lesson or a change to published course policy.
+
+Implementation companions: [speaker notes](week08-speaker-notes.md), [manual demo/fallback](week08-demo-fallback.md), [benefits evidence audit](week08-evidence-benefits.md), and [risks/extensions evidence audit](week08-evidence-risks.md). The audits identify the exact full-text versions, supporting locations and access limits. No paper is represented as fully read on the basis of an abstract alone.
 
 Course: **SD2112 · Artificial Intelligence in Design**, PolyU School of Design. Repository: [venetanji/sd2112-teaching](https://github.com/venetanji/sd2112-teaching).
 
@@ -91,7 +93,7 @@ The syllabus specifies a three-hour lecture/workshop block. The following relati
 
 Use these in ordinary team notes or the existing project workspace. No new Canvas/ClassPoint submission is established by this plan.
 
-1. Our product, intended user and context are…
+1. Our product, intended user and context are… The AI decision and necessary data are… It will not collect, promise or do…
 2. The AI relationship or attributed capability we need to investigate is…
 3. Our search question, keywords and search route are…
 4. For each paper: citation/link; relevant passage/page; method and comparator; finding; limitation; relevance to our product.
@@ -121,7 +123,7 @@ The earlier local “Quiz and Teams” slide package and merged Week 7 lesson ar
 ## Before teaching: decisions still open
 
 - Confirm the dated timetable. October 23/30 as Weeks 8/9 follows the discussed sequence but is not an independently confirmed schedule.
-- Choose the core studies for available lecture time; the reference register preserves all recovered discussed papers rather than claiming they all fit the lecture.
+- Core route now uses R1/R2/R8 for perception/choice, R6/R7 for complementary benefits, R3/R4 for sycophancy and R5 for cognitive surrender. R9 is a brief optional contrast in outcome-study design; shorten its detail if necessary. R10-R13 remain untimed appendix readings. The vendor rollback is explicitly a case, not a research result; unverified Friend/BBC cases are omitted.
 - Confirm whether the agent demonstration is useful and actually works. The Scopus CLI metadata smoke did not prove abstract/full-text access or an end-to-end literature review. Use manual library access as the reliable plan; do not bypass access restrictions.
 - Confirm current project proposal/deadline instructions against Canvas and the syllabus. This plan does not remove an existing assessment requirement.
 - For November 6, confirm coverage and the school's 15-minute ESFQ arrangement. Do not invent an ESFQ activity, a colleague commitment or a completed prototype for every team.
