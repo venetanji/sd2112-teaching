@@ -1,6 +1,6 @@
 # SD2112 · Week 13 lesson plan
 
-**Showcase: product, research and ethical argument** · planning draft · October 21, 2026
+**Showcase: product, research and ethical argument** · built review draft · October 21, 2026
 
 ## Status: showcase direction and policy item to reconcile
 
@@ -63,33 +63,41 @@ Once the assessment decision, team count and room are confirmed (and Q/A only if
 
 No numerical quiz duration, question count or round allocation is assumed in this draft. Do not finalize the timed deck until the assessment decision and showcase logistics are confirmed; quiz values are required only if that component remains.
 
-## Proposed slide construction plan
+## Built draft route: 32 slides, not a finalized timetable
 
-These are provisional operational slots; they are not a built deck.
+`deck/week13.py` now provides 28 main-route slides and four clearly marked instructor-review appendix slides. The draft is useful before logistics are confirmed: the fair prompts, fictional worked example, critique protocol and course synthesis are substantive teaching content. It does not provide an invented operational schedule.
 
-1. SD2112 showcase: product, research and ethical argument.
-2. Today's confirmed schedule, filled only after the timing decisions above.
-3. Access and support: where to go for technical/accessibility help, without personal details.
-4. Project components and the existing assessment weights.
-5. Room/rotation instructions based on actual teams and facilities.
-6. The five questions a visitor should be able to answer.
-7. How to give useful feedback: a specific strength and a substantive question.
-8. Presenting/visiting round instructions; duplicate only for confirmed rounds.
-9. Between-round holding slide or verified timer.
-10. Fair debrief: what changed when another person encountered the product?
-11. Break and return time, once confirmed.
-12. The course question: can a machine originate a design?
-13. Two ways to teach a machine: rules and examples, with earlier course examples.
-14. Using AI in the creative process versus incorporating AI in a product.
-15. Mediation and agency: the relationship is a design responsibility.
-16. Data, evidence and bias: what supports the claim and who bears the error?
-17. The designer's contribution: framing, curation, choices, guardrails and communication.
-18. Conditional assessment instructions only if the instructor confirms the syllabus quiz remains here; otherwise omit after the authorized policy decision.
-19. Conditional assessment holding/timing slide, only for a confirmed quiz; no questions or answers in the public deck.
-20. Completion and support instructions for the confirmed showcase/submission arrangements; include assessment-platform instructions only if applicable.
-21. Closing reflection and where verified course resources remain available.
+| Slides | Actual content | Facilitation boundary |
+| --- | --- | --- |
+| 1-4 | Showcase purpose, route, existing deliverables and rubric | No extra submission, weights or speaking-time assumption. |
+| 5-8 | Visitor questions, one-decision story, evidence and ethical argument | Conversation scaffolds, not extra assessed sections. |
+| 9-11 | Fictional route recommender, useful formative feedback, receiving critique | No real campus-service claim, visit quota, score or public collection. |
+| 12 | Present. Visit. Listen. | Reusable static/manual hold; transition only on instructor cue. |
+| 13-14 | Debrief and manual break hold | No collected reflection or invented return clock time. |
+| 15-18 | Course question, rules/examples/A+B, tool versus product, native mediation diagram | Conceptual connection, not a claim that selected concepts exhaust exam scope. |
+| 19-24 | Agency, data/bias, evidence/impact, curation, language, authorship/ownership | Design questions and bounded claims; no universal safety/legal claims. |
+| 25-28 | Spoken closing reflection, attributed clickable resources, existing arrangements and closing | Does not dismiss class before any retained assessment. |
+| 29-32 | Instructor-only assessment/logistics/testing/provenance readiness appendix | Review material, not student-facing tentative instructions. |
 
-The course synthesis is not an announcement that only the concepts named here are examinable. If a quiz is retained, its blueprint must match material actually taught and the approved whole-course scope.
+The main route ends at slide 28. The companion `lessons/week13-notes.md` explains each slide's teaching move and limits. `lessons/week13-sources.md` records the archive and synthesis provenance. `lessons/week13-verification.md` records actual build/visual checks and what remains untested.
+
+No new ClassPoint question or upload is configured. Spoken peer feedback is formative unless a separate approved rule says otherwise; optional team working notes are not a submission. `attach_reports` follows the normal course hook, safely doing nothing for this zero-activity deck. No synthetic live report links are published.
+
+## Operational readiness gates: explicit instructor decisions
+
+A built draft is not classroom-operational approval. Record the decision, authorized source and verification before releasing student logistics; no decision is marked complete by this document.
+
+| Gate | Required decision / evidence | Current state |
+| --- | --- | --- |
+| Assessment reconciliation | Explicitly retain, move or otherwise revise the published Week 13 final-quiz item through authorized policy; communicate any approved change. | Unresolved; 20% published weight preserved. |
+| Conditional assessment operation | Only if retained here: approved count/time/platform/resources/attempt/access/recovery/results rules; private blueprint matches taught whole-course scope; authorized test route. | Unresolved; no default Q or platform. |
+| Fair feasibility | Confirm date, room, actual teams, equitable presenting/visiting, transitions, circulation and display access; check conditional time budget. | Unresolved; no rounds or visit quota. |
+| Assessment procedure | Confirm rubric use, grader coverage, moderation and any accommodations through authorized procedures. | Unresolved; no staffing promise or peer marks. |
+| Existing deliverables | Confirm actual Canvas route, deadlines, printing and approved failures/contingencies for existing deliverables only. | Unresolved; no new submission. |
+| Actual room and media | Test display, captions/audio, secure offline playback, accessible nonmovement route and clear support/transition cues. | Classroom test pending; build QA is separate. |
+| Feedback/privacy | Confirm whether feedback is collected, by whom, consent/handling/access and whether any claimed anonymity is real. | Spoken/formative draft; no public collection or anonymity promise. |
+
+If the quiz remains here, use the conditional `180 - Q - A - 15` reserve above; do not assume Q, A or that every venue uses the same schedule. If an authorized revision moves/removes it, record the decision before reallocating time. Only then add the confirmed operations to the existing substantive deck. Public quiz instructions must remain separate from private assessed content. Confirm classroom readiness rather than replacing these gates with guesses.
 
 ## Fair protocol for review
 
@@ -120,4 +128,4 @@ This repository plan deliberately contains no assessed question bank, answer key
 
 ## Readiness and implementation boundary
 
-The draft is useful now as a checklist and editorial plan; the operational slides remain blocked on the explicit logistics above. Do not describe unconfirmed settings as defaults. After confirmation, implement in the established course style, inspect every export and test the actual selected tools. This planning PR does not build/render a deck, prepare a live quiz, alter assessment settings, contact staff/students, publish student work, merge or deploy.
+The substantive 32-slide draft is implemented and locally built for review; see the verification record for evidence and remaining QA limits. Operational release remains gated on the explicit decisions above. Do not describe unconfirmed settings as defaults or treat a local build as deployment. This work does not prepare a live quiz, alter assessment settings, contact staff/students, publish student work, commit, push, merge or deploy. Classroom testing and authorized logistics are still required.
