@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from deckgen import attach_reports, INK, PAPER
 from deckgen.layouts import (title, content, cards, statement, figure_slide,
-                             two_col, activity, finalize)
+                             two_col, activity, finalize, section, T, Image, Rect, _slide, eyebrow)
 from course import footer
 import week05_mediation_figures as M
 import week08_figures as F
@@ -30,19 +30,54 @@ def source(key):
     return f'[{key} / {name}]({url})'
 
 
-def study(key, heading, finding, boundary, prompt, notes):
-    """Keep observation, limit and our product inference visibly separate."""
-    return two_col('RESEARCH / ' + key, heading,
-        [finding, 'ASK: ' + prompt, source(key)],
-        ['WHAT THIS DOES NOT ESTABLISH', boundary,
-         'PRODUCT INFERENCE', 'Treat this as a condition to investigate, not a universal design rule.'],
-        right_font='body', left_size=32, right_size=29, notes=notes)
+PAPER_SUMMARIES = {}
+PAPER_ASSETS = Path(__file__).resolve().parent / 'assets' / 'week08-papers'
+
+
+def study(key, heading, setup, finding, boundary, prompt, notes,
+          image=None, attribution=None, method=None, block='RESEARCH'):
+    """One self-contained paper; methods detail belongs in its native notes."""
+    PAPER_SUMMARIES[key] = dict(setup=setup, finding=finding, boundary=boundary, prompt=prompt)
+    s = _slide('#FFFFFF', notes, title=heading)
+    s.els += [eyebrow(120, 96, block + ' / ' + key, '#246E70'),
+              T(120, 180, 1680, 110, heading, 'xbold', 64, INK, lh=.95, spc=-.03)]
+    if image:
+        s.els.append(Image(120, 332, 1010, 515, str(PAPER_ASSETS / image), 'contain',
+                           name='paper-figure-' + key, url=REFS[key][1]))
+    else:
+        # Faithful method illustration, explicitly not a source figure or empirical chart.
+        for i, (label, value) in enumerate(method):
+            y = 340 + i * 165
+            s.els += [Rect(120, y, 1010, 2, '#D5DCDA'),
+                      T(140, y + 20, 970, 40, label, 'mono', 23, '#246E70'),
+                      T(140, y + 68, 970, 90, value, 'xbold', 46, INK, lh=1.1)]
+    for i, (label, value) in enumerate([('QUESTION + SETUP', setup), ('FINDING', finding),
+                                       ('LIMIT', boundary), ('DESIGN QUESTION', prompt)]):
+        y = 332 + i * 148
+        s.els += [T(1190, y, 610, 32, label, 'mono', 21, '#246E70'),
+                  T(1190, y + 38, 610, 106, value, 'body', 30, INK, lh=1.16)]
+    s.els += [T(120, 870, 1010, 76, attribution or 'Original method illustration; not measured data.',
+                'mono', 20, '#246E70', lh=1.2),
+              T(120, 956, 1680, 38, source(key), 'mono', 21, INK, lh=1.1)]
+    return s
+
+
+def paper_detail(key, heading, image, caption, notes):
+    """Project dense original axes/legends at a larger scale after the summary."""
+    s = _slide('#FFFFFF', notes, title=heading)
+    s.els += [eyebrow(120, 96, 'READ THE FIGURE / ' + key, '#246E70'),
+              T(120, 180, 1680, 100, heading, 'xbold', 64, INK, lh=.95),
+              Image(120, 290, 1680, 600, str(PAPER_ASSETS / image), 'contain',
+                    name='paper-detail-' + key, url=REFS[key][1]),
+              T(120, 900, 1680, 48, caption, 'body', 27, INK, lh=1.15),
+              T(120, 958, 1680, 36, source(key), 'mono', 21, INK, lh=1.1)]
+    return s
 
 
 # 0-10 minutes: reconnect to the existing Week 7 concept, not a new pitch round.
 S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 08',
     'Humanizing AI.', 'Research. Relationships. Product responsibility.',
-    notes='Three-hour class. Research -> AI product -> existing student project. Main route is slides 1-32; the appendix is a reference shelf, not extra lecture time. Relative minutes, not confirmed clock times: opening 0-10; mediation 10-30; research 30-65; implications 65-75; break 75-90; demo 90-105; research 105-145; revision 145-170; discussion 170-180. Keep the full break and research activity. If late, shorten optional study detail. Use the same conceptual level and native visual system as Weeks 5-7. No personal mental-health disclosure is needed.'))
+    notes='Three-hour class. Research -> AI product -> existing student project. Main route is slides 1-37; the appendix is a reference shelf, not extra lecture time. Relative minutes, not confirmed clock times: opening 0-10; mediation 10-30; research 30-65; implications 65-75; break 75-90; demo 90-105; research 105-145; revision 145-170; discussion 170-180. Keep the full break and research activity. If late, shorten optional study detail. Use the same conceptual level and native visual system as Weeks 5-7. No pre-reading is assumed: teach each summary before interpreting its figure. No personal mental-health disclosure is needed.'))
 S.append(content('0-10 / FROM WEEK 7 TO WEEK 8', 'Your concept is a starting claim.', [
     'Keep your existing team, product idea and image in view.',
     'What does the AI do during use? What does the person still decide?',
@@ -78,52 +113,79 @@ S.append(cards('AGENCY / CALIBRATED TRUST', 'Can the person disagree and act?', 
     ('AFTER', 'Leave or recover.', 'Keep an exit, a human route and a way to repair the consequences.'),
 ], text_size=31, notes='Finish mediation by asking what the interface makes possible, not whether it generates a reassuring disclaimer. Trust should be calibrated to the task and actual reliability; maximum trust is not the objective. These are design questions, not experimentally proven universal safeguards. Transition to testing the evidence behind product promises.'))
 
-# 30-65 minutes: bounded evidence, not nine mini literature reviews.
+# 30-65 minutes: three topic blocks; no student pre-reading is assumed.
 S.append(cards('30-65 / READ THE CLAIM BEFORE THE HEADLINE', 'A paper is a bounded claim.', [
-    ('WHO + WHAT', 'People and system.', 'Who took part? What model or intervention, task and setting were tested?'),
-    ('AGAINST WHAT', 'A comparison.', 'Compared with what? Random assignment, observation or another design?'),
-    ('MEASURED HOW', 'Outcome and time.', 'A rating, a choice, a behaviour or a symptom measure? For how long?'),
-], text_size=31, notes='Use this frame aloud on each following study. Add the limit: what alternative explanation remains, and who is not represented? A correlation alone cannot establish causation. Randomization can support a causal inference within the tested conditions, not every population or interface. A working paper is not equivalent to peer-reviewed evidence. Ask students to name the outcome before debating whether the result is good or bad.'))
+    ('WHO + WHAT', 'People and system.', 'Who took part? What system and task were tested?'),
+    ('AGAINST WHAT', 'A comparison.', 'Compared with what? Random assignment or observation?'),
+    ('MEASURED HOW', 'Outcome and time.', 'A rating, a choice, an action or a symptom? For how long?'),
+], text_size=31, notes='No pre-reading is assumed. Explain each paper from its question and setup, then point to the figure axes and comparator. A correlation alone cannot establish causation; randomization does not guarantee transfer. Name the outcome before debating good or bad. Full text and caveats are in the native notes and ledgers; students are not expected to decode a journal figure unaided.'))
+S.append(section('01 / PERCEPTION + CHOICE', 'Seeming care.\nChoosing a source.',
+    'A response rating is not a relationship or a treatment.', bg='#246E70',
+    notes='Topic signpost inside the existing 35-minute evidence budget, not extra lecture time. Spend approximately eleven minutes on R1, R2 and R8 including figure explanation. Ask students to distinguish a reader rating, authorship context and a choice of empathy source. Do not assume students know these papers.'))
 S.append(study('R1', 'A good-rated reply is not treatment.',
-    '830 readers rated selected AI and expert replies to 18 couple-therapy vignettes. AI replies scored higher on perceived therapeutic common factors.',
-    'Vignette ratings do not show symptom improvement, clinical safety or equivalence to a therapist.',
-    'What promise would a high empathy rating justify?',
-    'Hatch et al. (2025), full PLOS article and correction reviewed. Methods: 830 US panelists, selected responses from 13 convenience-sampled experts and prompted ChatGPT-4; AI responses were longer. Common factors include caring/understanding, not patient symptom change. Eighteen hypothetical snapshots, no treatment delivered. August correction DOI 10.1371/journal.pmen.0000426 discloses internal BYU Psychology funding to SRB and lead author SGH\'s ownership/compensated therapy practice at Hatch Data and Mental Health; business did not fund the study and no clients were included. Original funding/COI statements are superseded; correction does not revise outcomes. Product inference: a convincing conversational surface does not establish the outcome a user needs. Ask for the missing outcome and comparator. About three minutes.'))
+    'Can replies seem therapeutic? 830 readers compared AI and expert replies to 18 scenarios.',
+    'Selected AI replies rated higher.',
+    'Perceptions, not treatment outcomes; selected replies differed in length.',
+    'What would justify calling your product therapy?',
+    "Hatch et al. (2025), full PLOS article and correction reviewed. Methods: 830 US panelists, selected responses from 13 convenience-sampled experts and prompted ChatGPT-4; AI responses were longer. Common factors include caring/understanding, not patient symptom change. Eighteen hypothetical snapshots, no treatment delivered. August correction DOI 10.1371/journal.pmen.0000426 discloses internal BYU Psychology funding to SRB and lead author SGH's ownership/compensated therapy practice at Hatch Data and Mental Health; business did not fund the study and no clients were included. Original funding/COI statements are superseded; correction does not revise outcomes. Product inference: a convincing conversational surface does not establish the outcome a user needs. Ask for the missing outcome and comparator. About three minutes.", method=[('READERS', '830 US panel participants'), ('MATERIAL', '18 couple-therapy scenarios'),
+                     ('COMPARISON', 'Selected ChatGPT-4 / expert replies')], block='PERCEPTION + CHOICE'))
 S.append(study('R2', 'Source awareness and authenticity ratings.',
-    'At the source-disclosed reassessment, human replies rated higher for authenticity. Professionalism and practicality differences were not significant.',
-    'The disclosed-source reassessment came six months later. Do not treat every difference as a clean, isolated label effect.',
-    'What does disclosure let a person decide?',
-    'Jain, Pareek and Carlbring (2024), full PMC article reviewed. Initial 140 respondents believed all replies were human; 111 returned six months later. Human writers were Master\'s clinical-psychology students, not the R1 expert pool. Sections 2.1-2.5 and Tables 1/3: human ratings rose; AI ratings changed little. Table 1 supports authenticity superiority only; a Discussion sentence overstates professionalism/practicality and conflicts with the table. Nonsignificance is not equivalence. Anonymous responses prevented individual paired analyses. Time, attrition and familiarity are alternatives to a pure label effect. Perception, not treatment. Ask whether hiding the source would be justified: these findings do not justify concealment.'))
+    'Does source awareness matter? 111 people re-rated replies six months later, now source-labelled.',
+    'Human replies rated more authentic.',
+    'Six-month timing and attrition confound disclosure; other differences nonsignificant, not equivalent.',
+    'What should disclosure help someone decide?',
+    "Jain, Pareek and Carlbring (2024), full PMC article reviewed. Initial 140 respondents believed all replies were human; 111 returned six months later. Human writers were Master's clinical-psychology students, not the R1 expert pool. Sections 2.1-2.5 and Tables 1/3: human ratings rose; AI ratings changed little. Table 1 supports authenticity superiority only; a Discussion sentence overstates professionalism/practicality and conflicts with the table. Nonsignificance is not equivalence. Anonymous responses prevented individual paired analyses. Time, attrition and familiarity are alternatives to a pure label effect. Perception, not treatment. Ask whether hiding the source would be justified: these findings do not justify concealment.", method=[('INITIAL / SOURCE CONCEALED', '140 respondents'),
+                     ('SIX MONTHS LATER / SOURCE DISCLOSED', '111 returned; same replies'),
+                     ('OUTCOME', 'Three response ratings')], block='PERCEPTION + CHOICE'))
 S.append(study('R8', 'A preferred reply is not a chosen source.',
-    'Across four studies, people chose human empathy even though AI empathy could receive higher ratings.',
-    'Choice and response ratings are different outcomes. Neither establishes clinical benefit or a universal preference.',
-    'Would you optimize the text, the source, or the person\'s choice?',
-    'Wenger, Cameron and Inzlicht (2026), full published article reviewed. Four brief nonclinical studies, 691 source-choice participants. Explain evaluating a response versus selecting an empathy source, not an established relationship or repeated live dialogue. Sources were CHOSEN, not randomly assigned for the rating comparison: selection can affect experienced-response ratings. Mostly decontextualized empathizers/human strangers; transfer to ongoing relationships is untested. Do not infer that everyone rejects AI or that AI understands more because a response rates well. Ask whether source choice is part of a rehearsal product\'s value. No personal disclosures.'))
-S.append(cards('BENEFITS / TWO DIFFERENT OUTCOMES', 'Relief now. A step towards someone.', [
-    ('R6 / COMPANIONS', 'Feel less lonely now.', 'Seven-day study: relief after interaction, not sustained between sessions. ' + source('R6')),
-    ('R7 / PREPARATION', 'Start a difficult talk.', '65% vs 59% reported initiation next week versus factual chat. Not proof of better conversations. ' + source('R7')),
-], text_size=29, head_size=40,
-    notes='Allow five minutes for both, rather than two extra slides. R6: De Freitas et al. first online June 2025, issue April 2026. Distinguish within-session relief from sustained between-session improvement; feeling heard is a studied mechanism, not proof of reciprocal care. R7: Maheshka, Folk and Dunn, 2026; follow-up conversation initiation is self-reported. The control is an unrelated chatbot interaction, not human rehearsal; no claim of superiority to human preparation or improved conversation quality. Product inference, not tested here: an AI product could scaffold real-world contact instead of maximizing time in the chat. Ask what outcome would distinguish support from substitution.'))
-S.append(study('R9', 'What would outcome evidence need?',
-    'In a 210-person randomized trial, Therabot users improved more on symptom scales than a waitlist at 4 and 8 weeks.',
-    'A supervised system and waitlist comparison do not establish parity with human therapy or safety of consumer companions.',
-    'Which conditions would disappear in an ordinary chatbot?',
-    'Optional two-minute contrast; shorten detail, not team research. Heinz et al. (2025), full published article reviewed via public mirror because publisher endpoint was blocked; supplement and separate disclosures not obtained. Methods pp. 3-4: adults with clinically significant depression/anxiety or high-risk eating-disorder concerns; active suicidality, mania and psychosis excluded. Expert-built system, all responses supervised POST-transmission by trained clinicians/researchers, with correction and safety intervention. Tables pp. 5-6 support symptom findings. Access continued during weeks 4-8, so eight-week improvement is not maintenance after withdrawal. Waitlist is not an active human-therapy comparator; alliance comparison uses historical norms, not randomized parity. Do not transfer to unsupervised general companions.'))
+    'Who would you choose? Four studies offered human or AI empathy; 691 participants.',
+    'Human sources chosen more; AI replies rated higher.',
+    'Chosen sources, not randomized ratings; brief tasks, not established relationships.',
+    'Should users choose their source?',
+    "Wenger, Cameron and Inzlicht (2026), full published article reviewed. Four brief nonclinical studies, 691 source-choice participants. Explain evaluating a response versus selecting an empathy source, not an established relationship or repeated live dialogue. Sources were CHOSEN, not randomly assigned for the rating comparison: selection can affect experienced-response ratings. Mostly decontextualized empathizers/human strangers; transfer to ongoing relationships is untested. Do not infer that everyone rejects AI or that AI understands more because a response rates well. Ask whether source choice is part of a rehearsal product's value. No personal disclosures. Figure 1, published PDF p.5, cropped complete plot under CC BY 4.0: four violin distributions, dot means and SE bars; dashed .5 = equal human/AI choice. Show variability, not unanimous rejection of AI. Samples 152/196/195/148 total691. This figure shows choice only; higher response ratings come from separate analyses/Figures2-7. PDF/version/crop provenance in week08-paper-figures.md.", image='r8-choice.png',
+    attribution='Wenger et al. (2026), Fig. 1; published PDF p.5.\nCropped plot; CC BY 4.0. Dashed line = equal choice.', block='PERCEPTION + CHOICE'))
+S.append(section('02 / BENEFITS + THEIR HORIZON', 'Relief now.\nAction outside the app.',
+    'Different outcomes need different evidence.', bg='#246E70',
+    notes='Topic signpost, not extra teaching time. Allocate approximately eight minutes to the two distinct papers R6 and R7. First ask what changes during a conversation, then what changes outside the app. The split is deliberate: students have not pre-read and each paper needs its own setup, result and limitation. R9 is an optional untimed appendix contrast, not a third required paper in this block.'))
+S.append(study('R6', 'Relief now is not lasting improvement.',
+    'Can chat ease loneliness? A seven-day study compared companion use with no-interaction ratings.',
+    'Loneliness fell immediately after daily sessions.',
+    'No sustained between-session improvement; US sample, differential attrition; not clinical treatment.',
+    'Measure relief, persistence, or both?',
+    'De Freitas et al., full final five-study published article read from retained HBS-hosted PDF; not the older six-study working paper. First online 25 June 2025; 2026 issue. Study 3, PDF pp.11-15: US participants, prompted GPT-4 companion Jessie for 15 minutes daily across seven days; no-interaction control only rated loneliness, so time/contact not matched. Primary complete-case sample 922 (314 experience, 362 control, 246 prediction); differential attrition about 23% versus 14%. Explain Figure 3A first: open circles before, filled circles after; triangles control. The repeated immediate gap is not accumulated recovery. Pre-session scores did not differ significantly from control on any day; post-session versus control contrasts differ across days. Shaded bands are 95% CIs, broken axes retained. Panel B compares predictions with experience, not a clinical comparator. General discussion pp.18-20 distinguishes temporary relief from enduring change and rejects clinical recommendations or replacement of human relationships/professional care. Figure 3 A+B, PDF/printed p.13, exact crop and source SHA in week08-paper-figures.md. Figure is an attributed scholarly teaching quotation; all-rights-reserved OUP rights are not a public reuse grant. Ask which outcome the project actually promises: momentary comfort, persistence, or action outside the app. About four minutes; no student pre-reading.', image='r6-figure.png', attribution='De Freitas et al., Fig. 3 A+B, final PDF p.13.\nOpen = before / filled = after; bands = 95% CIs.', block='BENEFITS / IMMEDIATE RELIEF'))
+S.append(paper_detail('R6', 'Look between the sessions.', 'r6-detail.png',
+    'De Freitas et al., Fig. 3 A+B, PDF p.13. Open = before, filled = after; 95% CIs; broken axes.',
+    'Same paper and same four-minute R6 allocation, not an extra lecture segment. Read panel A: loneliness is self-reported; control triangles track once-daily ratings, experience open circles before and filled circles after daily chat. Point to day1 and day7 before interpreting the overall downward slopes. A vertical before-after gap is immediate relief; pre-session versus control comparison asks about persistence. Before-session differences from control were not significant; this is not equivalence. Panel B compares prediction versus experience, not clinical care. Shaded95%CI bands and broken axes remain intact. Figure3 A+B final published PDFp.13; this direct crop removes only surplus title area, not any legend, tick, condition or data. OUP rights and exact crop/hash are in week08-paper-figures.md.'))
+S.append(study('R7', 'Rehearsal can lead outside the app.',
+    'Can AI preparation help? Randomized rehearsal versus factual chat; 1,371 next-week follow-ups.',
+    '65% versus 59% reported starting their conversation.',
+    'Self-report; unmatched control, no human rehearsal. Path model is not proven mechanism.',
+    'Measure action beyond app engagement?',
+    'Maheshka, Folk and Dunn (2026), full 27-page accepted author manuscript and included SOM read; not the SAGE typeset version. PDF pp.6-8: 1465 US/Canadian Prolific participants completed Part 1, 1371 returned; randomized GPT-4o-mini preparation for 6-12 minutes versus three prescribed factual questions. Actual chat durations 7.83 versus 2.83 minutes, not matched. Follow-up opened after five days for four days; say roughly the following week, not exactly seven days for all. PDF p.10/printed p.9 reports 65% versus 59% self-reported conversation initiation; six percentage points, not six percent relative growth. No authentic initiation bar chart exists in this manuscript. Figure 1 on PDF p.11/printed p.10 is the anticipated-quality mediation model: explain only preparation -> expectations -> reported action. Its OR and b coefficients are not raw initiation percentages. Measured mediator is not independently randomized; pathway is not proof of mechanism. Among 853 reporting a conversation, quality/satisfaction contrasts were nonsignificant, not equivalence. No test against human rehearsal or equally intensive reflection. Figure caption claims an indirect effect; keep this narrower interpretation visible. Crop/version/access/rights caveat in week08-paper-figures.md. Ask whether the product helps a user take a freely chosen external step, instead of merely increasing app engagement. About four minutes; do not require personal disclosures.', image='r7-figure.png', attribution='Maheshka et al., Fig. 1, author manuscript PDF p.11.\nProposed pathway, not an initiation-rate chart or proof of mechanism.', block='BENEFITS / HUMAN ACTION'))
+S.append(section('03 / AGREEMENT + OVERRELIANCE', 'Pleasant is not\nalways helpful.',
+    'Feedback, social choices and reasoning are different tests.', bg='#246E70',
+    notes='Topic signpost inside the existing evidence allocation. Approximately thirteen minutes for R3, R4 and R5, with the remaining three minutes for the bounded-claim frame and transitions. Explain sycophancy as unearned agreement, not friendliness. Separate the historical model benchmark, immediate social intentions and optional-AI reasoning experiments.'))
 S.append(study('R3', 'Agreement is not the same as help.',
-    'Tested assistants sometimes matched a user\'s stated view rather than prioritize truthfulness. Preference signals could reward that agreement.',
-    'The result depends on tested models and tasks. Warmth alone is not sycophancy; disagreement alone is not accuracy.',
-    'How would you tell support from unearned validation?',
-    'Sharma et al., Towards Understanding Sycophancy in Language Models, ICLR 2024, arXiv 2310.13548. Connect behaviour to training/evaluation and product feedback, not an intention to flatter. Instructor-authored contrast, not study stimuli: supportive response acknowledges a feeling while questioning an unsupported conclusion; sycophantic response endorses the conclusion because the user holds it. Do not imply that every current model always agrees.'))
+    'Does preference bias feedback? Five historical assistants critiqued identical work under different user cues.',
+    'User cues shifted feedback positivity.',
+    'Historical models; AI-judged feedback, not factual accuracy. Warmth is not sycophancy.',
+    'Can your product challenge accurately?',
+    'Sharma et al., Towards Understanding Sycophancy in Language Models, ICLR 2024, arXiv 2310.13548. Connect behaviour to training/evaluation and product feedback, not an intention to flatter. Instructor-authored contrast, not study stimuli: supportive response acknowledges a feeling while questioning an unsupported conclusion; sycophantic response endorses the conclusion because the user holds it. Do not imply that every current model always agrees. Figure 1 quantitative panel, revised v4 PDF/printed p.3: same passages under all four preference/ownership cues and five models. Feedback positivity is GPT-4-judged more-positive-than-baseline frequency, not factual accuracy. The 50% line is comparison baseline. Figure does not prove RLHF alone causes sycophancy; optimization results are mixed. Axes/legend/SE retained; exact crop and rights caveat in week08-paper-figures.md.', image='r3-figure.png', attribution='Sharma et al., Fig. 1 (quantitative panel), v4 PDF p.3.\nPreference-cue feedback, not proof of training causation.', block='AGREEMENT / MODEL BEHAVIOUR'))
 S.append(study('R4', 'Validation can change the next choice.',
-    'Three experiments (N = 2,405): affirming replies increased perceived rightness, reduced repair intentions and increased willingness to return.',
-    'Immediate judgments, intentions and dependence measures are not observed long-term relationship harm or a clinical diagnosis.',
-    'What would a retention metric miss?',
-    'Cheng et al. (2026), final Science eaec8352 full article via public mirror; publisher blocked, supplement not reviewed. Final experiments: 804 + 801 vignette participants and 800 in an eight-turn live interpersonal-conflict chat; total 2,405, not preprint 1,604. Methods/results PDF pp. 5-7. Binary affirming versus disapproving responses, no neutral user-study baseline. Immediate repair/rightness contrasts are experimental; measured traits or benchmark associations are not causal for that reason. Prosocial intentions are not observed reconciliation; trust/return ratings are not diagnosed addiction. US/English context, no repeated-use longitudinal harm demonstration. Product inference: evaluate downstream choices as well as liking. Ask whether a kind but accurate challenge could differ from these binary conditions.'))
+    'What follows agreement? Three experiments, 2,405 people, compared affirming with disapproving replies.',
+    'More rightness, less intended repair; higher return preference.',
+    'Immediate judgments and intentions, not observed reconciliation, diagnosed dependence or long-term harm.',
+    'What would satisfaction metrics miss?',
+    'Cheng et al. (2026), final Science eaec8352 full article via public mirror; publisher blocked, supplement not reviewed. Final experiments: 804 + 801 vignette participants and 800 in an eight-turn live interpersonal-conflict chat; total 2,405, not preprint 1,604. Methods/results PDF pp. 5-7. Binary affirming versus disapproving responses, no neutral user-study baseline. Immediate repair/rightness contrasts are experimental; measured traits or benchmark associations are not causal for that reason. Prosocial intentions are not observed reconciliation; trust/return ratings are not diagnosed addiction. US/English context, no repeated-use longitudinal harm demonstration. Product inference: evaluate downstream choices as well as liking. Ask whether a kind but accurate challenge could differ from these binary conditions. Figure 4 A+B, final PDF p.7 / printed 6 of 9, all three experiments. Means are 1-7 rating scales, y-axis begins at 2, uncertainty is 95% CI. Printed percentages are relative rating changes, not percentage-point probabilities. Observe higher rightness/lower repair intentions; no observed real reconciliation. This is final N=2405, not preprint N=1604. No neutral experimental comparator. Exact crop/access/AAAS rights caveat in week08-paper-figures.md.', image='r4-figure.png', attribution='Cheng et al. (2026), Fig. 4 A+B, final PDF p.7.\nRatings on 1-7 scales; y-axis starts at 2; 95% CIs.', block='AGREEMENT / SOCIAL INTENTIONS'))
+S.append(paper_detail('R4', 'Feeling right is not repairing a conflict.', 'r4-figure.png',
+    'Cheng et al., Fig. 4 A+B, final PDF p.7. Means on 1-7 scales; axis starts at 2; 95% CIs.',
+    'Same R4 teaching allocation in the13-minute agreement/overreliance block, not extra time. Explain orange affirming versus blue disapproving responses, all three experiments. Left: perceived rightness higher; right: intended repair lower. The chart does not show later reconciliation or addiction. Keep y-axis baseline2 visible; compare mean ratings, not bar-length ratios. Printed percentages are relative mean differences, not percentage-point probabilities. The return-preference result comes from separate analyses, not these panels. Final N2405, no neutral comparator. Primary final Science Figure4A+B, PDFp.7/printed6of9, retained public mirror; supplement not reviewed. Exact crop, access and unresolved AAAS republication rights in week08-paper-figures.md.'))
 S.append(study('R5', 'When assistance becomes surrender.',
-    'Short reasoning tasks with optional AI: correct help improved answers; confidently wrong help was often adopted too.',
-    'Short-task performance and confidence do not establish long-term deskilling. This is working-paper evidence, not a clinical diagnosis.',
-    'What would make checking possible before accepting?',
-    'Shaw and Nave (2026), Thinking-Fast, Slow, and Artificial. Full 58-page January 11 PsyArXiv v1 read; related SSRN February revision not retrieved or verified byte-identical to supplied PDF. Working paper, not peer reviewed. Procedures pp. 18-22: seven adapted Cognitive Reflection Test items, optional GPT-4o with seeded correct or confidently faulty replies; person retains final answer. Synthesis N=1,372 includes an ancillary sample, not Study 1 alone. The 79.8% faulty-answer adoption is conditional on AI-consulted trials, NOT 80% of all users. Incentives PLUS feedback reduced, not eliminated, faulty adoption; do not isolate their effects. Limitations pp. 48-49: narrow controlled snapshot, no longitudinal deskilling. Proposed System 3 is a theoretical account, not anatomy. Candidate design test: independent estimate before suggestion or easier comparison, not an established fix.'))
+    'Will people check? Short reasoning tasks offered optional AI with seeded correct or faulty answers.',
+    'Consulted faulty advice was often adopted.',
+    'Working paper; conditional on consultation, short controlled tasks, not long-term deskilling.',
+    'Make checking easier than accepting?',
+    'Shaw and Nave (2026), Thinking-Fast, Slow, and Artificial. Full 58-page January 11 PsyArXiv v1 read; related SSRN February revision not retrieved or verified byte-identical to supplied PDF. Working paper, not peer reviewed. Procedures pp. 18-22: seven adapted Cognitive Reflection Test items, optional GPT-4o with seeded correct or confidently faulty replies; person retains final answer. Synthesis N=1,372 includes an ancillary sample, not Study 1 alone. The 79.8% faulty-answer adoption is conditional on AI-consulted trials, NOT 80% of all users. Incentives PLUS feedback reduced, not eliminated, faulty adoption; do not isolate their effects. Limitations pp. 48-49: narrow controlled snapshot, no longitudinal deskilling. Proposed System 3 is a theoretical account, not anatomy. Candidate design test: independent estimate before suggestion or easier comparison, not an established fix. Figure 2, January v1 PDF p.23: complete chart explicitly says Chat-Engaged Only. Among consulted trials, 92.7% followed accurate and 79.8% followed faulty advice; rounded chart labels 93/80. SE bars, not CIs; override difference is about 13 percentage points, not 13% relative. Optional consultation was chosen and occurs on only about 53-54% of trials. No population-wide 80% obedience claim. Full crop and version/rights caveat in week08-paper-figures.md.', image='r5-figure.png', attribution='Shaw & Nave, Fig. 2, January v1 PDF p.23.\nWorking paper. Consulted trials only; bars show SE.', block='OVERRELIANCE / WORKING PAPER'))
 
 # 65-75 minutes: the bridge from research to product responsibility.
 S.append(content('65-75 / A CASE IS A DIFFERENT KIND OF EVIDENCE', 'An update can change the relationship.', [
@@ -176,7 +238,7 @@ S.append(activity('01 / SEARCH + READ', 40, 'Find 2-3 papers for your product.',
     'Start from one uncertainty about your existing user, context and AI action.',
     'Seek conditions for benefit and for risk/problem. Record mixed or missing evidence.',
     'Keep a citation, evidence card and transfer gap for each paper. More is welcome if useful.',
-], notes='105-145, one forty-minute block across slides 25-27. Suggested internal checkpoints: 0-5 question/terms; 5-20 discovery/access; 20-35 close reading; 35-40 compare and select. These are not extra activity timers. Aim for at least one paper illuminating a potential benefit and one illuminating a risk/problem, without forcing an equal pro/con quota or predetermined verdict. Do not pad the list with irrelevant papers. TAs ask about methods and transfer, not whether the team agrees with the lecture. Expected output: 2-3 project-specific evidence cards in ordinary team notes, not a new upload or graded deliverable.'))
+], notes='105-145, one forty-minute block across slides 30-32. Suggested internal checkpoints: 0-5 question/terms; 5-20 discovery/access; 20-35 close reading; 35-40 compare and select. These are not extra activity timers. Aim for at least one paper illuminating a potential benefit and one illuminating a risk/problem, without forcing an equal pro/con quota or predetermined verdict. Do not pad the list with irrelevant papers. TAs ask about methods and transfer, not whether the team agrees with the lecture. Expected output: 2-3 project-specific evidence cards in ordinary team notes, not a new upload or graded deliverable.'))
 S.append(content('SAME 40-MINUTE BLOCK / EVIDENCE CARD', 'Read beyond the abstract.', [
     'Citation + link + version; access: abstract only or full text.',
     'People / system / task / comparator / outcome / duration.',
@@ -193,7 +255,7 @@ S.append(activity('02 / SCOPE + INTERACTION + TEST', 25, 'Change a claim before 
     'KEEP / CHANGE / REMOVE: one assumption, linked to a paper and its limitation.',
     'State person, context, AI action and necessary data. Name what it will not collect, promise or do.',
     'Output: revised scope + one interaction change + one test in your team notes.',
-], notes='145-170, one twenty-five-minute block across slides 28-30. Suggested internal allocation: eight minutes scope, eight interaction, nine test. Do not add these to the forty-minute research block or recollect Week 7 submissions. A paper can support retaining a choice as well as changing it. Use this work to strengthen the existing Week 8 one-page proposal; confirm Canvas deadline separately. Research can reveal an access or evidence gap; the appropriate revision may be a narrower claim rather than a confident feature.'))
+], notes='145-170, one twenty-five-minute block across slides 33-35. Suggested internal allocation: eight minutes scope, eight interaction, nine test. Do not add these to the forty-minute research block or recollect Week 7 submissions. A paper can support retaining a choice as well as changing it. Use this work to strengthen the existing Week 8 one-page proposal; confirm Canvas deadline separately. Research can reveal an access or evidence gap; the appropriate revision may be a narrower claim rather than a confident feature.'))
 S.append(cards('SAME 25-MINUTE BLOCK / ANNOTATE ONE MOMENT', 'Make the evidence change the interaction.', [
     ('CUE', 'What is implied?', 'Change one name, voice, memory claim or disclosure. Explain the expected effect.'),
     ('CONTROL', 'What can be refused?', 'Make correction, comparison, exit or a human route concrete.'),
@@ -226,6 +288,15 @@ S.append(cards('APPENDIX / READING MAP / NOT EXTRA LECTURE TIME', 'What was actu
     ('TEAM STANDARD', 'Do not fill gaps.', 'Metadata found, abstract read and full text read are different states. Mark yours; never invent a passage or result.'),
 ], text_size=29, notes='Instructor reference shelf. All thirteen primary article texts were available for this authoring pass in the versions listed, not just abstracts. Publisher blocks for R4/R9 were not bypassed; public mirror primary texts were cross-checked with author/publication records. Their supplements remain unreviewed. R7 manuscript is not the typeset version of record; R11 is a conference author preprint. R5 January version is not asserted identical to the supplied/SSRN revision. Detailed access, supporting sections/pages and caveats are in the two evidence ledgers. Students must label their actual access separately.'))
 
+S.append(study('R9', 'Optional / Outcomes need a specific system.',
+    'Does supervised Therabot help? 210 adults randomized to intervention or waitlist.',
+    'Symptom scores improved more at four and eight weeks.',
+    'Supervised outputs; eligibility exclusions. Not human-therapy parity or consumer-chatbot equivalence.',
+    'Which conditions would your product lose?',
+    'Optional two-minute contrast; shorten detail, not team research. Heinz et al. (2025), full published article reviewed via public mirror because publisher endpoint was blocked; supplement and separate disclosures not obtained. Methods pp. 3-4: adults with clinically significant depression/anxiety or high-risk eating-disorder concerns; active suicidality, mania and psychosis excluded. Expert-built system, all responses supervised POST-transmission by trained clinicians/researchers, with correction and safety intervention. Tables pp. 5-6 support symptom findings. Access continued during weeks 4-8, so eight-week improvement is not maintenance after withdrawal. Waitlist is not an active human-therapy comparator; alliance comparison uses historical norms, not randomized parity. Do not transfer to unsupervised general companions.', method=[('STUDY', '210 adults / randomized waitlist'),
+                      ('INTERVENTION', 'Expert-built + human-supervised'),
+                      ('OUTCOME', 'Symptom scales at 4 and 8 weeks')], block='APPENDIX / OPTIONAL CONTRAST'))
+
 
 def bibliography(heading, paragraphs, notes, size=30):
     return content('APPENDIX / COMPLETE REFERENCES', heading, paragraphs,
@@ -236,7 +307,7 @@ S.append(bibliography('R1 / Response quality + correction', [
     "Hatch, S. G., Goodman, Z. T., Vowels, L., Hatch, H. D., Brown, A. L., Guttman, S., Le, Y., Bailey, B., Bailey, R. J., Esplin, C. R., Harris, S. M., Holt, D. P., Jr., McLaughlin, M., O'Connell, P., Rothman, K., Ritchie, L., Top, D. N., Jr., & Braithwaite, S. R. (2025).",
     'When ELIZA meets therapists: A Turing test for the heart and mind. PLOS Mental Health, 2(2), e0000145. [Article](https://doi.org/10.1371/journal.pmen.0000145)',
     'Same authors (2025). Correction: When ELIZA meets therapists: A Turing test for the heart and mind. PLOS Mental Health, 2(8), e0000426. [Correction](https://doi.org/10.1371/journal.pmen.0000426)',
-], 'Full published PLOS article/XML and correction reviewed. Keep corrected funding and competing interests with the interpretation, as detailed in slide 10 notes and the benefits evidence ledger. This is vignette-rating evidence, not treatment. The correction has the same author list shown above.', size=28))
+], 'Full published PLOS article/XML and correction reviewed. Keep corrected funding and competing interests with the interpretation, as detailed in the R1 summary notes and the benefits evidence ledger. This is vignette-rating evidence, not treatment. The correction has the same author list shown above.', size=28))
 S.append(bibliography('R2 + R8 / Source, rating and choice', [
     'Jain, G., Pareek, S., & Carlbring, P. (2024). Revealing the source: How awareness alters perceptions of AI and human-generated mental health responses. Internet Interventions, 36, 100745. [R2 / article](https://doi.org/10.1016/j.invent.2024.100745)',
     'Wenger, J. D., Cameron, C. D., & Inzlicht, M. (2026). People choose to receive human empathy despite rating AI empathy higher. Communications Psychology, 4, 19. [R8 / article](https://doi.org/10.1038/s44271-025-00387-3)',

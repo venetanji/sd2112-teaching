@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-Recovered editorial plan from the October 18–19 discussion, implemented on October 21, 2026 in `deck/week08.py` with original conceptual figures in `deck/week08_figures.py`. The 32-slide main route and relative timing below are preserved; ten untimed appendix slides hold the access/version guide and complete references. This remains an instructor draft, not a classroom-tested lesson or a change to published course policy.
+Recovered editorial plan from the October 18–19 discussion, implemented and revised on October 21, 2026 in `deck/week08.py`, retaining original conceptual diagrams and adding authentic paper crops in `deck/assets/week08-papers/`. The revised 37-slide main route preserves every relative time budget; eleven untimed appendix slides hold the optional R9 contrast, access/version guide and full references. No student pre-reading is assumed. Each of eight core papers has its own self-contained summary; six include actual paper figures. This remains an instructor draft, not a classroom-tested lesson or a change to published course policy.
 
 Implementation companions: [speaker notes](week08-speaker-notes.md), [manual demo/fallback](week08-demo-fallback.md), [benefits evidence audit](week08-evidence-benefits.md), and [risks/extensions evidence audit](week08-evidence-risks.md). The audits identify the exact full-text versions, supporting locations and access limits. No paper is represented as fully read on the basis of an abstract alone.
 
@@ -46,48 +46,59 @@ The syllabus specifies a three-hour lecture/workshop block. The following relati
 |---|---|---|
 | 0–10 min | Reconnect to existing concepts; pose the humanizing-AI question | 1–3 |
 | 10–30 min | Mediation, alterity, agency, transparency and expectations | 4–8 |
-| 30–65 min | Research-led comparison of benefits and risks | 9–17 |
-| 65–75 min | Product implications and how to read evidence | 18–20 |
-| 75–90 min | Break | 21 |
-| 90–105 min | Manual library tutorial; optional brief verified agent comparison | 22–24 |
-| 105–145 min | Project-specific search and reading | 25–27 |
-| 145–170 min | Evidence-informed scope/design/test revision | 28–30 |
-| 170–180 min | Selected comparisons, unresolved questions, next step | 31–32 |
+| 30–65 min | Perception/choice, benefits, agreement/overreliance | 9–22 |
+| 65–75 min | Product translation: case, data/model/experience, bounded inference | 23–25 |
+| 75–90 min | Break | 26 |
+| 90–105 min | Manual library tutorial; optional brief verified agent comparison | 27–29 |
+| 105–145 min | Project-specific search and reading | 30–32 |
+| 145–170 min | Evidence-informed scope/design/test revision | 33–35 |
+| 170–180 min | Selected comparisons, unresolved questions, next step | 36–37 |
 
-## Proposed slide-by-slide construction plan
+## Revised slide-by-slide teaching map
 
-1. **Humanizing AI.** Central question: what changes when the model inside a product becomes a perceived other?
-2. **Where your project is now.** Reuse existing concepts/images as context, without collecting or publishing new student material.
-3. **Directing an AI-generated scene.** Optional two-minute Kling 4.0 news discussion within the opening ten minutes. Contrast vendor claims with evidence and ask what a designer can control/test. If skipped, retain the previous relationship question. This replaces that pair discussion, not the protected research or break time.
-4. **Mediation recap.** Reuse the course's established Ihde/Verbeek diagrams and vocabulary; distinguish the relation from the device itself.
-5. **Alterity.** Explain experiencing technology as an apparent other; do not assert that apparent agency proves consciousness.
-6. **Cues and expectations.** Voice, turn-taking, memory claims, naming, emotional language and human-like presentation. Label examples as design analysis, not study findings.
-7. **The hidden decision.** Ask what data/model choices disappear behind an apparently effortless interaction.
-8. **Agency and calibrated trust.** Who can question, override, correct or leave? What is visible before a decision matters?
-9. **A paper is a bounded claim.** Introduce population, task, comparator, outcome, duration and limitation. Use this frame on every research slide.
-10. **When ELIZA meets therapists [R1].** Perception/vignette evidence. Perceived quality is not treatment effectiveness; retain correction disclosure in notes.
-11. **Revealing the source [R2].** At the source-disclosed six-month reassessment, human replies rated higher for authenticity; professionalism/practicality differences were not significant. Time, attrition and familiarity mean this does not isolate a causal authorship-label effect. Compare perception with R1, not treatment effectiveness.
-12. **Choosing empathy [R8].** Preference for a human source can coexist with high ratings for AI responses. Sources were chosen, not randomly assigned for the rating comparison; selection can affect ratings. Brief nonclinical tasks do not establish effects in established relationships or repeated live dialogue.
-13. **A beneficial relationship with limits [R6/R7].** Pair immediate loneliness relief with preparing for a real human conversation. Separate feeling better now from durable improvement and real-world action.
-14. **What stronger outcome evidence looks like [R9, optional detail].** Therabot's controlled, supervised intervention versus general consumer companions. Explain the waitlist comparator and transfer limits.
-15. **Why agreement can be misleading [R3].** Introduce sycophancy as behaviour tied to feedback/preferences, not just a rude versus polite tone.
-16. **Social consequences [R4].** Use the final 2026 Science paper, not the older preprint's sample. Connect validation, dependence and prosocial intentions to product choices.
-17. **Cognitive surrender [R5].** Use the supplied Shaw/Nave working paper. Keep short-task reasoning evidence distinct from claims of long-term deskilling.
-18. **Product cases are a different evidence category.** Use the verified OpenAI rollback account as vendor-reported evidence, not independent research. Unverified Friend/BBC cases remain omitted.
-19. **DATA → AI → EXPERIENCE.** For an example, locate the possible harm/benefit, mechanism, and design response. Privacy and ownership belong here; optional R10/R11 can deepen them.
-20. **Research → product → your project.** Show one bounded inference and one inference the evidence does not justify. Do not prescribe a universal safe persona.
-21. **Break.** State when to return only after the actual class timetable is confirmed.
-22. **Search from your product question.** Turn a broad term such as “fashion AI” into user, relationship, context and outcome terms; show synonyms and alternative explanations.
-23. **Manual library search.** Demonstrate discovery, filters, access to the record/full text, references and citation chasing. Distinguish abstract from article.
-24. **Optional local-agent comparison.** Only if preflight succeeds: compare its retrieved references with manual verification. Show how to detect invented citations, metadata-only results and overclaimed synthesis. No live credentials or private student data.
-25. **Team research brief.** Find 2–3 relevant studies, ideally more, before choosing the benefit/risk story. At least one should illuminate a potential benefit and one a risk/problem; report mixed or missing evidence honestly.
-26. **Read beyond the abstract.** Record method, sample/context, comparator, outcome, limitation and exact passage/page supporting the team's use.
-27. **Does it transfer?** Compare the paper's system and people with the team's product and intended users. Record the gap rather than assuming generalization.
-28. **Revise the project scope.** What does the AI do, for whom, and what should it not do? Identify changed assumptions.
-29. **Revise the interaction.** Make one evidence-linked decision about cues, disclosure, control, escalation or friction. A sketch/annotation can make the decision concrete; it is not a newly assessed deliverable.
-30. **Specify the next test.** What could falsify the team's assumption? Define an observable outcome and comparison; do not imply that an informal classroom test establishes clinical safety.
-31. **Compare decisions.** Discuss selected changes and unresolved contradictions. Avoid requiring personal experiences or mental-health disclosure.
-32. **Keep the evidence base growing.** Save the team's references and next question. Preview the confirmed Week 9 recommendations/bias, Week 10 interactive Double Diamond, Weeks 11-12 ethics and Week 13 showcase arc. Instructor absence in Week 10 is confirmed, not the coverage person, exact dates, ESFQ or quiz policy.
+The two dense-figure follow-ups and three signposts fit inside the existing 35-minute evidence block. Approximately 3 minutes cover the claim frame/transitions, 11 perception/choice, 8 benefits and 13 agreement/overreliance. Do not consume break, research or activity time. R9 is off the timed route; R10–R13 remain optional/later background, not homework.
+
+1. **Humanizing AI.** Reconnect the existing concept and established mediation/agency vocabulary; use the native notes.
+2. **Your concept is a starting claim.** Reconnect the existing concept and established mediation/agency vocabulary; use the native notes.
+3. **Directing an AI-generated scene.** Optional two-minute Kling 4.0 news discussion within the existing ten-minute opening, replacing the previous pair prompt. Separate vendor claims from independent evidence; if skipped, discuss the product relationship for the same two minutes. No signup, live generation or personal disclosure.
+4. **Technology shapes the relation.** Reconnect the existing concept and established mediation/agency vocabulary; use the native notes.
+5. **An apparent other is still a design relation.** Reconnect the existing concept and established mediation/agency vocabulary; use the native notes.
+6. **A cue can become a promise.** Reconnect the existing concept and established mediation/agency vocabulary; use the native notes.
+7. **Effortless for whom?** Reconnect the existing concept and established mediation/agency vocabulary; use the native notes.
+8. **Can the person disagree and act?** Reconnect the existing concept and established mediation/agency vocabulary; use the native notes.
+9. **A paper is a bounded claim.** Teach population, comparison, outcome and horizon before interpreting any study.
+10. **Seeming care. Choosing a source.** Topic signpost. About 11 minutes for R1/R2/R8, including setup and explanation; no pre-reading.
+11. **A good-rated reply is not treatment.** R1: 830 readers, selected AI/expert replies to couple-therapy scenarios. Perceived quality is not treatment; correction in notes. Original method illustration.
+12. **Source awareness and authenticity ratings.** R2: 140 initially/111 returning, six-month reassessment. Authenticity-only source contrast; timing, attrition and familiarity mean this does not isolate disclosure. Nonsignificance is not equivalence. Original method illustration.
+13. **A preferred reply is not a chosen source.** R8: own summary and authentic Figure 1. Explain distributions, means and equal-choice line. Sources were chosen, not randomly assigned for ratings; not established relationships or repeated live dialogue.
+14. **Relief now. Action outside the app.** Benefits signpost. About 8 minutes for two separately taught papers.
+15. **Relief now is not lasting improvement.** R6: own summary plus actual Figure 3 A+B. Distinguish immediate relief from sustained between-session change; final five-study publication.
+16. **Look between the sessions.** Same R6 four-minute allocation: enlarge Figure3, explain before/after versus persistence; no extra lecture time.
+17. **Rehearsal can lead outside the app.** R7: own summary plus actual Figure 1 pathway. The 65%/59% initiation result is in prose, NOT this diagram; mediation is not proof of mechanism. Self-reported initiation, not better quality or human-rehearsal superiority.
+18. **Pleasant is not always helpful.** Agreement/overreliance signpost. About 13 minutes for R3/R4/R5.
+19. **Agreement is not the same as help.** R3: own summary plus actual Figure 1 quantitative panel. Historical-model preference-cue feedback shifts; mixed optimization effects, not warmth or proof RLHF alone causes sycophancy.
+20. **Validation can change the next choice.** R4: own summary plus final Science Figure 4 A+B, N=2,405. Rightness ratings and repair intentions, not observed long-term harm; return preference is a separate outcome.
+21. **Feeling right is not repairing a conflict.** Same R4 allocation: enlarge final Figure4, explain rating scales and intended repair; no extra lecture time.
+22. **When assistance becomes surrender.** R5: own summary plus Figure 2. Short tasks, seeded correct/faulty advice, consultation-conditional adoption. Working paper, not long-term deskilling.
+23. **An update can change the relationship.** Vendor-reported OpenAI rollback, not independent experimental evidence.
+24. **Data. AI. Experience.** Product translation: data, model and experience. Proposed responses remain hypotheses to test.
+25. **Make the inference small enough to test.** Worked R7 transfer: result versus product hypothesis versus next test.
+26. **Break. 15 minutes.** Protect 15-minute break; no invented clock time.
+27. **Search a condition, not a verdict.** Search person/system/context/outcome rather than a verdict.
+28. **Find. Open. Read. Follow the trail.** Manual library route; lawful primary access and network/login/offline fallback.
+29. **Discovery is not paper reading.** Optional agent within same 15-minute demo; NOT preflighted. Manual verification remains default.
+30. **Find 2-3 papers for your product.** One protected 40-minute search/read block; 2–3 project-specific papers; no new upload.
+31. **Read beyond the abstract.** Same block: evidence card with exact passage/page, method, limit and actual access.
+32. **Is this evidence about your product?** Same block: compare study conditions with the project; keep transfer gaps visible.
+33. **Change a claim before adding a feature.** One protected 25-minute scope/interaction/test block; necessary data and collection limits.
+34. **Make the evidence change the interaction.** Same block: evidence-linked cue/control/mechanism revision; sketch optional.
+35. **What result would change your mind?** Same block: observable comparison and falsification criterion; no clinical testing.
+36. **Show the decision, not a pro/con list.** Selected comparisons, not compulsory team presentations or personal disclosure.
+37. **Your next version needs a reason.** Existing one-page proposal/Canvas deadline gate and confirmed later arc preserved; exact dates, coverage, ESFQ and quiz policy remain unconfirmed.
+
+### Untimed appendix
+
+38. Access/version map. 39. Optional R9 self-contained supervised-intervention/waitlist summary. 40–48. Full citations, clearly optional/later R10–R13 readings, frameworks and vendor account. This shelf adds no required pre-reading.
 
 ## Team activity worksheet prompts
 
@@ -123,7 +134,7 @@ The earlier local “Quiz and Teams” slide package and merged Week 7 lesson ar
 ## Before teaching: decisions still open
 
 - Confirm the dated timetable. October 23/30 as Weeks 8/9 follows the discussed sequence but is not an independently confirmed schedule.
-- Core route now uses R1/R2/R8 for perception/choice, R6/R7 for complementary benefits, R3/R4 for sycophancy and R5 for cognitive surrender. R9 is a brief optional contrast in outcome-study design; shorten its detail if necessary. R10-R13 remain untimed appendix readings. The vendor rollback is explicitly a case, not a research result; unverified Friend/BBC cases are omitted.
+- Core route now uses R1/R2/R8 for perception/choice, R6/R7 for complementary benefits, R3/R4 for sycophancy and R5 for cognitive surrender. R9 is an untimed appendix contrast in outcome-study design, not a required main-route paper. R10-R13 remain untimed appendix readings. The vendor rollback is explicitly a case, not a research result; unverified Friend/BBC cases are omitted.
 - Confirm whether the agent demonstration is useful and actually works. The Scopus CLI metadata smoke did not prove abstract/full-text access or an end-to-end literature review. Use manual library access as the reliable plan; do not bypass access restrictions.
 - Confirm current project proposal/deadline instructions against Canvas and the syllabus. This plan does not remove an existing assessment requirement.
 - The Week 10 instructor absence and interactive Double Diamond direction are confirmed. Confirm the exact date and coverage person; November 6 is older planning shorthand, not a verified timetable. ESFQ timing/arrangements and quiz policy remain unconfirmed. Do not invent a colleague commitment, assessment cancellation or a completed prototype for every team.

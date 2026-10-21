@@ -137,3 +137,8 @@ SHA-256 fingerprints of the inspected PDFs (for version identity, not public dow
 - R11 v3: `5ee260bd6e32f3cf5b1b7509c4086693287b605795d9c0f653a66ee6cc1d613d`
 - R12: `c8c4e58a5d35bb208568993e0a655eb028bc81ae168f3fb4ce5905acafcacb3a`
 - R13: `9d01510154c0f2ccc5b9299101228fe8de844d77fe778f595e220d0acc407849`
+
+
+## Paper-visual revision (21 October 2026)
+
+The no-figure statements above describe the earlier audit, not this revision. Each taught main paper now has its own concise summary with rich native notes and a visible key limitation. Authentic figure crops, exact version/page/panel, primary access route, crop recipe, hash, interpretation and unresolved republication rights are recorded in [the paper-figure ledger](week08-paper-figures.md). R7 Figure1 is a pathway model, not an initiation chart; the65%/59% result is prose. R4 uses final Figure4, not preprint figure numbering; R5 retains Chat-Engaged Only. R9 is an optional untimed appendix contrast. No full papers or public deployment are included.

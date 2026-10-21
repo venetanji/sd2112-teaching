@@ -1,8 +1,8 @@
 # Week 8 research register and later-lecture references
 
-Prepared and primary-text audited October 21, 2026. This preserves the papers recovered from the October 18–19 planning discussion. It is not a declaration that every paper is assigned reading or fits in one lecture. The implemented deck preserves 32 timed main slides plus ten untimed appendix slides; R10-R13 remain optional/later readings. **R1–R3** are the original Week 8 anchors. **R4–R9** are the discussed refresh and complementary evidence. **R10–R12** are optional extensions; **R13** belongs to the later research-literacy thread.
+Prepared and primary-text audited October 21, 2026. This preserves the papers recovered from the October 18–19 planning discussion. It is not a declaration that every paper is assigned reading or fits in one lecture. The implemented deck preserves 37 timed main slides plus eleven untimed appendix slides; R10-R13 remain optional/later readings. **R1–R3** are the original Week 8 anchors. **R4–R9** are the discussed refresh and complementary evidence. **R10–R12** are optional extensions; **R13** belongs to the later research-literacy thread.
 
-Use citations, short attributed excerpts and original diagrams/analysis in the deck. Do not commit full publisher PDFs without checking their reuse terms. Before a slide makes a numerical claim, check the cited version's methods/results and place the limitation next to the claim.
+Use citations, short attributed excerpts, original method illustrations and attributed authentic source-figure crops. No pre-reading is assumed: R1/R2/R8/R6/R7/R3/R4/R5 each have a main summary, R9 an optional appendix summary. Exact figure/page/version/crop provenance is in `week08-paper-figures.md`. Do not commit full publisher PDFs without checking their reuse terms. Before a slide makes a numerical claim, check the cited version's methods/results and place the limitation next to the claim.
 
 ## Original Week 8 anchors
 
@@ -168,4 +168,4 @@ The recovery notes above remain editorial provenance, not the final access ledge
 - R6 is the final **five-study** article, not the earlier six-study working paper; author order/version were corrected here.
 - R2 Table 1 supports a significant disclosed-source difference for authenticity, not professionalism/practicality. A contradictory Discussion sentence is not repeated.
 - Framework sources: Ihde, D. (1990). *Technology and the Lifeworld: From Garden to Earth*. Indiana University Press (established course source, not a newly reviewed full book). Verbeek, P.-P. (2015). Beyond interaction: A short introduction to mediation theory. *Interactions, 22*(3), 26-31. https://doi.org/10.1145/2751314 . Full published six-page author-hosted PDF reviewed: https://ris.utwente.nl/ws/portalfiles/portal/6973415/p26-verbeek.pdf ; printed p.29/PDF position 4 describes the four relations and alterity.
-- Original conceptual diagrams, not fabricated results/figures. Unverified Friend/BBC details omitted; OpenAI account explicitly vendor-reported.
+- Original conceptual diagrams and attributed authentic paper crops; no fabricated empirical charts. Unverified Friend/BBC details omitted; OpenAI account explicitly vendor-reported.

@@ -104,3 +104,8 @@ Verified 21 October 2026 against the sources specified below. This is an instruc
 - R9: optional contrast for stronger outcome evidence, tightly bounded to this supervised system.
 
 The student-team task should ask which users, situations, comparator and outcome support a benefit or risk. None of these papers warrants either a universal pro-AI or anti-AI verdict.
+
+
+## Paper-visual revision (21 October 2026)
+
+The no-figure statements above describe the earlier audit, not this revision. Each taught main paper now has its own concise summary with rich native notes and a visible key limitation. Authentic figure crops, exact version/page/panel, primary access route, crop recipe, hash, interpretation and unresolved republication rights are recorded in [the paper-figure ledger](week08-paper-figures.md). R7 Figure1 is a pathway model, not an initiation chart; the65%/59% result is prose. R4 uses final Figure4, not preprint figure numbering; R5 retains Chat-Engaged Only. R9 is an optional untimed appendix contrast. No full papers or public deployment are included.
