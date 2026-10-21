@@ -23,8 +23,8 @@ Jain, G., Pareek, S., & Carlbring, P. (2024). Revealing the source: How awarenes
 
 - Paper: https://doi.org/10.1016/j.invent.2024.100745
 - Historical location: Week 8 PDF, page 38.
-- Teaching use: compare judgments when the source of a response is disclosed versus hidden; connect disclosure to authenticity, trust and product expectations.
-- Limit: perception measures do not establish therapeutic benefit. The six-month reassessment also requires care when discussing a simple disclosure effect.
+- Teaching use: distinguish source context from rated content. At the source-disclosed reassessment, human replies rated higher for authenticity; professionalism/practicality differences were not significant.
+- Limit: the initial 140-person assessment and six-month follow-up with 111 respondents differ in time, attrition and familiarity. This does not isolate a causal disclosure effect; anonymous responses prevented individual paired analyses. Nonsignificance is not equivalence, and perception is not therapeutic benefit. See the benefits ledger for Table 1 and the conflicting Discussion wording.
 
 ### R3 · Sycophancy mechanism and evaluation
 
@@ -82,7 +82,7 @@ Wenger, J. D., Cameron, C. D., & Inzlicht, M. (2026). People choose to receive h
 - Paper: https://doi.org/10.1038/s44271-025-00387-3
 - Research-team account: https://emplab.la.psu.edu/2026/01/31/joshua-wenger-publishes-first-author-paper-on-ai-empathy-choice/
 - Teaching use: distinguish response ratings from source preference and relationship choice.
-- Limit: N = 691 across four studies in the recovered review. This is not clinical-outcome evidence. Do not infer that a higher-rated response is always the relationship a person wants.
+- Limit: N = 691 source-choice participants across four brief nonclinical studies. Sources were chosen, not randomly assigned for the response-rating comparison; selection can affect experienced-response ratings. Mostly decontextualized empathizers/human strangers, not established relationships or repeated live dialogue. This is not clinical-outcome evidence or a universal preference.
 
 ### R9 · A supervised therapeutic system, not a generic companion
 
@@ -121,7 +121,7 @@ Sözen, Tuğçe, and Börekçi, Naz A. G. Z. (2026). Analyzing the integration o
 
 - DOI: https://doi.org/10.1017/S0890060426100304
 - Publisher: https://www.cambridge.org/core/journals/ai-edam/article/analyzing-the-integration-of-generative-ai-in-the-design-process-through-the-doublediamond-framework/F527231A155A48F597CD28E2B1F3B2F0
-- Placement: supporting reading for the proposed November 6 reframing/testing/prototype session, not a reason to restore the older full Double Diamond block to Week 8.
+- Placement: supporting reading for the confirmed Week 10 interactive Double Diamond session while the instructor is absent, not a reason to restore the older full block to Week 8. The confirmed wider arc is Week 9 recommendations/bias, Weeks 11-12 ethics and Week 13 showcase/reflection. Exact dates, coverage person, ESFQ arrangements and quiz policy remain unconfirmed; November 6 is older planning shorthand, not a verified date.
 - Keep the Double Diamond framework itself distinct from this particular study. Review the study's methods before deriving instructional prescriptions.
 
 ### R13 · Later-course research literacy and structured discussion

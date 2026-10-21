@@ -53,6 +53,32 @@ class Week08Tests(unittest.TestCase):
             self.assertIn(f'## {i:02d} / ' + slide.title.replace('\n', ' '), notes)
             self.assertIn(slide.notes, notes)
 
+    def test_confirmed_teaching_arc_is_not_a_provisional_schedule(self):
+        finish = self.slides[31]
+        for phrase in ('Week 9: recommendations and bias', 'Week 10: interactive Double Diamond',
+                       'Weeks 11-12: ethics', 'Week 13: showcase'):
+            self.assertIn(phrase, text(finish))
+        self.assertIn('instructor is absent', finish.notes)
+        for phrase in ('exact dates', 'coverage person', 'ESFQ', 'quiz policy'):
+            self.assertIn(phrase, finish.notes)
+        self.assertNotIn('proposed later Double Diamond', finish.notes)
+        for file in ('week08-lesson-plan.md', 'week08-references.md'):
+            companion = (ROOT / 'lessons' / file).read_text()
+            for phrase in ('Week 9', 'Week 10', 'Week 13', 'confirmed'):
+                self.assertIn(phrase, companion)
+
+    def test_recovered_r2_and_r8_shorthand_preserves_the_audited_limits(self):
+        plan = (ROOT / 'lessons/week08-lesson-plan.md').read_text()
+        r2 = next(line for line in plan.splitlines() if line.startswith('11. '))
+        r8 = next(line for line in plan.splitlines() if line.startswith('12. '))
+        for phrase in ('six-month', 'attrition', 'does not isolate', 'authenticity'):
+            self.assertIn(phrase, r2)
+        for phrase in ('chosen, not randomly assigned', 'established relationships'):
+            self.assertIn(phrase, r8)
+        register = (ROOT / 'lessons/week08-references.md').read_text()
+        self.assertIn('does not isolate a causal disclosure effect', register)
+        self.assertIn('chosen, not randomly assigned', register)
+
     def test_manual_demo_and_access_limits_are_explicit(self):
         demo = ' '.join(text(s) + s.notes for s in self.slides[21:24])
         for phrase in ('manual', 'abstract', 'Scopus', 'metadata', 'offline', 'NOT preflighted'):

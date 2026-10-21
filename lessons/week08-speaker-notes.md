@@ -128,7 +128,7 @@ Use about seven of the final ten minutes for two or three selected examples, not
 
 ## 32 / Your next version needs a reason.
 
-Final three minutes. No new assessment, changed weight or invented submission deadline. Teaching direction recovered for Week 9 is recommendations/bias and a proposed later Double Diamond session; the published syllabus still has the older Week 8-10 sequence. Instructor must confirm dated timetable, November 6 staffing and ESFQ arrangements separately. Do not announce those as settled. Appendix follows for reading and reference, not further timed lecture.
+Final three minutes. No new assessment, changed weight or invented submission deadline. Teaching direction confirmed on October 21: Week 9 recommendations/bias; Week 10 interactive Double Diamond while the instructor is absent; Week 11 ethics, agency and authorship; Week 12 ethics, trust and design responsibility; Week 13 student showcase and reflection. The published syllabus still has the older Week 8-10 sequence and is not rewritten here. The exact dates, coverage person, timetable, ESFQ arrangements and quiz policy remain unconfirmed; do not announce them as settled or infer assessment cancellation. Check current official instructions. A useful uncertainty is better than a confident invented citation. Appendix follows for reading and reference, not further timed lecture.
 
 ## 33 / What was actually read?
 

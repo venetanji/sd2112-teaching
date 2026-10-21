@@ -18,7 +18,7 @@ The latest teaching direction takes priority over the old whole-course [PR #3](h
 - After the break, demonstrate manual university-library searching. A local-agent literature-search demonstration is optional and remains unconfirmed.
 - Teams first find **2–3 project-specific papers**, ideally more, including evidence relevant to a benefit and evidence relevant to a risk/problem. They then revise scope, design choices and tests in light of those papers and their limits.
 - Teams have already formed, brainstormed and shared concept text/images. Do not repeat those activities.
-- The intended next arc is Week 9 recommendations/bias, followed by Week 10 Double Diamond reframing, testing and prototype iteration while Giovanni is away on November 6. Staffing and detailed arrangements still need confirmation.
+- The instructor confirmed the teaching arc on October 21: Week 9 recommendations/bias; Week 10 interactive Double Diamond while the instructor is absent; Week 11 ethics, agency and authorship; Week 12 ethics, trust and design responsibility; Week 13 student showcase and reflection. Exact dates, coverage person, timetable, ESFQ arrangements and quiz policy still need confirmation. See the preserved [news/teaching handoff](week08-news-20261021.md); it does not require extra slides.
 
 ## Learning goals
 
@@ -66,14 +66,14 @@ The syllabus specifies a three-hour lecture/workshop block. The following relati
 8. **Agency and calibrated trust.** Who can question, override, correct or leave? What is visible before a decision matters?
 9. **A paper is a bounded claim.** Introduce population, task, comparator, outcome, duration and limitation. Use this frame on every research slide.
 10. **When ELIZA meets therapists [R1].** Perception/vignette evidence. Perceived quality is not treatment effectiveness; retain correction disclosure in notes.
-11. **Revealing the source [R2].** Authorship disclosure changes perceptions. Compare the construct measured with R1 rather than announcing that a bot is a therapist.
-12. **Choosing empathy [R8].** Preference for a human source can coexist with high ratings for AI responses. Discuss what the interaction is for.
+11. **Revealing the source [R2].** At the source-disclosed six-month reassessment, human replies rated higher for authenticity; professionalism/practicality differences were not significant. Time, attrition and familiarity mean this does not isolate a causal authorship-label effect. Compare perception with R1, not treatment effectiveness.
+12. **Choosing empathy [R8].** Preference for a human source can coexist with high ratings for AI responses. Sources were chosen, not randomly assigned for the rating comparison; selection can affect ratings. Brief nonclinical tasks do not establish effects in established relationships or repeated live dialogue.
 13. **A beneficial relationship with limits [R6/R7].** Pair immediate loneliness relief with preparing for a real human conversation. Separate feeling better now from durable improvement and real-world action.
 14. **What stronger outcome evidence looks like [R9, optional detail].** Therabot's controlled, supervised intervention versus general consumer companions. Explain the waitlist comparator and transfer limits.
 15. **Why agreement can be misleading [R3].** Introduce sycophancy as behaviour tied to feedback/preferences, not just a rude versus polite tone.
 16. **Social consequences [R4].** Use the final 2026 Science paper, not the older preprint's sample. Connect validation, dependence and prosocial intentions to product choices.
 17. **Cognitive surrender [R5].** Use the supplied Shaw/Nave working paper. Keep short-task reasoning evidence distinct from claims of long-term deskilling.
-18. **Product cases are a different evidence category.** Friend and the previously discussed vendor incident are illustrative cases. The BBC report is optional, non-graphic, and not proof of prevalence or causation. Verify details before inclusion.
+18. **Product cases are a different evidence category.** Use the verified OpenAI rollback account as vendor-reported evidence, not independent research. Unverified Friend/BBC cases remain omitted.
 19. **DATA → AI → EXPERIENCE.** For an example, locate the possible harm/benefit, mechanism, and design response. Privacy and ownership belong here; optional R10/R11 can deepen them.
 20. **Research → product → your project.** Show one bounded inference and one inference the evidence does not justify. Do not prescribe a universal safe persona.
 21. **Break.** State when to return only after the actual class timetable is confirmed.
@@ -87,7 +87,7 @@ The syllabus specifies a three-hour lecture/workshop block. The following relati
 29. **Revise the interaction.** Make one evidence-linked decision about cues, disclosure, control, escalation or friction. A sketch/annotation can make the decision concrete; it is not a newly assessed deliverable.
 30. **Specify the next test.** What could falsify the team's assumption? Define an observable outcome and comparison; do not imply that an informal classroom test establishes clinical safety.
 31. **Compare decisions.** Discuss selected changes and unresolved contradictions. Avoid requiring personal experiences or mental-health disclosure.
-32. **Keep the evidence base growing.** Save the team's references and next question for later lectures. Preview Week 9 recommendations/bias and the proposed Double Diamond session, without announcing unconfirmed staffing or deadlines.
+32. **Keep the evidence base growing.** Save the team's references and next question. Preview the confirmed Week 9 recommendations/bias, Week 10 interactive Double Diamond, Weeks 11-12 ethics and Week 13 showcase arc. Instructor absence in Week 10 is confirmed, not the coverage person, exact dates, ESFQ or quiz policy.
 
 ## Team activity worksheet prompts
 
@@ -105,7 +105,7 @@ Research is cumulative across lectures. Failure to find strong evidence should p
 
 ## Source-slide reuse and separation from the historical deck
 
-The prior Week 8 PDF had 44 pages: mediation/transparency/agency on 16–26; Double Diamond on 27–29; privacy/ownership on 31–32; sycophancy on 33; Friend on 34–35; original papers on 37–39; project implications on 41–43. These are historical page pointers from the earlier review, not slide numbers in the proposed new deck.
+The prior Week 8 PDF had 44 pages: mediation/transparency/agency on 16–26; Double Diamond on 27–29; privacy/ownership on 31–32; sycophancy on 33; Friend on 34–35; original papers on 37–39; project implications on 41–43. These are PDF page positions, not slide numbers in the new deck. The 44-slide editable OneDrive Week 8 PPTX has the same relevant section sequence and R2 wording; it was compared directly on October 21, not assumed identical from its filename. Diagram-heavy PDF pages 18, 21, 27 and 41 and the R2 page 38 were rendered and inspected. Historical page 38 omits the six-month/attrition caveat and interprets nonsignificance too strongly; the revision retains the narrower Table 1 result and does not claim equivalence.
 
 Reuse relevant explanatory material after inspecting the original. Move the substantial Double Diamond activity out of Week 8 in accordance with the later discussion. Do not copy historical Blackboard logistics, dates, Week 14 exam details or old quiz rules into the current course.
 
@@ -126,6 +126,6 @@ The earlier local “Quiz and Teams” slide package and merged Week 7 lesson ar
 - Core route now uses R1/R2/R8 for perception/choice, R6/R7 for complementary benefits, R3/R4 for sycophancy and R5 for cognitive surrender. R9 is a brief optional contrast in outcome-study design; shorten its detail if necessary. R10-R13 remain untimed appendix readings. The vendor rollback is explicitly a case, not a research result; unverified Friend/BBC cases are omitted.
 - Confirm whether the agent demonstration is useful and actually works. The Scopus CLI metadata smoke did not prove abstract/full-text access or an end-to-end literature review. Use manual library access as the reliable plan; do not bypass access restrictions.
 - Confirm current project proposal/deadline instructions against Canvas and the syllabus. This plan does not remove an existing assessment requirement.
-- For November 6, confirm coverage and the school's 15-minute ESFQ arrangement. Do not invent an ESFQ activity, a colleague commitment or a completed prototype for every team.
+- The Week 10 instructor absence and interactive Double Diamond direction are confirmed. Confirm the exact date and coverage person; November 6 is older planning shorthand, not a verified timetable. ESFQ timing/arrangements and quiz policy remain unconfirmed. Do not invent a colleague commitment, assessment cancellation or a completed prototype for every team.
 
 See [the research register](week08-references.md) for all recovered papers, evidence categories and reading priorities.
