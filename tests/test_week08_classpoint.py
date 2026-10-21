@@ -26,7 +26,7 @@ class Week08ClassPointTests(unittest.TestCase):
         from deckgen.classpoint import activity
         deck = self.load()
         questions = [s for s in deck['S'] if s.cp]
-        self.assertEqual([deck['S'].index(s) + 1 for s in questions], [7, 8, 35])
+        self.assertEqual([deck['S'].index(s) + 1 for s in questions], [7, 8, 43])
         self.assertEqual([s.cp['type'] for s in questions],
                          ['multiple_choice', 'short_answer', 'short_answer'])
         poll, follow, paper = questions

@@ -1,6 +1,6 @@
 # Week 8 authentic paper-figure ledger
 
-Revised 21 October 2026 for instructor review. No pre-reading is assumed. The main lesson teaches eight papers separately: R1/R2/R8, R6/R7, R3/R4/R5; R9 moves to the untimed appendix. Each summary states question/setup, bounded result, key limit, design question and clickable primary citation in approximately 35-50 words excluding labels/source. R1/R2 use explicitly original method illustrations, not fake paper figures; their articles have tables rather than useful explanatory graphical figures. Six other summaries use authentic paper crops.
+Revised 21 October 2026 for instructor review. No pre-reading is assumed. The main lesson teaches eight papers separately: R1/R2/R8, R6/R7, R3/R4/R5; R9 moves to the untimed appendix. Each paper now has a separate plain-language task/comparison/example/measurement slide before the result/figure/limit slide. Examples are labelled as original illustrations or source material; no fabricated data or unverified quotations. Titles, label gaps and citation baselines share one native grid. This supersedes the earlier 35-50-word summary constraint; teaching time is unchanged. R1/R2 use explicitly original method illustrations, not fake paper figures; their articles have tables rather than useful explanatory graphical figures. Six other summaries use authentic paper crops.
 
 ## Evidence actually read
 

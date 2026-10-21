@@ -1,6 +1,20 @@
 # Week 8 implementation and verification
 
-## Current ClassPoint revision (21 October 2026)
+## Current plain-language experiment revision (21 October 2026)
+
+Supersedes the compressed summaries and 51-slide count below. **60 slides: 48 main-route + 12 untimed appendix/reference slides.** Every core paper now has a task/result pair; optional R9 uses the same pair in the appendix. This is an instructor review draft, not a classroom-tested lesson.
+
+- **Explanation:** a concrete example, what participants/models did, what changed in the comparison and what was counted/rated are shown before each result. The same cited versions' primary methods/results were checked again; R2 uses its full published PMC text. Illustrations are explicitly labelled, not passed off as study quotations, actual stimuli or empirical data. R3 explains GPT-4 judging relative positivity, not factual accuracy; R4 keeps final N=2,405 and immediate intentions; R5 keeps consulted-trial denominators and working-paper status; R6 distinguishes immediate from between-session change; R7 separates self-reported initiation from the displayed pathway model.
+- **Layout:** paper titles share the standard 72 px native display style at x120/y184, 1680x140; labels/body offsets, column widths, result rows and citation baselines use a single course-owned helper. Content wording, not font shrinking, resolves measured overflow. Existing figure crops and hashes are unchanged; dense R6/R4 enlargements remain. No shared renderer, dependency pin or workflow was changed.
+- **Timing:** each task/result pair shares its original paper allocation. The evidence block stays 35 minutes; break/demo/search/revision/comparison stay 15/15/40/25/10 minutes. The detailed reading explanation replaces an abstract, not adds a second lecture or a new exercise. Eight core papers still make this a brisk guided survey; when late, shorten optional detail, not team research or the break.
+- **ClassPoint:** the same three collections remain at slides 7/8/43 (the paper collection moved with the expanded teaching route). Individual paper URL + relevance and different papers within teams are unchanged. Personal participation remains optional/ungraded, with no secrets requested, no anonymity promise and no public personal-report links. The existing report/drift and raw-publication safeguards remain intact.
+- **Fresh local verification:** all **126 repository tests pass**, including three new task/measurement/example/title-grid tests. Pinned `deckgen build --no-pdf week08` succeeds; both 60-slide PPTX variants have 60 notes matching final source and the Markdown companion. Actual native buttons/tag relationships confirm exactly three activities at 7/8/43, the intended DTOs/name-display settings, no quiz settings and no real activity IDs.
+- **Browser/visual verification:** all 60 desktop slides and 60 actual mobile handout sections pass measured overflow/resource/JavaScript checks; visible primary-link activation and mobile Deck toggle work. All new/materially revised paper slides were inspected in desktop/mobile and native previews; the final title/measurement/caption correction was confirmed. No new source images or full papers are added. Existing source-specific quotation/rights notices remain in the figure ledger.
+- **Preview boundary:** local build omits PDF deliberately because this revision is delivered as HTML. Exact-head CI must run the standard PDF/native checks separately before a hosted link is called verified. Local native previews do not establish classroom PowerPoint font substitution, real ClassPoint collection, publisher access or anonymity; preserve the ordinary classroom preflight.
+
+Private evidence: workspace `tmp/week08-explain-20261021/` (source research, red/final tests, native/export reports, desktop/mobile captures, final editorial review and eventual exact-head deployment receipt). Only draft PR #21 and its review preview may be updated; no merge or main/staging/live course change.
+
+## Prior ClassPoint revision (historical, 21 October 2026)
 
 The instructor requested three ClassPoint collections after the combined draft. This section supersedes the earlier zero-activity and 48-slide records below. The deck now has **51 slides: 40 main-route + 11 untimed appendix slides**.
 

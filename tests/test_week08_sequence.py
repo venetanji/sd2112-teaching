@@ -39,11 +39,11 @@ class Week08Tests(unittest.TestCase):
         self.assertIn('replacing the previous pair prompt', plan)
         self.assertEqual(len(self.summaries), 9)
         news = (ROOT / 'lessons/week08-news-20261021.md').read_text()
-        self.assertIn('40 main-route plus 11 untimed appendix/reference slides (51 total)', news)
+        self.assertIn('48 main-route plus 12 untimed appendix/reference slides (60 total)', news)
 
     def test_main_route_and_protected_budgets(self):
-        self.assertEqual((self.main_count, len(self.slides)), (40, 51))
-        self.assertEqual(self.slides[27].title, 'Break.\n15 minutes.')
+        self.assertEqual((self.main_count, len(self.slides)), (48, 60))
+        self.assertEqual(self.slides[35].title, 'Break.\n15 minutes.')
         for title, duration in [('Break.\n15 minutes.', '75-90'),
                                 ('Find 2-3 papers for your product.', '40 min'),
                                 ('Change a claim before adding a feature.', '25 min'),
@@ -51,22 +51,21 @@ class Week08Tests(unittest.TestCase):
             self.assertIn(duration, text(self.slide(title)))
         self.assertIn('90-105', text(self.slide('Search a condition, not a verdict.')))
 
-    def test_each_taught_paper_has_one_concise_self_contained_summary(self):
+    def test_each_taught_paper_has_a_concrete_explanation_pair(self):
+        from deck.week08 import STUDY_GUIDES
         expected = ['R1', 'R2', 'R8', 'R6', 'R7', 'R3', 'R4', 'R5']
         main = self.slides[:self.main_count]
         observed = []
-        for s in main:
-            labels = text(s)
-            if 'QUESTION + SETUP' in labels:
+        for slide in main:
+            labels = text(slide)
+            if 'WHAT THEY DID' in labels:
                 observed.append(next(k for k in expected if f'/ {k} ' in labels))
         self.assertEqual(observed, expected)
-        for key, summary in self.summaries.items():
-            with self.subTest(paper=key):
-                self.assertEqual(set(summary), {'setup', 'finding', 'boundary', 'prompt'})
-                self.assertTrue(all(summary.values()))
-                words = sum(len(v.split()) for v in summary.values())
-                self.assertGreaterEqual(words, 35)
-                self.assertLessEqual(words, 50)
+        self.assertEqual(set(STUDY_GUIDES), set(expected + ['R9']))
+        for key, guide in STUDY_GUIDES.items():
+            self.assertTrue(all(guide.values()))
+            self.assertGreater(len(guide['task'].split()), 15)
+            self.assertLessEqual(len(guide['task'].split()), 45)
         self.assertIn('No pre-reading is assumed', main[0].notes)
 
     def test_topic_blocks_and_optional_reading_shelf(self):
@@ -76,7 +75,7 @@ class Week08Tests(unittest.TestCase):
                                    'Pleasant is not\nalways helpful.',
                                    'An update can change the relationship.', 'Break.\n15 minutes.']]
         self.assertEqual(positions, sorted(positions))
-        r9 = self.slide('Optional / Outcomes need a specific system.')
+        r9 = self.slide('Optional / Symptoms improved with support.')
         self.assertGreater(self.slides.index(r9), self.main_count)
         self.assertIn('waitlist', text(r9))
         self.assertIn('consumer-chatbot equivalence', text(r9))
@@ -112,30 +111,30 @@ class Week08Tests(unittest.TestCase):
     def test_figure_specific_interpretation_and_denominators(self):
         r7 = self.slide('Rehearsal can lead outside the app.')
         self.assertIn('not an initiation-rate chart', text(r7))
-        self.assertIn('not proven mechanism', text(r7))
-        self.assertIn('1,371', text(r7))
-        self.assertIn('65% versus 59%', text(r7))
-        r4 = self.slide('Validation can change the next choice.')
+        self.assertIn('not a proven mechanism', text(r7))
+        self.assertIn('1,371', text(self.slides[self.slides.index(r7) - 1]))
+        self.assertIn('65% with preparation versus 59%', text(r7))
+        r4 = self.slide('More right, less willing to repair.')
         self.assertIn('Fig. 4 A+B', text(r4))
-        self.assertIn('2,405', text(r4))
+        self.assertIn('2,405', text(self.slides[self.slides.index(r4) - 1]))
         self.assertIn('y-axis starts at 2', text(r4))
-        r5 = self.slide('When assistance becomes surrender.')
-        self.assertIn('conditional on consultation', text(r5))
+        r5 = self.slide('Many followed the planted wrong answer.')
+        self.assertIn('consulted problems, not people', text(r5))
         self.assertIn('working paper', text(r5).lower())
         self.assertIn('Chat-Engaged Only', r5.notes)
-        r3 = self.slide('Agreement is not the same as help.')
+        r3 = self.slide('The same work got different feedback.')
         self.assertIn('not factual accuracy', text(r3))
 
     def test_perception_and_relationship_boundaries(self):
-        r2 = self.slide('Source awareness and authenticity ratings.')
-        for phrase in ('six months', 'attrition', 'not equivalent'):
+        r2 = self.slide('Human replies felt more genuine.')
+        for phrase in ('Six months', 'did not return', 'does not prove equal'):
             self.assertIn(phrase, text(r2))
-        r8 = self.slide('A preferred reply is not a chosen source.')
+        r8 = self.slide('People chose humans but rated AI higher.')
         self.assertIn('not randomly assigned', r8.notes)
         self.assertIn('not an established relationship', r8.notes)
         self.assertIn('not established relationships', text(r8))
         self.assertIn('between-session', text(self.slide('Relief now is not lasting improvement.')))
-        self.assertIn('10.1371/journal.pmen.0000426', self.slide('A good-rated reply is not treatment.').notes)
+        self.assertIn('10.1371/journal.pmen.0000426', self.slide('A caring reply is not treatment.').notes)
 
     def test_research_precedes_scope_with_individual_paper_collection(self):
         self.assertLess(self.slides.index(self.slide('Read beyond the abstract.')),
