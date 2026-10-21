@@ -5,13 +5,19 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from deckgen import attach_reports, INK, PAPER
+from deckgen.reports import load as load_reports
 from deckgen.layouts import (title, content, cards, statement, figure_slide,
-                             two_col, activity, finalize, section, T, Image, Rect, _slide, eyebrow)
+                             two_col, activity, question, finalize, section, T, Image, Rect, _slide, eyebrow)
 from course import footer
 import week05_mediation_figures as M
 import week08_figures as F
 
 S = []
+PRIVATE_REFLECTION_TITLES = (
+    'Have you ever shared a deep secret with a chatbot that you would not tell a human?',
+    'If yes, what made it easier to tell the chatbot?',
+)
+PAPER_SUBMISSION_TITLE = 'Share one paper for your group project.'
 REFS = {
     'R1': ('Hatch et al., 2025', 'https://doi.org/10.1371/journal.pmen.0000145'),
     'R2': ('Jain, Pareek & Carlbring, 2024', 'https://doi.org/10.1016/j.invent.2024.100745'),
@@ -77,12 +83,12 @@ def paper_detail(key, heading, image, caption, notes):
 # 0-10 minutes: reconnect to the existing Week 7 concept, not a new pitch round.
 S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 08',
     'Humanizing AI.', 'Research. Relationships. Product responsibility.',
-    notes='Three-hour class. Research -> AI product -> existing student project. Main route is slides 1-37; the appendix is a reference shelf, not extra lecture time. Relative minutes, not confirmed clock times: opening 0-10; mediation 10-30; research 30-65; implications 65-75; break 75-90; demo 90-105; research 105-145; revision 145-170; discussion 170-180. Keep the full break and research activity. If late, shorten optional study detail. Use the same conceptual level and native visual system as Weeks 5-7. No pre-reading is assumed: teach each summary before interpreting its figure. No personal mental-health disclosure is needed.'))
+    notes='Three-hour class. Research -> AI product -> existing student project. Main route is slides 1-40; the appendix is a reference shelf, not extra lecture time. Relative minutes, not confirmed clock times: opening 0-10; mediation 10-30; research 30-65; implications 65-75; break 75-90; demo 90-105; research 105-145; revision 145-170; discussion 170-180. Keep the full break and research activity. Two optional personal questions use about three minutes inside mediation, not extra time; discuss design conditions rather than secrets. Each student submits a different paper URL and relevance during the existing research block. No new grade or deadline is introduced. If late, shorten optional study detail. Use the same conceptual level and native visual system as Weeks 5-7. No pre-reading is assumed: teach each summary before interpreting its figure. No personal mental-health disclosure is needed.'))
 S.append(content('0-10 / FROM WEEK 7 TO WEEK 8', 'Your concept is a starting claim.', [
     'Keep your existing team, product idea and image in view.',
     'What does the AI do during use? What does the person still decide?',
     'Today: research -> product decision -> a revised scope and a test.',
-    'Work in your team notes. No new ClassPoint upload today.',
+    'Work in team notes; later, each person submits one different paper in ClassPoint.',
 ], body_size=36, notes='Recall Week 7: one concept text and one image, teams already formed. Do not recollect or publish them. Ask teams to open their own material privately. This workshop informs the existing formal one-page group proposal; it does not cancel or replace it. The syllabus still specifies that proposal for Week 8. Confirm actual Canvas instructions/deadline before teaching; do not invent one.'))
 S.append(content('NEWS / 15 OCTOBER 2026 / OPTIONAL TWO-MINUTE OPENER',
     'Directing an AI-generated scene', [
@@ -102,6 +108,20 @@ S.append(figure_slide('MEDIATION / ALTERITY', 'An apparent other is still a desi
 S.append(figure_slide('DESIGN ANALYSIS / NOT A STUDY RESULT', 'A cue can become a promise.', F.expectations(),
     caption='Try: a name, a warm voice, "I remember", or "I am always here". What capability might each imply?',
     notes='Instructor-authored examples, not quotes from a product or empirical causal estimates. Ask which cue implies memory, availability, confidentiality or competence. A warm tone can be useful without pretending to be human. The arrows are questions to investigate: studies below test particular pieces, not this whole universal chain. Ask what happens when the expectation outlasts the actual capability.'))
+personal_poll = question('multiple_choice', PRIVATE_REFLECTION_TITLES[0],
+    choices=['Yes', 'No'], size=74,
+    eyebrow_text='OPTIONAL / PERSONAL EXPERIENCE / YES OR NO',
+    cp={'type': 'multiple_choice', 'choices': ['A', 'B'], 'select_multiple': False},
+    notes='Optional, ungraded reflection within about three minutes shared with the next question inside the existing 10-30 mediation block. Students may skip without explanation or penalty. Explain before opening that responses may identify you to the teaching team; do not promise anonymity. This is self-reported experience, not a prevalence study or evidence that disclosure is safe. Keep the results panel closed and do not project individual responses or identify who answered yes. The pinned native multiple-choice DTO has no verified hide-names flag: check the actual add-in presentation controls before running; skip collection if responses cannot be kept private. Do not publish the activity URL, responses, exports or screenshots. Ask only yes/no, never for the secret. The course report hook withholds this personal activity even if a report ID is later supplied. Transition from implied confidentiality to design responsibility, not a request for confessions.')
+personal_poll.els.append(T(120, 850, 1680, 120,
+    'Optional: you may skip. Do not share the secret.\nResponses may identify you; this is not an anonymous poll.',
+    'body', 30, INK, lh=1.25))
+S.append(personal_poll)
+S.append(question('short_answer', PRIVATE_REFLECTION_TITLES[1],
+    hint='Responses may identify you. Optional: you may skip.\nExplain why, not the secret. No names or transcripts.',
+    eyebrow_text='OPTIONAL / IF YOU ANSWERED YES / SHORT ANSWER',
+    cp={'type': 'short_answer', 'hide_names': True, 'multiple': False},
+    notes='Only students who answered yes and freely choose to elaborate should respond; everyone else skips. This is a manual conditional prompt, not automatic ClassPoint branching. Share the same approximately three-minute mediation allocation as the yes/no question, not extra lecture time. Ask about what made disclosure feel easier, for example perceived distance or control, not the content of the secret. No names, identifying details, health histories, actual secrets or chat transcripts. Hidden display names do not make exports or ClassPoint report payloads anonymous. Do not project individual responses; discuss general design conditions without attributing or reading out disclosures. Do not publish the activity URL, responses, exports or screenshots. If someone submits sensitive detail, keep it off-screen and follow normal private handling rather than repeating it. The report hook withholds this activity even if a report ID is later supplied. This is not therapy, assessment or evidence that a chatbot offers confidentiality.'))
 S.append(cards('THE HIDDEN DECISION / MACHINE A + B', 'Effortless for whom?', [
     ('DATA', 'What disappears?', 'A conversation may become stored data. What is needed, retained or reused?'),
     ('MODEL', 'What gets rewarded?', 'A pleasing answer, a truthful answer and a useful challenge are not identical.'),
@@ -233,12 +253,12 @@ S.append(content('OPTIONAL AGENT / SAME VERIFICATION STANDARD', 'Discovery is no
 ], body_size=34,
     notes='Final five minutes of the same fifteen-minute demo, not extra time. Live agent mode is optional and NOT preflighted by this deck. Default is a manual audit of one candidate. If instructor separately preflights an agent, compare its returned metadata and claim with the primary source in front of the class. Scopus metadata access is not abstract/full-text access. Never display tokens, bypass access restrictions, upload student concepts verbatim or cite an invented passage. An honest access gap is a useful outcome.'))
 
-# 105-145: these three slides describe ONE forty-minute block.
+# 105-145: instructions and the individual submission share ONE forty-minute block.
 S.append(activity('01 / SEARCH + READ', 40, 'Find 2-3 papers for your product.', [
     'Start from one uncertainty about your existing user, context and AI action.',
     'Seek conditions for benefit and for risk/problem. Record mixed or missing evidence.',
-    'Keep a citation, evidence card and transfer gap for each paper. More is welcome if useful.',
-], notes='105-145, one forty-minute block across slides 30-32. Suggested internal checkpoints: 0-5 question/terms; 5-20 discovery/access; 20-35 close reading; 35-40 compare and select. These are not extra activity timers. Aim for at least one paper illuminating a potential benefit and one illuminating a risk/problem, without forcing an equal pro/con quota or predetermined verdict. Do not pad the list with irrelevant papers. TAs ask about methods and transfer, not whether the team agrees with the lecture. Expected output: 2-3 project-specific evidence cards in ordinary team notes, not a new upload or graded deliverable.'))
+    'Each person chooses a different paper and submits its URL + project relevance in ClassPoint.',
+], notes='105-145, one forty-minute block across slides 32-35. Suggested internal checkpoints: 0-5 question/terms and divide the search; 5-20 discovery/access; 20-35 close reading; 35-40 compare and submit. These are not extra activity timers. Start with 2-3 relevant papers, then extend as needed so each teammate submits a different paper; 2-3 is not a cap on the team total. Aim for evidence illuminating benefit and risk/problem without forcing an equal pro/con quota or predetermined verdict. Do not pad the list with irrelevant papers. TAs ask about methods and transfer, not whether the team agrees with the lecture. Keep evidence cards in ordinary team notes. Instructor-requested formative submission: every student sends one primary paper URL/DOI and why it is relevant to the group project, not one spokesperson per team. No grade or additional Canvas upload/deadline is introduced.'))
 S.append(content('SAME 40-MINUTE BLOCK / EVIDENCE CARD', 'Read beyond the abstract.', [
     'Citation + link + version; access: abstract only or full text.',
     'People / system / task / comparator / outcome / duration.',
@@ -249,13 +269,18 @@ S.append(content('SAME 40-MINUTE BLOCK / EVIDENCE CARD', 'Read beyond the abstra
 S.append(figure_slide('SAME 40-MINUTE BLOCK / CHECK TRANSFER', 'Is this evidence about your product?', F.transfer(),
     caption='Compare population, system, task, outcome, setting and time. Keep a mismatch visible in the team notes.',
     notes='Near the end of research, ask each team for one match and one mismatch. A loneliness study does not directly validate a fashion recommender; a student sample is not every older adult; a supervised intervention is not an unsupervised consumer app. No relevant full text found? Narrow the claim, state access limits and make the next search explicit. Absence of retrieved evidence is not proof of no effect. Transition only after the forty-minute block is protected.'))
+S.append(question('short_answer', PAPER_SUBMISSION_TITLE,
+    hint='Each person: a different paper from your teammates.\nPaste its URL + why it is relevant to your group project.',
+    eyebrow_text='105-145 / SAME RESEARCH BLOCK / EVERYONE SUBMITS',
+    cp={'type': 'short_answer', 'hide_names': False, 'multiple': False},
+    notes='Use the final five minutes of the existing forty-minute research block; no extra submission block. Each student submits one response containing a primary paper URL or DOI and one or two sentences explaining its relevance to the existing group project. Coordinate within the team so teammates choose different papers, not duplicate submissions through a spokesperson. A group may need more than the starting 2-3 papers to cover its members. Tie relevance to a user, AI action, evidence question or design decision; briefly state a transfer/access limit if needed. Do not paste private project details, student/user identifiers, full papers or copyrighted full-text excerpts. This is formative collection, not a new grade, quota beyond one paper per person, or Canvas deadline. This is a named classroom submission, not an anonymous reflection. Review any report for private content before ordinary after-class publication; unlike the two personal reflections, this non-sensitive activity can use the normal report-link workflow. If ClassPoint fails, retain the URL and explanation in team notes and arrange the normal instructor-led recovery, not a new public board.'))
 
 # 145-170: one twenty-five-minute revision block, three outputs in team notes.
 S.append(activity('02 / SCOPE + INTERACTION + TEST', 25, 'Change a claim before adding a feature.', [
     'KEEP / CHANGE / REMOVE: one assumption, linked to a paper and its limitation.',
     'State person, context, AI action and necessary data. Name what it will not collect, promise or do.',
     'Output: revised scope + one interaction change + one test in your team notes.',
-], notes='145-170, one twenty-five-minute block across slides 33-35. Suggested internal allocation: eight minutes scope, eight interaction, nine test. Do not add these to the forty-minute research block or recollect Week 7 submissions. A paper can support retaining a choice as well as changing it. Use this work to strengthen the existing Week 8 one-page proposal; confirm Canvas deadline separately. Research can reveal an access or evidence gap; the appropriate revision may be a narrower claim rather than a confident feature.'))
+], notes='145-170, one twenty-five-minute block across slides 36-38. Suggested internal allocation: eight minutes scope, eight interaction, nine test. Do not add these to the forty-minute research block or recollect Week 7 submissions. A paper can support retaining a choice as well as changing it. Use this work to strengthen the existing Week 8 one-page proposal; confirm Canvas deadline separately. Research can reveal an access or evidence gap; the appropriate revision may be a narrower claim rather than a confident feature.'))
 S.append(cards('SAME 25-MINUTE BLOCK / ANNOTATE ONE MOMENT', 'Make the evidence change the interaction.', [
     ('CUE', 'What is implied?', 'Change one name, voice, memory claim or disclosure. Explain the expected effect.'),
     ('CONTROL', 'What can be refused?', 'Make correction, comparison, exit or a human route concrete.'),
@@ -347,6 +372,17 @@ S.append(bibliography('Frameworks + product account', [
     'OpenAI. (2025, April 29). Sycophancy in GPT-4o: What happened and what we\'re doing about it. [Vendor account](https://openai.com/index/sycophancy-in-gpt-4o/)',
 ], 'Verbeek full six-page author-hosted published article reviewed; mediation/alterity explanation on printed p.29 (PDF position 4). Ihde framework carried from the established course source and checked through Verbeek, not a claim to newly read the whole book. OpenAI is a vendor release/rollback account, not independent empirical research. All custom diagrams are original conceptual teaching illustrations, not empirical data or faithful model-internals diagrams.'))
 
-attach_reports(S, Path(__file__).resolve().parent / 'week08-reports.json')
+def protected_report_entries(source):
+    """Never expose personal-reflection report URLs; retain normal drift checks."""
+    entries = [dict(entry) for entry in load_reports(source)]
+    targets = [slide for slide in S if slide.cp]
+    for slide, entry in zip(targets, entries):
+        if slide.title in PRIVATE_REFLECTION_TITLES:
+            entry['activity'] = None
+            entry['withheld'] = 'personal reflection; do not publish'
+    return entries
+
+
+attach_reports(S, protected_report_entries(Path(__file__).resolve().parent / 'week08-reports.json'))
 DECK = dict(title='SD2112 / AI in Design / Week 08',
             slides=finalize(S, footer(8)), pdf='SD2112-week08.pdf')

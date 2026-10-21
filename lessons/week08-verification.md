@@ -1,6 +1,18 @@
 # Week 8 implementation and verification
 
-## Current combined draft (21 October 2026)
+## Current ClassPoint revision (21 October 2026)
+
+The instructor requested three ClassPoint collections after the combined draft. This section supersedes the earlier zero-activity and 48-slide records below. The deck now has **51 slides: 40 main-route + 11 untimed appendix slides**.
+
+- **Activities:** slide 7, optional yes/no about having shared a deep secret with a chatbot rather than a human; slide 8, optional short answer for willing yes respondents about why it felt easier, explicitly not the secret; slide 35, one named paper URL/DOI plus relevance per student, with different papers within each team. Both short answers allow one submission; display names are hidden only for the personal follow-up. No quiz mode or correct answer is configured.
+- **Boundaries:** personal participation is optional and ungraded; skipping requires no explanation. Visible wording warns that responses may identify the student. Never request secrets, identifying details or transcripts. Results must stay off projection. The native multiple-choice DTO has no verified hide-names flag; real add-in presentation/privacy controls still require classroom preflight. The follow-up is a manual conditional prompt, not automatic branching.
+- **Publication protection:** both personal report entries are masked before the sole report-attachment call, including when synthetic IDs are supplied. Count/question drift still fails; missing/empty and explicit null placeholders remain safe. Tests check saved report files for personal IDs. The README and lesson plan require permanently withholding personal records and answer-index links before any post-class commit, because deck masking does not sanitize raw JSON or other consumers. Paper submissions use the ordinary named-report workflow only after content review.
+- **Timing and continuity:** the two personal questions share about three minutes within the existing 20-minute mediation block; the paper submission uses the final five minutes of the existing 40-minute research block. The break/demo/research/revision/comparison retain 15/15/40/25/10 minutes. Team size may require more than the initial 2-3 papers. No extra Canvas upload, grading rule or deadline is introduced. News opener, paper figures and study limits remain intact.
+- **Local verification:** the standard pinned build generates 51-page PDF and both 51-slide PowerPoints. Source/export notes match. Synthetic-only tests cover the real deck report invocation and native activity DTOs; actual PPTX tag/button relationships and rendered desktop/mobile slides are separately inspected. Fresh receipts are retained privately under workspace `tmp/week08-classpoint-20261021/`; no real student responses or activity IDs are used.
+
+ClassPoint collection itself requires the add-in and classroom preflight; an HTML badge, source test or valid activity DTO does not prove a live submission or anonymity. Requested publication remains draft PR #21 and its review preview only, not a merge or production release.
+
+## Prior combined draft (historical, 21 October 2026)
 
 Combines the remote news/CI head `da38455` with the independently reviewed paper-summary revision. The original local revision and previous immutable preview remain preserved. This section supersedes the historical receipts below; it does not authorize a merge or production release.
 

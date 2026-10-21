@@ -35,15 +35,15 @@ class Week08Tests(unittest.TestCase):
                             for e in opening.els if hasattr(e, 'paras')
                             for p in e.paras for r in p.runs))
         plan = (ROOT / 'lessons/week08-lesson-plan.md').read_text()
-        self.assertIn('3. **Directing an AI-generated scene.**', plan)
+        self.assertIn(f'3. **{opening.title}**', plan)
         self.assertIn('replacing the previous pair prompt', plan)
         self.assertEqual(len(self.summaries), 9)
         news = (ROOT / 'lessons/week08-news-20261021.md').read_text()
-        self.assertIn('37 main-route plus 11 untimed appendix/reference slides (48 total)', news)
+        self.assertIn('40 main-route plus 11 untimed appendix/reference slides (51 total)', news)
 
     def test_main_route_and_protected_budgets(self):
-        self.assertEqual((self.main_count, len(self.slides)), (37, 48))
-        self.assertEqual(self.slides[25].title, 'Break.\n15 minutes.')
+        self.assertEqual((self.main_count, len(self.slides)), (40, 51))
+        self.assertEqual(self.slides[27].title, 'Break.\n15 minutes.')
         for title, duration in [('Break.\n15 minutes.', '75-90'),
                                 ('Find 2-3 papers for your product.', '40 min'),
                                 ('Change a claim before adding a feature.', '25 min'),
@@ -137,10 +137,10 @@ class Week08Tests(unittest.TestCase):
         self.assertIn('between-session', text(self.slide('Relief now is not lasting improvement.')))
         self.assertIn('10.1371/journal.pmen.0000426', self.slide('A good-rated reply is not treatment.').notes)
 
-    def test_research_precedes_scope_without_new_submissions(self):
+    def test_research_precedes_scope_with_individual_paper_collection(self):
         self.assertLess(self.slides.index(self.slide('Read beyond the abstract.')),
                         self.slides.index(self.slide('Change a claim before adding a feature.')))
-        self.assertFalse(any(s.cp for s in self.slides))
+        self.assertEqual(sum(bool(s.cp) for s in self.slides), 3)
         self.assertIn('mixed or missing', text(self.slide('Find 2-3 papers for your product.')))
         self.assertIn('necessary data', text(self.slide('Change a claim before adding a feature.')))
         self.assertIn('one-page proposal', text(self.slide('Your next version needs a reason.')))
@@ -164,7 +164,9 @@ class Week08Tests(unittest.TestCase):
             self.assertIn(phrase, finish.notes)
 
     def test_manual_demo_retains_access_and_offline_gates(self):
-        demo = ' '.join(text(s) + s.notes for s in self.slides[26:29])
+        demo = ' '.join(text(self.slide(title)) + self.slide(title).notes for title in (
+            'Search a condition, not a verdict.', 'Find. Open. Read. Follow the trail.',
+            'Discovery is not paper reading.'))
         for phrase in ('manual', 'abstract', 'Scopus', 'metadata', 'offline', 'NOT preflighted'):
             self.assertIn(phrase, demo)
         self.assertTrue((ROOT / 'lessons/week08-demo-fallback.md').exists())
