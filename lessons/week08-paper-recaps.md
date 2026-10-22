@@ -115,7 +115,7 @@ The work does not change.
 
 **Keep in mind:** Sources were chosen, not randomly assigned. Brief tasks, not established relationships or clinical benefit.
 
-[Paper / publication record](https://doi.org/10.1038/s44271-025-00387-3) | [Full-text route](https://www.nature.com/articles/s44271-025-00387-3.pdf)
+[Paper / publication record](https://doi.org/10.1038/s44271-025-00387-3) | [Full-text route](https://michael-inzlicht.squarespace.com/s/People-choose-to-receive-human-empathy.pdf)
 
 ## R9: Randomized trial of a generative AI chatbot for mental health treatment
 

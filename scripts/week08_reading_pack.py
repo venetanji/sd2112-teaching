@@ -37,7 +37,7 @@ PAPERS = {
            'Maheshka-et-al..pdf'),
     'R8': ('People choose to receive human empathy despite rating AI empathy higher',
            'https://doi.org/10.1038/s44271-025-00387-3',
-           'https://www.nature.com/articles/s44271-025-00387-3.pdf', 's44271-025-00387-3.pdf'),
+           'https://michael-inzlicht.squarespace.com/s/People-choose-to-receive-human-empathy.pdf', 's44271-025-00387-3.pdf'),
     'R9': ('Randomized trial of a generative AI chatbot for mental health treatment',
            'https://doi.org/10.1056/AIoa2400802', 'https://gwern.net/doc/psychiatry/depression/2025-heinz.pdf', '2025-heinz.pdf'),
     'R10': ("Understanding U.S. Users' Security and Privacy Transparency Needs for Consumer-Facing Generative AI",
@@ -140,6 +140,9 @@ def main():
                 error = str(exc)
         available = path.is_file() and path.read_bytes().startswith(b'%PDF-')
         state = f'[Open local PDF]({path.name})' if available else f'PENDING: {error}'
+        provenance = args.output / (key + '-provenance.txt')
+        if available and provenance.is_file():
+            state += f' ([copy details]({provenance.name}))'
         missing += not available
         status += [f'- **{key}: {title}** - {state}. [Source]({url})']
         print(f'{key}: {"available" if available else "pending"}')
