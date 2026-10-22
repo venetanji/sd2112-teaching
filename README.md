@@ -105,6 +105,18 @@ Nothing in the sources identifies a student. Keep it that way:
 - ClassPoint report links are public by design and go in `ANSWERS.md` — but never link an
   activity that was run with names hidden. See **After the class** above.
 
+**Week 8 personal-reflection exception:** never publish the two chatbot-disclosure
+activities, including the yes/no poll. The native multiple-choice export has no
+verified name-hiding flag, so the normal hidden-name rule alone is insufficient.
+Before any report/answer-index commit, withhold both personal entries with
+`activity: null` and an explicit reason; remove their URLs from `ANSWERS.md` too.
+If an optional question was not run, preserve a null placeholder with its exact
+question rather than shifting the later paper submission's position. The Week 8
+deck also masks both personal links before attachment, but that does not sanitize
+raw JSON or other consumers. Keep personal responses, exports and screenshots
+private. The individual paper URL/relevance activity is a named formative
+submission; review its content before any normal after-class link publication.
+
 ## Design system
 
 Slides and site follow the ait4x design system (PolyU Design brand): Pantone Black 6 ink `#000B1C`, white, cool gray, teal `#64C2C3`, the 70-tile secondary matrix for bands, orange `#ED6D24` for the X and for numbers; Inter (display 800–900, tight tracking) and JetBrains Mono (eyebrows, caps, tracked). Tokens: `site/vendor/ait4x-colors_and_type.css`. PowerPoint font names follow [`PPTX-EXPORT.md`](https://github.com/ait4x/deckgen/blob/main/PPTX-EXPORT.md) in the generator: *Inter Black* / *Inter ExtraBold* / *Inter* + bold / *JetBrains Mono*.
