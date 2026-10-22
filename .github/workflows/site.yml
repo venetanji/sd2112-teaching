@@ -49,7 +49,7 @@ jobs:
   pdf:
     # one PDF per deck, printed from that deck's html deck with Chromium
     needs: decks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
