@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from deckgen import attach_reports, PAPER
 from deckgen.layouts import (title, content, cards, two_col, statement, question,
-                             activity, finalize)
+                             activity, section, finalize)
 from course import footer
 import week12_figures as F
 
@@ -15,19 +15,19 @@ REFS = {
     'R1': ('Cecil et al., Scientific Reports, 2024', 'https://doi.org/10.1038/s41598-024-60220-5'),
     'R2': ('Sharma et al., ASSETS, 2025', 'https://doi.org/10.1145/3663547.3746335'),
     'R2v': ('Sharma et al., consulted author preprint v2', 'https://arxiv.org/html/2507.00286v2'),
-    'R3': ('Yao et al., ReAct, ICLR 2023', 'https://arxiv.org/abs/2210.03629v3'),
-    'R4': ('Mitchell et al., Model Cards, 2019', 'https://arxiv.org/abs/1810.03993v2'),
+    'R3': ('Yao et al., ReAct: Synergizing Reasoning and Acting in Language Models, ICLR 2023', 'https://arxiv.org/abs/2210.03629v3'),
+    'R4': ('Mitchell et al., Model Cards for Model Reporting, FAT* 2019', 'https://arxiv.org/abs/1810.03993v2'),
 }
 TIMING = [
     (0, 10, 1, 3, 'Reconnect'),
-    (10, 40, 4, 10, 'Rules, generation and delegation'),
-    (40, 65, 11, 16, 'Reliance and accessible privacy'),
-    (65, 75, 17, 19, 'Worked example and review brief'),
-    (75, 90, 20, 20, 'Break'),
-    (90, 120, 21, 23, 'Interface walkthrough'),
-    (120, 155, 24, 27, 'Mock review'),
-    (155, 175, 28, 29, 'Revision'),
-    (175, 180, 30, 30, 'Close'),
+    (10, 40, 4, 13, '01 / What are we delegating?'),
+    (40, 65, 14, 22, '02 / What may people rely on?'),
+    (65, 75, 23, 26, '03 / Turn evidence into a revision'),
+    (75, 90, 27, 27, 'Break'),
+    (90, 120, 28, 30, 'Interface walkthrough'),
+    (120, 155, 31, 34, 'Mock review'),
+    (155, 175, 35, 36, 'Revision'),
+    (175, 180, 37, 37, 'Close'),
 ]
 
 
@@ -38,7 +38,7 @@ def source(key):
 
 S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 12',
     'Trust is not\nthe target.', 'Ethics II: what may a person rely on, delegate and contest?',
-    notes='Main route: slides 1-30, exactly 180 minutes including a full fifteen-minute break. Slides 31-34 are the reference shelf, not extra lecture time or new reading assignments. Reconnect to research and curation from Week 11, the human-technology relation from Week 5 and Week 8, and the existing project. Do not repeat the empathy/sycophancy lecture. Today is about justified reliance in a particular task and responsibility for consequential decisions. Chatbots are one example, not a requirement. Explain that a paper prototype is enough throughout; do not open accounts or activate real actions.'))
+    notes='Main route: slides 1-37, exactly 180 minutes including a full fifteen-minute break. Slides 38-42 are the reference shelf, not extra lecture time or new reading assignments. Reconnect to research and curation from Week 11, the human-technology relation from Week 5 and Week 8, and the existing project. Do not repeat the empathy/sycophancy lecture. Today is about justified reliance in a particular task and responsibility for consequential decisions. Chatbots are one example, not a requirement. Explain that a paper prototype is enough throughout; do not open accounts or activate real actions.'))
 S.append(content('0-10 / TODAY / 180 MINUTES', 'Evidence -> boundary -> revision.', [
     '0-75: rules, delegation, calibrated reliance and accessible privacy.',
     '75-90: break. 90-120: interface walkthrough, 30 minutes.',
@@ -50,11 +50,12 @@ S.append(question('short_answer', 'What should a person NOT delegate to your pro
     eyebrow_text='0-10 / DISCUSS / TEAM NOTES OR CLASSPOINT',
     notes='Allow three minutes within the opening ten. Ask for a task-specific boundary, not a blanket declaration that AI is good or bad. A recommender might rank possibilities while the person chooses; an installation might adapt light while an operator sets a safe limit. Invite one example and its affected people. No sensitive experience or student work needs to be displayed. Oral/team-note fallback is complete; ClassPoint is optional, not a new graded submission. If used, do not promise anonymity: default named activity; do not publish private responses. Later report links must follow the course withholding policy.'))
 
+S.append(section('01 / DELEGATION', 'What are we\ndelegating?', 'Answers, actions and permission / 10-40 min', bg="#246E70", notes='Topic signpost inside the existing thirty-minute teaching block, not extra lecture time. Move from the opening question to one fictional workshop-slot example: rule filtering, learned interpretation and an externally executed action. ReAct will provide one authentic source excerpt for the action-observation mechanism, with a standalone account requiring no prior reading. Our native harness diagram then separates that mechanism from our proposed permission boundary. Protect the later activities; do not turn this synthesis week into a benchmark lecture.'))
 S.append(cards('10-40 / ONE REQUEST / THREE IMPLEMENTATIONS', '"Find an available workshop slot."', [
     ('MACHINE A', 'Filter written rules.', 'Read a fictional timetable. Return slots matching room capacity and a stated time range.'),
     ('MACHINE B', 'Interpret language.', 'Turn a vague request into a proposed time and explanation. The proposal may be wrong.'),
     ('A + B', 'Interpret, then check.', 'Use learned interpretation with explicit availability checks. Keep booking a separate permission.'),
-], text_size=30, notes='Instructor-authored fictional example, not a product evaluation. Use one request across all three routes, retaining the established course Machine A/B labels. Rules can be wrong or incomplete; a learned response can be correct. The distinction is written procedure versus learned patterns, not safe versus unsafe. Separate searching an authoritative timetable from generating a plausible answer. A hybrid needs evidence that its checks actually run. The user has not yet authorized a booking. Ask what the ambiguous word "available" might hide: access needs, eligibility, location or cost. About four minutes.'))
+], text_size=30, notes='Instructor-authored fictional example, not a product evaluation. Use one request across all three routes, retaining the established course Machine A/B labels. Rules can be wrong or incomplete; a learned response can be correct. The distinction is written procedure versus learned patterns, not safe versus unsafe. Separate searching an authoritative timetable from generating a plausible answer. A hybrid needs evidence that its checks actually run. The user has not yet authorized a booking. Ask what the ambiguous word "available" might hide: access needs, eligibility, location or cost. About three minutes.'))
 S.append(two_col('DELEGATION / ANSWERING IS NOT ACTING', 'A sentence can become a commitment.', [
     '"Room C looks suitable." An answer proposes a choice.',
     '"I reserved Room C." A tool action changes a record.',
@@ -65,7 +66,11 @@ S.append(two_col('DELEGATION / ANSWERING IS NOT ACTING', 'A sentence can become 
     'Which people and records are affected?',
     'What can be refused, corrected or recovered?',
 ], right_font='body', left_size=33, right_size=32,
-    notes='These are illustrative statements, not live tool results. A generated success message is not evidence that a booking happened. Read operations are not automatically harmless: they can expose private data or create a log. Introduce delegation as a limited grant of authority, not surrender of responsibility. In a non-chatbot concept, the same issue appears when a classifier automatically denies entry or an adaptive object changes the environment. Ask which step would need a different permission. About four minutes.'))
+    notes='These are illustrative statements, not live tool results. A generated success message is not evidence that a booking happened. Read operations are not automatically harmless: they can expose private data or create a log. Introduce delegation as a limited grant of authority, not surrender of responsibility. In a non-chatbot concept, the same issue appears when a classifier automatically denies entry or an adaptive object changes the environment. Ask which step would need a different permission. About three minutes.'))
+S.extend(F.paper_pair('R3 / REACT / MECHANISM RECAP', 'An observation can change the next step.',
+    [('react-fig1-search.png', 120, 350, 990, 405)],
+    source('R3'), 'Yao et al. / ReAct v3 / Fig. 1(1d), first cycle / PDF p. 2 / crop',
+    'Yao et al., ReAct, ICLR 2023, exact arXiv:2210.03629v3, PDF page 2, Figure 1(1d), first Thought/Act/Obs cycle. Read the question at the top: which other device controls the program originally controlled by Apple Remote? The generated action searches Apple Remote; the returned observation names Front Row. That observation supplies evidence for a later search, rather than an answer being accepted simply because it sounds fluent. This crop deliberately omits later cycles and benchmark scores; it is an authentic published example trace, not a live system or a faithful window into hidden cognition. Sections 2-4 compare benchmark methods, but no benchmark success generalization or quantitative performance claim is taught. Our following editable harness figure adds an explicit permission check not validated by this paper. Use about two minutes, trimming earlier verbal examples to keep the whole block thirty minutes. No additional reading is required.', 'Read downward: generated Thought -> Search action -> returned evidence. The observation is not another model guess.'))
 S.append(F.agent_loop())
 S.append(cards('DESIGN HYPOTHESIS / NOT A SAFETY CERTIFICATE', 'Make permission specific.', [
     ('BEFORE', 'Preview the scope.', 'Show the record, recipient, cost and exact action. Offer a read-only route.'),
@@ -95,35 +100,22 @@ S.append(cards('ACCOUNTABILITY / OUR ETHICAL ARGUMENT', 'Delegation does not era
     ('ACCOUNTABLE OWNER', 'Who must respond?', 'Name an operational role able to investigate and repair. "The AI decided" is not an answer.'),
 ], text_size=30, notes='This is the course design argument, not a legal conclusion or a universal assignment of liability. Keep conflicting values explicit: independence, privacy, accuracy, dignity, access, efficiency. The developer, provider and deploying organization may have different powers; a team should identify who can actually change a result, not merely who receives a complaint. A human in the loop is inadequate if they lack time, authority or evidence. End the 10-40 block by asking where a fictional failed reservation would be contested and which role could fix it. About six minutes including discussion.'))
 
-S.append(two_col('40-65 / R1 / CONTROLLED ADVICE TASK', 'An explanation did not fix wrong advice here.', [
-    'Five online experiments; 1,403 students and HRM employees judged fictional CVs.',
-    'Incorrect advice harmed decision accuracy. Heatmaps/charts did not reliably reduce overreliance.',
-    source('R1'),
-], [
-    'WHAT WAS MEASURED?',
-    'Task accuracy, advice-quality ratings and confidence - not real hiring outcomes.',
-    'LIMIT',
-    'This does not show that all explanations are useless.',
-], right_font='body', left_size=31, right_size=30,
-    notes='Cecil, Lermer, Hudecek, Sauer and Gaube (2024), published full text, General procedure, Experiments 1a/1b/2a/2b/2c, Tables 2-7 and Discussion/Limitations read. Samples: 370, 242, 328, 143, 320 = 1,403. Each participant screened 16 fictional two-page CVs against strict criteria; half were eligible. Advice was purported human/AI prescreening, generally 75% correct, not a live deployed recruiter. No-advice controls; source manipulated in 1a/b and visual explanation in 2a-c. 2b removed time limits; 2c used criterion bar charts. Wrong-advice trials performed worse than baseline, not a universal overall harm from having any advice. Explanation effects on ratings/confidence varied; the tested explanations did not significantly improve task accuracy or reduce wrong-advice reliance. No consequences for actual applicants. Supplements/preregistrations not independently audited. About five minutes.'))
+S.append(section('02 / RELIANCE + ACCESS', 'What may people\nrely on?', 'Accuracy, independence and privacy / 40-65 min', bg="#246E70", notes='Topic signpost within the existing twenty-five-minute block. The two empirical papers ask different questions: Cecil tests immediate decisions with correct or incorrect advice; Sharma interviews blind and low-vision GenAI users about visual privacy. Do not combine them as if they measured the same outcome. The summaries and authentic source excerpts give everything needed for this discussion without pre-reading. Translate each bounded finding into a design question, then label the proposed response as ours, not a validated remedy.'))
+S.extend(F.paper_pair('40-65 / R1 / EXPERIMENTS', 'An explanation did not fix wrong advice here.',
+    [('cecil-fig6a.png', 180, 340, 860, 420)],
+    source('R1'), 'Cecil et al. / Fig. 6a: Exp. 2a, N328 (214 advice recipients) / PDF p. 9 / crop / CC BY 4.0',
+    'Cecil, Lermer, Hudecek, Sauer and Gaube (2024), published full text, General procedure, Experiments 1a/1b/2a/2b/2c, Tables 2-7 and Discussion/Limitations read. Samples: 370, 242, 328, 143, 320 = 1,403. Each participant screened 16 fictional two-page CVs against strict criteria; half were eligible. Advice was purported human/AI prescreening, generally 75% correct, not a live deployed recruiter. No-advice controls; source manipulated in 1a/b and visual explanation in 2a-c. 2b removed time limits; 2c used criterion bar charts. Wrong-advice trials performed worse than baseline, not a universal overall harm from having any advice. Explanation effects on ratings/confidence varied; the tested explanations did not significantly improve task accuracy or reduce wrong-advice reliance. No consequences for actual applicants. Supplements/preregistrations not independently audited. About five minutes. Figure-led explanation: published PDF page 9, Figure 6a, Experiment 2a (328 students overall; 214 in advice groups for the regression). This single panel is not a pooled estimate across all five experiments. First compare blue Correct with magenta Incorrect: these pool the two explanation conditions and distinguish advice accuracy. Then compare orange Non-Expl and green Expl: these pool correct and incorrect advice and distinguish explanation conditions. These are two different contrasts, not four experimental arms. The dashed line is the no-advice baseline, 70.61%; error bars are standard errors. The similar orange/green bars alone do not establish equivalence; use the reported model and bounded nonsignificant result. Axis and original labels remain intact; native text explains the contrasts for mobile readers.', 'Y = % correct CV decisions (0-100%). Blue/pink pool explanation conditions; orange/green pool advice accuracy. Not four arms. Line = 70.61% baseline; bars = standard errors.'))
 S.append(content('R1 -> PRODUCT QUESTION / TEACHING HYPOTHESIS', 'Test rejection of an error - not trust alone.', [
     'Use a fictional workshop rule: Room C has 8 seats; your group has 12.',
     'Scripted advice says: "Choose Room C: it is suitable." Label this SIMULATION.',
     'Can a reviewer find the conflict and refuse the suggestion? What did they inspect?',
     'Record the observed choice separately from confidence and your interpretation.',
 ], body_size=33, notes='Prepared low-stakes thought experiment, not a replication of Cecil et al. Show the capacity rule and incorrect advice together. Reveal deliberately wrong advice as part of the teaching setup, without deception, rankings of students or real personnel data. Invite a refusal and alternative. One correct rejection with the answer visible does not establish calibrated reliance in deployment; failures can still identify confusing evidence. Do not make a quantitative class comparison from a few volunteers or force a high-stakes decision. This transfer tests a possible interface failure, not whether explanations are universally helpful or harmful. About three minutes.'))
-S.append(two_col('R2 / QUALITATIVE ACCESSIBILITY RESEARCH', 'Private from a helper. Exposed to whom?', [
-    '21 blind and low-vision GenAI users in the US described visual-privacy practices and preferences.',
-    'AI could support independence from helpers while raising concerns about providers and other people\'s data.',
-    source('R2'),
-    source('R2v'),
-], [
-    'METHOD',
-    'Remote, scenario-based interviews; thematic analysis. Not a controlled intervention.',
-    'LIMIT',
-    'Desired retention/redaction controls were not tested for effectiveness.',
-], right_font='body', left_size=30, right_size=30,
-    notes='Sharma, Tseng, Zhang, Ide, Mack, Findlater, Gurari and Wang (2025), full author preprint arXiv v2, 19 July 2025, read sections 3-6 and interview appendix. Final ACM DOI is supplied for attribution; final typeset text was not compared. US sample of existing GenAI users, one-hour remote Zoom interviews Nov 2024-Jan 2025, scenario prompts across self-presentation, spaces, social sharing and professional documents. Fourteen totally blind, seven with some light perception. Recruitment and table contain an age-description mismatch: prose 25-54, table includes P12 18-24; no age range is taught. Practices vary: some prefer a trusted human for sensitive data. Findings are experiences and expectations, not prevalence, measured privacy improvement or current vendor-policy facts. Do not adopt participants\' risky practices as recommended security. About five minutes.'))
+S.extend(F.paper_pair('R2 / INTERVIEWS / VISUAL PRIVACY', 'Private from a helper. Exposed to whom?',
+    [('sharma-table1-columns.png', 120, 390, 990, 310)],
+    source('R2v'), 'Sharma et al. / v2 Table 1 rows 3-5 / PDF p. 4 / joined column crops',
+    "Sharma, Tseng, Zhang, Ide, Mack, Findlater, Gurari and Wang (2025), full author preprint arXiv v2, 19 July 2025, read sections 3-6 and interview appendix. Final ACM DOI is supplied for attribution; final typeset text was not compared. US sample of existing GenAI users, one-hour remote Zoom interviews Nov 2024-Jan 2025, scenario prompts across self-presentation, spaces, social sharing and professional documents. Fourteen totally blind, seven with some light perception. Recruitment and table contain an age-description mismatch: prose 25-54, table includes P12 18-24; no age range is taught. Practices vary: some prefer a trusted human for sensitive data. Findings are experiences and expectations, not prevalence, measured privacy improvement or current vendor-policy facts. Do not adopt participants' risky practices as recommended security. About five minutes. Source-image explanation: the exact v2 PDF contains no numbered figures, so use its authentic Table 1 on PDF page 4 rather than inventing a findings chart. Two column crops joined side by side at identical pixel scale preserve the scenario-name and privacy-type columns for rows 3-5; the middle definition column and unrelated rows are explicitly omitted; the caption identifies the two column excerpts, and row alignment is retained in both desktop and mobile. Read corresponding rows: social-media sharing concerns own and others privacy; sharing visual content concerns own privacy; professional documents concern others privacy. These are interview prompts/categories, not counts or prevalence findings. Findings in sections 4-5 supply the helper/provider/other-person tension summarized alongside the table. Native guidance repeats the privacy distinction so reading mode does not depend on reading small image text.", 'Table 1 prompts, not findings: social sharing = own + others; personal document = own; professional documents = others. Middle column omitted; rows stay aligned.',
+    second_reading=source('R2')))
 S.append(F.privacy_flow())
 S.append(cards('BOUNDARIES / NOT ONLY A DISCLAIMER', 'Design the moment it should stop.', [
     ('ORDINARY', 'Enough evidence?', 'Show what supports this output and what the person can check.'),
@@ -137,6 +129,7 @@ S.append(content('ETHICS / MAKE THE REASONING VISIBLE', 'Name the trade-off - an
     'Accountability: the deploying service must offer an answerable role and a way to challenge harm.',
 ], body_size=33, notes='Worked normative argument using a fictional photo-sharing concept, not a finding that all participants held identical values. Explicitly name non-users rather than reducing ethics to individual consent. State the unresolved issue: a preview can miss private content, and refusing every uncertain image can undermine independence. There is no friction-free answer; choose and justify a proportionate boundary, then test it with affected people. A student sketch cannot prove privacy or accessibility. Ask teams to translate the argument to their own product with different people and values. Four minutes closes 40-65.'))
 
+S.append(section('03 / REFLECTION -> REVISION', 'What will you\nchange?', 'Evidence -> walkthrough -> peer review -> revision / 65-180 min', bg="#246E70", notes='This signpost marks a change from discussing evidence to working on the project already required. Spend only a few seconds here inside the existing ten-minute worked-example and brief block. The source summaries are lenses, not a new reading list or safety checklist. Show one bounded design change and why it remains unvalidated, clarify the assessment contract, then protect the full fifteen-minute break and the thirty/thirty-five/twenty-minute activity budgets. No extra submission, criterion, deadline or final-quiz policy is introduced.'))
 S.append(two_col('65-75 / WORKED COMPARISON / FICTIONAL PRODUCT', 'Same promise. A different contract.', [
     'A / "I found the best room and booked it for you."',
     'Hidden: the capacity rule, access needs, permission and recovery.',
@@ -210,7 +203,7 @@ S.append(content('MOCK REVIEW / VIDEO + ONE-PAGE BRIEF', 'Does the same product 
     'Brief: do the relation, data, bias and guardrails match the poster and video?',
     'Can you see who selected outputs, set boundaries and contributed to the work?',
     'Record one strength and one specific revision. Distinguish content from untested playback.',
-], body_size=34, notes='Five minutes within each twelve-minute turn, then eight minutes joint synthesis as specified on slide 24. Existing final video length remains three to five minutes; review only a selected segment or storyboard if needed to fit this turn, without changing the final requirement. Storyboards do not establish runtime or sound quality. Retain historical authorship questions from PDF65-66 as process disclosure and accountable curation, not unsupported legal conclusions about ownership. Acknowledge inputs and permissions accurately; do not infer copyright from authorship feelings. Collaboration remains part of the existing rubric.'))
+], body_size=34, notes='Five minutes within each twelve-minute turn, then eight minutes joint synthesis as specified on slide 31. Existing final video length remains three to five minutes; review only a selected segment or storyboard if needed to fit this turn, without changing the final requirement. Storyboards do not establish runtime or sound quality. Retain historical authorship questions from PDF65-66 as process disclosure and accountable curation, not unsupported legal conclusions about ownership. Acknowledge inputs and permissions accurately; do not infer copyright from authorship feelings. Collaboration remains part of the existing rubric.'))
 
 S.append(activity('03 / REVISION', 20, 'Choose the change that matters most.', [
     '0-5: compare the walkthrough and mock-review notes. Keep disagreement visible.',
@@ -223,7 +216,7 @@ S.append(content('REVISION / LEAVE UP DURING THE SAME 20 MINUTES', 'A stronger c
     'Instead of "the explanation builds trust": say what the person can check or challenge.',
     'Instead of "privacy solved": state what is processed, where it goes and what is untested.',
     'Instead of "users understood": report who tried what, what happened and what remains unknown.',
-], body_size=34, notes='Reference during slide 28\'s twenty minutes, not a second activity. These are wording principles, not templates for making untested guarantees sound acceptable. A narrower claim must still be true. If no real participant test occurred, say peer walkthrough or simulation, not user validation. If the data-processing route is not implemented, state it as proposed. Record contradictions between materials before improving layout. Explain the difference between tool verification, observed behavior and human acceptance. Leave five minutes at the end of class for the final question.'))
+], body_size=34, notes='Reference during slide 35\'s twenty minutes, not a second activity. These are wording principles, not templates for making untested guarantees sound acceptable. A narrower claim must still be true. If no real participant test occurred, say peer walkthrough or simulation, not user validation. If the data-processing route is not implemented, state it as proposed. Record contradictions between materials before improving layout. Explain the difference between tool verification, observed behavior and human acceptance. Leave five minutes at the end of class for the final question.'))
 S.append(question('short_answer', 'What will you change - and who can contest the result?',
     hint='Name one revision, the evidence behind it and an accountable role. What remains uncertain?',
     eyebrow_text='175-180 / TEAM NOTES, ORAL SHARE OR CLASSPOINT',
@@ -242,12 +235,11 @@ S.append(content('REFERENCE SHELF / R2 / VERSION AND ACCESS', 'Sharma et al. / e
     '21 US GenAI users; scenario-based remote interviews and thematic analysis. Read sections 3-6 and Appendix A.',
     'Experiences and preferences - not prevalence, comparative privacy gains or tested control efficacy.',
 ], body_size=28, notes='Optional reference shelf. Author preprint v2 dated 19 July 2025 has unfilled conference-template metadata; cite its arXiv version explicitly and the final DOI separately. We do not assert identity with the final typeset text. No intervention/comparator, no performance measure or follow-up trial. Participants describe varied and sometimes risky practices; these are not security recommendations or verified current product claims. The paper\'s own technical design suggestions are proposals, not implementations with proven guarantees. Sample of existing users in the US, not every BLV person. No full paper or participant material redistributed in the public repository.'))
-S.append(content('REFERENCE SHELF / MECHANISM + DOCUMENTATION', 'Read the mechanism. Keep the limits.', [
-    'Yao, S., Zhao, J., Yu, D., Du, N., Shafran, I., Narasimhan, K., & Cao, Y. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. ICLR. ' + source('R3'),
-    'Interleaved reasoning/action/observation in benchmark tasks; not permission, privacy or deployment-safety certification.',
-    'Mitchell, M., Wu, S., Zaldivar, A., Barnes, P., Vasserman, L., Hutchinson, B., Spitzer, E., Raji, I. D., & Gebru, T. (2019). Model Cards for Model Reporting. FAT* 2019, 220-229. ' + source('R4'),
-    'Intended use, evaluation conditions, ethical considerations and caveats - not a badge proving safety.',
-], body_size=28, notes='Full primary author texts reviewed: ReAct arXiv v3 and Model Cards arXiv v2. Mechanism discussion uses ReAct sections 2-4, not a claim about current commercial agents or faithful hidden reasoning. Model Cards section 4 motivates documenting intended use, evaluation data, factors, limitations and recommendations. Our interface walkthrough is not itself a model card or deployment audit. No new report is required. Both links point at the exact consulted version.'))
+S.extend(F.paper_pair('REFERENCE SHELF / R4 / DOCUMENTATION FRAMEWORK', 'Make the scope inspectable.',
+    [('modelcards-fig1-use.png', 120, 340, 990, 220),
+               ('modelcards-fig1-caveats.png', 120, 590, 990, 185)],
+    source('R4'), 'Mitchell et al. / v2 Fig. 1 / PDF p. 3 / two separate excerpts',
+    'Full primary author texts reviewed: ReAct arXiv v3 and Model Cards arXiv v2. Mechanism discussion uses ReAct sections 2-4, not a claim about current commercial agents or faithful hidden reasoning. Model Cards section 4 motivates documenting intended use, evaluation data, factors, limitations and recommendations. Our interface walkthrough is not itself a model card or deployment audit. No new report is required. Both links point at the exact consulted version. This is an optional documentation reminder, not an additional timed paper lecture or reading assignment. Authentic Figure 1 excerpts, exact arXiv v2 PDF page 3: Intended Use and the final Quantitative Analyses/Ethical Considerations/Caveats sections. Separate crops are labelled as excerpts; they do not reproduce a complete card. Read the out-of-scope line first, then the requirement to examine group-level and intersectional results. The conceptual contribution is a reporting framework with worked examples, not experimental evidence that documentation prevents harm. A card can be incomplete, inaccurate or ignored. Apply the questions to the existing mediation brief only; no model-card submission is assigned.', 'Name the intended user and out-of-scope uses. Ask which groups were evaluated and which caveats remain. No new report.'))
 S.append(content('REFERENCE SHELF / CONTINUITY AND INSTRUCTOR DECISIONS', 'Carry forward the question - not old logistics.', [
     '2025 Week 12 PDF54-66: language, rules/data, curation, authorship. Reframed here as boundaries and accountable choices.',
     'PDF27 is a thought/action/observation loop; PDF29 is latent diffusion. Editable deck has 71 slides, PDF 70 pages.',

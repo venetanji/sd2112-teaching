@@ -1,10 +1,10 @@
 # SD2112 / Week 12 lesson plan
 
-**Ethics II: calibrated reliance, accessible privacy, delegation and accountability** / draft for instructor review / 21 October 2026
+**Ethics II: calibrated reliance, accessible privacy, delegation and accountability** / draft for instructor review / 22 October 2026
 
 ## Status and continuity
 
-Actual source: `deck/week12.py`, with original editable native diagrams in `deck/week12_figures.py`. There are **34 slides: 30 in the timed route and four reference slides**. Native speaker notes are reproduced in `lessons/week12-speaker-notes.md`. The primary-text claim/version ledger is `lessons/week12-evidence-ledger.md`; build and inspection evidence is in `lessons/week12-verification.md`. This is local draft work for PR #25, not a publication, deployment or approved change to assessment.
+Actual source: `deck/week12.py`, with authentic paper excerpts plus original editable native diagrams in `deck/week12_figures.py`. There are **42 slides: 37 in the timed route and five reference slides**. Native speaker notes are reproduced in `lessons/week12-speaker-notes.md`. The primary-text claim/version ledger is `lessons/week12-evidence-ledger.md`; build and inspection evidence is in `lessons/week12-verification.md`. This is an uncommitted reconciliation for instructor review. Parent owns authorized public repository/Cloudflare branch-preview updates; no main release or assessment change is authorized here.
 
 Week 11's evidence/curation audit becomes a question about what a product invites people to rely on. Week 5/8 mediation remains the vocabulary, but Week 8's full empathy/sycophancy lecture is not repeated. Machine A, Machine B and the harness are recalled only to locate consequential choices and permission. Non-chatbot products, services, recommenders, classifiers, objects and installations are valid throughout.
 
@@ -23,16 +23,16 @@ The visible ethical argument is not a checklist that certifies safety: independe
 | Relative minutes | Duration | Segment | Actual slides |
 |---|---|---|---|
 | 0-10 | 10 | Reconnect | 1-3 |
-| 10-40 | 30 | Rules, generation and delegation | 4-10 |
-| 40-65 | 25 | Reliance and accessible privacy | 11-16 |
-| 65-75 | 10 | Worked example and review brief | 17-19 |
-| 75-90 | 15 | Break | 20 |
-| 90-120 | 30 | Interface walkthrough | 21-23 |
-| 120-155 | 35 | Mock review | 24-27 |
-| 155-175 | 20 | Revision | 28-29 |
-| 175-180 | 5 | Close | 30 |
+| 10-40 | 30 | 01 / What are we delegating? | 4-13 |
+| 40-65 | 25 | 02 / What may people rely on? | 14-22 |
+| 65-75 | 10 | 03 / Turn evidence into a revision | 23-26 |
+| 75-90 | 15 | Break | 27-27 |
+| 90-120 | 30 | Interface walkthrough | 28-30 |
+| 120-155 | 35 | Mock review | 31-34 |
+| 155-175 | 20 | Revision | 35-36 |
+| 175-180 | 5 | Close | 37-37 |
 
-Total: **180 minutes**. Slides 31-34 are a reference shelf, not additional lecture time. If late, reduce spoken lecture detail; protect the 15-minute break, 30-minute interface walkthrough, 35-minute mock review and 20-minute revision. Slides within a workshop block are reference screens within the same timer, not separate timed activities.
+Total: **180 minutes**. Slides 38-42 are a reference shelf, not additional lecture time. If late, reduce spoken lecture detail; protect the 15-minute break, 30-minute interface walkthrough, 35-minute mock review and 20-minute revision. Slides within a workshop block are reference screens within the same timer, not separate timed activities.
 
 ## Actual slide map
 
@@ -43,37 +43,45 @@ Total: **180 minutes**. Slides 31-34 are a reference shelf, not additional lectu
 | 1 | Trust is not / the target. | 0-10 |
 | 2 | Evidence -> boundary -> revision. | 0-10 |
 | 3 | What should a person NOT delegate to your product? | 0-10 |
-| 4 | "Find an available workshop slot." | 10-40 |
-| 5 | A sentence can become a commitment. | 10-40 |
-| 6 | A tool result becomes the next input. | 10-40 |
-| 7 | Make permission specific. | 10-40 |
-| 8 | Easy to use. Hard to see through. | 10-40 |
-| 9 | A better prompt is not the whole design. | 10-40 |
-| 10 | Delegation does not erase responsibility. | 10-40 |
-| 11 | An explanation did not fix wrong advice here. | 40-65 |
-| 12 | Test rejection of an error - not trust alone. | 40-65 |
-| 13 | Private from a helper. Exposed to whom? | 40-65 |
-| 14 | Privacy controls must be usable before sharing. | 40-65 |
-| 15 | Design the moment it should stop. | 40-65 |
-| 16 | Name the trade-off - and who can contest it. | 40-65 |
-| 17 | Same promise. A different contract. | 65-75 |
-| 18 | Review the project you already owe. | 65-75 |
-| 19 | Can the work speak without an oral rescue? | 65-75 |
-| 20 | Break. / Fifteen minutes. | 75-90 |
-| 21 | Walk through three low-risk situations. | 90-120 |
-| 22 | Show the next action. Do not explain it away. | 90-120 |
-| 23 | One observation. One bounded revision. | 90-120 |
-| 24 | Paired review. Then swap roles. | 120-155 |
-| 25 | Read the poster before the pitch. | 120-155 |
-| 26 | Who benefits? Who can challenge it? | 120-155 |
-| 27 | Does the same product appear in all three? | 120-155 |
-| 28 | Choose the change that matters most. | 155-175 |
-| 29 | A stronger claim can be a narrower claim. | 155-175 |
-| 30 | What will you change - and who can contest the result? | 175-180 |
-| 31 | Cecil et al. / evidence card | Reference shelf |
-| 32 | Sharma et al. / evidence card | Reference shelf |
-| 33 | Read the mechanism. Keep the limits. | Reference shelf |
-| 34 | Carry forward the question - not old logistics. | Reference shelf |
+| 4 | What are we / delegating? | 10-40 |
+| 5 | "Find an available workshop slot." | 10-40 |
+| 6 | A sentence can become a commitment. | 10-40 |
+| 7 | How does a tool result change the next step? | 10-40 |
+| 8 | An observation can change the next step. | 10-40 |
+| 9 | A tool result becomes the next input. | 10-40 |
+| 10 | Make permission specific. | 10-40 |
+| 11 | Easy to use. Hard to see through. | 10-40 |
+| 12 | A better prompt is not the whole design. | 10-40 |
+| 13 | Delegation does not erase responsibility. | 10-40 |
+| 14 | What may people / rely on? | 40-65 |
+| 15 | Can people reject incorrect advice? | 40-65 |
+| 16 | An explanation did not fix wrong advice here. | 40-65 |
+| 17 | Test rejection of an error - not trust alone. | 40-65 |
+| 18 | How do people manage visual privacy? | 40-65 |
+| 19 | Private from a helper. Exposed to whom? | 40-65 |
+| 20 | Privacy controls must be usable before sharing. | 40-65 |
+| 21 | Design the moment it should stop. | 40-65 |
+| 22 | Name the trade-off - and who can contest it. | 40-65 |
+| 23 | What will you / change? | 65-75 |
+| 24 | Same promise. A different contract. | 65-75 |
+| 25 | Review the project you already owe. | 65-75 |
+| 26 | Can the work speak without an oral rescue? | 65-75 |
+| 27 | Break. / Fifteen minutes. | 75-90 |
+| 28 | Walk through three low-risk situations. | 90-120 |
+| 29 | Show the next action. Do not explain it away. | 90-120 |
+| 30 | One observation. One bounded revision. | 90-120 |
+| 31 | Paired review. Then swap roles. | 120-155 |
+| 32 | Read the poster before the pitch. | 120-155 |
+| 33 | Who benefits? Who can challenge it? | 120-155 |
+| 34 | Does the same product appear in all three? | 120-155 |
+| 35 | Choose the change that matters most. | 155-175 |
+| 36 | A stronger claim can be a narrower claim. | 155-175 |
+| 37 | What will you change - and who can contest the result? | 175-180 |
+| 38 | Cecil et al. / evidence card | Reference shelf |
+| 39 | Sharma et al. / evidence card | Reference shelf |
+| 40 | What should a model report make inspectable? | Reference shelf |
+| 41 | Make the scope inspectable. | Reference shelf |
+| 42 | Carry forward the question - not old logistics. | Reference shelf |
 
 <!-- slide-map:end -->
 
@@ -82,9 +90,9 @@ Total: **180 minutes**. Slides 31-34 are a reference shelf, not additional lectu
 | Actual slide | Exact question | Native type | Classroom alternative |
 |---|---|---|---|
 | 3 | What should a person NOT delegate to your product? | short_answer | Oral discussion or private team notes |
-| 30 | What will you change - and who can contest the result? | short_answer | Oral share or private team notes |
+| 37 | What will you change - and who can contest the result? | short_answer | Oral share or private team notes |
 
-These are brief formative discussions, not new assessed uploads. Two optional ClassPoint short answers are emitted; activity slides 21/24/28 do not collect artifacts. Default settings are named, single response; do not promise anonymity. Check actual classroom add-in/privacy settings before use. `attach_reports(S, ... / 'week12-reports.json')` runs before `finalize`; a missing/empty map is a safe pre-class no-op. Do not create fictitious live activity IDs. Later public answer links must withhold anonymous/private activities under the existing course policy.
+These are brief formative discussions, not new assessed uploads. Two optional ClassPoint short answers are emitted; activity slides 28/31/35 do not collect artifacts. Default settings are named, single response; do not promise anonymity. Check actual classroom add-in/privacy settings before use. `attach_reports(S, ... / 'week12-reports.json')` runs before `finalize`; a missing/empty map is a safe pre-class no-op. Do not create fictitious live activity IDs. Later public answer links must withhold anonymous/private activities under the existing course policy.
 
 ## Activity A / interface walkthrough / 30 minutes
 
@@ -118,7 +126,7 @@ Relative 155-175: five minutes compare notes, ten minutes make one essential cor
 
 ## Selected evidence and reading load
 
-One prepared excerpt/evidence card plus one background reading; no additional compulsory reading load is imposed. Descriptive attributed links are visible on research slides and the reference shelf.
+This is a synthesis/reflection week, not a new four-paper lecture. Cecil and Sharma are the two empirical teaching lenses; ReAct is a mechanism recap; Model Cards is an optional documentation reminder on the reference shelf. Each taught source has a task/analysis screen before its finding/figure screen: task, comparison, concrete labelled example, and measurement or analytical basis. No pre-reading is required. ReAct is a mechanism example, not a safety result; Model Cards is a documentation proposal, not an evaluated safeguard. The existing prepared excerpt/background reading load is unchanged; no additional compulsory reading is imposed. Three topic signposts are inside the original budgets, not extra timed material. Authentic source excerpts are on slides 8, 16, 19 and 41; our diagrams on slides 9 and 20 remain explicitly illustrative. Sharma v2 has no figures, so two explicitly labelled Table 1 column excerpts stand in for a figure that version does not contain. They are joined at original scale with a white gutter to preserve row alignment in mobile. Figure meanings are also stated in native text for mobile reading. Descriptive attributed links are visible on research slides and the reference shelf.
 
 - [Cecil et al. (2024), Scientific Reports](https://doi.org/10.1038/s41598-024-60220-5): five controlled online experiments, fictional CV advice, 1,403 students/HRM employees. Wrong advice harmed trial-level accuracy; tested heatmaps/charts did not reliably reduce overreliance. Advice quality/confidence are distinct outcomes. Not universal evidence against explanations or a test of real hiring.
 - [Sharma et al. (2025), ASSETS record](https://doi.org/10.1145/3663547.3746335); [consulted author preprint v2](https://arxiv.org/html/2507.00286v2): interviews with 21 US BLV GenAI users. Independence, helpers/providers and others' privacy; experiences/preferences, not tested control efficacy. Full author version read; final typeset text not compared.
@@ -129,7 +137,7 @@ The syllabus's Van Den Eede reading remains background; its full text was not ne
 
 ## Archive comparison and retained synthesis
 
-The 2025 Week 12 PDF has **70 pages**. Positions 54-69 were extracted and rendered: language as interface, rules/data, designer as curator, authorship/ownership, then fair/research logistics. Positions 27 and 29 were separately rendered: page 27 is a thought/action/observation loop under an imprecise "Agent prompt" title; page 29 is diffusion, not agents. New diagrams are original native elements, not copied screenshots or assertions of faithful internal cognition.
+The 2025 Week 12 PDF has **70 pages**. Positions 54-69 were extracted and rendered: language as interface, rules/data, designer as curator, authorship/ownership, then fair/research logistics. Positions 27 and 29 were separately rendered: page 27 is a thought/action/observation loop under an imprecise "Agent prompt" title; page 29 is diffusion, not agents. Original illustrative diagrams remain native elements, separately labelled from authentic paper excerpts or assertions of faithful internal cognition.
 
 The editable OneDrive Week 12 deck has **71 slides**, including Ask Me Anything at 54; subsequent synthesis is shifted by one (PDF54 -> PPTX55). Retain the designer's curation/accountability question and process disclosure, not unverified Ihde language claims, universal "ultimate interface" predictions or legal ownership assertions. Do not carry over the 2025 exam date, four-group requirement, shared board link or upload date. Old PR #3 remains historical background, not tooling or operational authority; no logistics are copied from it.
 

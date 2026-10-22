@@ -3,10 +3,74 @@
 These are teaching illustrations, not observed data or model-internals traces.
 Text and shapes remain native in PowerPoint and semantic in mobile reading mode.
 """
-from deckgen import INK, PAPER
+from pathlib import Path
+
+from deckgen import INK, PAPER, Image
 from deckgen.layouts import content, T, Rect
 
 TEAL = '#246E70'
+ASSETS = Path(__file__).resolve().parent / 'assets' / 'week12'
+
+
+def paper_frame(eyebrow, heading, notes):
+    """Use the approved course paper-title and citation grid."""
+    slide = content(eyebrow, heading, [], title_size=72, notes=notes)
+    slide.els = slide.els[:2]
+    heading_el = slide.els[1]
+    heading_el.x, heading_el.y, heading_el.w, heading_el.h = 120, 184, 1680, 140
+    heading_el.name = 'paper-title'
+    return slide
+
+
+def paper_block(slide, x, y, width, label, value, height, size=34, name=''):
+    slide.els.extend([
+        T(x, y, width, 34, label, 'mono', 23, TEAL, name=name + '-label'),
+        T(x, y + 52, width, height, value, 'body', size, INK,
+          lh=1.2, name=name + '-body'),
+    ])
+
+
+def paper_pair(eyebrow, heading, images, reading, caption, notes,
+                  guide, second_reading=None):
+    """Replace the compressed abstract with a task/analysis then result pair."""
+    from week12_studies import GUIDES
+    key = next(k for k in GUIDES if k in eyebrow.split(' / '))
+    g = GUIDES[key]
+    extra = (' Targeted primary-source recheck, 22 October 2026: ' +
+             g['location'] + ' This pair replaces the compressed summary within '
+             'the existing teaching allocation, not extra class minutes. ')
+    task = paper_frame(eyebrow + ' / TASK + EVIDENCE', g['title'], notes + extra)
+    for x, y, label, value, height, name in [
+        (120, 348, g['task_label'], g['task'], 210, 'study-task'),
+        (120, 676, g['comparison_label'], g['comparison'], 190, 'study-comparison'),
+        (1020, 348, g['example_label'], g['example'], 210, 'study-example'),
+        (1020, 676, g['measure_label'], g['measured'], 190, 'study-measurement'),
+    ]:
+        paper_block(task, x, y, 780, label, value, height, name=name)
+    task.els.append(T(120, 956, 1680, 38, reading, 'mono', 21, INK, lh=1.1))
+
+    result = paper_frame(eyebrow + ' / FINDING + LIMIT', heading, notes + extra)
+    for i, (name, *_unused) in enumerate(images):
+        if len(images) == 1:
+            x, y, w, h = 120, 348, 1010, 385
+        else:
+            x, y, w, h = 120, 348 + i * 205, 1010, 185
+        result.els.append(Image(x, y, w, h, str(ASSETS / name), fit='contain',
+                                name='paper-excerpt-' + name))
+    result.els.append(T(120, 760, 1010, 115, guide, 'body', 29, INK, lh=1.2))
+    for y, label, value, height, name in [
+        (348, g['result_label'], g['result'], 160, 'study-result'),
+        (580, 'WHAT IT DOES NOT SHOW', g['limit'], 160, 'study-limit'),
+        (812, 'FOR YOUR PROJECT', g['design'], 90, 'study-design'),
+    ]:
+        paper_block(result, 1190, y, 610, label, value, height, size=32, name=name)
+    result.els.extend([
+        T(120, 884, 1010, 64, caption, 'mono', 22, TEAL, lh=1.1),
+        T(120, 956, 1680, 38, reading, 'mono', 21, INK, lh=1.1),
+    ])
+    if second_reading:
+        task.els.append(T(120, 914, 1680, 34, second_reading, 'mono', 21, TEAL))
+    return [task, result]
 
 
 def stages(eyebrow, heading, items, caption, notes):
