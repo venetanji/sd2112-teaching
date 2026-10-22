@@ -22,19 +22,22 @@ class Week10Tests(unittest.TestCase):
         cls.slides, cls.deck, cls.blocks = S, DECK, BLOCKS
 
     def test_actual_sequence_and_complete_budget(self):
-        self.assertEqual(len(self.slides), 25)
+        self.assertEqual(len(self.slides), 26)
         self.assertEqual([(b[0], b[1]) for b in self.blocks],
                          [(0,15),(15,30),(30,55),(55,75),(75,90),
                           (90,115),(115,145),(145,165),(165,180)])
         self.assertEqual([b[1]-b[0] for b in self.blocks],
                          [15,15,25,20,15,25,30,20,15])
         self.assertEqual(sum(b[1]-b[0] for b in self.blocks), 180)
-        self.assertEqual([s.title for s in self.slides[6:10]],
+        self.assertEqual([(b[3], b[4]) for b in self.blocks],
+                         [(1,1),(2,7),(8,11),(12,14),(15,15),
+                          (16,18),(19,21),(22,23),(24,25)])
+        self.assertEqual([s.title for s in self.slides[7:11]],
                          ['Reopen the problem, not just the file.', 'Read the passage again.',
                           'Change the question.', 'Keep the disagreement.'])
-        self.assertIn('15 minutes', text(self.slides[13]))
+        self.assertIn('15 minutes', text(self.slides[14]))
         self.assertEqual([s.title for s in self.slides if 'min' in text(s) and s.bg == '#F6AD00'],
-                         [self.slides[i].title for i in (6,10,14,17,20,22)])
+                         [self.slides[i].title for i in (7,11,15,18,21,23)])
 
     def test_provisional_school_reserve_and_assessment_contract(self):
         hold = text(self.slides[0])
@@ -54,7 +57,7 @@ class Week10Tests(unittest.TestCase):
                      'voluntary participation', 'right to stop', 'Declining is fine',
                      'No recording, names, sensitive stories', 'Observation is not interpretation',
                      'Actual model reliability', 'not a validated threshold',
-                     'clinical, legal or other high-stakes validity'):
+                     'No clinical, legal or high-stakes validation'):
             self.assertIn(term, all_text)
         notes = ' '.join(s.notes for s in self.slides)
         self.assertIn('satisfaction alone', notes.lower())
@@ -69,10 +72,45 @@ class Week10Tests(unittest.TestCase):
                     'https://creativecommons.org/licenses/by/4.0/'):
             self.assertIn(url, urls)
         self.assertIn('2024', text(self.slides[5]))
-        self.assertIn('not an AI-versus-no-AI trial', text(self.slides[5]))
+        self.assertIn('not an AI/no-AI causal trial', text(self.slides[5]))
         self.assertIn('no formal inter-rater reliability', self.slides[5].notes)
-        self.assertIn('Adapted from', text(self.slides[4]))
+        self.assertIn('Official diagram, unchanged', text(self.slides[4]))
         self.assertIn('CC BY 4.0', text(self.slides[4]))
+
+    def test_study_task_recording_result_and_provenance(self):
+        setup = text(self.slides[5])
+        for term in ('WHAT THEY DID', 'WHAT THEY COMPARED', 'WHAT THEY RECORDED',
+                     'ADAPTED FROM THE STUDY', '88 AI-user survey responses',
+                     '10 selected professionals', 'lunchbox', '2024', '2026 PUBLICATION'):
+            self.assertIn(term, setup)
+        self.assertNotIn('WHAT THEY FOUND', setup)
+        result = self.slides[6]
+        for term in ('WHAT THEY FOUND', 'WHAT IT DOES NOT SHOW', 'neither time shares',
+                     'nor participant counts', 'Top-panel crop; no redraw', 'CC BY 4.0'):
+            self.assertIn(term, text(result))
+        images = [e for e in result.els if e.kind == 'image' and e.name == 'paper-figure']
+        self.assertEqual(len(images), 1)
+        self.assertEqual(Path(images[0].src).name, 'sozen-borekci-2026-fig5-overview.png')
+        self.assertEqual(images[0].fit, 'contain')
+        lens = text(self.slides[17])
+        for term in ('CONCEPTUAL LENS', 'NOT A PARTICIPANT STUDY', 'OUR EXAMPLE / NOT FROM',
+                     'TRY IN YOUR PROTOTYPE', 'design hypotheses, not proven safeguards'):
+            self.assertIn(term, lens)
+        ledger = (ROOT / 'lessons/week10-references.md').read_text()
+        self.assertEqual(ledger.count('## V1 /'), 1)
+        for term in ('public GitHub', 'Cloudflare', 'CC BY 4.0', 'not a restricted/local-only'):
+            self.assertIn(term, ledger)
+
+    def test_repeated_paper_geometry_matches_week08(self):
+        for slide in (self.slides[i] for i in (5,6,17)):
+            heading = next(e for e in slide.els if e.name == 'paper-title')
+            self.assertEqual((heading.x, heading.y, heading.w, heading.h), (120,184,1680,140))
+            self.assertEqual(heading.paras[0].runs[0].size, 72)
+            citation = next(e for e in slide.els if e.name == 'paper-citation')
+            self.assertEqual(citation.y, 956)
+            for label in (e for e in slide.els if e.name.endswith('-label')):
+                body = next(e for e in slide.els if e.name == label.name[:-6]+'-body')
+                self.assertEqual(body.y-label.y, 52)
 
     def test_report_hook_invocation_is_real_and_zero_collection_is_explicit(self):
         import deckgen

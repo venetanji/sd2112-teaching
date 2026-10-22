@@ -1,6 +1,6 @@
 # SD2112 · Week 10 lesson plan
 
-**Reframe, prototype, test: the Double Diamond with evidence** · implemented slide draft · October 21, 2026
+**Reframe, prototype, test: the Double Diamond with evidence** · implemented slide draft · October 22, 2026
 
 ## Status and intent
 
@@ -43,18 +43,18 @@ The 15-minute ESFQ slot is reserved provisionally; its placement below is not co
 | Minutes | Segment | Actual slides |
 |---|---|---|
 | 0-15 | Provisional school ESFQ reserve | 1 |
-| 15-30 | Framing | 2-6 |
-| 30-55 | Reframe | 7-10 |
-| 55-75 | Develop | 11-13 |
-| 75-90 | Break | 14 |
-| 90-115 | Prototype | 15-17 |
-| 115-145 | Test | 18-20 |
-| 145-165 | Revise | 21-22 |
-| 165-180 | Share | 23-24 |
+| 15-30 | Framing | 2-7 |
+| 30-55 | Reframe | 8-11 |
+| 55-75 | Develop | 12-14 |
+| 75-90 | Break | 15 |
+| 90-115 | Prototype | 16-18 |
+| 115-145 | Test | 19-21 |
+| 145-165 | Revise | 22-23 |
+| 165-180 | Share | 24-25 |
 
 ## Actual native slide map
 
-The deck has 25 slides: 24 in the timed run (including the holding slide) and one untimed reference shelf. Each activity timer covers its following support slides, not additional time.
+The deck has 26 slides: 25 in the timed run and one untimed reference shelf. No pre-reading is assumed. The framework, task/recording explanation and authentic Figure 5 result map share six minutes inside the unchanged 15-minute framing block. Activity openers are phase dividers; their timers cover the following support slides, not extra time.
 
 | Slide | Actual title |
 |---|---|
@@ -63,35 +63,36 @@ The deck has 25 slides: 24 in the timed run (including the holding slide) and on
 | 3 | Start where your project is. |
 | 4 | A plausible idea is not a finding. |
 | 5 | Two diamonds. Four kinds of work. |
-| 6 | AI can enter more than one phase. |
-| 7 | Reopen the problem, not just the file. |
-| 8 | Read the passage again. |
-| 9 | Change the question. |
-| 10 | Keep the disagreement. |
-| 11 | Two responses. One uncertainty. |
-| 12 | Test the decision, not the decoration. |
-| 13 | Decide what would change your mind. |
-| 14 | Break. 15 minutes. |
-| 15 | Build only enough to learn. |
-| 16 | Three cards are enough. |
-| 17 | Can the person say no? |
-| 18 | Give the task. Then watch. |
-| 19 | Do not teach the answer. |
-| 20 | Observation is not interpretation. |
-| 21 | Change one consequential decision. |
-| 22 | Who still needs to be heard? |
-| 23 | One changed decision. Its evidence. |
-| 24 | Keep the learning, not just the screen. |
-| 25 | Framework. Study. Mediation. |
+| 6 | Where did designers use AI? |
+| 7 | Both problem and solution work. |
+| 8 | Reopen the problem, not just the file. |
+| 9 | Read the passage again. |
+| 10 | Change the question. |
+| 11 | Keep the disagreement. |
+| 12 | Two responses. One uncertainty. |
+| 13 | Test the decision, not the decoration. |
+| 14 | Decide what would change your mind. |
+| 15 | Break. 15 minutes. |
+| 16 | Build only enough to learn. |
+| 17 | Three cards are enough. |
+| 18 | Can the person say no? |
+| 19 | Give the task. Then watch. |
+| 20 | Do not teach the answer. |
+| 21 | Observation is not interpretation. |
+| 22 | Change one consequential decision. |
+| 23 | Who still needs to be heard? |
+| 24 | One changed decision. Its evidence. |
+| 25 | Keep the learning, not just the screen. |
+| 26 | Framework. Study. Mediation. |
 
 ## Materials and collection contract
 
-- `deck/week10.py` is the native source; `deck/week10_figures.py` draws the attributed framework adaptation.
+- `deck/week10.py` is the native source; `deck/week10_figures.py` embeds authentic source pixels for the official framework and paper figure.
 - Detailed facilitation script: `lessons/week10-speaker-notes.md`, generated from the actual native speaker notes.
 - Claim/access ledger and prepared offline card: `lessons/week10-references.md`.
 - Zero ClassPoint activities and no new upload. `attach_reports` is retained before finalization; a missing report file is a safe no-op. No fabricated reports are created.
-- Three-card paper/manual fallback is on slide 16; all AI responses are visibly simulated. Voluntary peer test protocol is on slides 18-20.
-- Local build/QA evidence and unresolved delivery checks: `lessons/week10-verification.md`.
+- Three-card paper/manual fallback is on slide 17; all AI responses are visibly simulated. Voluntary peer test protocol is on slides 19-21.
+- Build/QA evidence and unresolved delivery checks: `lessons/week10-verification.md`.
 
 ## Detailed team protocol
 
@@ -127,7 +128,7 @@ Change one design decision, retain one finding that did not support the team's e
 
 ## Review gates
 
-Confirm the actual calendar, coverage, ESFQ slot and team starting points. Reconcile new instructor-supplied materials. Preserve the existing assessment brief and deadlines. The authorized implementation pass now provides a 25-slide native deck, synchronized notes and local builds. This remains an uncommitted local draft, not a deployment or accepted facilitation rota. See `week10-verification.md` for actual checks and remaining classroom verification. Keep student records and test notes out of the public repository.
+Confirm the actual calendar, coverage, ESFQ slot and team starting points. Reconcile new instructor-supplied materials. Preserve the existing assessment brief and deadlines. The authorized implementation pass now provides a 26-slide native deck, synchronized notes and local builds. This remains an uncommitted local draft, not a deployment or accepted facilitation rota. See `week10-verification.md` for actual checks and remaining classroom verification. Keep student records and test notes out of the public repository.
 
 ## Existing syllabus milestone to reconcile
 

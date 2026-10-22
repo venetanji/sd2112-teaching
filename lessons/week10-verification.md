@@ -1,5 +1,28 @@
 # Week 10 / local implementation verification
 
+## Current Week 8-standard revision / October 22, 2026
+
+26 slides: 25 in the timed route (including provisional ESFQ and break), one untimed reference shelf. The compressed study card is replaced, not supplemented, by a task/recording slide followed by the authentic Figure 5 result map. The same four minutes and 15-minute framing allocation remain. Verbeek's conceptual checkpoint now uses a labelled argument/example/application/limit layout. The week-owned helper uses Week 8's x120/y184/w1680/h140, 72px paper title, 52px label/body gap and citation y956. No workshop exercises, ClassPoint prompts, grading or deadlines were added.
+
+Prepared isolated checkout: `tmp/weeks09-13-standard-20261022/week10/worktree`, detached head `9336ded93f9d2a154df51b4ae096e7c9ecebd082`. Read original-base/current/local B for every recorded file: all tracked current Week 10 files equal their original base, so Version B changes were applied without overwriting a competing newer Week 10 edit; new source images were copied byte-identically. Preserved published Weeks 1-8, remote registration and original worktree untouched. Reconciliation receipt: task-local `reconciliation.json`.
+
+Fresh pinned environment: Deckgen requirements Git commit `9990546c01865807e6aaac5aaa50977b4b6b916a` (v0.11.2 pin; metadata 0.1.0), Playwright 1.56.1 under `.venv`, preinstalled Chromium. No shared/global renderer, pin or browser changes.
+
+Fresh passing receipts (private output-budget log IDs):
+- `.venv/bin/deckgen build --no-pdf week10`: `run-1792654563165-b686dbf2-b7d1-4311-9e12-e57f5ef5f683`, exit 0; 26-slide HTML, plain/ClassPoint PPTXs and native previews; zero collections; no missing assets/overflow/JS errors. No PDF generated; parent owns complete-course PDF/export integration.
+- Focused unittest discovery: 10 tests, `run-1792654700380-241926c9-75d3-4424-bc69-641a50a54823`, exit 0.
+- Full repository unittest discovery: 137 tests, `run-1792654700511-41910e87-4a6e-4db9-b786-228498541f09`, exit 0. Existing image-reader ResourceWarnings are non-failing, not patched here.
+
+Fresh browser QA: task-local `qa/browser-results.json`, 26 desktop slides, 26 genuinely fresh 390x844 mobile reading sections, horizontal bounds pass, zero page errors, real visible Deck view toggle. Ten desktop/mobile primary/licence anchor activations land on the intended intercepted destinations; this verifies interaction and URL, not publisher uptime. Full sheets for desktop/mobile/native were visually inspected, plus slide 7 full-size in all three modes. Body text, headings, labels and citations are separated. Figure is an explanatory four-phase category map, not a chart with numerical axes; small raster activity labels are supplemented by visible prose and a clickable full article/image. Only the established bottom-aligned display title/activity heading line boxes exceed scrollHeight; visually inspected glyphs and adjacent content do not collide. No body overflow exemptions.
+
+Both exported PowerPoints: 26 slides, every native notes frame exactly matches final source; Markdown companion generated from the same notes and covered by tests. `qa/native-results.json` retains receipts. No classroom Office rendering or live facilitation test is claimed.
+
+Sources: targeted final publisher PDF recheck pp.4-7,13-16 and licence p.1; original Figure 5 p.16 visually inspected. Design Council retained official HTML and Verbeek retained primary extraction rechecked, not a fresh full-paper audit. Public GitHub draft sources, Cloudflare preview and downloadable artifacts are the actual review distribution, not local-only. Explicit CC BY 4.0 image licences cover these two reused images; preserve attribution and crop disclosure. Full papers stay private. Details and source pixels: `week10-references.md` and asset `PROVENANCE.md`.
+
+Open classroom decisions: date, facilitator coverage, ESFQ visit/placement and actual Canvas Prototype v1 instructions remain unconfirmed. No guest or staff acceptance inferred. No commit/push/PR/deployment/main release performed in this author pass; parent owns review/integration/GitHub and hosted verification.
+
+## Historical 25-slide receipts (superseded for current source count)
+
 Checked October 21, 2026 in `/home/venetanji/.openclaw/workspace-sd2112/week10-worktree`, branch `docs/week10-planning`, for draft PR #23. Initial worktree status was clean. This is an **uncommitted local draft**, not a PR update, deployment, accepted staff rota or confirmed school visit.
 
 ## Implemented artifacts
