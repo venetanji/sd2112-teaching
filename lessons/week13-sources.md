@@ -39,7 +39,9 @@ Local file: `references/onedrive-pptx/SD2112 - AI in Design - Week 13.pptx` in t
 
 Text and reference renders: `master.txt`, `week12-closing.txt`, `master-page21.png`, `week12-page60.png` in the QA directory.
 
-## Attributed reading links and claims
+## Historical access record / 21 October 2026
+
+The following records describe the earlier access attempt. The Verbeek access/read status is superseded by the dated 22 October retained-copy recheck below; it is not the current evidence-access claim.
 
 - Verbeek, P.-P. (2015). *Beyond interaction: a short introduction to mediation theory*. Interactions 22(3), 26-31. [DOI](https://doi.org/10.1145/2751314). DOI/title/year matched against ACM and University of Twente search records. Direct DOI fetch returned HTTP 406 in this pass; no new full-text read is claimed. Conceptual teaching is grounded in the inspected course mediation sources, not a newly asserted empirical finding. [Institutional author copy](https://ris.utwente.nl/ws/portalfiles/portal/6973415/p26-verbeek.pdf) is a lawful reading route, not claimed read here.
 - Lion, G. *Concept Formation in Computational Creativity*, chapter 2 literature review: [chapter](https://giovannilion.link/thesis/2-Litreview.html). Existing syllabus background for the course question, concepts and creativity. Resource link, not a newly verified empirical result. Direct endpoint check returned HTTP 200 and redirected to the canonical extensionless chapter route; the returned introduction was inspected, not the full chapter newly read.
@@ -48,3 +50,17 @@ Text and reference renders: `master.txt`, `week12-closing.txt`, `master-page21.p
 ## New authored material
 
 The campus route recommender is fictional and explicitly labelled, not student work, a real campus service or evaluated intervention. Its data-freshness/control suggestions are hypotheses to test, not guarantees. The native person/technology/world diagram and all critique prompts, evidence distinctions and closing statements are original teaching adaptations. No generated photographs, imported student examples, live timers or new external assets are required. The native diagram has editable text and an accessible mobile reading order.
+
+## Reconciliation and primary recheck / 22 October 2026
+
+Current source snapshot and distribution: this pass targets a public source repository and public Cloudflare branch preview after parent review; local build outputs are not a deployment. It is NOT a restricted-classroom-only reuse assessment. Main's approved Week 8 source is the geometry/teaching reference, not the historical active PR.
+
+Verbeek (2015), *Beyond Interaction*, DOI 10.1145/2751314: retained six-page institutional author copy at `tmp/paper-visual-revision-20261021/week11/sources/verbeek.pdf` (11,648,005 bytes). Full layout text rechecked on 22 October; no fresh publisher access or supplement review claimed. Public institutional route: https://ris.utwente.nl/ws/files/6973415/p26-verbeek.pdf . PDF positions 3-4 / printed pp. 28-29: extension/opposition/hybridity and situated relations; positions 5-6 / printed pp. 30-31: influence and ethics. PDF positions 4 and 6 were freshly rendered and visually inspected; capture/extraction receipts stay in task-local `week13/qa/`.
+
+The worked example adapts the essay's double-sided printer default (printed pp. 29 and 31). The question compares seeing a technology as a neutral instrument with seeing it as helping shape practice; the analysis is conceptual, not a randomized comparison. There is no participant sample, dependent measure, printing rate, causal estimate or validated safety outcome. This is stated on-screen before applying the lens to the fictional route recommender. The route diagram is original course illustration, not a canonical relation schema or research finding.
+
+Version B's editorial photograph by Vita Khorzhevska (printed p. 27) is NOT imported. It does not explain the argument or measurement and no licence/permission or supported exception for public-repository/Cloudflare redistribution has been established. Original asset and prior review remain untouched in the original worktree. Attribution/access would not itself establish permission. No third-party raster artwork, long quoted excerpt or full paper enters this revision: only a short attributed paraphrase, source link and original editable teaching illustration are distributed. The photograph remains an explicit rights gate for any later proposed reuse, not cleared by this task.
+
+Remote Version A's staff/student separation is authoritative for export construction: `finalize(S, ...)` receives only 33 main-route slides; four staff-only objects remain in their source list and companion record. Version B's shorter projected text, four signposts, detailed notes and self-contained reading intent survive without restoring its staff appendix to student exports.
+
+PR #3 audit disposition: broad course-question/mediation synthesis is already covered by this native recap. The unique old interactive course-map implementation stays archived because its old Week 8-10 mapping is not current and no additional interaction is needed. Fair/quiz timers, assumed teams/rounds/staff/prizes and old platform/toolchain remain archive-only in the parent-preserved `pr3-recovery.tar`; none is silently promoted to policy. Current curation connects to Week 11 and language/interface to Week 12, not the historical week labels.

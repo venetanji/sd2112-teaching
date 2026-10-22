@@ -1,8 +1,26 @@
+# SD2112 Week 13 - current reconciliation verification
+
+Fresh checks: 22 October 2026, prepared detached worktree at `0fd7d93`. Current review student export: **33 slides**, with **four staff-only source objects excluded** (37 authored objects total). Earlier records below are historical and do not certify this revision.
+
+- Own `.venv`: requirements Git pin `v0.11.2`, resolved Deckgen commit `9990546c01865807e6aaac5aaa50977b4b6b916a`; Playwright 1.56.1 installed only under `.venv`. Existing `/ms-playwright/chromium-1246/chrome-linux64/chrome` used; no package patch or browser download.
+- Fresh `deckgen build --no-pdf week13` through the workspace output-budget wrapper: exit 0, 33 student HTML sections, 33 slides in both PPTX variants, no text overflow, no missing asset/still, zero ClassPoint activities. Full build receipt in task `week13/qa/build-receipt.txt`. Parent owns full-course PDF build; **no current PDF is generated or certified here**. PDF exclusion follows the same 33-slide `DECK`, but page count remains the parent's check.
+- Focused Week 13 suite: **18 tests passed**. Complete repository suite: **145 tests passed**. `git diff --check` passed. Geometry contracts cover header x120/y184/w1680/h140/72, label/body gap52, citations y956; no shrinking body copy to force fit.
+- Independent package audit: both native PPTX variants have **33 slides and 33 matching source notes**; companion has exact native transcripts. Four complete staff sections/notes retained only in `STAFF_SLIDES` and the companion; none in student slide XML or native note XML. Zero ClassPoint tag parts. Staff text absent from student HTML sections. Reports: `week13/qa/artifact-report.json`, `student-boundary-report.json`.
+- Browser checks: all **33 desktop slides at 1920x1080** and all **33 visible mobile handout sections in a fresh 390x844 mobile context** captured; zero browser exceptions, missing local assets, body-text overflows or horizontal/mobile bounds failures. All eight resource anchors activated on desktop and mobile with destination interception; this proves actual activation/target, not publisher availability. Same-tab mobile links were returned with Back before checking the visible Deck view control; **Deck view passed**. Report: `week13/qa/browser-report.json`.
+- Visually inspected all desktop, mobile and generator-native contact sheets, plus full-size conceptual recap/application captures. Titles, labels, body, citations and footer are separated; mobile question/example precedes argument/limit, and person/technology/world labels stay with their explanations. No new/source photo; the original diagram remains editable. Captures: `week13/qa/{desktop,mobile}/slide-*.png`, `{desktop,mobile,native}-sheet-*.jpg`; native originals remain `worktree/export/preview/week13/`.
+- Source check: retained six-page Verbeek institutional copy rechecked in full, fresh visual renders of PDF positions 4 and 6. The printer example is attributed conceptual analysis, not a participant trial. Editorial photograph remains unported because no supported public-repository/Cloudflare reuse basis is established. Prior local asset and source remain unchanged.
+
+## Unresolved Delivery Gates
+
+No classroom room/media/access/PowerPoint/add-in test, live quiz preflight, staffing/rotation confirmation or hosted deployment is claimed. Published project 40% / A0 / 3-5 minute video / one-page mediation brief and final quiz20% / whole-course MC / last portion remain intact. Exact timetable remains conditional `180 - Q - A - 15`; no new activities, assessment rules, deadlines or class minutes. User-facing preview publication, full 13-week integration/PDF verification, commits/pushes and PR handling remain with the parent.
+
+## Historical Evidence / Retained Without Re-certification
+
 # SD2112 Week 13 - verification record
 
-## Current review-fix verification: 21 October 2026
+## Historical review-fix verification: 21 October 2026
 
-The current export has **28 slides**. The four staff-only readiness/provenance sections are retained in `week13-notes.md` and separate source objects, never included in the exported deck. The old 32-slide output below is historical, not the current student artifact. Student-facing production disclaimers were replaced with useful actions.
+That reviewed export had **28 slides**. The four staff-only readiness/provenance sections are retained in `week13-notes.md` and separate source objects, never included in the exported deck. The old 32-slide output below is historical, not the current student artifact. Student-facing production disclaimers were replaced with useful actions.
 
 - New regression failed against the previous source before the fix. Full repository suite now passes: **114 tests** (`python -m unittest discover -s tests`). Existing Deckgen image ResourceWarnings remain; they are not new failures.
 - `deckgen build week13 --no-pdf` passed with pinned Deckgen v0.11.2 (`9990546c01865807e6aaac5aaa50977b4b6b916a`). HTML, both PPTX variants, native previews and companion documents were generated; no text-overflow failure.

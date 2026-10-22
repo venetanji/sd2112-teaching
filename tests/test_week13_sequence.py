@@ -26,7 +26,7 @@ class Week13Tests(unittest.TestCase):
         return matches[0]
 
     def test_student_exports_exclude_staff_readiness_material(self):
-        self.assertEqual(len(self.deck['slides']), 28)
+        self.assertEqual(len(self.deck['slides']), 33)
         exported = ' '.join(text(s) for s in self.deck['slides'])
         self.assertNotIn('INSTRUCTOR REVIEW ONLY', exported)
         for phrase in ('Reconcile the published assessment', 'READINESS GATE',
@@ -35,7 +35,7 @@ class Week13Tests(unittest.TestCase):
             self.assertNotIn(phrase, exported)
 
     def test_actual_route_and_instructor_appendix(self):
-        self.assertEqual((len(self.slides), self.main), (28, 28))
+        self.assertEqual((len(self.slides), self.main), (33, 33))
         self.assertEqual(len(self.staff), 4)
         for s in self.staff:
             self.assertIn('INSTRUCTOR REVIEW ONLY', text(s))
@@ -144,6 +144,43 @@ class Week13Tests(unittest.TestCase):
         self.assertIn('https://doi.org/10.1145/2751314', urls)
         self.assertTrue(any('/syllabus/' in u for u in urls))
 
+    def test_conceptual_reading_is_self_contained_not_an_experiment(self):
+        slide = self.slide('Products shape how we see and act.')
+        visible = text(slide)
+        for phrase in ('CONCEPTUAL ESSAY', 'QUESTION', 'EXAMPLE / ADAPTED FROM THE ESSAY',
+                       'printer defaults to double-sided', 'ARGUMENT / ANALYSIS',
+                       'No printing rate or safety result is measured'):
+            self.assertIn(phrase, visible)
+        self.assertLess(visible.index('EXAMPLE'), visible.index('ARGUMENT / ANALYSIS'))
+        self.assertIn('not a participant study', slide.notes)
+        self.assertIn('printed pp. 29 and 31', slide.notes)
+        self.assertFalse(any(getattr(e, 'src', None) for e in slide.els if not getattr(e, 'name', '').startswith('chrome-')))
+        self.assertLess(self.slides.index(slide), self.slides.index(self.slide('A recommendation rearranges the choice.')))
+
+    def test_conceptual_common_grid(self):
+        for title in ('Products shape how we see and act.', 'A recommendation rearranges the choice.'):
+            slide = self.slide(title)
+            heading = next(e for e in slide.els if e.name == 'paper-title')
+            self.assertEqual((heading.x, heading.y, heading.w, heading.h), (120, 184, 1680, 140))
+            self.assertEqual(heading.paras[0].runs[0].size, 72)
+            citation = next(e for e in slide.els if e.name == 'paper-citation')
+            self.assertEqual((citation.x, citation.y, citation.w), (120, 956, 1680))
+        slide = self.slide('Products shape how we see and act.')
+        for name in ('concept-question', 'concept-example', 'concept-argument', 'concept-limit'):
+            label = next(e for e in slide.els if e.name == name+'-label')
+            body = next(e for e in slide.els if e.name == name+'-body')
+            self.assertEqual(body.y-label.y, 52)
+
+    def test_topic_sections_and_reduced_projected_copy(self):
+        titles = ('Explain the choice.', 'Notice. Then ask.', 'Making. Using. Living.',
+                  'Who chooses? Who answers?')
+        indices = [self.slides.index(self.slide(t)) for t in titles]
+        self.assertEqual(indices, sorted(indices))
+        for title in ('Can I understand the product?', 'Two routes. Different commitments.',
+                      'Can the person act otherwise?', 'Follow the error through the system.',
+                      'A prompt is a design decision.'):
+            self.assertLessEqual(len(text(self.slide(title)).split()), 65, title)
+
     def test_notes_companion_preserves_exact_native_transcript(self):
         notes = (ROOT / 'lessons/week13-notes.md').read_text()
         for i, slide in enumerate(self.slides, 1):
@@ -168,7 +205,7 @@ class Week13Tests(unittest.TestCase):
         self.assertIn('week13', config['course']['decks'])
         self.assertFalse(any('week13' in n['href'] for n in config['nav']))
         plan = (ROOT / 'lessons/week13-lesson-plan.md').read_text()
-        for phrase in ('28 main-route', 'four staff-only', '180 - Q - A - 15', 'Unresolved', 'formative'):
+        for phrase in ('33 main-route', 'Four staff-only', '180 - Q - A - 15', 'Unresolved', 'formative'):
             self.assertIn(phrase, plan)
         for name in ('week13-notes.md', 'week13-sources.md', 'week13-verification.md'):
             self.assertTrue((ROOT / 'lessons' / name).exists())

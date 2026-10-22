@@ -5,17 +5,18 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from deckgen import attach_reports, INK, PAPER
-from deckgen.layouts import title, content, cards, statement, end, finalize, T, Rect
+from deckgen.layouts import title, content, cards, statement, section, end, finalize, T, Rect, _slide, eyebrow
 from course import SITE, footer
 
 SYLLABUS = 'https://github.com/venetanji/sd2112-teaching/blob/7596f50f620d5000ad32445ab3851aec29dc67da/syllabus/SD2112-syllabus-2026.md'
 VERBEEK = 'https://doi.org/10.1145/2751314'
 THESIS = 'https://giovannilion.link/thesis/2-Litreview.html'
+VERBEEK_COPY = 'https://ris.utwente.nl/ws/files/6973415/p26-verbeek.pdf'
 S = []
 
 S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 13',
     'Your product.\nYour argument.', 'Showcase / evidence / responsibility',
-    notes='Showcase-first review draft, not a confirmed operational schedule. Main teaching route ends at slide 28; staff readiness material lives only in the companion instructor notes, outside the exported deck. The published syllabus still assigns a 20% final quiz in Week 13 after the fair. Its placement and rules require explicit reconciliation; this deck neither cancels it nor supplies a quiz. No assessment questions, answers or student work are included. See the companion notes and readiness gates.'))
+    notes='Showcase-first review draft, not a confirmed operational schedule. Main teaching route ends at slide 33; staff readiness material lives only in the companion instructor notes, outside the exported deck. The published syllabus still assigns a 20% final quiz in Week 13 after the fair. Its placement and rules require explicit reconciliation; this deck neither cancels it nor supplies a quiz. No assessment questions, answers or student work are included. See the companion notes and readiness gates.'))
 S.append(content('SHOWCASE / THE ROUTE', 'Make the decision visible.', [
     'Present the product: who it is for, what the AI does, and why it matters.',
     'Encounter other work: ask about evidence, consequences and control.',
@@ -23,9 +24,9 @@ S.append(content('SHOWCASE / THE ROUTE', 'Make the decision visible.', [
     'Follow the teaching team\'s confirmed presenting and visiting arrangements.',
 ], body_size=36, notes='Do not infer that this is the entire three-hour schedule. Announce only separately confirmed movements, access/support routes and assessment arrangements. The separate instructor record names the decisions needed before classroom use.'))
 S.append(cards('EXISTING GROUP PROJECT / 40% OF THE COURSE', 'Three ways to explain one product.', [
-    ('A0 POSTER', 'Research + concept.', 'Who is it for? What problem and evidence shaped the product? Make the AI action legible.'),
-    ('3-5 MINUTE VIDEO', 'A moment of use.', 'Show the person, the interaction and the implications. Label simulation rather than implying a tested working model.'),
-    ('ONE-PAGE BRIEF', 'The mediation.', 'Name the relation, necessary data, bias and guardrails. Connect the ethical argument to the actual design.'),
+    ('A0 POSTER', 'Research + concept.', 'Person + problem + evidence. Show the AI action.'),
+    ('3-5 MINUTE VIDEO', 'A moment of use.', 'Show a moment of use. Label simulated behaviour.'),
+    ('ONE-PAGE BRIEF', 'The mediation.', 'Relation + data + bias + guardrails. Explain your design choice.'),
 ], text_size=30, notes='Existing syllabus deliverables only. This slide does not create another submission, deadline, printing route or presentation duration. The video length is not a speaking allocation. Confirm actual Canvas instructions separately.'))
 S.append(content('EXISTING PROJECT RUBRIC / NOT COURSE WEIGHTS', 'Polish is only part of the argument.', [
     '30% research and contextual analysis: credible sources, situated claims.',
@@ -34,45 +35,49 @@ S.append(content('EXISTING PROJECT RUBRIC / NOT COURSE WEIGHTS', 'Polish is only
     '10% video presentation; 10% team collaboration and process documentation.',
     '[Read the syllabus and group-project rubric](' + SYLLABUS + ')',
 ], body_size=33, notes='These five percentages sum to 100% WITHIN the group project, which is 40% of the course. They are not additional course weights. Do not invent peer scores, prizes, extra criteria or assessment procedures. Instructor grading uses the approved rubric and confirmed procedure; the peer discussion below is formative unless separately approved.'))
+S.append(section('01 / SHOWCASE', 'Explain the choice.', 'Person / AI action / evidence / consequence', bg=INK,
+    notes='Chapter marker within the existing showcase route, not an additional activity or time allocation. The opening deliverables and rubric remain unchanged. Now turn from what is submitted to how another person can understand the design. No new speaking duration, visitor quota, written checklist or submission is introduced.'))
 S.append(content('VISITOR LENS / FIVE QUESTIONS', 'Can I understand the product?', [
-    'WHO: which person, need and situation does it address?',
-    'AI ACTION: what does it recognise, recommend, adapt or generate during use?',
-    'EVIDENCE: what informed the choice, and where does that evidence stop?',
-    'CONSEQUENCE: whose data, opportunity or interpretation might change?',
-    'AGENCY: what can the person question, refuse, correct or undo?',
+    'WHO: person, need, situation.',
+    'AI ACTION: what happens during use?',
+    'EVIDENCE: what supports the choice? Where does it stop?',
+    'CONSEQUENCE: whose experience changes?',
+    'AGENCY: question, refuse, correct, undo.',
 ], body_size=34, notes='Use these as a conversation guide, not five compulsory written answers or a new assessment checklist. A nonconversational recommender still makes a consequential selection. Visitors can engage while seated; do not make physical movement the condition for participation.'))
 S.append(cards('PRESENTER / FROM CLAIM TO CONSEQUENCE', 'Tell the story of one decision.', [
-    ('01 / SITUATION', 'A person needs ...', 'Describe the moment and the alternative without this AI feature. Why is a model appropriate?'),
-    ('02 / AI ACTION', 'The system proposes ...', 'Show the input and output. Separate what works, what is simulated and what is only proposed.'),
-    ('03 / RESPONSIBILITY', 'The person can ...', 'Explain the benefit, one credible failure and the control or recovery route you designed.'),
+    ('01 / SITUATION', 'A person needs ...', 'Describe the moment. Why use a model?'),
+    ('02 / AI ACTION', 'The system proposes ...', 'Input -> output. Working, simulated or proposed?'),
+    ('03 / RESPONSIBILITY', 'The person can ...', 'Benefit -> failure -> control or recovery.'),
 ], text_size=30, notes='An optional speaking scaffold, not a new timed pitch or required script. Ask for a concrete moment of use rather than a general claim that the product is intelligent or ethical. A team may honestly show a concept and limits; do not imply evaluated performance from a polished mockup.'))
 S.append(content('RESEARCH / A BOUNDED CLAIM', 'A citation is not a guarantee.', [
-    'Name the people, system, task, comparison and outcome actually studied.',
-    'Separate the finding from your interpretation and your product hypothesis.',
-    'Explain one mismatch: population, context, model, outcome or time.',
-    'A small classroom demonstration is not evidence of long-term benefit or safety.',
+    'Who and what were studied? Compared with what?',
+    'Finding is not interpretation or product validation.',
+    'Name one gap: people, context, model, outcome or time.',
+    'A classroom demo cannot establish long-term benefit or safety.',
 ], body_size=36, notes='Connect to the Week 8 evidence cards. Do not require new papers or another upload at the fair. If only an abstract was read, say so; do not invent methods or quotations. A study can inform a design choice without validating the new product. Ask: what result would make you revise your claim?'))
 S.append(content('ETHICAL ARGUMENT / NOT A LIST OF VALUES', 'Show the trade-off you chose.', [
-    'Claim: this feature helps [person] in [situation] by [mechanism].',
-    'Tension: it may benefit one person while burdening another. Who is missing?',
-    'Decision: we changed [data / model / interface / policy] because [reason].',
-    'Boundary: [risk] remains. We would check [outcome] and revise [decision].',
+    'CLAIM: helps [person] by [mechanism].',
+    'TENSION: who benefits, who carries the cost?',
+    'DECISION: changed [design choice] because [reason].',
+    'BOUNDARY: [risk] remains. Check [outcome].',
 ], body_size=35, notes='Instructor-authored scaffold applying mediation and the existing ethical/sociological criterion, not a new compulsory section or submission. Ask whether an objection changed the design. Privacy, convenience and inclusion can conflict; naming a value does not resolve that conflict. Avoid demanding personal sensitive disclosures as evidence.'))
 S.append(cards('ILLUSTRATIVE CONCEPT / NOT A VALIDATED PRODUCT', 'A campus route recommender.', [
-    ('PROMISE', 'A suitable route.', 'Suggest a route from a person\'s stated access needs. Do not equate the shortest route with the best route.'),
-    ('FAILURE', 'An unavailable lift.', 'Outdated route data could make the recommendation unusable. Do not imply a live access audit exists.'),
-    ('RESPONSE TO TEST', 'Show uncertainty.', 'Offer alternatives, show data freshness and allow a correction. A map or human support route must remain possible.'),
+    ('PROMISE', 'A suitable route.', 'Stated access needs matter. Shortest is not always suitable.'),
+    ('FAILURE', 'An unavailable lift.', 'Outdated data could make the route unusable.'),
+    ('RESPONSE TO TEST', 'Show uncertainty.', 'Alternatives + freshness + correction. Keep map or human support.'),
 ], text_size=29, notes='Fictional teaching example, not a campus service, empirical result or validated safeguard. Do not collect health records or identify students with access needs. A freshness label can still be wrong; test whether people notice and can recover, and how a correction reaches the responsible operator. No guarantee of accessible routing is made.'))
+S.append(section('02 / CRITIQUE', 'Notice. Then ask.', 'A specific choice / an interpretation / a question', bg='#246E70',
+    notes='A transition inside the existing showcase budget. This marks the switch from presenting a product to discussing a consequential choice. Peer discussion stays formative: no new scores, prizes, quotas, public feedback collection or assessed log. Visitors can participate without circulating physically.'))
 S.append(content('VISITOR / FORMATIVE FEEDBACK', 'Notice. Interpret. Ask.', [
-    'NOTICE a specific choice: "You show uncertainty before the person accepts a route."',
-    'INTERPRET its consequence: "That may help someone compare, if the data is current."',
-    'ASK a consequential question: "What happens if the lift status is wrong?"',
-    'Discuss the design, not the person. Invite a response; do not invent a score.',
+    'NOTICE: "Uncertainty appears before acceptance."',
+    'INTERPRET: "That may help comparison if data is current."',
+    'ASK: "What if the lift status is wrong?"',
+    'Discuss the design; do not invent a score.',
 ], body_size=34, notes='These are instructor-authored example comments about the fictional route concept. Formative peer discussion unless an approved rule says otherwise. No visit quota, compulsory comment collection, bonus mark or peer prize. Do not promise anonymity or open a public board. Consent and authorized handling are needed before recording/sharing identifiable feedback.'))
 S.append(cards('PRESENTER / RECEIVE CRITIQUE', 'Listen for the decision behind the comment.', [
-    ('CLARIFY', 'What did they encounter?', 'Ask which moment, claim or feature prompted the response. Do not treat every preference as a fact.'),
-    ('COMPARE', 'What supports it?', 'Distinguish an observed difficulty, an inference and a suggestion. Check whose situation is represented.'),
-    ('DECIDE', 'Keep, change or investigate.', 'Explain your reason. A useful response may narrow a claim rather than add another feature.'),
+    ('CLARIFY', 'What did they encounter?', 'Which moment prompted the response?'),
+    ('COMPARE', 'What supports it?', 'Observation, inference or suggestion? Whose situation?'),
+    ('DECIDE', 'Keep, change or investigate.', 'Explain why. Narrowing a claim can beat adding features.'),
 ], text_size=30, notes='Optional team working notes, not a new feedback log submission or post-fair revision deadline. Keep private project material in the existing authorized workspace. Feedback is evidence about this encounter, not a representative user study.'))
 S.append(content('SHOWCASE / MANUAL HOLDING VIEW', 'Present. Visit. Listen.', [
     'Presenters: explain one person, one AI action and one consequence.',
@@ -81,30 +86,32 @@ S.append(content('SHOWCASE / MANUAL HOLDING VIEW', 'Present. Visit. Listen.', [
     'Listen for the teaching team\'s cue before changing roles.',
 ], body_size=37, notes='This is not a live timer. Reusable static holding slide, manually revisited as needed. It does not prescribe rounds, staffing or visit counts. Use only with a separately confirmed fair protocol that gives equitable presenting/visiting opportunities. Announce actual support and transition arrangements; do not imply an automatic clock, alarm or scheduled advance.'))
 S.append(content('DEBRIEF / FROM ENCOUNTER TO INSIGHT', 'What did someone else make visible?', [
-    'Which part of the product did a visitor understand differently from your intention?',
-    'Was the difficulty in the claim, the model, the evidence or the interaction?',
-    'What would you keep, change or investigate, and why?',
-    'Discuss without naming classmates or exposing their private project material.',
+    'What did a visitor understand differently?',
+    'Claim, model, evidence or interaction?',
+    'Keep, change or investigate? Why?',
+    'No names or private project material.',
 ], body_size=36, notes='Short spoken debrief, not a new graded reflection or collected answer. Invite a volunteer observation and a contrasting interpretation. Do not announce an unapproved resubmission opportunity or deadline. Bridge into the synthesis: a designer is accountable for interpretation as well as intention.'))
 S.append(statement('Pause.\nReturn on cue.', eyebrow_text='MANUAL BREAK HOLD / FOLLOW THE INSTRUCTOR', size=118,
     notes='Static break holding slide. The planning budget provisionally holds a fifteen-minute break, but this is not a universal schedule claim. Instructor announces the actual return cue after confirming the session plan and access needs. No countdown or clock time is embedded.'))
+S.append(section('03 / SYNTHESIS', 'Making. Using. Living.', 'Rules and examples / mediation / responsibility', bg=INK,
+    notes='Chapter marker for the conceptual close, not a new lecture allocation or a restriction of whole-course assessment scope. Connect the visitor encounter to the course question. The instructor selects the route within confirmed showcase and any retained assessment time; this deck still does not set operational logistics.'))
 S.append(statement('Can a machine\noriginate\na design?', eyebrow_text='THE COURSE QUESTION / DEFEND A POSITION', bg=PAPER, size=111,
     notes='Return to the syllabus opening question. Do not force a yes/no verdict or equate fluent output with intention. Ask what originate means: producing an artifact, framing a problem, judging value, assuming responsibility? Synthesis is a conceptual connection, not a restricted exam scope.'))
 S.append(cards('MACHINE A / MACHINE B / A+B', 'Two routes. Different commitments.', [
-    ('RULES / MACHINE A', 'Write the procedure.', 'LeWitt\'s points or a coded mark: instructions set what is allowed. Randomness can still operate inside the rule.'),
-    ('EXAMPLES / MACHINE B', 'Learn a pattern.', 'An image or language model generalizes from training. A plausible result is not a guarantee of truth or exact constraint satisfaction.'),
-    ('COMBINE / A+B', 'Allocate the choices.', 'A model writes code; rules execute it. A coded boundary can constrain generated material. Check both parts.'),
+    ('RULES / MACHINE A', 'Write the procedure.', 'Instructions set possibilities. Randomness can work inside rules.'),
+    ('EXAMPLES / MACHINE B', 'Learn a pattern.', 'Learn from training examples. Plausible does not mean true.'),
+    ('COMBINE / A+B', 'Allocate the choices.', 'Model writes code; rules execute. Check both.'),
 ], text_size=29, notes='Reuses the established course distinction, not a claim that every system fits a pure category. Rules can be complex and opaque to a user; learned systems can be repeatable and constrained. Do not repeat the archive\'s incorrect historical implication that 1975 prototype research caused the 1958 perceptron. Examples are grounded in Weeks 2-6 sources.'))
 S.append(cards('PROCESS VERSUS PRODUCT', 'Where is the model doing the work?', [
-    ('AI AS A DESIGN TOOL', 'Helps you make.', 'Generate a poster image, draft code or rearrange sound. You select, revise, verify and disclose the process.'),
-    ('AI IN THE PRODUCT', 'Acts during use.', 'Recommend a route or adapt a feed for someone. The data, choices and consequences recur beyond the studio.'),
+    ('AI AS A DESIGN TOOL', 'Helps you make.', 'Make images, code or sound. Select, verify, disclose.'),
+    ('AI IN THE PRODUCT', 'Acts during use.', 'Recommend a route or adapt a feed. Consequences recur in use.'),
 ], text_size=34, notes='Both can occur in one project; one does not prove the other. An AI-rendered mockup alone does not establish an AI-incorporating product. A product might combine an explicit rule with a learned model. Use the team\'s stated AI action as the anchor rather than assuming an implementation architecture.'))
 
 
 def mediation_decision():
     """Native text/shape figure keeps all labels readable in mobile handout mode."""
-    slide = content('MEDIATION / ORIGINAL TEACHING DIAGRAM', 'A recommendation rearranges the choice.', [],
-        bg=PAPER, title_size=67,
+    slide = concept_frame('A recommendation rearranges the choice.',
+        'MEDIATION / ORIGINAL TEACHING DIAGRAM',
         notes='Original course application of Ihde/Verbeek, not their canonical four-relation diagram or a causal finding. The fictional route example shows a situated relation, not merely data flow: the person encounters the place through selected alternatives. The interface can make uncertainty and alternatives salient or hide them. All figure labels are native editable text, also included in mobile reading order. Source: Verbeek (2015), Beyond Interaction; Week 5 mediation bridge and Week 8 product analysis.')
     for x, label, heading, body in [
         (120, 'PERSON', 'A need + a choice', 'A person wants to reach a place.\nNeeds and priorities differ.'),
@@ -117,46 +124,100 @@ def mediation_decision():
                       T(x+25, 610, 470, 150, body, 'body', 31, INK, lh=1.3)]
     slide.els += [T(120, 845, 1680, 100,
         'Ask: what becomes easier to notice or do, and what becomes harder?', 'xbold', 37, INK)]
+    slide.els.append(T(120, 956, 1680, 38,
+        '[Verbeek (2015)](' + VERBEEK + ') / original route illustration, not measured data.',
+        'mono', 21, INK, lh=1.1, name='paper-citation'))
     return slide
 
 
+def concept_frame(heading, phase, notes):
+    """Week-owned Week 8 grid for the short conceptual recap."""
+    slide = _slide('#FFFFFF', notes, title=heading)
+    slide.els += [eyebrow(120, 96, phase, '#246E70'),
+                  T(120, 184, 1680, 140, heading, 'xbold', 72, INK,
+                    lh=.95, spc=-.03, name='paper-title')]
+    return slide
+
+
+def concept_block(slide, x, y, label, value, height, name):
+    slide.els += [T(x, y, 780, 34, label, 'mono', 23, '#246E70', name=name+'-label'),
+                  T(x, y+52, 780, height, value, 'body', 34, INK,
+                    lh=1.2, name=name+'-body')]
+
+
+def mediation_reading():
+    slide = concept_frame('Products shape how we see and act.',
+        'MEDIATION RECAP / VERBEEK / 2015 / CONCEPTUAL ESSAY',
+        'Verbeek (2015), Beyond Interaction, Interactions 22(3), 26-31, DOI 10.1145/2751314. '
+        'The retained six-page institutional author copy was rechecked in full on 22 October 2026; '
+        'PDF positions 3-4 / printed pp. 28-29 compare extension, opposition and hybridity, '
+        'and positions 5-6 / printed pp. 30-31 address influence and design ethics. '
+        'This is a conceptual essay, not a participant study: there is no sample size, '
+        'comparison group, measured effect or validated safety recipe. The double-sided '
+        'printer is adapted from the author example on printed pp. 29 and 31; no observed '
+        'printing rate is claimed. The argument is that a default helps shape practice, '
+        'not that it determines all behaviour or removes human freedom. '
+        'Explain the question and worked example before the interpretation. The next slide '
+        'applies this lens to the fictional route concept, not to a newly tested product. '
+        'This replaces the old compressed reading summary within the existing short synthesis; '
+        'no pre-reading, extra lecture minutes or student experiment. No source artwork is reused.')
+    concept_block(slide, 120, 348, 'QUESTION / TWO WAYS TO SEE A TOOL',
+        'Does a printer merely carry out a choice, or also help shape that choice?', 210, 'concept-question')
+    concept_block(slide, 1020, 348, 'EXAMPLE / ADAPTED FROM THE ESSAY',
+        'A printer defaults to double-sided. A person can change it, but the starting choice is already set.',
+        210, 'concept-example')
+    concept_block(slide, 120, 676, 'ARGUMENT / ANALYSIS, NOT A MEASURED EFFECT',
+        'Design helps shape what people notice and do. Verbeek compares tool, opposition and mediation views.',
+        190, 'concept-argument')
+    concept_block(slide, 1020, 676, 'LIMIT / FOR YOUR DESIGN',
+        'No printing rate or safety result is measured. Ask what your design makes easy, then test that claim.',
+        190, 'concept-limit')
+    slide.els.append(T(120, 956, 1680, 38,
+        '[Verbeek, Beyond Interaction (2015)](' + VERBEEK_COPY + ') / pp. 28-31 / conceptual analysis.',
+        'mono', 21, INK, lh=1.1, name='paper-citation'))
+    return slide
+
+
+S.append(mediation_reading())
 S.append(mediation_decision())
 S.append(cards('AGENCY / A RELATION YOU DESIGN', 'Can the person act otherwise?', [
-    ('BEFORE', 'Understand the boundary.', 'What is this feature for? What does it not know? Avoid making a stronger promise than the evidence supports.'),
-    ('DURING', 'Compare and refuse.', 'Can the person inspect alternatives, correct an input or reject a suggestion before it matters?'),
-    ('AFTER', 'Recover and contest.', 'Who can repair an error? Can the person exit or reach a responsible human without losing the service?'),
+    ('BEFORE', 'Understand the boundary.', 'What is it for? What does it not know?'),
+    ('DURING', 'Compare and refuse.', 'Compare, correct or reject before it matters.'),
+    ('AFTER', 'Recover and contest.', 'Repair, exit or reach a responsible human.'),
 ], text_size=29, notes='Design questions, not universal proven safeguards. A nominal override is weak if alternatives are unusable or burdensome. Consider people affected by the choice who never use the interface. Saying human-in-the-loop does not establish who can intervene, when or with what authority.'))
 S.append(cards('DATA / BIAS / CONSEQUENCES', 'Follow the error through the system.', [
-    ('INPUT + LABELS', 'Who is represented?', 'What was collected or omitted? Who defined the categories? Collect only what the task needs.'),
-    ('MODEL + OBJECTIVE', 'What counts as success?', 'Accuracy, engagement and equitable access are not the same target. Compare errors that matter in this context.'),
-    ('INTERACTION', 'Who bears the cost?', 'Repeated choices can shape future data. Ask whose mistakes are visible and who can correct them.'),
+    ('INPUT + LABELS', 'Who is represented?', 'Collected, omitted, labelled by whom?'),
+    ('MODEL + OBJECTIVE', 'What counts as success?', 'Accuracy, engagement and equitable access can diverge.'),
+    ('INTERACTION', 'Who bears the cost?', 'Whose errors are visible? Who can correct them?'),
 ], text_size=29, notes='Synthesis of the syllabus data/bias strand and historical Master pp. 27, 31-34. These are possible mechanisms, not a claim that every recommender inevitably creates polarization or every dataset has the same bias. Pseudonymization does not automatically remove reidentification risk. A broad accuracy average can conceal unequal consequences; avoid inventing demographic results.'))
 S.append(cards('EVIDENCE / THREE DIFFERENT CLAIMS', 'Looks good. Works here. Helps over time.', [
-    ('APPEARANCE', 'A convincing demonstration.', 'Shows a possible interaction. It does not establish that the underlying AI works reliably.'),
-    ('PERFORMANCE', 'A defined task result.', 'Requires a test, comparison and conditions. A good score may not measure the benefit people need.'),
-    ('IMPACT', 'A change in someone\'s life.', 'Needs relevant outcomes, people and time. Do not infer long-term benefit from immediate liking.'),
+    ('APPEARANCE', 'A convincing demonstration.', 'A possible interaction, not proof of reliable AI.'),
+    ('PERFORMANCE', 'A defined task result.', 'Task + comparison + conditions. Score is not benefit.'),
+    ('IMPACT', 'A change in someone\'s life.', 'Relevant outcomes, people, time. Liking is not lasting benefit.'),
 ], text_size=30, notes='Instructor-authored evidence ladder, not a formal universal hierarchy: qualitative accounts can reveal meaningful consequences too. Reconnect to Week 8\'s distinction between response ratings, source choice and outcomes without repeating numerical findings or implying later classes were already taught. Ask which claim the poster actually makes.'))
+S.append(section('04 / RESPONSIBILITY', 'Who chooses? Who answers?', 'Curation / language / authorship / accountability', bg='#246E70',
+    notes='Final thematic transition inside the existing conceptual synthesis. Distinguish the model output from the choices that frame, select and release it. Do not turn this chapter into a new production task, legal ruling, monitoring report or extra assessment. The closing position remains open to reasoned disagreement.'))
 S.append(cards('CURATION / DESIGNER RESPONSIBILITY', 'Selection is a design act.', [
-    ('BEFORE GENERATION', 'Frame the possible.', 'Choose the question, sources, examples and constraints. What does the dataset make likely or leave out?'),
-    ('AFTER GENERATION', 'Judge what ships.', 'Select, reject, edit and verify. A fluent output cannot take responsibility for its sources or consequences.'),
-    ('AFTER RELEASE', 'Attend to effects.', 'Specify limits, monitoring and correction. Name who can stop or change a harmful behaviour.'),
-], text_size=30, notes='Connect the historical Week 12 curation takeaways to process documentation and product accountability. These are responsibilities to design for, not a new required production deployment or assessed monitoring report. Do not turn curation into a claim that selecting any generated output establishes legal authorship or ownership.'))
+    ('BEFORE GENERATION', 'Frame the possible.', 'Question, sources, examples, constraints. What is excluded?'),
+    ('AFTER GENERATION', 'Judge what ships.', 'Select, reject, edit, verify. Output cannot answer for consequences.'),
+    ('AFTER RELEASE', 'Attend to effects.', 'Who monitors, corrects or stops harmful behaviour?'),
+], text_size=30, notes='Connect the Week 11 curation discussion to process documentation and product accountability. These are responsibilities to design for, not a new required production deployment or assessed monitoring report. Do not turn curation into a claim that selecting any generated output establishes legal authorship or ownership.'))
 S.append(content('LANGUAGE AS INTERFACE / NOT MAGIC', 'A prompt is a design decision.', [
-    'Language can express goals and open possibilities without specifying every step.',
-    'A model may infer a different intention. Check the result against the actual task.',
-    'An agent adds tools and permissions: decide what it may do, and where approval belongs.',
-    'Conversational fluency is not proof of understanding, competence or care.',
-], body_size=36, notes='Synthesis of Week 4 harnesses and the historical Week 12 language-as-interface theme. Do not call natural language the ultimate interface for every user or task. Form controls, direct manipulation, code and speech can coexist. Do not equate generated explanations with faithful access to internal reasoning.'))
+    'Language expresses goals without specifying every step.',
+    'Inferred intent can differ. Check the actual result.',
+    'Agents add tools: set permissions and approval points.',
+    'Fluency is not understanding, competence or care.',
+], body_size=36, notes='Synthesis of Week 4 harnesses and the Week 12 language-as-interface theme. Do not call natural language the ultimate interface for every user or task. Form controls, direct manipulation, code and speech can coexist. Do not equate generated explanations with faithful access to internal reasoning.'))
 S.append(content('AUTHORSHIP / OWNERSHIP / ACCOUNTABILITY', 'Keep the questions separate.', [
-    'Authorship: what did you frame, make, select and change?',
-    'Attribution: whose work, data and tools contributed, and how do you disclose that?',
-    'Ownership: which permissions and jurisdiction apply? Do not assume selection settles rights.',
-    'Accountability: who checks the claim and responds to consequences?',
+    'AUTHORSHIP: what did you frame, make or change?',
+    'ATTRIBUTION: whose work and tools contributed?',
+    'OWNERSHIP: which permissions and jurisdiction apply?',
+    'ACCOUNTABILITY: who checks and responds?',
 ], body_size=36, notes='Historical Week 12 pp. 64-66 and Master pp. 39-41/49-50 motivate the distinction. This slide gives no legal determination. The historical universal heading about AI patents/copyright is overbroad; authorship and rights depend on jurisdiction, subject matter and human contribution. No claim about a current case disposition or training legality is imported. Course policy still requires honest AI process disclosure and accurate sources.'))
 S.append(content('CLOSING DISCUSSION / NO NEW SUBMISSION', 'Defend your answer with a design choice.', [
-    'My answer to "can a machine originate a design?" depends on what I mean by ...',
-    'One experiment or product decision supports my position because ...',
-    'A serious objection is ... It would change my position if ...',
+    '"Originate" means ... My position is ...',
+    'A design choice supports it because ...',
+    'An objection is ... I would reconsider if ...',
     'The designer remains responsible for ...',
 ], body_size=37, notes='Spoken reflection or private thinking; no ClassPoint collection, new essay or extra mark. Invite different defensible positions, not the instructor\'s preferred answer. The concepts on these synthesis slides are not a restriction of the published whole-course assessment scope.'))
 S.append(content('RESOURCE SHELF / ATTRIBUTED LINKS', 'Return to the sources, not just the output.', [
