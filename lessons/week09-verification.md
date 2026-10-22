@@ -1,66 +1,65 @@
-# Week 9 local draft verification
+# Week 9 current verification / 22 October 2026
 
-Date: 21 October 2026. Branch: `docs/week09-planning`. Worktree: `/home/venetanji/.openclaw/workspace-sd2112/week09-worktree`. Initial `git status --short` was empty; existing lesson plan preserved as foundation and updated to the actual map. No commit, push, PR update, merge or deployment authorized/performed.
+Isolated prepared checkout: `/home/venetanji/.openclaw/workspace-sd2112/tmp/weeks09-13-standard-20261022/week09/worktree`, detached prepared head429ebcc. Uncommitted changes only. The original `week09-worktree` and every recorded source/asset hash were preserved. Prepared Week09 sources matched original baseaf4f0cd exactly before reconciliation; no newer remote Week09 choices were overwritten. Published main54f38c7/Weeks1-8 and registration remain untouched.
 
-## Source and scope
+## Current teaching and evidence
 
-- **31 slides**: 28 main-route slides + 3 untimed reference-shelf slides. Five linked primary references; detailed notes on all 31 slides; native editable diagram, interaction matrix and deterministic ranking table/results. No generated/photo assets or borrowed screenshots needed.
-- Main source `deck/week09.py`, reproducible toy `deck/week09_demo.py`, tests `tests/test_week09_sequence.py`, actual lesson plan, evidence/access/version ledger, notes companion and this record.
-- Only `week09` appended to the existing `deckgen.toml` build list. No site landing/nav, workflows, syllabus, shared generator, requirement pin or other week edited.
-- Exact allocations retained: 75-90 break (15 min), 90-105 demo (15 min), 105-135 research (30 min), 135-165 redesign/test (30 min = 20+10), 165-180 debrief (15 min). No new grade, collection/submission, deadline or account; no private/student data. No ClassPoint activities are added. Report hook is retained; no synthetic live report mappings.
+43 slides =40 main +3 non-assigned reference;180minutes;0ClassPoint collections. All protected blocks and existing concept-board/bias-register/Canvas uncertainty preserved. Five walkthroughs replace compressed abstracts, not additional slides: engineering task/evaluation(R1), historical classifier audit/error denominator(R4), documentation argument/development(R5), randomized feed assignment/following(R2), controlled0-100% dot estimates/baseline errors(R3). Examples distinguish instructor illustrations from the source-adapted53/73/40 calculation. Result slides explain charts, limits and proposed design questions. Common paper titles x120/y184/w1680/h140,size72; label/body gap52; citationy956 with6pxfooter clearance.
 
-## Build environment and completed checks
+This author performed targeted retained-primary methods/results rechecks, not a fresh full-paper read. Details/version/access in evidence ledger and `deck/week09_studies.py`. Source pages/figures visually inspected; full papers remain outside Git. Current11asset provenance records preserve9inherited crops plus2authentic condition assemblies. Eight displayed image elements on6explanation slides. R2assemblies improve phone scale without redrawing data; old crops remain historical.
 
-Prepared worktree-local `.venv` from unchanged `requirements.txt` (`v0.11.2` Git pin resolves to `9990546c01865807e6aaac5aaa50977b4b6b916a`). Used `uv pip install --python .venv/bin/python --link-mode=copy -r requirements.txt` and Playwright 1.56.1 under `.venv/node_modules`. No global install, generator patch or browser download.
+## Fresh local checks
 
-Full target-week build command on the bound course node:
+Pinned own `.venv`: Deckgen requirements v0.11.2, Playwright1.56.1 in `.venv/node_modules`, existing executable Chromium override. Target `deckgen build --no-pdf week09` succeeds without overflow; fresh43-slide HTML, plain+ClassPoint PowerPoints, native previews and zero-entry activity manifest. No PDF or deployment is claimed. Full suite and focused test receipts, exact counts and current artifact hashes are in task-local `author-report.json`; source/companion/native notes, links, geometry, causal limits, arithmetic and report drift are checked.
 
-```sh
-export NODE_PATH="$PWD/.venv/node_modules"
-export CHROMIUM="$(printf '%s\n' /ms-playwright/chromium-*/chrome-linux*/chrome | head -n 1)"
-test -x "$CHROMIUM"
-node /home/venetanji/.openclaw/workspace-sd2112/.openclaw/output-budget/run.mjs -- .venv/bin/deckgen build week09
-```
+Fresh browser at desktop1920x1080 and a new mobile390x844context captures all43sections in each mode. Handout is visible, both toggles work, no JS errors or measured horizontal overflow. All17primary-link instances activate to their expected destinations in both views; destination requests are stubbed, so this is navigation QA rather than publisher/classroom network reachability. Every desktop/mobile/native slide was reviewed in sheets, with final full-resolution confirmation of modified results and phone Figure4after the one corrective split. Native previews/XML are not a test in Microsoft PowerPoint or on a classroom projector.
 
-- Standard full target build succeeds with exit 0, no stderr/text-overflow failure. Final build log: `.openclaw/output-budget/logs/run-1792564267710-be915489-ba02-4106-a75f-a892cd681da8` under the shared workspace. Fresh HTML, **31-page PDF**, plain PPTX and ClassPoint PPTX, preview images, zero-entry activity manifest and document exports generated. Actual `pdfinfo` page count agrees with source (31).
-- `.venv/bin/python -m unittest discover -s tests -p 'test_week09_sequence.py' -v`: **12 tests pass**, including protected sequence/timing, visible evidence limits, primary hyperlink runs, toy arithmetic/endpoints/ties/invalid inputs, original no-collection contract, actual report-hook invocation/no-op/stale-map rejection, canvas/footer bounds, lesson-map/native-note companion consistency, and all exported notes in both PPTX variants.
-- Full existing suite `.venv/bin/python -m unittest discover -s tests -v`: **111 tests pass** in 22.502 seconds; log retained as `full-tests.log` in the QA root.
-- Optional toy terminal run reproduces rule A A7.4/B7.0/C5.6/D5.0 and rule B D7.5/C7.1/B4.5/A3.4. No model, network, seed or service required. All input scores, formulas and result lists remain visible if the terminal is unavailable.
-- Browser QA uses installed Chromium (`chromium-1246`) and Playwright 1.56.1: all **31 desktop slides at 1920x1080** and **31 mobile handout sections at 390x844** captured. No browser page errors or horizontal overflow in the measured views. Mobile is checked through `.handout .ho-slide`, not hidden Reveal navigation.
-- All source links are native `Run.url` hyperlinks; nine rendered anchor instances are visible on their active slides. All nine links were clicked in **both** views with observed request URLs matching their intended targets; mobile Deck view and Reading view controls both work. Source-link activation is intercepted only to verify the intended navigation destination without making publisher/network availability part of a click test. Successful link activation does not claim current classroom internet access.
-- All 31 Deckgen native preview PNGs, all desktop captures and all mobile captures inspected in batched sheets; corrected the interaction-matrix and toy-score cells to carry their own labels when reflowed on mobile. Targeted final screenshots of slides 7 and 20 confirm that correction in desktop, mobile and native previews. Native notes extracted from **both** PPTX files match every source note and the companion; no claim of actual desktop PowerPoint font resolution is made.
-- `git diff --check` passes. Focused source changes only; all build outputs remain ignored.
+Current private evidence root: `/home/venetanji/.openclaw/workspace-sd2112/tmp/weeks09-13-standard-20261022/week09/qa/`: browser-qa.json,qa.cjs,desktop/,mobile/,contact sheets. Build/test receipts are linked in author-report.md/json. `git diff --check`passes. Parent owns combined13-week PDF/export QA and all GitHub integration.
 
-## QA locations
+## Current public-review rights decision
 
-Internal QA root (outside tracked repository files):
-`/home/venetanji/.openclaw/workspace-sd2112/tmp/weekly-draft-audit-20261021/week09/`
+The earlier author report gated R1/R2/R5 because a distribution-specific public-use basis was undocumented; it remains historical evidence, not the current complete decision. Follow-up 22 October read raw official IPD FAQ16-18 bodies and assessed exact purpose, necessary amount, attribution, potential market and unrestricted public GitHub/Cloudflare/HTML/PDF/PPTX workflow distribution. A narrow Hong Kong section39 criticism/review/quotation basis is supported; not education alone, classroom-only permission, restricted recipients, attribution alone or an open licence. Gauthier remains **CC BY-NC-ND 4.0**, with no ND-licence permission asserted for crop/assembly. Exact rationale/credits/boundaries are in `deck/assets/week09/README.md` and provenance.
 
-- `full-tests.log`: all 111 existing and new tests.
-- `browser-qa.json`, `qa.cjs`: slide counts, errors, visible anchors, horizontal bounds and link activation.
-- `desktop/01.png` through `31.png`; `mobile/01.png` through `31.png`.
-- `desktop-sheet-1.jpg` through `4.jpg`, `mobile-sheet-1.jpg` through `4.jpg`, `native-sheet-1.jpg` through `4.jpg`: full visual audit.
-- `research/`: internal full-text consultation extracts and historical render/selected PPTX comparison. These are evidence aids, not public redistributed teaching assets.
-- Ignored native previews: `export/preview/week09/slide-01.png` through `slide-31.png`.
-- Local review HTML: `_site/week09/index.html`; not a reachable deployed preview URL. Parent may serve it through its approved local-preview route. Generated PDF/PPTX are internal QA, not unsolicited Telegram attachments.
+Parent correction verified 22 October: native reference slide42 names Gauthier, Hodler, Widmer and Zhuravskaya and The political effects of X's feed algorithm; slide43 names Gebru et al. and Datasheets for Datasets. Both rebuilt PowerPoint variants contain these title and author credits as actual native slide text. HTML/PDF derive from the same source. The precise missing-title condition is resolved for the assessed public-review use. This does not grant ND-licence permission or blanket legal clearance; the scoped exception and jurisdiction-sensitive boundaries remain. Historical absent-credit conditions are preserved in the original rights-only report and provenance history. Parent also replaced the Figure4 left/right locator with Switch ON/OFF wording and added an explicitly invented completed bias-register row to the existing redesign notes, without a new slide, collection or minute. Companion notes regenerated. Final combined/hosted checks remain separate; earlier author receipts do not certify these later corrections.
 
-## Evidence/access boundaries and instructor decisions
+---
 
-- Read relevant recovered 2025 Week 9 PDF ranges 23-45, 47-49; render diagram/image-heavy pages. Compared selected content/order with the same week's 50-slide OneDrive PPTX rather than assuming identical exports. The updated deck corrects universal exposure-to-polarization wording and does not reuse an unattributable labour quotation.
-- Gauthier et al. **2026 published main full text** concerns a **2023** active-US-X field experiment. Glickman/Sharot **online 2024 / issue 2025 main full text** concerns controlled judgement tasks, not a live feed effect size. Supplements and replication data/code not independently reviewed/reproduced. Other primary-paper consultation scope and exact versions recorded in `week09-evidence-ledger.md`.
-- Proposed diversity/reset/override controls are hypotheses to test, not validated safeguards or legal compliance. No current platform internals or universal algorithm-radicalization claims.
-- Instructor must reconcile intended Week 8/9/10 sequence with unchanged published syllabus (which places recommendation systems in Week 10), confirm actual class date and current Canvas concept-board/bias-register scope/timing, and choose one short research excerpt. No confirmed date invented.
-- Native PPTX XML/Deckgen previews and browser/PDF checks do **not** reproduce Microsoft PowerPoint's on-device rendering, classroom projection readability, actual ClassPoint add-in behaviour or instructor approval. No new ClassPoint collection needs classroom setup for this draft.
-- This is a full **target-week** export check, not a complete course-site rebuild. No public preview/deployment, commit, push or PR mutation. Parent independent review/build remains required by the assignment.
+# Historical record / 21 October 2026 / not current QA
 
-## Independent cross-week verification
+The following retained VersionBverification describes the original checkout and earlier assets/claims. Current checks and corrected rights scope above supersede it; its receipts are not counted as fresh.
 
-Independent parent review on 21 October 2026, after authoring handoff:
+# Week 9 paper-visual revision verification
 
-- Re-ran the standard targeted build and repository tests on this branch: build exit 0; **111 tests passed**. All 31 PDF pages and 31 slides in each PPTX match source count; all native notes match the source and companion.
-- Parent inspected all new desktop, mobile-handout and generator-native slides in independently captured contact sheets. Browser checks find no measured body/horizontal overflow, JavaScript errors or failed local resources. Native preview inspection does not establish Microsoft PowerPoint classroom rendering.
-- Assembled a separate, detached, local-only integration checkout from unchanged main plus the six weekly source sets, combining only the build-list registrations. **The unfiltered 13-week HTML/PDF/PPTX build passes, and all 165 combined repository tests pass.** This is integration verification, not a merge or production deployment.
-- Parent reviewed source/notes, activity pacing, assessment boundaries and archive continuity. Primary-source access/version limits in the evidence ledger remain in force; this is not replication or a claim to newly reread every reference independently.
-- The registration regression now permits later weeks while requiring Week 9 exactly once and retaining the earlier seven weeks; the combined run exposed the old last-week-only assumption.
-- Review evidence is retained outside tracked course sources at `tmp/weekly-draft-audit-20261021/week09/parent/`; combined build/test receipts and source hashes are in the adjacent audit root. Generated exports, QA screenshots and archived full papers are not staged.
-- PR remains a draft; operational instructor decisions listed above are not invented or silently resolved. No merge, staging update or production change is authorized by these checks.
+21 October 2026. Worktree `week09-worktree`, branch `docs/week09-planning`, starting clean at `af4f0cd`. This revision is **uncommitted**. No push, PR mutation, deployment, shared generator, registration, earlier-week, syllabus or requirement-pin edit.
+
+## Revised teaching contract
+
+- 43 slides: 40 main-route + 3 visibly **NON-ASSIGNED / REFERENCE SHELF** slides. Five standalone paper summaries, each before its authentic source image; body lengths R1 47, R2 42, R3 43, R4 48, R5 47 words, excluding title/labels/source.
+- Four purposeful teal section transitions: mechanism; objectives/data; feedback evidence; evidence-to-design. Shorter visible exposition on mechanism/privacy slides; fuller method in native notes and regenerated companion. Labour is taught through an actual documentation question instead of a duplicate prose slide.
+- Nine faithful image crops on six explanation slides: Covington Figure 2; Gender Shades Table 4; Datasheets section 3.3 document excerpt; Gauthier Figure 4 top rows plus separately preserved original axes/legend; Glickman Figure 2a-c and separate panels e/g. No invented empirical chart. Full source/version/page/crop/hash information in `deck/assets/week09/provenance.json`, asset README, native notes and evidence ledger.
+- Original 180-minute budget retained. Break 75–90 (slide 30), demo 90–105 (31–32), research 105–135 (33–35), redesign/test 135–165 (36–38; 20+10), debrief 165–180 (39–40). Added summary/image slides split explanations, not add time. Zero ClassPoint activities as before. Concept-board/bias-register Canvas scope/date remain uncertain; no new submission, grade, deadline, account or student-data collection.
+
+## Fresh verification
+
+Unchanged worktree-local `.venv`; Deckgen requirements pin `v0.11.2`, Playwright 1.56.1 in `.venv/node_modules`, installed Chromium override. All commands on bound course node through output-budget wrapper. No global install or toolchain patch.
+
+- `.venv/bin/deckgen build --no-pdf week09`: exit 0, no text-overflow/error, fresh 43-slide HTML, plain PPTX, ClassPoint PPTX, 43 native previews and zero-entry manifest. **No fresh PDF requested/generated**; any prior PDF is stale and is not a deliverable/evidence for this revision.
+- `.venv/bin/python -m unittest discover -s tests -v`: **112 tests pass**, including **13 Week09 tests**. Tests cover summary count/length, actual image files and crop hashes, mobile image-before-explanation order, visible bounded claims, native links, timing/assessment, report mapping no-op/drift rejection, deterministic toy arithmetic, geometry/footer, plan titles and companion/native notes in both fresh PowerPoints.
+- Browser: all **43 desktop slides at 1920×1080**, all **43 mobile handout sections at 390×844**, no JS errors or measured horizontal overflow. All **17 visible source-link instances** clicked in both views with observed intended navigation URLs. Destination requests intercepted as QA stubs; this verifies activation/destination, not publisher or classroom network availability. Deck/Reading view controls pass.
+- All desktop/mobile/native previews inspected in batched contact sheets. Initial full X figure was too small: corrected once to its actual political rows, with separately preserved original x-axis and legend strips, visibly labelled as crops. Final mobile confirmation keeps figure, axes and legend together before explanation and citation. Divider kickers moved above footer locally, not by shared-layout edits. No aesthetic cycling after final confirmation.
+- `git diff --check` passes. Only Week09 sources/assets/docs/tests changed. Native preview/XML checks are not Microsoft PowerPoint-on-classroom-device rendering or instructor approval.
+
+## Retained evidence
+
+Task QA root: `/home/venetanji/.openclaw/workspace-sd2112/tmp/paper-visual-revision-20261021/week09/`.
+
+- `qa.cjs`, `browser-qa.json`, `desktop/`, `mobile/`, desktop/mobile/native contact sheets and `research/` original downloaded figures/source page renders.
+- Recovered full primary texts: sibling `tmp/weekly-draft-audit-20261021/week09/research/`. Main primary versions reread; supplements and replication code/data not newly reviewed/reproduced. HTML Nature figures have exact figure anchors, not invented PDF page numbers.
+- Final content build log: `.openclaw/output-budget/logs/run-1792578325052-1cecf002-068e-43f6-bd10-f62ca72c76de` under workspace.
+- Final full tests: `.openclaw/output-budget/logs/run-1792578333962-a362f72a-93d6-468d-85d3-16c49bc35d22`.
+- Final browser: `.openclaw/output-budget/logs/run-1792578357404-10ca4bfd-5518-4dfe-8599-731aea86c2e6`.
+- Handoff report: `tmp/paper-visual-revision-20261021/week09-report.md` under workspace. Parent owns combined QA and any requested review URL. No public preview claimed here.
+
+## Remaining boundaries
+
+This is a target-week HTML/PPTX review, not an unfiltered combined-course build, PDF finalization, replication or legal opinion. Full papers remain private reference aids; only attributed useful excerpts/images enter teaching assets. Classroom projection/PowerPoint font resolution, actual network access and human acceptance remain checks for the instructor. Source reuse notices/limits are recorded; no unsupported open licence is asserted for Covington or the short Datasheets quotation. All product controls remain hypotheses, not proven remedies.
