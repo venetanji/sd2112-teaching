@@ -7,7 +7,7 @@ name   = "Artificial Intelligence in Design"
 year   = "2026/27"
 school = "PolyU School of Design"
 footer = "SD2112 · AI IN DESIGN"
-decks  = ["week01", "week02", "week03", "week04", "week05", "week06", "week07", "week08"]
+decks  = ["week01", "week02", "week03", "week04", "week05", "week06", "week07", "week08", "week12"]
 artifact = "sd2112-powerpoints"
 
 [[nav]]
