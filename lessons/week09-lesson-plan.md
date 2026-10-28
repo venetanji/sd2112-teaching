@@ -4,7 +4,7 @@
 
 ## Status and source reconciliation
 
-This draft follows the latest intended sequence: Week 8 humanizing AI, Week 9 recommendations/bias, Week 10 Double Diamond reframing/testing. It now has a 43-slide native Deckgen implementation for review, not a timetable announcement or a syllabus amendment. October 30 is an inferred date, not independently confirmed.
+This draft follows the latest intended sequence: Week 8 humanizing AI, Week 9 recommendations/bias, Week 10 Double Diamond reframing/testing. It now has a 43-slide native Deckgen implementation for review, not a timetable announcement or a syllabus amendment. The class is Friday 30 October 2026, confirmed by Giovanni on 28 October 2026.
 
 Published main at 54f38c7 includes approved Weeks 1-8. This isolated Week 9 checkout preserves that baseline; parent owns combined integration and PR updates. Old [PR #3](https://github.com/venetanji/sd2112-teaching/pull/3) contains an unmerged Week 9 bias/privacy deck and Week 10 recommendation deck. Reuse ideas selectively, not those weeks' obsolete tooling, assumed submissions, Blackboard deadlines or slide numbers.
 
@@ -31,7 +31,7 @@ The instructor should allocate these tasks; names in earlier plans do not establ
 - Technical support: preflight any toy similarity/ranking demo, provide static screenshots and a paper fallback, check ClassPoint settings if used.
 - Research support: prepare accessible copies/links for selected readings, with page pointers for claims. Use manual library access where appropriate; no automated gated access.
 - Facilitation: bring a blank evidence/decision sheet, help teams formulate project-specific questions, and check that cited work actually supports claims.
-- Instructor: the taught selection is R1–R5; confirm the class date and current Canvas instructions, and select anonymized examples only if permission allows their classroom use.
+- Instructor: the taught selection is R1–R5; confirm current Canvas instructions, and select anonymized examples only if permission allows their classroom use.
 
 Do not assume every team already has a prototype or has submitted a formal proposal. A sketch and a defined product decision are enough to enter the activity.
 
@@ -146,7 +146,7 @@ Source reuse: [old Week 9 source](https://github.com/venetanji/sd2112-teaching/b
 
 - Reconcile additional instructor-supplied slides and the final Week 8 work.
 - Verify any contemporary product claim or legal statement from a current primary source. No current legal advice is supplied by this plan.
-- Confirm date, actual project stage, current Canvas milestones and demo accessibility.
+- Confirm actual project stage, current Canvas milestones and demo accessibility.
 - Current source: `deck/week09.py`; deterministic demo: `deck/week09_demo.py`. Native notes companion: [week09-speaker-notes.md](week09-speaker-notes.md); primary-claim/access/version ledger and offline cards: [week09-evidence-ledger.md](week09-evidence-ledger.md); truthful build/QA record: [week09-verification.md](week09-verification.md). Target-week builds do not establish a full-course site build or deployment.
 - No ClassPoint collection is added. Slide 12 and closing comparisons are spoken reflections; activities remain existing private team notes. The report-attachment hook is retained and safely no-ops until a legitimate mapping exists; a stale nonempty mapping is rejected.
 - Ranking demo is complete and native/static: all four invented items, two formulas and both result lists are visible. Optional local Python runs identical arithmetic; no browser sketch, service, new account or model is required.
