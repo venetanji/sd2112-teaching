@@ -1,5 +1,74 @@
 # Week 9 current verification / 30 October 2026
 
+## Current: two 20-minute blocks / hard finish 13:20
+
+Giovanni shortened both activities on 30 October and confirmed that class ends
+at **13:20**. This timing correction supersedes the earlier thirty-minute blocks
+and three-hour planning claims below; it does not change either submission.
+
+- First response: **20 minutes**, 5 recall + 10 examine + 5 compose/submit.
+- Second response: **20 minutes**, 15 research + 5 synthesize/submit.
+- Relative work blocks: 105-125 and 125-145; closing discussion 145-160.
+  Total allocated teaching time is 160 minutes, not an inferred class start.
+- Latest starts: 12:25 and 12:45; finish submissions by 13:05, then close by
+  13:20. If ahead, keep the margin rather than extend the activities.
+- Fresh no-PDF build: 51 slides, two native short answers at 40/43, no overflow.
+  All **166 post-build tests pass without skips**, including native notes,
+  ClassPoint settings/privacy and the corrected timing/finish assertions.
+- Revised timers, dividers and closing slide checked in desktop/mobile HTML;
+  both activity displays say 20 min, research says 15 + 5, and slide 47 visibly
+  says FINISH BY 13:20. Targeted browser checks report no errors or overflow.
+
+Build receipt: workspace `.openclaw/output-budget/logs/`
+`run-1793329397172-db6a7f7b-cf7e-4207-ae80-caa84b74e07e`.
+Tests and browser receipts: `tmp/week09-polish-20261029/twenty-minute/`.
+PR #28 remains the review route; no merge or production update is authorized.
+
+## Earlier: two text submissions / follow-up to merged PR #22
+
+Giovanni requested replacing slides 37-38 and collecting two text responses:
+harmful AI bias encountered in experience, with a project link where possible;
+then research-backed proposals to mitigate or remove the selected harm. This
+follow-up starts from merged main `134d1992594f356cc9f33d892bb299ee4412c32c`,
+not the closed PR branch. It supersedes the earlier zero-collection contract.
+
+- Still **51 slides**, 47 main + 4 reference, six dividers, three hours,
+  a protected 15-minute break and two 30-minute work blocks.
+- Slides **37-38** replace the arithmetic demo with a clearly invented caption
+  example and research-to-proposal preparation. The arithmetic utility remains
+  archived, not projected. No new measured disparity or proven remedy is claimed.
+- Exactly **two native ClassPoint short answers**, slides **40 and 43**:
+  one nominated member submits one text per team per stage. Hidden display names,
+  multiple submissions off, quiz/grading off. Personal disclosure is optional;
+  a public case is welcome. Responses are not anonymous and remain private.
+- Both report URLs are withheld before the sole attachment call, even when
+  supplied. Tests retain count/question drift failures, input immutability and
+  safe missing/empty/withheld mappings. Stored report JSON and answer indexes
+  still require privacy review before any future publication.
+- Fresh **no-PDF build passes without overflow**; both PowerPoints are rebuilt.
+  Native tests follow each actual button's tags relationship and inspect the
+  ShortAnswer ACTIVITYMODEL. Manifest and HTML show only positions 40/43;
+  the plain PowerPoint has no activity models/buttons.
+- **166 tests pass, zero skips** after fresh exports. Native notes, Markdown
+  companion and lesson map agree. Source-figure provenance remains unchanged.
+- Browser: 51 desktop/mobile sections, no errors or horizontal overflow,
+  27 source/licence links activate in each view, both mode controls work, and
+  activity badges occur only at 40/43. Changed slides inspected in desktop,
+  mobile and native previews; the long slide-39 subtitle was shortened after
+  an overflow check. Opener wording was subsequently aligned and rebuilt.
+
+Receipts in workspace `.openclaw/output-budget/logs/`:
+`run-1793328164055-822e0e39-d6b3-4a90-991d-f1bac25c6d3f` (final build),
+`run-1793328174943-f1460803-0767-49cc-9384-5c1264d988e6` (full tests),
+`run-1793327910896-2abfbbc4-1453-41ee-b648-5d65d12020f6` (browser).
+
+These are export and browser checks, **not a live classroom submission or
+presenter-privacy test**. Preflight the actual ClassPoint add-in; keep individual
+results off projection. If collection is unavailable, retain private team notes
+rather than invent another upload channel. No new Canvas deadline or assessment
+weight. Follow-up PR/CI/hosted-preview results are reported separately after push;
+no merge or production publication is authorized by this revision.
+
 ## PR reconciliation and final polish
 
 Giovanni authorized pushing the local revision to existing PR #22 on 30 October.

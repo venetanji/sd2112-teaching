@@ -1,10 +1,8 @@
 """Week 9 structure, bounded evidence, native fallback and export contracts."""
 from decimal import Decimal
 from pathlib import Path
-import runpy
 import tomllib
 import unittest
-from unittest.mock import patch
 import zipfile
 import xml.etree.ElementTree as E
 
@@ -40,9 +38,16 @@ class Week09Tests(unittest.TestCase):
             1: 'Inside the feed.', 4: 'How a feed selects.',
             13: 'Whose errors count?', 24: 'Not just a mirror.',
             29: 'A feed can change us.', 36: 'Break. 15 minutes.',
-            37: 'Same four items. Two scoring rules.',
-            39: 'Find and question bias.', 42: 'Change the interaction.',
-            46: 'From spotting bias to changing the relation.',
+            37: 'From an experience to a harmful-bias claim.',
+            38: 'From a source to a mitigation proposal.',
+            39: 'Find and question harmful bias.',
+            40: 'Where have you encountered harmful AI bias?',
+            41: 'What makes this an example of bias?',
+            42: 'Research ways to reduce the harm.',
+            43: 'How could this harmful bias be reduced or removed?',
+            44: 'Who might this revision miss?',
+            45: 'How would you check whether it helps?',
+            46: 'From harmful bias to a researched response.',
             47: 'Keep the example and the open question.',
         }.items():
             self.assertEqual(self.slides[position - 1].title.replace('\n', ' '), title)
@@ -50,31 +55,51 @@ class Week09Tests(unittest.TestCase):
         self.assertTrue(all('REFERENCE SHELF' in text(s) for s in self.slides[47:]))
         self.assertEqual([s.title for s in self.slides if s.bg == '#246E70'], [
             'How a feed selects.', 'Whose errors count?', 'Not just a mirror.',
-            'A feed can change us.', 'Find and question bias.', 'Change the interaction.',
+            'A feed can change us.', 'Find and question harmful bias.',
+            'Research ways to reduce the harm.',
         ])
 
-    def test_protected_break_research_and_redesign(self):
-        for title, phrase in [
-            ('Break. 15 minutes.', '15 minutes'),
-            ('Find two examples of AI bias.', '30 min'),
-            ('Change how the person can respond.', '30 min'),
-        ]:
-            self.assertIn(phrase, text(self.slide(title)))
+    def test_protected_break_and_two_twenty_minute_blocks(self):
+        self.assertIn('15 minutes', text(self.slide('Break. 15 minutes.')))
         plan = (ROOT / 'lessons/week09-lesson-plan.md').read_text()
         for interval in ('0–10', '10–25', '25–45', '45–60', '60–75',
-                         '75–90', '90–105', '105–135', '135–165', '165–180'):
+                         '75–90', '90–105', '105–125', '125–145', '145–160'):
             self.assertIn(interval, plan)
-        self.assertIn('twenty minutes redesign then ten test planning',
-                      self.slide('Change how the person can respond.').notes)
+        for position, interval in ((40, '105-125'), (43, '125-145')):
+            block = teaching_content(self.slides[position - 1]).lower()
+            self.assertIn(interval, block.replace('–', '-'))
+            self.assertRegex(block, r'(20|twenty)[ -]min')
+        research = teaching_content(self.slides[42]).lower()
+        self.assertRegex(research, r'(15|fifteen)[ -]+min(?:ute)?s?[^.]{0,70}research')
+        self.assertRegex(research, r'(5|five)[ -]+min(?:ute)?s?[^.]{0,70}synthesi')
+        self.assertIn('13:20', plan)
+        self.assertIn('12:25', plan)
+        self.assertIn('12:45', plan)
+        self.assertIn('13:05', plan)
+        self.assertIn('160 minutes', plan)
+        self.assertIn('13:20', text(self.slides[46]))
+        for position in (40, 43):
+            self.assertIn('20 min', text(self.slides[position - 1]))
+            self.assertNotIn('30 min', text(self.slides[position - 1]))
         self.assertIn('Friday 30 October 2026', plan)
         self.assertIn('confirmed by Giovanni on 28 October 2026', plan)
 
-    def test_no_new_collection_or_deadline_and_existing_milestone_preserved(self):
-        self.assertFalse(any(s.cp for s in self.slides))
-        self.assertIn('No new submission or deadline', text(self.slide('Change how the person can respond.')))
-        finish = text(self.slide('Keep the example and the open question.'))
-        for phrase in ('concept board + bias register', 'Canvas', 'no new mark, upload or deadline'):
+    def test_two_team_responses_are_private_ungraded_not_a_canvas_deadline(self):
+        for position in (40, 43):
+            visible = text(self.slides[position - 1]).lower()
+            self.assertRegex(visible, r'(one|1) (?:short |text )?(?:response|submission) per team|each team[^.]{0,50}(?:one|1) (?:response|submission)|one team (?:text )?response')
+            notes = self.slides[position - 1].notes.lower()
+            self.assertIn('do not publish', notes)
+            self.assertIn('off projection', notes)
+            self.assertRegex(visible, r'may identify you|not anonymous')
+            self.assertRegex(visible, r'ungraded|not graded|no (?:new )mark')
+        finish = teaching_content(self.slide('Keep the example and the open question.')).lower()
+        for phrase in ('concept board', 'bias register', 'canvas'):
             self.assertIn(phrase, finish)
+        self.assertRegex(finish, r'no new [^.]{0,45}deadline')
+        plan = (ROOT / 'lessons/week09-lesson-plan.md').read_text().lower()
+        self.assertIn('classpoint', plan)
+        self.assertRegex(plan, r'(?:no new|not a new) [^.\n]{0,100}deadline')
 
     def test_bias_distinctions_and_selected_traces(self):
         distinction = self.slide('Learning is selective. Is it unfair?')
@@ -113,30 +138,37 @@ class Week09Tests(unittest.TestCase):
         self.assertIn('does not guarantee fairness',
                       text(self.slide('Keep the example and the open question.')))
 
-    def test_two_examples_close_comparison_and_concrete_response(self):
-        finding = self.slide('Find two examples of AI bias.')
-        for phrase in ('Compare two examples', 'Choose one', 'system, task, source or prompt',
-                       'Who is favoured, excluded or misrepresented'):
-            self.assertIn(phrase, teaching_content(finding))
-        for phrase in ('ten minutes finding two examples', 'fifteen comparing',
-                       'five identifying uncertainty', 'No required paid account',
-                       'existing private team notes'):
-            self.assertIn(phrase, finding.notes)
+    def test_experience_claim_and_researched_mitigation_have_evidence_boundaries(self):
+        finding = self.slide('Where have you encountered harmful AI bias?')
+        visible = text(finding).lower()
+        self.assertRegex(visible, r'personal[^.]{0,70}optional|optional[^.]{0,70}personal')
+        self.assertRegex(visible, r'public (?:case|example)')
+        context = teaching_content(finding).lower()
+        for concept in ('project', 'harm', 'example'):
+            self.assertIn(concept, context)
+        self.assertRegex(context, r'where (?:possible|relevant)|if (?:possible|relevant)|when relevant')
         evidence = self.slide('What makes this an example of bias?')
         for phrase in ('Observation', 'Interpretation', 'Consequence', 'Uncertainty'):
             self.assertIn(phrase, text(evidence))
-        for phrase in ('model/version/date', 'exact invented input', 'one pair remains exploratory',
-                       'Do not infer the training corpus', "classmates' accounts"):
-            self.assertIn(phrase, evidence.notes)
-        revision = self.slide('Change how the person can respond.')
-        self.assertIn('compare, question, correct, override or refuse', text(revision).lower())
-        self.assertIn('no usable response', revision.notes)
-        test = self.slide('What changes in the interaction?')
-        for phrase in ('original interaction', 'meaningful response', 'failure condition',
-                       'Awareness alone is not a fairness fix'):
-            self.assertIn(phrase, teaching_content(test))
-        self.assertIn('rather than recruit participants', test.notes)
-        self.assertIn('Separate awareness, ability to act, task success', test.notes)
+        notes = evidence.notes.lower()
+        for concept in ('model/version/date', 'invented input', 'exploratory',
+                        'do not infer the training corpus'):
+            self.assertIn(concept, notes)
+        self.assertRegex(notes, r'do not expose[^.]{0,70}(?:private|classmates)')
+        revision = self.slide('How could this harmful bias be reduced or removed?')
+        researched = teaching_content(revision).lower()
+        for concept in ('research', 'source', 'proposal'):
+            self.assertIn(concept, researched)
+        self.assertRegex(researched, r'link|url|citation')
+        self.assertRegex(researched, r'limitation|uncertain|trade-off|tradeoff')
+        for position in (37, 38):
+            worked = teaching_content(self.slides[position - 1]).lower()
+            self.assertRegex(worked, r'worked|instructor|invented|illustrat')
+            self.assertRegex(worked, r'evidence|source|observation')
+        test = teaching_content(self.slide('How would you check whether it helps?')).lower()
+        self.assertRegex(test, r'compar|baseline|before.*after')
+        self.assertRegex(test, r'failure|fail|worse')
+        self.assertRegex(test, r'outcome|measure|harm')
 
     def test_mechanisms_and_uncertainty_are_explicit(self):
         self.assertIn('unobserved, not disliked', text(self.slide('Learn from a pattern of choices.')))
@@ -144,6 +176,7 @@ class Week09Tests(unittest.TestCase):
         self.assertIn('cosine(Q,A) = 0.8', teaching_content(self.slide('Near depends on the representation.')))
         self.assertIn('Near does not mean true, fair', teaching_content(self.slide('Near depends on the representation.')))
         self.assertIn('faithful', self.slide('A reason is not the whole mechanism.').notes)
+        self.assertIn('B: disliked', text(self.slide('Learn from a pattern of choices.')))
 
     def test_task_first_walkthroughs_and_authentic_figures(self):
         from deck.week09 import REFS, STUDY_GUIDES
@@ -288,7 +321,7 @@ class Week09Tests(unittest.TestCase):
         self.assertNotIn('Left: turn algorithm', text(chart))
         notes = self.slide('Who might this revision miss?').notes
         for phrase in ('Worked row / instructor illustration', 'false positive=',
-                       'false negative=', 'Proposed recourse=', 'not a new submission'):
+                       'false negative=', 'Proposed recourse='):
             self.assertIn(phrase, notes)
 
     def test_primary_links_are_native_runs(self):
@@ -317,30 +350,8 @@ class Week09Tests(unittest.TestCase):
         for w in (-1, 2, 'NaN', 'Infinity'):
             with self.assertRaises(ValueError):
                 rank(w)
-        self.assertIn('INVENTED', text(self.slide('Same four items. Two scoring rules.')))
-        self.assertIn('Relevance: 9', text(self.slide('Same four items. Two scoring rules.')))
-        self.assertIn('Novelty: 1', text(self.slide('Same four items. Two scoring rules.')))
-        self.assertIn('B: disliked', text(self.slide('Learn from a pattern of choices.')))
-        for phrase in ('7.4', '7.0', '5.6', '5.0', '7.5', '7.1', '4.5', '3.4'):
-            self.assertIn(phrase, text(self.slide('The objective changes the shortlist.')))
-        self.assertIn('Do not present this weighted rule as a learned recommender', self.slide('Same four items. Two scoring rules.').notes)
-        self.assertIn('No evidence that B is fairer', self.slide('The objective changes the shortlist.').notes)
-
-    def test_report_hook_invocation_and_stale_mapping_rejection(self):
-        from deckgen import attach_reports
-        calls = []
-        def empty(slides, source):
-            calls.append(Path(source).name)
-            return attach_reports(slides, [], quiet=True)
-        with patch('deckgen.attach_reports', side_effect=empty):
-            loaded = runpy.run_path(str(ROOT / 'deck/week09.py'))
-        self.assertEqual(calls, ['week09-reports.json'])
-        self.assertFalse(any(s.report for s in loaded['S']))
-        def stale(slides, source):
-            return attach_reports(slides, [{'activity': None, 'question': 'synthetic stale entry'}], quiet=True)
-        with patch('deckgen.attach_reports', side_effect=stale):
-            with self.assertRaisesRegex(ValueError, 'drifted apart'):
-                runpy.run_path(str(ROOT / 'deck/week09.py'))
+        # The archived arithmetic utility remains independently reproducible;
+        # it is no longer the active slide 37-38 demonstration.
 
     def test_companion_matches_every_native_note_and_plan_title(self):
         companion = (ROOT / 'lessons/week09-speaker-notes.md').read_text()
