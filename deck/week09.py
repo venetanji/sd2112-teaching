@@ -4,11 +4,11 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from deckgen import attach_reports, INK, PAPER
+from deckgen.reports import load as load_reports
 from deckgen.layouts import (title, content, cards, statement, two_col, activity,
                              finalize, T, Rect, section, _slide, eyebrow)
 from deckgen.core import Image
 from course import footer
-from week09_demo import ITEMS, rank
 from week09_mediation import bias_distinction, mediation_slides, philosophy_reference
 from week09_visual_studies import apply_visuals as visualize_studies
 from week09_visual_activities import apply_visuals as visualize_activities
@@ -147,13 +147,13 @@ def paper_pair_results():
 # 0-10: reconnect, without recollecting Week 7 or Week 8 work.
 S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 09',
     'Inside the feed.', 'AI bias, technological mediation and reflective use.',
-    notes='Three-hour draft class: patterns -> bias -> mediation -> examples -> reflective use. Main route ends before the non-assigned reference shelf; see the current lesson map. Relative minutes: 0-10 opening; 10-25 mechanism; 25-45 objectives/bias; 45-60 mediation; 60-75 research; 75-90 break; 90-105 controlled ranking demo; 105-135 find and examine bias examples; 135-165 redesign and test; 165-180 comparison. Preserve all protected blocks. No date, submission, mark or deadline is announced. Class date: Friday 30 October 2026, confirmed by Giovanni on 28 October. The syllabus still lists Week 9 concept board/bias register and Week 10 recommendation systems: this revised sequence does not amend assessment requirements. Confirm current milestone scope on Canvas.'))
+    notes='Three-hour draft class: patterns -> bias -> mediation -> examples -> reflective use. Main route ends before the non-assigned reference shelf; see the current lesson map. Relative minutes: 0-10 opening; 10-25 mechanism; 25-45 objectives/bias; 45-60 mediation; 60-75 research; 75-90 break; 90-105 worked example and research preparation; 105-135 harmful-bias text response; 135-165 researched mitigation text response; 165-180 comparison. Preserve all protected blocks. Two ungraded in-class text responses are collected; no new Canvas upload, mark or deadline is introduced. Class date: Friday 30 October 2026, confirmed by Giovanni on 28 October. The syllabus still lists Week 9 concept board/bias register and Week 10 recommendation systems: this revised sequence does not amend assessment requirements. Confirm current milestone scope on Canvas.'))
 S.append(content('TODAY / FROM EXAMPLES TO REFLECTIVE USE', 'What shapes the next choice?', [
     'See how a system selects, ranks and learns.',
     'Distinguish a learned pattern from an unfair outcome.',
     'Ask how technology changes what we notice and do.',
-    'Find examples of bias. Rework one interaction.',
-], body_size=36, notes='Opening orientation within 0-10. Keep the existing team project and Week 8 research as resources, not entry requirements. A sketch is enough; students may analyse a documented AI example even if their project has no feed. Introduce the route: mechanisms, bias, mediation, feedback evidence, then finding examples and reflective redesign. No new pitch, paper quota, upload or assessment. The class is Friday 30 October 2026, confirmed by Giovanni on 28 October; actual Canvas milestone scope remains separate.'))
+    'Find harmful bias. Research ways to reduce it.',
+], body_size=36, notes='Opening orientation within 0-10. Keep the existing team project and Week 8 research as resources, not entry requirements. A sketch is enough; students may analyse a documented AI example even if their project has no feed. Introduce the route: mechanisms, bias, mediation, feedback evidence, then two team text responses: a harmful-bias example and researched mitigation. No new pitch, paper quota, Canvas upload or assessment weight. The class is Friday 30 October 2026, confirmed by Giovanni on 28 October; actual Canvas milestone scope remains separate.'))
 S.append(statement('Selected for you.\nBy whose objective?',
     eyebrow_text='DISCUSS / USER GOAL / SYSTEM PROXY / PERSON LEFT OUT', size=104, bg=PAPER,
     notes='Remaining opening minutes: pairs name a user goal, the system action and a possible proxy. Example: find a suitable workshop versus maximize click probability. These are instructor-authored examples, not claims about a named service. Return to this distinction after mechanisms. A recommendation is part of the product, not just an algorithm hidden behind a neutral screen.'))
@@ -254,70 +254,63 @@ S.append(native_table('COMPARE EVIDENCE / NOT "ALL FEEDS POLARIZE"',
     'Remaining evidence-block minutes before break. Ask teams to name population, system, comparator, outcome and time before asserting a filter bubble or an echo chamber. These terms overlap in ordinary use but do not name one measured outcome. R2 found no significant affective-polarization/partisanship effect despite other changes; R3 establishes controlled learning mechanisms, not field effect sizes. A null is not proof of universal absence, and a positive result is not universal presence. R2\'s main article discusses contrasting prior Meta results; that citation is background, not independently re-reviewed here. Do not claim a fresh systematic review or consensus. Use one methods/results excerpt in discussion, not two new compulsory full papers.',
     'Ask: platform / population / comparator / outcome / time. Keep the mismatch visible.'))
 S.append(statement('Break.\n15 minutes.', eyebrow_text='75-90 / PROTECTED BREAK / RELATIVE CLASS TIME', size=120,
-    notes='Preserve the full fifteen-minute break. Announce the actual return clock time in class. Next is one fifteen-minute controlled demo, then thirty minutes finding bias examples and thirty minutes reflective redesign/test. Open the two controlled-demo slides; the full fallback is native and needs no login, network or learned model.'))
+    notes='Preserve the full fifteen-minute break. Announce the actual return clock time in class. Next is a fifteen-minute worked preparation for two text submissions, not the earlier ranking-arithmetic demo. Then teams have thirty minutes to identify harmful bias and thirty minutes to research possible mitigation. No account or live AI test is needed for the preparation.'))
 
-# 90-105: reproducible arithmetic, with the whole fallback already on screen.
-S.append(native_table('90-105 / CONTROLLED DEMO / ALL VALUES INVENTED',
-    'Same four items. Two scoring rules.', ['ITEM', 'RELEVANCE', 'NOVELTY'],
-    [(f'{key} / {label}', f'Relevance: {rel}', f'Novelty: {nov}') for key, label, rel, nov in ITEMS], [840, 420, 420],
-    'First seven minutes of one fifteen-minute demo. Scores 0-10 are invented by the instructor for a fictional creative-workshop feed: relevance means fit to a prior interest; novelty means difference from that prior interest. Neither is estimated from people. Same four candidates, no filtering, personalization training, click simulation, accounts or network. Ask for a prediction: which two items enter the top two under each rule? Rule A = 0.8 relevance + 0.2 novelty; rule B = 0.3 relevance + 0.7 novelty. Compute A by hand: 0.8*9+0.2*1=7.4 under rule A; 0.3*9+0.7*1=3.4 under rule B. Optional local terminal: .venv/bin/python deck/week09_demo.py. All values, formulas and results are already native on these slides; if terminal/code fails, continue on paper without changing the activity budget. Do not present this weighted rule as a learned recommender or as study data.',
-    'A = 0.8 relevance + 0.2 novelty.   B = 0.3 relevance + 0.7 novelty.'))
-S.append(two_col('SAME 15-MINUTE DEMO / STATIC RESULTS = CODE RESULTS',
-    'The objective changes the shortlist.',
-    ['RULE A / RELEVANCE WEIGHT 0.8'] + [f'{i}. {key} / {label} / {score:.1f}' for i, (key, label, score) in enumerate(rank('0.8'), 1)] + ['Top two: A + B'],
-    ['RULE B / RELEVANCE WEIGHT 0.3'] + [f'{i}. {key} / {label} / {score:.1f}' for i, (key, label, score) in enumerate(rank('0.3'), 1)] + ['Top two: D + C'],
-    right_font='body', left_size=31, right_size=31,
-    notes='Remaining eight minutes of the same fifteen-minute block. Both lists are generated from week09_demo.py at import, not transcribed separately. Decimal arithmetic, deterministic ID tie-break and input validation make the local script reliable. Rule A scores A7.4 B7.0 C5.6 D5.0; rule B scores D7.5 C7.1 B4.5 A3.4. Hold candidates and scores fixed: only weights change. This isolates a scoring choice in the toy setup, not real user utility. Ask what did NOT change: candidate pool, feature definitions, who chose the scores and missing needs/accessibility. No evidence that B is fairer, safer, more satisfying or less polarizing. A native/PDF/handout reader has the whole calculation and outcome. Teams can reproduce one row on paper and choose an outcome to test in the real project.'))
+# 90-105: prepare the two responses with an explicitly invented example.
+S.append(content('90-105 / WORKED EXAMPLE / INVENTED, NOT STUDY DATA',
+    'From an experience to a harmful-bias claim.', [],
+    notes='First seven minutes of the fifteen-minute preparation. Invented example: an automatic-caption system repeatedly mishears a particular accent, so a viewer misses important instructions. This is a hypothetical design scenario, not a new measured disparity or an assertion about a current product. Ask what was observed, who is disadvantaged, and what comparison would help distinguish harmful bias from an isolated error. A personal encounter can motivate investigation but cannot establish the frequency, cause or population rate. Relate it to the team project where relevant; do not force a captioning feature into it. Students may use a public documented case instead of disclosing their own experience. No names, private transcripts or identifying details.'))
+S.append(content('SAME 15-MINUTE PREPARATION / RESEARCH TO RESPONSE',
+    'From a source to a mitigation proposal.', [],
+    notes='Remaining eight minutes: model how to turn research into a bounded proposal, not a promise to eliminate every bias. For the invented caption case, search for evidence on recognition errors across accents and possible remedies, then read the relevant method, population and result rather than citing only an abstract or an AI summary. Comparing error rates across groups transfers the audit question taught in Gender Shades, not its facial-classification result to speech. Testing broader evaluation coverage and offering editable captions are proposals here, not validated interventions. Students can consider data, labels, objective, model, interface, human review or not using AI for the decision. Explain what each source supports, why it fits this case, and what still needs testing. The next two blocks collect one short-answer response per team each.'))
 
-# 105-135: identify examples before proposing a remedy.
-S.append(activity('01 / FIND + EXAMINE BIAS', 30,
-    'Find two examples of AI bias.', [
-    'Use a documented case, a public output, or a safe test with invented inputs.',
-    'Compare two examples. Choose one to examine closely.',
-    'Record the system, task, source or prompt, output and comparison.',
-    'Who is favoured, excluded or misrepresented? What is the evidence?',
-], notes='105-135, one thirty-minute block: about ten minutes finding two examples, fifteen comparing and documenting one, five identifying uncertainty. This replaces the previous paper-search task at the instructor\'s request. Teams may use existing Week 8 research, the Gender Shades audit already taught, a permitted public example, or an optional safe test. No required paid account, live generation, harmful prompt or new personal data. A network/library failure uses the prepared historical audit table, explicitly labelled rather than presented as a live discovery. One output can suggest a problem but cannot establish a systematic rate or training-data cause. Work stays in existing private team notes; no collection or new paper quota.'))
-S.append(content('BIAS EXAMPLES / EVIDENCE CARD', 'What makes this an example of bias?', [
+# 105-135: one team text response on harmful bias, with optional personal disclosure.
+S.append(activity('01 / EXPERIENCE + PROJECT / TEXT SUBMISSION', 30,
+    'Where have you encountered harmful AI bias?', [
+    'Recall examples from your experience; a public case is also welcome.',
+    'Explain one: what happened, who was harmed, and why it may be bias.',
+    'Relate it to your project if possible; distinguish observation from hypothesis.',
+    'One team text response. No names, private details or transcripts.',
+], cp={'type': 'short_answer', 'hide_names': True, 'multiple': False},
+    notes='105-135, one thirty-minute block: ten minutes recalling examples, fifteen examining one and its possible project relevance, five composing the first text submission. In existing project groups, discuss examples of harmful AI bias encountered in use, observation or research; choose one to explain clearly. Personal experience is optional: use a public documented case instead, with no explanation for that choice required. No required paid account, live generation, harmful prompt or new personal data. A comparison supports inquiry; an isolated output does not establish a systematic rate or a training-data cause. One nominated team member submits one short-answer text for the team at the end of this block; do not ask every member to duplicate it. Response: example, affected people/harm, evidence or uncertainty, and project connection if possible. This is an ungraded in-class response, not a new Canvas deadline. Responses may identify you to the teaching team; hidden display names do not make them anonymous. Do not publish activity URLs, responses, exports or screenshots. Keep individual results off projection; discuss only non-identifying themes after instructor review. Preflight the actual add-in controls before collection; if unavailable, retain private team notes without inventing another upload channel.'))
+S.append(content('FIRST RESPONSE / EVIDENCE + HARM', 'What makes this an example of bias?', [
     'Observation: what happened, and compared with what?',
     'Interpretation: which pattern or assumption might explain it?',
-    'Consequence: who could benefit or be harmed in this context?',
-    'Uncertainty: what else could explain it? What would you check next?',
-], body_size=36, notes='Leave this evidence card visible during the activity. A stereotype in a generated image, an uneven classification error or an exclusion in ranked options can be useful cases, but they are different claims. Label documented finding, our observation and our hypothesis separately. For a paper, retain its link/version and relevant page or section; for a safe test, record model/version/date when available, exact invented input, settings and output. A matched comparison strengthens a claim; one pair remains exploratory, not a population-level audit. Do not infer the training corpus or intention from an output alone. Do not expose classmates\' accounts, faces, histories or sensitive attributes.'))
+    'Consequence: who was disadvantaged, excluded or misrepresented?',
+    'Uncertainty: what else could explain it? How does it relate to your project?',
+], body_size=36, notes='Leave this guide visible during the first activity. A stereotype in a generated image, uneven classification errors or an exclusion in ranked options make different claims. Label documented finding, our observation and our hypothesis separately. For a public source retain its link/version and relevant passage; for an existing safe test record model/version/date and invented input when available, without uploading private transcripts. One matched pair remains exploratory, not a population audit. Do not infer the training corpus or intention from an output alone. Do not expose private accounts, faces, histories or sensitive attributes. A team may describe a public case instead of personal experience. The first short-answer submission belongs to slide 40; this slide is guidance, not another collection.'))
 
-# 135-165: reflective use changes the interaction, not necessarily the model.
-S.append(activity('02 / REFLECTIVE USE + REDESIGN', 30, 'Change how the person can respond.', [
-    'Use one bias example to sketch the current interaction.',
-    'Make one hidden assumption or selection visible at the point of use.',
-    'Let the person compare, question, correct, override or refuse it.',
-    'Plan a comparison. No new submission or deadline.',
-], notes='135-165, one thirty-minute block: twenty minutes redesign then ten test planning. Use one bias example from the first activity; apply the insight to the existing team project where relevant, without forcing a feed or new feature into it. Redraw the relation between person, technology and world: what is noticed, accepted and acted on before and after? An explanation with no usable response is not the same as meaningful agency. Reflection does not require exposing all model internals, retraining a network or claiming to eliminate bias. Preserve existing concept-board/bias-register requirements; confirm actual Canvas scope separately. No new assessment, upload or deadline.'))
-S.append(cards('REFLECTIVE USE / BENEFITS AND BURDENS', 'Who might this revision miss?', [
-    ('NOTICE', 'Which assumption appears?', 'Show a relevant limit or selection, not a wall of technical detail.'),
-    ('RESPOND', 'What can the person do?', 'Make comparison, correction, refusal or an alternative genuinely usable.'),
-    ('RESPONSIBILITY', 'Who still must act?', 'A warning does not transfer the designer\'s responsibility to the user.'),
-], text_size=31, notes='Part of the twenty-minute redesign portion, not another timer. Ask whether the control is understandable, accessible and consequential. A transparency label alone can add burden or encourage misplaced trust; effects must be checked. Do not collect sensitive attributes to fill a template. Worked row / instructor illustration, not a new submission: decision=rank workshops; data=tagged catalogue and prior clicks; missing perspective=people with access needs absent from the evidence; false positive=an inaccessible option ranked suitable; false negative=a suitable option hidden. Proposed recourse=editable access constraints, browse-all and correction. Test whether the person can recover a suitable option. Access labels and control effectiveness remain unverified.'))
-S.append(content('REFLECTIVE USE / FINAL 10 MINUTES', 'What changes in the interaction?', [
-    'Compare the original interaction with your reflective version.',
-    'Can the person notice the issue and choose a meaningful response?',
-    'Check task success, unequal burdens and who is still excluded.',
+# 135-165: research-backed proposals, not a compulsory interface-only redesign.
+S.append(activity('02 / RESEARCH + MITIGATION / TEXT SUBMISSION', 30,
+    'How could this harmful bias be reduced or removed?', [
+    'Research your chosen example using credible sources.',
+    'Suggest ways to reduce or remove the harmful bias; explain why they fit.',
+    'Consider data, model, interaction, human review or not using AI.',
+    'One team text response: proposal + source/link + evidence + limitation.',
+], cp={'type': 'short_answer', 'hide_names': True, 'multiple': False},
+    notes='135-165, one thirty-minute block: twenty minutes research then ten minutes synthesis and the second text submission. Keep the chosen harmful-bias example from the first response. Find relevant research or an authoritative documented intervention; check the actual claim, context, comparator and outcome. Week 8 sources or the readings already taught can be starting points, but explain their transfer limits. Suggest ways harmful bias might be mitigated or removed: data collection or labels, evaluation coverage, objectives or model, interface and recourse, organizational review, or not using AI for this decision. No requirement to retrain a model, build a prototype or confine the proposal to reflective interface use. Cite the source/link supporting the proposal and say what remains uncertain. Documentation, awareness and an explanation alone do not prove reduced harm. Give a simple check that could disconfirm the proposal. One nominated member submits one short-answer text per team, distinct from the first response, during this block. Ungraded; no new Canvas deadline or assessment weight. Do not include identifying personal details from the first example. Responses may identify you; hidden names are not anonymity. Do not publish activity URLs, responses, exports or screenshots; keep individual results off projection. If search access fails, use the prepared course sources and state the gap rather than invent evidence.'))
+S.append(cards('MITIGATION / BENEFITS AND BURDENS', 'Who might this revision miss?', [
+    ('HARM', 'What changes?', 'Target the harmful outcome, not just whether the system looks fairer.'),
+    ('RESPOND', 'What can the person do?', 'Comparison, correction or an alternative must be usable.'),
+    ('RESPONSIBILITY', 'Who still must act?', 'A warning does not transfer responsibility to the person harmed.'),
+], text_size=31, notes='Use inside the research block, not another timer or submission. A proposal can act on data, model, interface or the decision to use AI. Ask whether any control is understandable, accessible and consequential, and whether it shifts effort to those already disadvantaged. Worked row / instructor illustration, not a new submission: decision=rank workshops; data=tagged catalogue and prior clicks; missing perspective=people with access needs absent from the evidence; false positive=an inaccessible option ranked suitable; false negative=a suitable option hidden. Proposed recourse=editable access constraints, browse-all and correction. Check whether people can recover suitable options, and whether the access labels themselves are reliable. This is a hypothesis, not evidence that a control removes discrimination.'))
+S.append(content('SECOND RESPONSE / EVIDENCE + LIMIT', 'How would you check whether it helps?', [
+    'Link the source to the proposed change: what does it actually support?',
+    'Compare harm before and after, or against a suitable alternative.',
+    'Check who benefits, who is still excluded and who carries extra work.',
     'Name a failure condition. Awareness alone is not a fairness fix.',
-], body_size=35, notes='Final ten minutes: plan a safe comparison rather than recruit participants or run a full audit now. One possible task is finding a suitable workshop with and without a visible ranking explanation plus editable constraints. Observe whether the person can detect and correct a mismatch, not just whether they like the explanation. Separate awareness, ability to act, task success and unequal outcome measures; improvement in one does not establish the others. A stated failure condition should lead to revising or removing the intervention. The toy ranking demonstrates a mechanism, not effectiveness or fairness.'))
+], body_size=35, notes='Use the final ten minutes of the second block to synthesize the researched proposal and submit it; this is not an extra test-planning activity. A concise response names the proposed change, source/link, relevant evidence, transfer limitation and a way to check whether harm falls. Plan a safe comparison rather than recruit participants or run a full audit now. Separate awareness, ability to act, task success and unequal burdens. A source about classification does not automatically validate a speech or recommendation intervention; a vendor claim is not an independent effectiveness study. If the available evidence does not establish removal, say reduction is a hypothesis to test. No additional submission beyond the second short answer on slide 43.'))
 
-# 165-180: discuss examples, interpretation and the changed relation.
-S.append(two_col('165-180 / COMPARE EXAMPLES / SPOKEN', 'From spotting bias to changing the relation.', [
-    'Show the example and the comparison that supports your claim.',
-    'Explain whose perspective it favours and what remains uncertain.',
-    'Show what the person can notice and do differently.',
-], ['ASK THE OTHER TEAM', 'Is this a learned pattern, an error, an unfair outcome - or more than one?',
-    'What does the interface make easy to overlook?', 'Does your revision change agency, or just add a label?'],
-    right_font='body', left_size=35, right_size=32,
-    notes='About ten minutes: invite two teams to share one example each, without personal or user data. Compare observation, interpretation, consequence and uncertainty before discussing the redesigned interaction. Avoid declaring a fairness winner or suggesting every non-neutral pattern is equally harmful. If no team volunteers, compare the prepared historical audit with the invented workshop ranking, explicitly distinguishing measured error disparities from a possible design risk. No required pitch deck, public upload, ClassPoint collection or grade.'))
+# 165-180: compare the two responses without displaying personal experiences.
+S.append(content('165-180 / COMPARE EXAMPLES + RESEARCH / SPOKEN',
+    'From harmful bias to a researched response.', [],
+    notes='About ten minutes: invite teams to discuss only non-identifying or public examples they choose to share. Compare the harm and its evidence, the proposed mitigation and supporting source, and the remaining uncertainty. Do not display the personal-experience response list or identify who supplied an example. No fairness winner, extra pitch, third submission or grade. If nobody volunteers, use the invented caption example and the prepared historical audit as clearly different evidence types. Reflective use is one possible response, not a compulsory remedy or proof of reduced harm.'))
 S.append(content('CARRY FORWARD / INTO REFRAMING AND PROTOTYPING', 'Keep the example and the open question.', [
     'Learning is selective. Harmful bias needs evidence and context.',
-    'AI reflects selected human traces - and can shape what happens next.',
+    'Keep the example, researched response and what remains untested.',
     'Reflective use can change mediation; it does not guarantee fairness.',
-    'Existing concept board + bias register: check Canvas; no new mark, upload or deadline.',
-], body_size=35, notes='Final five minutes. Ask what the team now notices about the mediation that it did not notice at the start, and which action becomes possible. Save the example/source, comparison, limitation, revised interaction and proposed test in existing team notes. Next comes reframing and prototyping, not a promise that identifying bias has solved it. The syllabus still places recommendation systems in Week 10 and the concept board/bias register in Week 9; the revised teaching sequence does not itself change Canvas obligations. No new deadline or public sharing requirement.'))
+    'Two in-class text responses. Existing concept board + bias register: check Canvas.',
+], body_size=35, notes='Final five minutes. Carry the example, source, proposed mitigation, limitation and check into existing project notes, reframing and prototyping. Two ungraded in-class ClassPoint text responses were requested by Giovanni on 30 October; this replaces the earlier no-collection plan. No new Canvas upload, mark or deadline is introduced. The concept-board/bias-register milestone remains subject to current Canvas instructions. Identifying a harmful pattern, adding a transparency label or making a proposal is not proof that harm has been removed. Both response collections remain private and must not receive public report links.'))
 
 # Reference shelf: available when a question needs it, not extra timed instruction.
 S.append(content('NON-ASSIGNED / REFERENCE SHELF / R1 / HISTORICAL SYSTEM', 'Candidate generation is not ranking.', [
@@ -379,15 +372,15 @@ S.append(section('04 / 60-75 / HOW SYSTEMS CHANGE US', 'A feed can change us.',
     notes='Ten-second transition inside the original fifteen-minute evidence block. Move from auditing a system output to studying changes in people. Explain one field experiment and one controlled task, each with a standalone summary before reading its authentic figures. Budget five minutes R2, five R3, remaining time comparison/transition. No additional homework reading or lecture time.'))
 start = next(i for i, slide in enumerate(old) if slide.title == 'Can changing a feed change people?')
 S += old[start:]
-# Fourth divider starts protected project work without a new timer.
-idx = next(i for i, slide in enumerate(S) if slide.title == 'Find two examples of AI bias.')
-S.insert(idx, section('05 / 105-135 / FIND BIAS', 'Find and question bias.',
-    'Two examples. One close comparison. Keep the uncertainty visible.', bg='#246E70',
-    notes='Ten-second orientation inside the thirty-minute example-finding activity, not extra time. The toy ranking illustrates a choice; now find examples from documented cases or safe observations. Distinguish a pattern from a harmful consequence and evidence from a guess about its cause. The following thirty-minute block changes the interaction through reflective use. No ClassPoint collection, new mark, upload or deadline; Canvas milestone scope remains separate.'))
-idx = next(i for i, slide in enumerate(S) if slide.title == 'Change how the person can respond.')
-S.insert(idx, section('06 / 135-165 / REFLECTIVE USE', 'Change the interaction.',
-    'Make the mediation noticeable. Make a response possible.', bg='#246E70',
-    notes='Ten-second transition within the existing thirty-minute redesign/test block. Start from one example identified in the preceding activity, not a new compulsory product pitch. Ask what the person can notice and do differently; a label without usable recourse may only move responsibility onto the user. Preserve twenty minutes redesign and ten test planning, followed by the existing fifteen-minute spoken comparison. No new submission, mark or deadline.'))
+# Dividers remain inside the protected thirty-minute work blocks.
+idx = next(i for i, slide in enumerate(S) if slide.title == 'Where have you encountered harmful AI bias?')
+S.insert(idx, section('05 / 105-135 / FIRST TEXT RESPONSE', 'Find and question harmful bias.',
+    'Experience. Harm. A possible project connection.', bg='#246E70',
+    notes='Ten-second orientation inside the first thirty-minute block, not extra time. Students discuss examples of harmful bias from experience or a public case and explain one clearly. A project connection is encouraged, not compulsory. Personal disclosure is optional and identifying details are excluded. One nominated member submits the first text response for the team at the end of the block. Keep results private; hidden display names do not establish anonymity.'))
+idx = next(i for i, slide in enumerate(S) if slide.title == 'How could this harmful bias be reduced or removed?')
+S.insert(idx, section('06 / 135-165 / SECOND TEXT RESPONSE', 'Research ways to reduce the harm.',
+    'Find evidence. Propose a response. Say what remains untested.', bg='#246E70',
+    notes='Ten-second transition within the second thirty-minute block. Research ways to mitigate or remove the chosen harmful bias; use twenty minutes research and ten minutes synthesis/submission. Do not restrict responses to an interface sketch. Consider data, objectives, model, interaction, human review or avoiding AI for the decision. The second short answer needs supporting sources and a limitation, not a claim of guaranteed elimination. No extra minutes or assessment deadline.'))
 S.append(philosophy_reference())
 # Reference shelf supplies links only; not assigned or additional paper instruction.
 for slide in S:
@@ -407,6 +400,15 @@ visualize_activities(S)
 visualize_mediation(S)
 visualize_mechanisms(S)
 
-attach_reports(S, Path(__file__).resolve().parent / 'week09-reports.json')
+def protected_report_entries(source):
+    """Both linked responses can contain experience details; never publish them."""
+    entries = [dict(entry) for entry in load_reports(source)]
+    for entry in entries:
+        entry['activity'] = None
+        entry['withheld'] = 'private team bias response; do not publish'
+    return entries
+
+
+attach_reports(S, protected_report_entries(Path(__file__).resolve().parent / 'week09-reports.json'))
 DECK = dict(title='SD2112 / AI in Design / Week 09',
             slides=finalize(S, footer(9)), pdf='SD2112-week09.pdf')

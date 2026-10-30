@@ -1,6 +1,6 @@
 # SD2112 · Week 9 lesson plan
 
-**Recommendations, bias and reflective use** · implemented local slide draft · October 29, 2026
+**Recommendations, bias and reflective use** · implemented local slide draft · October 30, 2026
 
 ## Status and source reconciliation
 
@@ -12,7 +12,7 @@ The original 50-page 2025 Week 9 PDF has now been recovered and visually inspect
 
 ## Purpose
 
-The feed looks personal, but each stage expresses choices about what to collect, retrieve, rank and show. A model is not a passive, neutral mirror of humanity: it transforms selected traces through representations and objectives, and its use can change what people notice and do. Students explain a mechanism, identify two examples of AI bias, closely examine one with a comparison, and redesign how a person can notice and respond.
+The feed looks personal, but each stage expresses choices about what to collect, retrieve, rank and show. A model is not a passive, neutral mirror of humanity: it transforms selected traces through representations and objectives, and its use can change what people notice and do. Students explain a mechanism, discuss harmful AI bias encountered through experience or a public documented case, examine one example and research ways to reduce or remove its harm. They submit two private, ungraded team text responses: first the example and possible project connection, then a researched mitigation proposal with evidence and a limitation. Personal disclosure is optional; reflective interface redesign is one possible response, not the required remedy.
 
 Research → AI-product context → existing team project remains the teaching pattern. Week 8's papers and project-specific research remain part of an accumulating evidence base; today adds the recommendation/data layer rather than replacing it.
 
@@ -24,16 +24,17 @@ By the end, students can:
 - Locate bias in collection, labels, objectives and feedback, including human labour and missing perspectives.
 - Distinguish inductive assumptions, learned regularities and harmful social bias; a repeated pattern is not automatically an error or injustice.
 - Relate Heidegger, Ihde and Verbeek to Van Den Eede's questions about transparency in use and the visibility of mediation's social context.
-- Document two examples, closely examine one and support a reflective interaction revision with evidence, a limitation and a testable outcome.
+- Explain one harmful-bias example, distinguish evidence from hypothesis and connect it to the existing project if possible.
+- Support a proposed mitigation with a credible source/link, relevant evidence, a transfer limitation and a check that could show it fails.
 
 ## Preparation and roles to allocate
 
 The instructor should allocate these tasks; names in earlier plans do not establish current commitments.
 
-- Technical support: preflight any toy similarity/ranking demo, provide static screenshots and a paper fallback, check ClassPoint settings if used.
+- Technical support: preflight both ClassPoint short-answer activities and private-result handling; confirm hidden display names and single submission per team per stage. Keep private team notes as the fallback if the add-in is unavailable; do not invent another upload channel.
 - Research support: prepare accessible copies/links for selected readings, with page pointers for claims. Use manual library access where appropriate; no automated gated access.
-- Facilitation: bring a blank evidence/decision sheet, help teams formulate project-specific questions, and check that cited work actually supports claims.
-- Instructor: retain the R1–R5 research walkthroughs and prepare the bounded mediation bridge; confirm current Canvas instructions, and select anonymized examples only if permission allows their classroom use.
+- Facilitation: help teams describe a harmful-bias example without identifying details, formulate a research question and check that the cited source actually supports the proposal. A public documented case is an equally valid alternative to personal experience.
+- Instructor: retain the R1–R5 research walkthroughs and prepare the bounded mediation bridge; confirm current Canvas instructions, and prepare public or non-identifying examples for voluntary discussion; do not project collected individual responses.
 
 Do not assume every team already has a prototype or has submitted a formal proposal. A sketch and a defined product decision are enough to enter the activity.
 
@@ -49,18 +50,20 @@ Relative timings are a planning allocation. Optional 28 October news uses at mos
 | 45–60 | Mediation: selected traces, Heidegger/Ihde/Verbeek, Van Den Eede, reflective use | 24–28 |
 | 60–75 | Feedback studies: R2 field experiment and R3 controlled task | 29–35 |
 | 75–90 | Protected break | 36 |
-| 90–105 | Same controlled ranking demo | 37–38 |
-| 105–135 | Identify two examples of AI bias; compare and examine one closely | 39–41 |
-| 135–165 | Reflective redesign + test planning: 20 + 10 minutes | 42–45 |
-| 165–180 | Compare examples, changed interaction and remaining uncertainty | 46–47 |
+| 90–105 | Invented caption example + research-to-proposal preparation | 37–38 |
+| 105–135 | Harmful-bias example: 10 recall + 15 examine + 5 compose/submit | 39–41 |
+| 135–165 | Mitigation proposal: 20 research + 10 synthesize/submit | 42–45 |
+| 165–180 | Compare public/non-identifying examples, research and uncertainty | 46–47 |
 
 ## Actual slide map
 
-### Visual teaching pass / 29 October
+### Visual teaching pass / 29 October, activity alignment / 30 October
 
 The projected deck now uses diagrams, historical study images and short visual
 instructions rather than prose-heavy cards. Detailed explanations remain in
-speaker notes; the sequence, timing and assessment contract are unchanged.
+speaker notes. The 30 October revision replaces slides 37–38 and adds the two
+authorized in-class responses without changing the 51-slide count, three-hour
+budget, protected break or assessment requirements.
 Following the Week 8 teaching pattern, each of the five paper walkthroughs
 keeps a **concrete example in simple English on screen**, before the authentic
 source figure or excerpt. Explain what changes, what is compared, and what the
@@ -119,16 +122,16 @@ schematics do not replace the authentic research figures or their limitations.
 34. **Learning can go in either direction.**
 35. **Different studies answer different questions.**
 36. **Break. 15 minutes.**
-37. **Same four items. Two scoring rules.**
-38. **The objective changes the shortlist.**
-39. **Find and question bias.**
-40. **Find two examples of AI bias.**
+37. **From an experience to a harmful-bias claim.**
+38. **From a source to a mitigation proposal.**
+39. **Find and question harmful bias.**
+40. **Where have you encountered harmful AI bias?**
 41. **What makes this an example of bias?**
-42. **Change the interaction.**
-43. **Change how the person can respond.**
+42. **Research ways to reduce the harm.**
+43. **How could this harmful bias be reduced or removed?**
 44. **Who might this revision miss?**
-45. **What changes in the interaction?**
-46. **From spotting bias to changing the relation.**
+45. **How would you check whether it helps?**
+46. **From harmful bias to a researched response.**
 47. **Keep the example and the open question.**
 48. **Candidate generation is not ranking.** Non-assigned reference shelf only.
 49. **Read the design, not just the headline.** Non-assigned reference shelf only.
@@ -142,46 +145,62 @@ schematics do not replace the authentic research figures or their limitations.
 - 25–45: divider + bias distinctions 2 minutes; goal/proxy/feedback/diversity 5; bias entry points 2; R4 walkthrough/table 4; R5 walkthrough/excerpt 3; privacy 2; questions/transition 2. A learned regularity, statistical error and harmful unequal consequence are different claims. Read the IBM row within its subgroup denominators; do not infer undisclosed training-data causes.
 - 45–60: divider + selected traces 2 minutes; Heidegger/Ihde/Verbeek recall 3; Van Den Eede use/context questions 4; reflective-use comparison 5; transition 1. Ask what becomes noticeable and what action becomes possible, not whether more explanation automatically makes a system fair.
 - 60–75: divider + R2 walkthrough/figure 5 minutes; R3 walkthrough/procedure/results 5; distinguish task, measures, transfer and transition 5. Read highlighted rows/axes, not every coefficient. Different n=50 follow-ups and different outcomes are not directly comparable bar heights.
-- 90–105: inspect the same four invented inputs 4 minutes; compare the two scoring rules/results 6; discuss whose objective changed and what the demo cannot establish 5. All arithmetic and fallback are visible natively.
-- 105–135: transition + identify two examples 10 minutes; compare them and closely document one 15; state uncertainty and a next check 5. This replaces the previous broad paper-search task, not an extra activity.
-- 135–165: transition + redesign 20 minutes, then test planning 10; keep the evidence and benefits/burdens prompts visible rather than introducing additional timers.
-- 165–180: two-team spoken comparison 10 minutes, carry-forward/open question 5. No fairness winner or new pitch deliverable.
-- Protect the full break and later blocks. If behind, trim lecture elaboration/reference discussion, not activity time. No new ClassPoint question: count stays zero.
+- 90–105: invented automatic-caption example 7 minutes; research-to-proposal preparation 8. Distinguish a hypothetical accent-related error and harm from a measured disparity; show how a credible source can support a bounded proposal. Testing across accents and editable captions are proposals, not proven fixes. This replaces the ranking-arithmetic demo, not an extra block.
+- 105–135: recall examples 10 minutes; examine one and its possible project connection 15; compose and submit the first team text response 5. Include the divider inside this allocation. Personal disclosure is optional; a public case is welcome.
+- 135–165: research credible sources 20 minutes; synthesize the proposal, evidence, limitation and check, then submit the second team text response within the final 10. Include the divider inside this allocation; no separate redesign/test timer or compulsory interface sketch.
+- 165–180: voluntary spoken comparison of public/non-identifying examples 10 minutes, carry-forward/open question 5. Do not project individual responses; use the invented caption example if nobody volunteers. No fairness winner, third submission or new pitch deliverable.
+- Protect the full break and both thirty-minute blocks. If behind, trim lecture elaboration/reference discussion, not activity time. Exactly two ClassPoint short-answer activities, at slides 40 and 43, replace the earlier zero-collection plan.
 
-## Activity: identify bias, then change the interaction
+## Activity: harmful-bias experience, then researched mitigation
 
-### 1. Identify two examples and closely examine one, 30 minutes
+### 1. Explain one harmful-bias example, 30 minutes
 
-Use existing Week 8 research, a documented case, a permitted public output, or an optional safe test with invented inputs. Identify **two examples of AI bias**, compare the kind of claim each makes, then select **one for close examination**. Do not force a feed into a project that has none. A sketch or a documented example is enough; no mandatory prototype, paid account, live generation or new paper quota.
+Work in existing project teams: **10 minutes recall, 15 examine, 5 compose and submit**. Discuss harmful AI bias encountered in use, observation or research, then choose one example to explain. Personal disclosure is optional: a public documented case is equally welcome, with no explanation for choosing it required. Relate the example to the project if possible; do not force a feed or captioning feature into a project that has none. There is no required count of two examples, prototype, paid account, live generation or new paper quota.
 
-For the selected example, keep these items in existing private team notes:
+The first team text response should include:
 
-- System and task; source link/version and relevant passage/page, or model/version/date when available, exact invented prompt/input, settings and output for a safe test.
-- Observation and comparison: what happened, compared with what? Distinguish a documented finding from our observation and our hypothesis. A matched comparison is useful; one pair remains exploratory, not a population-level audit.
-- Interpretation: identify an inductive assumption, learned regularity, error or harmful consequence without collapsing them. Do not infer the training corpus or designer intention from an output alone.
-- Consequence: who is favoured, excluded or misrepresented, for this task and context? Not every repeated pattern establishes unfairness.
-- Uncertainty: what else could explain it, what does the evidence not establish, and what would you check next?
+- Example and task: what happened, and compared with what?
+- Affected people and harm: who was disadvantaged, excluded or misrepresented, and why might this be harmful bias rather than an isolated error?
+- Evidence or uncertainty: distinguish a documented finding, an observation and a hypothesis. Retain a source/link and relevant passage where available; do not infer a training corpus or designer intention from an output alone.
+- Project connection, if possible: where could this matter to the team's product or decision?
 
-Do not collect classmates' accounts, faces, histories or sensitive attributes, run harmful prompts, or upload private assets. If access fails, use the prepared Gender Shades table and existing permitted course examples, explicitly labelled as historical evidence or instructor illustration rather than new discoveries. A suspected risk can remain a hypothesis; do not manufacture an observed disparity to fill the activity.
+Use no names, identifying details, private transcripts, classmates' faces, account histories or sensitive attributes. Do not run harmful prompts or upload private assets. An exploratory matched comparison is not a population audit, and a suspected risk can remain a hypothesis rather than a manufactured disparity. If access fails, use the prepared Gender Shades table or permitted course example, explicitly labelled historical evidence or instructor illustration.
 
-### 2. Reflective redesign, 20 minutes
+One nominated team member submits one short-answer text on slide 40. Responses may identify participants to the teaching team; hidden display names are **not anonymity**. Keep individual results off projection and use only non-identifying themes after instructor review.
 
-Use the selected example to sketch the current interaction and a revised one. Transfer the insight to the existing project only where relevant. Annotate what the person notices, accepts and does before and after:
+### 2. Research ways to reduce or remove the harm, 30 minutes
 
-- Make one relevant hidden assumption or selection visible at the point of use, not a wall of technical detail.
-- Offer a meaningful response: compare, question, correct, override, browse an alternative or refuse.
-- Identify who still cannot use the control, what burden it adds and who remains responsible for correction.
-- Retain the evidence, transfer limitation, required data and one avoidable inference; connect to the existing bias register without inventing a new required template.
+Use the same chosen example: **20 minutes research, 10 minutes synthesis and submission**. Find relevant research or an authoritative documented intervention; read the actual method, population, comparator and result rather than relying on a headline, abstract or AI summary. Existing Week 8 research and the taught papers can be starting points, with their transfer limits explicit.
 
-Heidegger's absorbed use helps ask what recedes; Ihde and Verbeek help analyse changed perception/action; Van Den Eede keeps fluent use and reflection on social context in view. These are related, not identical theories. Reflection can change attention, interpretation and action without retraining. A warning without usable recourse is not meaningful agency, and responsibility does not move from the designer to the user merely because a warning exists.
+Consider data collection or labels, evaluation coverage, objectives or model changes, interface/recourse, human or organizational review, or not using AI for the decision. A reflective interaction revision is an option, not a compulsory interface-only redesign. There is no requirement to retrain, build a prototype or run a full audit.
 
-### 3. Test planning, 10 minutes; then spoken comparison, 15 minutes
+The second team text response should include:
 
-Compare the original and revised interaction on a safe task. Name an observable outcome, a comparator and a failure condition that would change or remove the revision. Separate awareness, ability to act, task success and unequal burdens; improvement in one does not prove the others. Plan the comparison rather than recruit participants or claim a full audit in class.
+- Proposal: what could reduce or remove the selected harm, and why does it fit this case?
+- Credible source/link and relevant evidence: what does the source actually support?
+- Limitation: what remains uncertain, or differs between the source and this project?
+- Check: a safe comparator, observable outcome and failure condition that could show the proposal does not help.
 
-For example, can a person detect and correct an unsuitable workshop suggestion using an explanation and editable access constraints, compared with the original ranked list? Access labels and control effectiveness remain unverified. The toy scoring demo illustrates a mechanism; it does not establish that either ranking or the reflective redesign is fair, safe or effective. Awareness alone is not mitigation.
+Separate awareness, ability to act, task success and unequal burdens. Documentation, a warning or a usable control alone does not prove reduced harm; do not claim proven efficacy or removal where the evidence supports only a proposal. Gender Shades transfers an audit question, not a facial-classification result or validated remedy for speech. The invented caption example's broader evaluation coverage and editable captions remain untested proposals. If search fails, use prepared course evidence and state the gap rather than fabricate findings.
 
-During the debrief, two teams show their example/comparison, consequence/uncertainty and changed interaction without personal data. Keep the source, comparison, limitation, sketch and proposed test for the next session in existing team notes. No new submission channel, mark, upload, deadline or ClassPoint collection is created.
+One nominated member submits one short-answer text on slide 43, distinct from the first response. Exclude identifying details from the first example. Retain the source, proposal, limitation and check in existing private team notes for subsequent project work.
+
+### 3. Spoken comparison, 15 minutes
+
+Invite two teams to discuss public or non-identifying examples they choose to share: harm and evidence, researched proposal, remaining uncertainty. Do not project the collected experience list or identify its contributors. If nobody volunteers, use the invented caption example and prepared historical audit as distinct evidence types. No fairness winner, third response or new pitch is required.
+
+Heidegger, Ihde, Verbeek and Van Den Eede remain resources for analysing perception, action and social context, not evidence that reflection or transparency guarantees fairness. Responsibility does not move to the person harmed because a warning or control exists.
+
+## ClassPoint map and privacy contract
+
+| Slide | Exact question | Collection |
+|---|---|---|
+| 40 | Where have you encountered harmful AI bias? | Short answer; `hide_names=True`; `multiple=False`; one team text at the end of phase 1 |
+| 43 | How could this harmful bias be reduced or removed? | Short answer; `hide_names=True`; `multiple=False`; one team text at the end of phase 2 |
+
+These are the two **ungraded in-class responses authorized on 30 October**, not a new Canvas upload, assessment weight, homework task or deadline. One nominated member submits per team per stage, not one response from every student. Names are hidden on display only; responses may still identify participants to the teaching team. Keep individual responses off projection. Do not publish either activity URL, response content, export or screenshot. Both collections are private, including the linked research response.
+
+Preflight the actual add-in controls before collection. If unavailable, retain private team notes without inventing another submission channel. Withhold both report links and sanitize the actual report JSON and `ANSWERS.md` before publication as specified in the implementation gates; rendering without links is insufficient.
 
 ## Reading and reuse register
 
@@ -201,10 +220,11 @@ Source reuse: [old Week 9 source](https://github.com/venetanji/sd2112-teaching/b
 
 - Reconcile additional instructor-supplied slides and the final Week 8 work.
 - Verify any contemporary product claim or legal statement from a current primary source. No current legal advice is supplied by this plan.
-- Confirm actual project stage, current Canvas milestones and demo accessibility.
-- Current source: `deck/week09.py`; deterministic demo: `deck/week09_demo.py`. Native notes companion: [week09-speaker-notes.md](week09-speaker-notes.md); primary-claim/access/version ledger and offline cards: [week09-evidence-ledger.md](week09-evidence-ledger.md); truthful build/QA record: [week09-verification.md](week09-verification.md). Target-week builds do not establish a full-course site build or deployment.
-- No ClassPoint collection is added. The explanation check and closing comparisons are spoken reflections; activities remain existing private team notes. The report-attachment hook is retained and safely no-ops until a legitimate mapping exists; a stale nonempty mapping is rejected.
-- Ranking demo is complete and native/static: all four invented items, two formulas and both result lists are visible. Optional local Python runs identical arithmetic; no browser sketch, service, new account or model is required.
+- Confirm actual project stage and current Canvas milestones separately from the two authorized in-class responses; check research-source accessibility and the private-notes fallback.
+- Current sources: `deck/week09.py` and `deck/week09_visual_activities.py`. The retained `deck/week09_demo.py` is archival arithmetic provenance, not projected or required in the current lesson. Native notes companion: [week09-speaker-notes.md](week09-speaker-notes.md); primary-claim/access/version ledger and offline cards: [week09-evidence-ledger.md](week09-evidence-ledger.md); truthful build/QA record: [week09-verification.md](week09-verification.md). Target-week builds do not establish a full-course site build or deployment.
+- Verify exactly two short-answer activities at slides 40/43, both with `hide_names=True` and `multiple=False`, and one nominated submitter per team per stage. Check native add-in operation and privacy controls before collection; hidden display names do not establish anonymity. The explanation check and closing comparison remain spoken, not additional collections.
+- Withhold both public report URLs. The source masks report activities before attachment, but this does not sanitize stored data: before any publication, sanitize the actual `deck/week09-reports.json` with `activity: null` and an explicit withholding reason for both exact questions, and remove both URLs from `ANSWERS.md`. Keep positional placeholders if an activity was not run; never shift the second entry. Keep responses, exports and screenshots private and out of public sources/artifacts; review the actual files, not just the rendered deck.
+- Slides 37–38 prepare the two responses using an explicitly invented caption example and bounded research proposal. They do not demonstrate measured accent disparities or proven mitigation; no new research-source read or efficacy claim is created by this documentation alignment.
 - All substantive claim boundaries are visible near their findings, with methods/transfer/access detail in native notes and the evidence ledger. Instructor must still check classroom readability, links/network and any actual ClassPoint add-in use separately.
 - Preserve the published assessment requirements unless explicitly revised; do not publish student work or private records.
 
@@ -219,6 +239,6 @@ Both contemporary studies receive a short standalone summary and actual figure e
 - Gauthier, Hodler, Widmer & Zhuravskaya (2026), **The political effects of X’s feed algorithm**, Nature: https://doi.org/10.1038/s41586-026-10098-2 . A randomized seven-week US X experiment conducted in 2023 found that activating the algorithmic feed shifted some policy attitudes and follow choices; switching it off was not symmetric. It found no significant effect on self-reported partisanship or affective polarization. The platform/time-specific setting and largely self-reported compliance limit transfer. Do not summarize this as “all algorithms radicalize.” Discussion: if recommendations change whom I follow, what should “reset recommendations” reset? Proposed design exercise: distinguish feed mode, history and following controls, then choose an outcome beyond engagement.
 - Glickman & Sharot (online 2024; 2025 issue), **How human–AI feedback loops alter human perceptual, emotional and social judgements**, Nature Human Behaviour: https://doi.org/10.1038/s41562-024-02077-2 . Controlled experiments show that biased AI can amplify subsequent human bias, while accurate AI can improve judgement. This supports a feedback-loop mechanism, not a real-world recommender effect size. Discussion: when does a recommendation stop reflecting preference and start teaching it? Map choice → data → recommendation → changed judgement and identify a test point.
 
-Teach these through **Can changing a feed change people?** to **Learning can go in either direction.** within 60–75, then carry their limitations into the bias-example and reflective-redesign activities. Proposed controls are design hypotheses, not proven remedies. The historical audit/documentation papers retain walkthroughs and source images within 25–45, not an extra lecture block.
+Teach these through **Can changing a feed change people?** to **Learning can go in either direction.** within 60–75, then carry their limitations into the harmful-bias example and researched-mitigation responses. Proposed controls are design hypotheses, not proven remedies. The historical audit/documentation papers retain walkthroughs and source images within 25–45, not an extra lecture block.
 
 The mediation bridge adds Mitchell (1980), **The Need for Biases in Learning Generalizations**, and Van Den Eede (2011; online 2010), **In Between Us: On the Transparency and Opacity of Technological Mediation**, alongside Verbeek (2015). See the evidence ledger for precise source/read scope and the non-assigned **Read the distinctions in context.** shelf. Heidegger and Ihde originals were not newly read; their recall is checked through the mediation articles. No new compulsory reading is created.

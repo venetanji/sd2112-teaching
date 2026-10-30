@@ -1,5 +1,50 @@
 # Week 9 current verification / 30 October 2026
 
+## Current: two text submissions / follow-up to merged PR #22
+
+Giovanni requested replacing slides 37-38 and collecting two text responses:
+harmful AI bias encountered in experience, with a project link where possible;
+then research-backed proposals to mitigate or remove the selected harm. This
+follow-up starts from merged main `134d1992594f356cc9f33d892bb299ee4412c32c`,
+not the closed PR branch. It supersedes the earlier zero-collection contract.
+
+- Still **51 slides**, 47 main + 4 reference, six dividers, three hours,
+  a protected 15-minute break and two 30-minute work blocks.
+- Slides **37-38** replace the arithmetic demo with a clearly invented caption
+  example and research-to-proposal preparation. The arithmetic utility remains
+  archived, not projected. No new measured disparity or proven remedy is claimed.
+- Exactly **two native ClassPoint short answers**, slides **40 and 43**:
+  one nominated member submits one text per team per stage. Hidden display names,
+  multiple submissions off, quiz/grading off. Personal disclosure is optional;
+  a public case is welcome. Responses are not anonymous and remain private.
+- Both report URLs are withheld before the sole attachment call, even when
+  supplied. Tests retain count/question drift failures, input immutability and
+  safe missing/empty/withheld mappings. Stored report JSON and answer indexes
+  still require privacy review before any future publication.
+- Fresh **no-PDF build passes without overflow**; both PowerPoints are rebuilt.
+  Native tests follow each actual button's tags relationship and inspect the
+  ShortAnswer ACTIVITYMODEL. Manifest and HTML show only positions 40/43;
+  the plain PowerPoint has no activity models/buttons.
+- **166 tests pass, zero skips** after fresh exports. Native notes, Markdown
+  companion and lesson map agree. Source-figure provenance remains unchanged.
+- Browser: 51 desktop/mobile sections, no errors or horizontal overflow,
+  27 source/licence links activate in each view, both mode controls work, and
+  activity badges occur only at 40/43. Changed slides inspected in desktop,
+  mobile and native previews; the long slide-39 subtitle was shortened after
+  an overflow check. Opener wording was subsequently aligned and rebuilt.
+
+Receipts in workspace `.openclaw/output-budget/logs/`:
+`run-1793328164055-822e0e39-d6b3-4a90-991d-f1bac25c6d3f` (final build),
+`run-1793328174943-f1460803-0767-49cc-9384-5c1264d988e6` (full tests),
+`run-1793327910896-2abfbbc4-1453-41ee-b648-5d65d12020f6` (browser).
+
+These are export and browser checks, **not a live classroom submission or
+presenter-privacy test**. Preflight the actual ClassPoint add-in; keep individual
+results off projection. If collection is unavailable, retain private team notes
+rather than invent another upload channel. No new Canvas deadline or assessment
+weight. Follow-up PR/CI/hosted-preview results are reported separately after push;
+no merge or production publication is authorized by this revision.
+
 ## PR reconciliation and final polish
 
 Giovanni authorized pushing the local revision to existing PR #22 on 30 October.
