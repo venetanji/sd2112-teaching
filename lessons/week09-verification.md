@@ -1,6 +1,30 @@
 # Week 9 current verification / 30 October 2026
 
-## Current: two text submissions / follow-up to merged PR #22
+## Current: two 20-minute blocks / hard finish 13:20
+
+Giovanni shortened both activities on 30 October and confirmed that class ends
+at **13:20**. This timing correction supersedes the earlier thirty-minute blocks
+and three-hour planning claims below; it does not change either submission.
+
+- First response: **20 minutes**, 5 recall + 10 examine + 5 compose/submit.
+- Second response: **20 minutes**, 15 research + 5 synthesize/submit.
+- Relative work blocks: 105-125 and 125-145; closing discussion 145-160.
+  Total allocated teaching time is 160 minutes, not an inferred class start.
+- Latest starts: 12:25 and 12:45; finish submissions by 13:05, then close by
+  13:20. If ahead, keep the margin rather than extend the activities.
+- Fresh no-PDF build: 51 slides, two native short answers at 40/43, no overflow.
+  All **166 post-build tests pass without skips**, including native notes,
+  ClassPoint settings/privacy and the corrected timing/finish assertions.
+- Revised timers, dividers and closing slide checked in desktop/mobile HTML;
+  both activity displays say 20 min, research says 15 + 5, and slide 47 visibly
+  says FINISH BY 13:20. Targeted browser checks report no errors or overflow.
+
+Build receipt: workspace `.openclaw/output-budget/logs/`
+`run-1793329397172-db6a7f7b-cf7e-4207-ae80-caa84b74e07e`.
+Tests and browser receipts: `tmp/week09-polish-20261029/twenty-minute/`.
+PR #28 remains the review route; no merge or production update is authorized.
+
+## Earlier: two text submissions / follow-up to merged PR #22
 
 Giovanni requested replacing slides 37-38 and collecting two text responses:
 harmful AI bias encountered in experience, with a project link where possible;

@@ -38,9 +38,9 @@ The instructor should allocate these tasks; names in earlier plans do not establ
 
 Do not assume every team already has a prototype or has submitted a formal proposal. A sketch and a defined product decision are enough to enter the activity.
 
-## Implemented three-hour run of show
+## Implemented pacing / finish by 13:20
 
-Relative timings are a planning allocation. Optional 28 October news uses at most five minutes **inside** the opener, replacing elaboration. It does not consume the protected activity time. Six clear topic dividers take approximately ten seconds within their blocks, not extra minutes.
+Class ends at **13:20**, as confirmed by Giovanni on 30 October. Relative timings below total **160 minutes** and are planning allocations, not an inferred class start time. Work backwards from the hard finish: start activity 1 **no later than 12:25**, activity 2 **no later than 12:45**, complete the second submission by **13:05**, then close discussion/carry-forward by **13:20**. If ahead, retain the margin; do not stretch either twenty-minute activity. If behind, trim earlier lecture elaboration rather than run past 13:20. Optional 28 October news uses at most five minutes **inside** the opener, replacing elaboration. It does not consume the protected activity time. Six clear topic dividers take approximately ten seconds within their blocks, not extra minutes.
 
 | Minutes | Segment | Actual slides |
 |---|---|---|
@@ -51,9 +51,9 @@ Relative timings are a planning allocation. Optional 28 October news uses at mos
 | 60–75 | Feedback studies: R2 field experiment and R3 controlled task | 29–35 |
 | 75–90 | Protected break | 36 |
 | 90–105 | Invented caption example + research-to-proposal preparation | 37–38 |
-| 105–135 | Harmful-bias example: 10 recall + 15 examine + 5 compose/submit | 39–41 |
-| 135–165 | Mitigation proposal: 20 research + 10 synthesize/submit | 42–45 |
-| 165–180 | Compare public/non-identifying examples, research and uncertainty | 46–47 |
+| 105–125 | Harmful-bias example: 5 recall + 10 examine + 5 compose/submit | 39–41 |
+| 125–145 | Mitigation proposal: 15 research + 5 synthesize/submit | 42–45 |
+| 145–160 | Compare public/non-identifying examples, research and uncertainty | 46–47 |
 
 ## Actual slide map
 
@@ -62,8 +62,8 @@ Relative timings are a planning allocation. Optional 28 October news uses at mos
 The projected deck now uses diagrams, historical study images and short visual
 instructions rather than prose-heavy cards. Detailed explanations remain in
 speaker notes. The 30 October revision replaces slides 37–38 and adds the two
-authorized in-class responses without changing the 51-slide count, three-hour
-budget, protected break or assessment requirements.
+authorized in-class responses without changing the 51-slide count or protected break; the later timing correction sets two twenty-minute
+blocks and a hard 13:20 finish, without changing assessment requirements.
 Following the Week 8 teaching pattern, each of the five paper walkthroughs
 keeps a **concrete example in simple English on screen**, before the authentic
 source figure or excerpt. Explain what changes, what is compared, and what the
@@ -146,16 +146,16 @@ schematics do not replace the authentic research figures or their limitations.
 - 45–60: divider + selected traces 2 minutes; Heidegger/Ihde/Verbeek recall 3; Van Den Eede use/context questions 4; reflective-use comparison 5; transition 1. Ask what becomes noticeable and what action becomes possible, not whether more explanation automatically makes a system fair.
 - 60–75: divider + R2 walkthrough/figure 5 minutes; R3 walkthrough/procedure/results 5; distinguish task, measures, transfer and transition 5. Read highlighted rows/axes, not every coefficient. Different n=50 follow-ups and different outcomes are not directly comparable bar heights.
 - 90–105: invented automatic-caption example 7 minutes; research-to-proposal preparation 8. Distinguish a hypothetical accent-related error and harm from a measured disparity; show how a credible source can support a bounded proposal. Testing across accents and editable captions are proposals, not proven fixes. This replaces the ranking-arithmetic demo, not an extra block.
-- 105–135: recall examples 10 minutes; examine one and its possible project connection 15; compose and submit the first team text response 5. Include the divider inside this allocation. Personal disclosure is optional; a public case is welcome.
-- 135–165: research credible sources 20 minutes; synthesize the proposal, evidence, limitation and check, then submit the second team text response within the final 10. Include the divider inside this allocation; no separate redesign/test timer or compulsory interface sketch.
-- 165–180: voluntary spoken comparison of public/non-identifying examples 10 minutes, carry-forward/open question 5. Do not project individual responses; use the invented caption example if nobody volunteers. No fairness winner, third submission or new pitch deliverable.
-- Protect the full break and both thirty-minute blocks. If behind, trim lecture elaboration/reference discussion, not activity time. Exactly two ClassPoint short-answer activities, at slides 40 and 43, replace the earlier zero-collection plan.
+- 105–125: recall examples 5 minutes; examine one and its possible project connection 10; compose and submit the first team text response 5. Include the divider inside this allocation. Personal disclosure is optional; a public case is welcome.
+- 125–145: research credible sources 15 minutes; synthesize the proposal, evidence, limitation and check, then submit the second team text response within the final 5. Include the divider inside this allocation; no separate redesign/test timer or compulsory interface sketch.
+- 145–160: voluntary spoken comparison of public/non-identifying examples 10 minutes, carry-forward/open question 5. Do not project individual responses; use the invented caption example if nobody volunteers. No fairness winner, third submission or new pitch deliverable.
+- Protect the full break and both twenty-minute blocks. If behind, trim lecture elaboration/reference discussion, not activity time. Exactly two ClassPoint short-answer activities, at slides 40 and 43, replace the earlier zero-collection plan.
 
 ## Activity: harmful-bias experience, then researched mitigation
 
-### 1. Explain one harmful-bias example, 30 minutes
+### 1. Explain one harmful-bias example, 20 minutes
 
-Work in existing project teams: **10 minutes recall, 15 examine, 5 compose and submit**. Discuss harmful AI bias encountered in use, observation or research, then choose one example to explain. Personal disclosure is optional: a public documented case is equally welcome, with no explanation for choosing it required. Relate the example to the project if possible; do not force a feed or captioning feature into a project that has none. There is no required count of two examples, prototype, paid account, live generation or new paper quota.
+Work in existing project teams: **5 minutes recall, 10 examine, 5 compose and submit**. Discuss harmful AI bias encountered in use, observation or research, then choose one example to explain. Personal disclosure is optional: a public documented case is equally welcome, with no explanation for choosing it required. Relate the example to the project if possible; do not force a feed or captioning feature into a project that has none. There is no required count of two examples, prototype, paid account, live generation or new paper quota.
 
 The first team text response should include:
 
@@ -168,9 +168,9 @@ Use no names, identifying details, private transcripts, classmates' faces, accou
 
 One nominated team member submits one short-answer text on slide 40. Responses may identify participants to the teaching team; hidden display names are **not anonymity**. Keep individual results off projection and use only non-identifying themes after instructor review.
 
-### 2. Research ways to reduce or remove the harm, 30 minutes
+### 2. Research ways to reduce or remove the harm, 20 minutes
 
-Use the same chosen example: **20 minutes research, 10 minutes synthesis and submission**. Find relevant research or an authoritative documented intervention; read the actual method, population, comparator and result rather than relying on a headline, abstract or AI summary. Existing Week 8 research and the taught papers can be starting points, with their transfer limits explicit.
+Use the same chosen example: **15 minutes research, 5 minutes synthesis and submission**. Find relevant research or an authoritative documented intervention; read the actual method, population, comparator and result rather than relying on a headline, abstract or AI summary. Existing Week 8 research and the taught papers can be starting points, with their transfer limits explicit.
 
 Consider data collection or labels, evaluation coverage, objectives or model changes, interface/recourse, human or organizational review, or not using AI for the decision. A reflective interaction revision is an option, not a compulsory interface-only redesign. There is no requirement to retrain, build a prototype or run a full audit.
 

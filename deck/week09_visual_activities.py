@@ -58,7 +58,7 @@ def apply_visuals(slides):
         elif slide.title == 'How could this harmful bias be reduced or removed?':
             steps(slide,[('Research','Find credible sources for this case'),('Suggest','Ways to reduce or remove the harm'),
                          ('Submit','Proposal + source/link + evidence + limit')],
-                  'One team text response: 20 min research + 10 min synthesis.\n'
+                  'One team text response: 15 min research + 5 min synthesis.\n'
                   'No names or private details. Responses may identify you.\n'
                   'Not anonymous. Ungraded; no new Canvas deadline.')
         elif slide.title == 'What makes this an example of bias?':

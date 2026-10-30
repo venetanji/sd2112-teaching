@@ -59,19 +59,28 @@ class Week09Tests(unittest.TestCase):
             'Research ways to reduce the harm.',
         ])
 
-    def test_protected_break_and_two_thirty_minute_blocks(self):
+    def test_protected_break_and_two_twenty_minute_blocks(self):
         self.assertIn('15 minutes', text(self.slide('Break. 15 minutes.')))
         plan = (ROOT / 'lessons/week09-lesson-plan.md').read_text()
         for interval in ('0–10', '10–25', '25–45', '45–60', '60–75',
-                         '75–90', '90–105', '105–135', '135–165', '165–180'):
+                         '75–90', '90–105', '105–125', '125–145', '145–160'):
             self.assertIn(interval, plan)
-        for position, interval in ((40, '105-135'), (43, '135-165')):
+        for position, interval in ((40, '105-125'), (43, '125-145')):
             block = teaching_content(self.slides[position - 1]).lower()
             self.assertIn(interval, block.replace('–', '-'))
-            self.assertRegex(block, r'(30|thirty)[ -]min')
+            self.assertRegex(block, r'(20|twenty)[ -]min')
         research = teaching_content(self.slides[42]).lower()
-        self.assertRegex(research, r'(20|twenty)[ -]+min(?:ute)?s?[^.]{0,70}research')
-        self.assertRegex(research, r'(10|ten)[ -]+min(?:ute)?s?[^.]{0,70}synthesi')
+        self.assertRegex(research, r'(15|fifteen)[ -]+min(?:ute)?s?[^.]{0,70}research')
+        self.assertRegex(research, r'(5|five)[ -]+min(?:ute)?s?[^.]{0,70}synthesi')
+        self.assertIn('13:20', plan)
+        self.assertIn('12:25', plan)
+        self.assertIn('12:45', plan)
+        self.assertIn('13:05', plan)
+        self.assertIn('160 minutes', plan)
+        self.assertIn('13:20', text(self.slides[46]))
+        for position in (40, 43):
+            self.assertIn('20 min', text(self.slides[position - 1]))
+            self.assertNotIn('30 min', text(self.slides[position - 1]))
         self.assertIn('Friday 30 October 2026', plan)
         self.assertIn('confirmed by Giovanni on 28 October 2026', plan)
 
