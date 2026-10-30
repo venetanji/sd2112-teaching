@@ -18,6 +18,12 @@ Fresh local verification on the bound course node, using this checkout's own pin
 - Measured text bounds: no body overflow. Only established title/activity-heading line boxes exceed scrollHeight (slides 1, 11, 14, 20, 23); glyphs and neighbouring content were visually inspected and do not collide. This is a rendering-specific line-box observation, not a body-overflow exemption.
 - Both native PPTXs contain **29 slides**; every native notes frame exactly matches the final source and regenerated Markdown companion. These are structural and generator-preview checks, not Microsoft PowerPoint classroom rendering or live add-in tests.
 
+### Final integration with current main
+
+After the first push, GitHub reported the pre-existing build-list conflict with newer main changes; PR CI could not start. Integrated verified current main `b9a6542c87b9dde15bc1b9698ee54ec73e1bddcc` into the draft branch, resolving only the `deckgen.toml` conflict as the registration union Weeks 1-10. Newer Week 8/9 content, navigation, delivery infrastructure and all other main changes are retained unchanged. Main and staging refs are not modified. The PR diff against that base remains Week 10-owned sources plus its one build-list addition; this is not a production merge.
+
+Final **unfiltered ten-deck build** succeeds with HTML, PDFs, both native PPTX variants and previews for every registered week. Artifact verification passes for all ten decks; Week 10 has 29 source/native slides and 29 PDF pages. Receipt `run-1793343140015-030b2826-4d55-4432-9a9e-3d2835ad0573`. Post-build full suite: **179 passed, zero skips**, including the newer Week 9 export checks; receipt `run-1793343353792-02364e52-75ef-44fb-ac46-25c659ed3da3`. Repeated Week 10 desktop/mobile/link/toggle QA and exact native-note comparison pass on the integrated source; browser receipt `run-1793343383021-1e80628f-5f70-45d9-a73e-3661a3fcc121`. Week 10 teaching source and notes are unchanged by the base integration.
+
 Private evidence: `tmp/week10-ai-inside-20261030-qa/` contains browser/native JSON, screenshots and contact sheets. It is not staged or delivered to the instructor. Exact-head CI and hosted-preview results belong in the current PR handoff, not the historical receipts below. Classroom device/font/access checks and actual facilitation remain unverified.
 
 ## Historical Week 8-standard revision / October 22, 2026
