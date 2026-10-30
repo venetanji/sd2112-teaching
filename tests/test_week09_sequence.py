@@ -216,12 +216,15 @@ class Week09Tests(unittest.TestCase):
                 number = next(e for e in s.els if getattr(e, 'name', '') == 'chrome-num')
                 self.assertEqual(number.paras[0].runs[0].text, f'{i:02d}')
 
-    def test_only_build_list_extended_not_navigation(self):
+    def test_published_week_is_registered_and_linked(self):
         conf = tomllib.loads((ROOT / 'deckgen.toml').read_text())
         self.assertEqual(conf['course']['decks'].count('week09'), 1)
         self.assertEqual([w for w in conf['course']['decks'] if w in [f'week{i:02d}' for i in range(1,9)]],
                          [f'week{i:02d}' for i in range(1,9)])
-        self.assertFalse(any(n['href'] == 'week09/' for n in conf['nav']))
+        self.assertTrue(any(n['href'] == 'week09/' for n in conf['nav']))
+        homepage = (ROOT / 'site/index.html').read_text()
+        self.assertIn('href="week09/"', homepage)
+        self.assertIn('href="week09/SD2112-week09.pdf"', homepage)
         self.assertEqual(self.deck['pdf'], 'SD2112-week09.pdf')
 
     def test_exported_notes_and_native_links_if_built(self):
