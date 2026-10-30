@@ -64,7 +64,7 @@ def paper_block(s, x, y, width, label, value, height, name):
 
 def study_setup(url, notes):
     s = paper_frame('Where did designers use AI?',
-                    'THE STUDY / SÖZEN & BÖREKÇİ / 2026 PUBLICATION', notes)
+                    'OPTIONAL CONTEXT / AI AS A DESIGN TOOL / 2026 PUBLICATION', notes)
     paper_block(s, 120, 348, 780, 'WHAT THEY DID',
                 '88 AI-user survey responses in Türkiye; 10 selected professionals then designed a lunchbox while thinking aloud, using tools they chose.',
                 215, 'study-task')
@@ -85,7 +85,7 @@ def study_setup(url, notes):
 
 def study_result(url, notes):
     s = paper_frame('Both problem and solution work.',
-                    'THE FINDING / READ THE MAP, NOT AN EFFECT SIZE', notes)
+                    'OPTIONAL CONTEXT / NOT A STUDY OF AI-ENABLED PRODUCTS', notes)
     asset = Path(__file__).resolve().parent/'assets'/'week10'/'sozen-borekci-2026-fig5-overview.png'
     s.els.append(Image(120, 348, 1010, 430, str(asset), 'contain',
                        name='paper-figure', url=url))
@@ -106,7 +106,7 @@ def study_result(url, notes):
 
 def mediation_checkpoint(url, notes):
     s = paper_frame('Can the person say no?',
-                    'SAME PROTOTYPE BLOCK / VERBEEK (2015) / CONCEPTUAL LENS', notes)
+                    'SAME DEVELOP BLOCK / VERBEEK (2015) / CONCEPTUAL LENS', notes)
     paper_block(s, 120, 348, 780, 'THE ARGUMENT / NOT A PARTICIPANT STUDY',
                 'Technology helps shape what people notice, understand and do. A product is not just a neutral channel for a fixed intention.',
                 215, 'concept-argument')

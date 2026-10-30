@@ -1,6 +1,26 @@
 # Week 10 / local implementation verification
 
-## Current Week 8-standard revision / October 22, 2026
+## Current AI-inside revision / October 30, 2026
+
+Instructor-approved focus: products/services with AI inside, considered through Discover, Define, Develop and Deliver, using Week 8 mediation/AI-as-material and Week 9 data/bias/privacy. This supersedes the workshop-only teaching sequence below. Zhibin and four PhD researchers are intended contributors; their acceptance, identities beyond Zhibin, topics, order, individual allocations and facilitation roles are not invented. The new contributor brief records these open fields.
+
+Prepared a separate detached worktree at exact PR #23 head `82d796ed66a0ec942186164712b04bcad57f2eff`: `tmp/week10-ai-inside-20261030`. The older dirty `week10-worktree` is untouched. No syllabus, assessment, report, workflow, dependency, shared-renderer, main or staging change is part of this revision. The existing PR stays open/draft; branch preview is separate from production delivery.
+
+29 native slides: 26 in the proposed relative-minute route, then an untimed reference shelf and two preserved AI-as-design-tool study slides. The study is explicitly optional background, not AI-product validation. The new phase prompts are course-authored application, not an empirical result or official Design Council AI guidance. Existing primary-source checks, licences, source pixels and access boundaries remain in the ledger; no new full-paper audit is claimed.
+
+Proposed budget: opening/phase framing 15, collective guest cases 45, shared questions 10, break 15, four-phase map 15, develop/prototype 30, voluntary walkthrough 25, revise/share 10, provisional ESFQ reserve 15 = **180 minutes**. All workshop substeps sum to their blocks. Date, speaker allocations and the school arrangement remain provisional. Zero ClassPoint collections, new uploads or new assessment; Prototype v1 and actual Canvas instructions still apply.
+
+Fresh local verification on the bound course node, using this checkout's own pinned environment:
+
+- `.venv/bin/deckgen build --no-pdf week10`: exit 0, 29-slide HTML, both PPTX variants, native preview images and document exports. No build overflow, missing asset or report mismatch. Receipt `run-1793342232181-eb437de1-e136-46f2-91b6-5d6ea0a4529e`. This command deliberately does not certify a PDF or complete-course build.
+- Post-build full unittest discovery: **140 passed, zero skips**; Week 10's 13 regressions cover focus/bridge, phase order, provisional guests, full timing/substeps, evidence limits, privacy, zero collections, native geometry, links, plan map and exact notes synchronization. Full-suite receipt `run-1793342260919-12afba94-1b63-4a38-b347-b884b151ba75`. Existing generator image-reader ResourceWarnings are non-failing and not patched here.
+- Browser QA: all **29 desktop slides and 29 fresh 390x844 mobile reading sections** captured and visually reviewed alongside all 29 generator-native previews. No mobile horizontal overflow or browser page errors. Ten real anchor activations across desktop/mobile verify framework/licence/study/Verbeek destinations using intercepted external navigation, not external publisher availability. Visible mobile Deck view toggle passes. Receipt `run-1793342298612-8a2508f5-9d69-434b-97ec-310b41ee88c4`.
+- Measured text bounds: no body overflow. Only established title/activity-heading line boxes exceed scrollHeight (slides 1, 11, 14, 20, 23); glyphs and neighbouring content were visually inspected and do not collide. This is a rendering-specific line-box observation, not a body-overflow exemption.
+- Both native PPTXs contain **29 slides**; every native notes frame exactly matches the final source and regenerated Markdown companion. These are structural and generator-preview checks, not Microsoft PowerPoint classroom rendering or live add-in tests.
+
+Private evidence: `tmp/week10-ai-inside-20261030-qa/` contains browser/native JSON, screenshots and contact sheets. It is not staged or delivered to the instructor. Exact-head CI and hosted-preview results belong in the current PR handoff, not the historical receipts below. Classroom device/font/access checks and actual facilitation remain unverified.
+
+## Historical Week 8-standard revision / October 22, 2026
 
 26 slides: 25 in the timed route (including provisional ESFQ and break), one untimed reference shelf. The compressed study card is replaced, not supplemented, by a task/recording slide followed by the authentic Figure 5 result map. The same four minutes and 15-minute framing allocation remain. Verbeek's conceptual checkpoint now uses a labelled argument/example/application/limit layout. The week-owned helper uses Week 8's x120/y184/w1680/h140, 72px paper title, 52px label/body gap and citation y956. No workshop exercises, ClassPoint prompts, grading or deadlines were added.
 

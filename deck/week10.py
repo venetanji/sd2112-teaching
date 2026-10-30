@@ -1,8 +1,8 @@
-"""Week 10: evidence-based reframe / prototype / voluntary peer test workshop."""
+"""Week 10: design a product with AI inside, through the Double Diamond."""
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from deckgen import attach_reports, INK, PAPER
+from deckgen import attach_reports, PAPER
 from deckgen.layouts import title, content, two_col, activity, statement, figure_slide, finalize
 from course import footer
 import week10_figures as F
@@ -11,139 +11,192 @@ S = []
 DC = 'https://www.designcouncil.org.uk/resources/the-double-diamond/'
 PAPER_URL = 'https://doi.org/10.1017/S0890060426100304'
 VERBEEK = 'https://ris.utwente.nl/ws/files/6973415/p26-verbeek.pdf'
-# Relative time is deliberate: date, staffing and the school's visit are unconfirmed.
+# Proposed relative times, not accepted speaker slots or a confirmed school visit.
 BLOCKS = [
-    (0, 15, 'Provisional school ESFQ reserve', 1, 1),
-    (15, 30, 'Framing', 2, 7), (30, 55, 'Reframe', 8, 11),
-    (55, 75, 'Develop', 12, 14), (75, 90, 'Break', 15, 15),
-    (90, 115, 'Prototype', 16, 18), (115, 145, 'Test', 19, 21),
-    (145, 165, 'Revise', 22, 23), (165, 180, 'Share', 24, 25),
+    (0, 15, 'Weeks 8-9 bridge and Double Diamond', 1, 7),
+    (15, 60, 'Guest cases: Zhibin and four PhD researchers', 8, 8),
+    (60, 70, 'Case discussion', 9, 9), (70, 85, 'Break', 10, 10),
+    (85, 100, 'Four-phase project map', 11, 13),
+    (100, 130, 'Develop and prototype', 14, 19),
+    (130, 155, 'Voluntary peer walkthrough', 20, 22),
+    (155, 165, 'Revise and share', 23, 25),
+    (165, 180, 'Provisional school ESFQ reserve', 26, 26),
 ]
 
-S.append(content('PROVISIONAL RESERVE / 15 MINUTES / PLACEMENT TO CONFIRM',
-    'School ESFQ: if confirmed.', [
-    '15 minutes reserved provisionally; school placement to confirm.',
+S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 10',
+    'Design with\nAI inside.', 'The Double Diamond. Decisions, data and consequences.', size=126,
+    notes='0-15 opening, slides 1-7 together. One minute here; two minutes each on the six following slides. The focus approved by Giovanni is designing a product or service with AI inside, not using AI to accelerate the designer\'s workflow. Giovanni is confirmed absent. Zhibin and four PhD researchers are intended contributors; their topics, individual allocations, speaking order, acceptance and facilitation roles remain to confirm. Relative timings are a proposal, not a confirmed rota. No new submission, deadline or grading criterion.'))
+S.append(two_col('BRIDGE / WEEKS 8 AND 9', 'From material to design decisions.',
+    ['WEEK 8 / AI AS DESIGN MATERIAL', 'What does the product decide for a person?',
+     'How does it shape what they notice and do?', 'Who keeps judgment, control and responsibility?'],
+    ['WEEK 9 / DATA, BIAS AND PRIVACY', 'What data makes that decision possible?',
+     'Whose patterns and perspectives are represented?', 'What harm could follow, and how could we reduce it?'],
+    right_font='body', left_size=34, right_size=34, lang=None,
+    notes='Two minutes. Reconnect to Week 8\'s using-versus-incorporating distinction and mediation: the AI-enabled product shapes perception, action and relationships, not just output speed. Week 9 adds learned patterns versus harmful bias, data and privacy considerations. Not every learned distinction is a harmful bias; ask who is disadvantaged in this application, by which mechanism and consequence. Research-backed mitigation is a hypothesis to test in context, not a promise that harm can always be removed. Use existing project evidence and bias notes, not a new reading quota.'))
+S.append(figure_slide('FRAMEWORK / OUR APPLICATION: PRODUCTS WITH AI INSIDE', 'Two diamonds. Four kinds of work.',
+    F.source_image('design-council-double-diamond.png', 'Official Design Council Double Diamond: Discover, Define, Develop, Deliver'), bg=PAPER,
+    body=['Discover and Define: understand the need; decide the role of AI.',
+          'Develop and Deliver: explore interactions; test, improve and monitor. Return when evidence changes.'],
+    caption=f'[Design Council: The Double Diamond]({DC}), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Official diagram, unchanged.',
+    notes='Two minutes. The official Design Council framework distinguishes Discover, Define, Develop and Deliver; divergence opens possibilities and convergence focuses choices. The AI-product questions on the following slides are our teaching application, not claims that the Design Council prescribes this AI checklist. The official PNG is unchanged, with CC BY 4.0 attribution. This is a framework, not measured evidence of better outcomes. It is iterative: testing may reopen the problem. The older AI-as-design-tool study is optional context after the timed route, not the lesson\'s central evidence.'))
+S.append(content('DISCOVER / NEED, CONTEXT, PEOPLE, DATA', 'Whose experience changes?', [
+    'Understand the need before assuming AI is the answer.',
+    'Ask what the product would make visible, easy or difficult.',
+    'Find missing perspectives and evidence about affected people.',
+    'Ask what data exists, who it represents and whether it may be used.',
+], body_size=36,
+    notes='Two minutes. Connect Week 8 mediation to Week 9 representation and privacy. A fictional cafe chooser is the running example, not a researched user need: a time-limited commuter might need comparison, not automated choice. Identify affected people beyond the primary user, including those ranked or excluded. A generated persona is not evidence from those people. Accessible data is not automatically accurate, representative or permitted for this purpose. Record unknowns rather than invent research; use saved source passages if offline.'))
+S.append(content('DEFINE / AI ROLE, BOUNDARIES, EVIDENCE', 'What should the AI decide?', [
+    'State the need and why AI belongs in the product.',
+    'Separate the model output, the product rule and the human choice.',
+    'Define useful outcomes, unacceptable harms and data limits.',
+    'Choose the assumption whose failure would change the design.',
+], body_size=36,
+    notes='Two minutes. Make the AI\'s role explicit: ranking cafe options is different from automatically choosing or booking one. The model may estimate a match, a written product rule may filter opening hours, and the person may make the final choice. This reconnects Machine A/Machine B without adding a technical lecture. Compare a simpler or non-AI baseline to justify the AI role; that comparison does not remove the project requirement to incorporate AI. Success includes the intended user outcome and its distribution, not only engagement or a model score. Record harms and boundaries before testing.'))
+S.append(content('DEVELOP / ALTERNATIVES, CONTROL, FAILURE', 'Design more than the happy path.', [
+    'Compare interactions and levels of AI autonomy.',
+    'Make uncertainty and the basis of a suggestion understandable.',
+    'Design correction, rejection and recovery from a poor output.',
+    'Minimise data; examine biased results and who bears the cost.',
+], body_size=36,
+    notes='Two minutes. Explore meaningfully different responses, not only different screen colours. For the fictional cafe product, compare an automatic first choice with an editable comparison card. Consider explanations that a person can use, missing evidence, inappropriate suggestions and a usable fallback. An override button is not a complete ethics solution: who notices the problem, does the correction work, and who must do extra labour? Data minimisation, representation and potential harm travel through the prototype, rather than waiting for an end-of-process ethics slide.'))
+S.append(content('DELIVER / TEST, RECOVER, MONITOR, RETURN', 'Test the interaction and the AI.', [
+    'A paper simulation tests the interface, not model reliability.',
+    'Check useful outcomes and failures across relevant contexts.',
+    'Plan recovery, responsibility and privacy-safe monitoring.',
+    'New evidence may send you back to Discover or Define.',
+], body_size=36,
+    notes='Two minutes. Separate interface comprehension from actual model behaviour and longer-term product consequences. Future model evaluation needs relevant cases, baselines and attention to who benefits or fails; do not fabricate benchmarks from a classmate walkthrough. Discuss feedback, correction, rollback or a non-AI route, and who acts on a reported failure. Monitoring is a plan, not permission to collect personal data. Today\'s classroom task does not deploy a product, establish safety or authorize high-stakes validation. All four phases revisit data, bias and mediation.'))
+S.append(content('GUEST CASES / PROPOSED 15-60 / TOPICS AND ORDER TO CONFIRM', 'Show the AI inside the product.', [
+    'Intended contributors: Zhibin + four PhD researchers.',
+    'Need -> AI role -> design decision -> evidence or failure.',
+    'Connect each case to relevant Double Diamond phases.',
+    'Listen for a decision you could reconsider in your own project.',
+], body_size=36,
+    notes='Proposed 45-minute collective case block, not five confirmed individual bookings. Zhibin and four PhD researchers are the instructor\'s intended contributors. Their names beyond Zhibin, titles, examples, demos, order, acceptance and individual minutes remain unconfirmed. Do not assign one speaker per phase. Brief them to show a product/service with AI inside: the need, the AI\'s function, data and human roles, choices through relevant phases, a failure or piece of evidence that changed the design, and an unresolved limitation. Tool-use examples alone are not the focus. No claims about speakers\' actual work are supplied here. Confirm allocations before class; do not silently consume workshop time.'))
+S.append(content('CASE DISCUSSION / PROPOSED 60-70', 'Which decision would you question?', [
+    'Which phase changed when the speaker found new evidence?',
+    'What did the AI decide, and what remained with a person?',
+    'Who might be poorly represented, excluded or exposed?',
+    'Which lesson transfers to your project, and which may not?',
+], body_size=36,
+    notes='Ten minutes including speaker questions. Discuss specific cases actually presented, not invented study findings. Ask for the task, affected people, evidence and limits behind a claim. Bring Week 8 mediation and Week 9 harm/data reasoning into the same design decision. A speaker\'s successful example does not establish transfer to every team\'s users. If a case does not demonstrate AI incorporated in a product, explicitly distinguish it from today\'s product focus instead of changing the brief.'))
+S.append(statement('Break.\n15 minutes.', eyebrow_text='PROPOSED 70-85 / RELATIVE CLASS TIME', size=120,
+    notes='Protect the full fifteen-minute break. Announce an actual return time only after the timetable is confirmed. The following workshop starts with existing project material and paper; no new account, subscription or installation is required. Speaker overruns must be managed against the confirmed case allocations, not silently paid for by the break or the voluntary test.'))
+S.append(activity('01 / MAP YOUR AI PRODUCT', 15, 'Four phases. One product.', [
+    '0-4 / Need, affected people, data and missing evidence.',
+    '4-8 / AI role, human choice, useful outcomes and harms.',
+    '8-12 / Alternatives, failure paths and evaluation needs.',
+    '12-15 / Choose one consequential uncertainty to test.',
+], notes='85-100, one fifteen-minute block across slides 11-13. Each team makes a four-phase map of its own product with AI inside, in its existing workspace. This is not four full research phases completed in fifteen minutes. Record known decisions, evidence, risks and unknowns; choose the most consequential unresolved assumption. A concept, sketch or working interaction is an acceptable starting point. Carry forward Weeks 8-9 research and bias notes, and one relevant guest insight with transfer limits. No new upload or assessment.'))
+S.append(two_col('SAME MAP BLOCK / EVIDENCE + DECISION + RISK + NEXT CHECK', 'Make the whole process visible.',
+    ['DISCOVER', 'Person, need, affected people; data source and missing voices.',
+     'DEFINE', 'Why AI? Model output, product rules, human choice; success and harms.'],
+    ['DEVELOP', 'Alternative interactions; data limits, uncertainty and recovery.',
+     'DELIVER', 'Interface test, model evaluation, responsibility and monitoring.'],
+    right_font='body', left_size=34, right_size=34, lang=None,
+    notes='Within the same fifteen minutes. For each phase, record one decision, its evidence or assumption, an important risk and the next check. The map is a working design aid, not a new compulsory poster section. Draw arrows back when uncertainty crosses phases: a harmful ranking may require revisiting data or the product\'s objective, not only changing a label. The product should incorporate AI; a non-AI baseline remains a useful comparator and fallback. Do not treat a generated persona or a guest example as direct evidence of this team\'s users.'))
+S.append(content('SAME MAP BLOCK / USE WEEKS 8-9 EVIDENCE', 'A plausible idea is not a finding.', [
+    'Open the source passage: who, task, comparison and outcome?',
+    'Separate a finding, an assumption and a generated suggestion.',
+    'Which evidence concerns your intended people and context?',
+    'Write the strongest counterargument and the next evidence gap.',
+], body_size=36,
+    notes='Use within the map block, especially its final uncertainty choice. A generated summary is not the source; inspect the relevant passage if available. Note source version, access and limits. With no network, use saved project passages; with no evidence, write unknown rather than fabricate a finding. Not every learned pattern is harmful: specify a potential disadvantage, its mechanism and affected people, then consider research-backed mitigation. Keep disagreement in the map. No private sources, names or personal notes are collected.'))
+S.append(activity('02 / DEVELOP AND PROTOTYPE', 30, 'Build only enough to learn.', [
+    '0-5 / Sketch two responses; choose the uncertain decision.',
+    '5-10 / Write a task and what would change your mind.',
+    '10-25 / Build request, AI output, choice and recovery.',
+    '25-30 / Label simulation; rehearse a neutral task.',
+], notes='100-130, one thirty-minute block across slides 14-19. Substeps total thirty minutes. Start from the four-phase map, not an assumed polished prototype. Compare two interactions or autonomy levels, choose one uncertainty, define the test, then make the minimum useful prototype. Paper, role-play, Figma or existing code is fine. Teams with code should isolate one interaction, not add broad features. Show the AI\'s role, the person\'s choice, data boundary and at least one poor-output recovery path. Label simulated AI before participation.'))
+S.append(two_col('SAME DEVELOP BLOCK / CHOOSE AN ALTERNATIVE', 'Test the decision, not the decoration.',
+    ['FICTIONAL CAFE PRODUCT', 'A / AI chooses one cafe automatically.',
+     'B / AI ranks options; the person edits constraints and chooses.',
+     'Compare with a simple non-AI baseline where relevant.'],
+    ['ONE UNCERTAINTY', 'Can a person understand a reason and reject an unsuitable suggestion?',
+     'PAPER CANNOT SHOW', 'Actual model reliability, ranking accuracy or real-world safety.'],
+    right_font='body', left_size=32, right_size=32, lang=None,
+    notes='First five minutes of Develop. This is an invented example, not research or a guest\'s product. Compare what changes in the person\'s agency and burden, not just screen styling. The baseline helps justify AI and may offer recovery; it does not rewrite the project as a non-AI product. Choose an observable uncertainty such as comprehension, correction or recovery. Satisfaction alone does not establish effectiveness or safety. The task must match the question you can actually investigate today.'))
+S.append(content('SAME DEVELOP BLOCK / TEST CONTRACT', 'Decide what would change your mind.', [
+    'Task: compare two fictional options; choose one or reject both.',
+    'Observe: stated reason, hesitation, correction and help needed.',
+    'Revise if: a reason is mistaken or rejection needs coaching.',
+    'This is a design trigger, not a validated threshold.',
+], body_size=36,
+    notes='Minutes 5-10 of Develop. Teams replace this fictional ten-minute cafe scenario with their own ordinary low-risk task. Write the prompt, comparison and observable outcome before testing. This is formative work, not a controlled experiment: order, familiarity and a tiny convenience sample limit attribution. Do not invent percentage targets or claim that a successful walkthrough establishes model quality, accessibility or long-term benefit. Record what result would challenge the preferred design.'))
+S.append(two_col('SAME DEVELOP BLOCK / PAPER FALLBACK', 'Three cards are enough.',
+    ['1 / REQUEST', 'Fictional commuter: ten minutes, two cafe options. No real account or location.',
+     '2 / AI SUGGESTION', 'Two invented options and reasons. SIMULATED AI - prepared by the team.'],
+    ['3 / CHOICE + RECOVERY', 'Change constraints, choose another, reject both or continue without AI.',
+     'Prepare one unsuitable suggestion and its recovery path.',
+     'No device, login, purchase or model call is needed.'],
+    right_font='body', left_size=32, right_size=32, lang=None,
+    notes='Minutes 10-25 of Develop. Make simulation visible before the task; a teammate reveals a prepared next card after the person acts, not a covert model impersonation. Invented cafe names, reasons and attributes are scenario props, not actual recommendations. One mismatch could violate the fictional time constraint. Test how the interface handles it, not an invented model failure rate. No need to spend workshop time installing tools or connecting a live model.'))
+S.append(F.mediation_checkpoint(VERBEEK,
+    notes='Same Develop block; support slide, not extra time. Verbeek\'s Beyond Interaction (2015), pp.28-31, is the established Week 8 conceptual lens: technologies shape perception and action, not merely serve fixed intentions. The fictional cafe example is our application, not a study from the essay. Ask who notices a poor suggestion, who must correct it and whether refusal is meaningful. Correction, rejection and fallback are design hypotheses, not proven safeguards. An override button alone does not settle wider consequences or responsibility.'))
+S.append(content('SAME DEVELOP BLOCK / WEEK 9 CHECKPOINT', 'Keep data and harm in the design.', [
+    'What input is necessary? What could you avoid collecting?',
+    'Who might receive a worse or unsuitable suggestion, and why?',
+    'How would someone correct data, challenge output or recover?',
+    'Test a mitigation; do not claim that bias has been removed.',
+], body_size=36,
+    notes='Use during building and the final five-minute rehearsal, not as another activity. Carry the relevant Week 9 harm example and proposed mitigation into a concrete interaction. A smaller data footprint does not automatically make a product fair, and a visible explanation does not prove accuracy. Do not equate learned patterns with harmful bias: identify a contextual disadvantage and mechanism. Use synthetic inputs; no identifiable or sensitive data. A product-level control cannot substitute for evaluating underlying model/data behaviour.'))
+S.append(activity('03 / VOLUNTARY PEER WALKTHROUGH', 25, 'Give the task. Then watch.', [
+    '0-3 / Explain simulation, voluntary participation, right to stop.',
+    '3-11 / Test. 11-19 / Swap if willing. 19-25 / Compare notes.',
+    'Declining is fine: use an internal walkthrough.',
+    'No recording, names, sensitive stories or transactions.',
+], notes='130-155, one twenty-five-minute block across slides 20-22. The 3+8+8+6 checkpoints total twenty-five minutes. Invite another team locally, explain simulated behaviour and allow anyone to decline, pause or stop. An internal walkthrough is an alternative, with weaker outsider evidence and clearly labelled. Use synthetic, low-risk scenarios only. Do not collect names, recordings, personal stories or health/legal/financial data. Consent is for classroom learning, not publication. Stop intrusive or unsafe scenarios; do not initiate recruitment or high-stakes validation.'))
+S.append(two_col('SAME WALKTHROUGH BLOCK / NEUTRAL SCRIPT', 'Do not teach the answer.',
+    ['SAY', 'This is a simulated interface. You can stop at any time.',
+     'Use these fictional options to make a choice, or reject both.', 'What would you do next?'],
+    ['AVOID', 'Click the explanation so you can trust our AI.', 'You like this version better, right?',
+     'Observe difficulty before helping; record any help.'],
+    right_font='body', left_size=32, right_size=32, lang=None,
+    notes='Leave visible during the walkthrough if useful. Use a neutral task that permits rejection, not a script guiding the person to the desired outcome. A think-aloud request can change behaviour; a pause is not automatically confusion. Ask after the attempt what a label meant and what the person expected. If comparing variants, record order and familiarity; this exercise cannot isolate causal effects. A helpful facilitator must not turn coached success into an unassisted outcome.'))
+S.append(two_col('SAME WALKTHROUGH BLOCK / KEEP NOTES PRIVATE', 'Observation is not interpretation.',
+    ['OBSERVATION / INVENTED EXAMPLE', 'Person chose B, then asked where the quiet claim came from.',
+     'Reject was found only after a hint.', 'Record task, action, outcome and any help; no names.'],
+    ['INTERPRETATION / TENTATIVE', 'The explanation may not show its evidence clearly.',
+     'NEXT CHECK', 'Try a source label and visible rejection; test again.'],
+    right_font='body', left_size=32, right_size=32, lang=None,
+    notes='Use the final six minutes to compare observer and test-lead notes. The text is an invented example, not actual classroom results. A classmate is not automatically an intended user. Distinguish observation from inference and interface behaviour from model quality. Satisfaction alone is insufficient; a failure can reflect task wording or prototype limits. Preserve one outcome that challenged expectations and explicitly record missing evidence. Keep test notes in the existing private team workspace.'))
+S.append(activity('04 / REVISE AND SHARE', 10, 'One changed decision. Its evidence.', [
+    '0-5 / Revise one consequential decision; keep before/after.',
+    '5-8 / Share evidence and limits with a neighbouring team.',
+    '8-10 / Record the next check and who should act.',
+], notes='155-165, one ten-minute block across slides 23-25. The 5+3+2 checkpoints total ten minutes. Return to the four-phase map: revise the relevant need, AI role, data choice, interaction or recovery path. A defensibly retained decision is acceptable if evidence and limits are explicit. Share locally rather than create a full-room pitch queue. No new collection, grade or deadline. If the ESFQ reserve is unused, use it for extra revision and feedback rather than extend beyond three hours.'))
+S.append(content('SAME REVISION BLOCK / DELIVER IS NOT THE END', 'What still needs a real test?', [
+    'Separate interface evidence from actual model performance.',
+    'Name missing users, contexts, harmful outcomes and data checks.',
+    'Plan feedback, privacy-safe monitoring, recovery and responsibility.',
+    'No clinical, legal or high-stakes validation here.',
+], body_size=36,
+    notes='During revision, plan the next evidence without pretending it was gathered today. A simulated interface cannot establish recommendation quality or fairness, and classmates do not represent all affected people. Name who would review failures and what would trigger rollback, correction or reframing. Monitoring must respect purpose and data limits; this classroom plan is not permission to collect personal data, recruit people or deploy a high-stakes system. Return to Discover/Define when the problem or objective, not just the interface, is wrong.'))
+S.append(content('FINISH / EXISTING PROJECT WORKSPACE', 'Keep the reasoning, not just the screen.', [
+    'Keep: four-phase map + evidence + test + before/after.',
+    'State: changed ___ because ___; not established ___.',
+    'Prototype v1 milestone still applies. Check Canvas instructions.',
+    'No new graded submission or deadline.',
+], body_size=36,
+    notes='Final two minutes of revision/sharing. The intended outcome is a map of the AI-enabled product across four phases, key decisions and risks, and a prototype/walkthrough of the most consequential uncertainty. Keep observation, interpretation, simulation and unknowns separate. This feeds existing project research, poster and mediation reasoning without adding compulsory assessed sections. Preserve the syllabus Prototype v1 milestone and actual Canvas instructions. No student test notes or records belong in public course sources.'))
+S.append(content('PROVISIONAL RESERVE / 15 MINUTES / PLACEMENT TO CONFIRM', 'School ESFQ: if confirmed.', [
+    '15 minutes reserved provisionally; placement to confirm.',
     'Visit not yet confirmed. Follow confirmed school instructions.',
     'Move the reserve if needed; unused time: revision and feedback.',
 ], body_size=37, bg=PAPER,
-    notes='0-15 is a planning placeholder, not a statement that school staff are present, have accepted or will visit at this time. Giovanni is confirmed absent; coverage is unconfirmed. Confirm date, facilitators and school placement before class. No survey is invented here. Preserve all workshop blocks and the break; an unused reserve becomes revision/feedback, not a new assessment.'))
-S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 10',
-    'Reframe.\nPrototype. Test.', 'The Double Diamond with evidence.', size=132,
-    notes='15-30 framing block, six slides total. No pre-reading is assumed. Keep the framework, study summary and figure to six minutes together; this is not an added lecture block. Giovanni is absent; no named substitute is assumed. Use relative times until calendar and coverage are confirmed. This is a facilitated workshop, not a replacement recommendation lecture. By the end, each team can explain evidence -> changed question -> prototype -> observation -> revision. No new submission, deadline or grading criterion.'))
-S.append(content('15-30 / OPEN YOUR EXISTING TEAM WORK', 'Start where your project is.', [
-    'Start with a concept, sketch or working interaction.',
-    'Open Weeks 8-9 evidence + one unresolved assumption privately.',
-    'Keep decisions in your team workspace. No new upload.',
-    'Prototype v1 milestone still applies. Check Canvas instructions.',
-], body_size=35, notes='Two minutes. Ask teams to locate one source and one unresolved assumption. Do not collect private notes or require a polished interface. Existing prototype teams should test one uncertain interaction, not add features. The syllabus still lists Prototype v1 in Week 10; instructor must reconcile implementation with actual Canvas instructions, not silently move the milestone.'))
-S.append(two_col('EVIDENCE / A FICTIONAL WORKED EXAMPLE', 'A plausible idea is not a finding.',
-    ['ASSUMPTION / The commuter needs an AI cafe chooser.',
-     'SCENARIO / Ten minutes. Two cafe options.',
-     'Invented teaching example, not research evidence.'],
-    ['MISSING / Quiet for whom, and when?',
-     'TEST / Can they compare reasons and reject an option?',
-     'Paper tests comprehension, not actual cafe quietness.'],
-    right_font='body', left_size=33, right_size=31, lang=None,
-    notes='Three minutes. Avoid inventing study results for the cafe example. A source may support a broad concern without establishing this user need. Ask which evidence about intended users the team actually has, versus a design hypothesis, a prepared scenario or generated persona. Observable task behaviour is evidence about that test only.'))
-S.append(figure_slide('FRAMEWORK / OPEN UP, THEN FOCUS', 'Two diamonds. Four kinds of work.', F.source_image('design-council-double-diamond.png', 'Official Design Council Double Diamond: Discover, Define, Develop, Deliver'), bg=PAPER,
-    body=['Discover: explore evidence. Define: focus the question.',
-          'Develop: explore responses. Deliver: test and improve. Return when evidence changes.'],
-    caption=f'[Design Council: The Double Diamond]({DC}), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Official diagram, unchanged.',
-    notes='Two minutes. Official Design Council resource checked October 21, 2026: Discover understands rather than assumes the problem; Define reframes the challenge; Develop explores different responses; Deliver tests small-scale solutions, rejects and improves. The original official Design Council PNG is reproduced unchanged under CC BY 4.0. It is a framework, not measured data. The teaching recap sits outside the image. Divergence opens possibilities; convergence focuses choices. Do not repeat the 2025 Week 8 page 29 claim equating divergence with doing the thing right and convergence with doing the right thing: those slogans do not define the distinction. Testing can send us back to Discover/Define.'))
-S.append(F.study_setup(PAPER_URL, notes='Two minutes; no pre-reading. Question: how do professionals integrate AI? Explain survey versus selected observed task before the finding. The study/result pair explains the task and what was coded before interpreting the map; it is not assigned reading. Primary final Cambridge open PDF read: methods pp.4-7, results/discussion pp.13-16 and Figure 5 p.16 visually inspected. 88 valid AI-user survey responses from 103 replies to 3,004 invitations; 10 selected professional designers in Turkiye in May-June 2024 think-aloud sessions using chosen tools on a lunchbox task. Low response, self-selection/experience/sector limits; coding primarily first author with second-author checking and no formal inter-rater reliability. These sample counts are context, not effect estimates. No randomized no-AI comparator, so do not infer superior outcomes or time savings. Application: AI can suggest an alternative question, but it cannot replace evidence from affected people. Distinguish use of AI in designing from AI incorporated in the product.'))
-S.append(F.study_result(PAPER_URL, notes='Two minutes, completing the SAME 15-minute framing block. Actual Figure 5, final Cambridge 19-page PDF, PDF/printed p.16. Top-panel crop preserves the four phases and activity labels; the dense lower list is omitted for projection, not reconstructed. The complete local crop and source provenance are in deck/assets/week10/. Read left to right: AI appeared in problem exploration as well as solution work. Do not interpret triangle width as measured time, participant count or benefit. Persona generation is an observed practice, not validation of synthetic users. Application to this workshop: consider an alternative framing but check real evidence before adopting it. Use the clickable article for the full figure; no pre-reading or additional workshop time.'))
-S.append(activity('01 / REFRAME', 25, 'Reopen the problem, not just the file.', ['0-7 / Evidence versus assumption.', '7-15 / Person, context, need, missing voice.', '15-22 / Rewrite the question. 22-25 / Counterargument.'], notes='30-55, one 25-minute block across slides 8-11. The checkpoints partition this block, not extra timers. Paper and pens suffice. Circulate: What evidence makes you say that? If there is no research, write unknown rather than fabricate a finding. Teams can test comprehension of a problem statement today, while identifying missing external research. Facilitation detail retained from the prior slide: 0-7 min: compare your strongest relevant finding with the assumption it does not settle. 7-15 min: name the person, context, need and a missing perspective. 15-22 min: rewrite the question without assuming your favourite feature is the answer. 22-25 min: state what changed and the strongest counterargument.'))
-S.append(content('SAME REFRAME BLOCK / EVIDENCE CARD', 'Read the passage again.', [
-    'PASSAGE / Source, version, page. Full text or abstract?',
-    'METHOD / Who? Task? Comparison? Outcome? When?',
-    'FINDING / What is supported? What is not?',
-    'GAP / Whose context or perspective is missing?',
-], body_size=36,
-    notes='Within the first seven minutes. Use research from Weeks 8-9 rather than assigning another reading quota. A generated summary is not the source; open the supporting passage if available. With no network, use saved team passages or the prepared primary-paper card in week10-references.md. Label access gaps; do not turn a different sample into evidence of this team\'s users. No sources or personal notes are uploaded.'))
-S.append(two_col('SAME REFRAME BLOCK / DEFINE', 'Change the question.',
-    ['BEFORE / FEATURE-FIRST', 'How might we build a cafe recommender?',
-     'AFTER / NEED-FIRST', 'How might a time-limited commuter compare options and understand why each is suggested?'],
-    ['YOUR TEMPLATE', 'For [person in context], the problem is [need], not simply [feature].',
-     'Which finding supports that need? What contradicts our first idea?',
-     'Example only: the commuter need is still a hypothesis.'],
-    right_font='body', left_size=32, right_size=31, lang=None,
-    notes='Use during minutes 7-22 of reframing. The narrower question still leaves non-AI and lower-autonomy responses possible. Do not describe it as validated by the paper. Ask whose problem gets easier, whose labour or control becomes invisible, and what an affected person might dispute. This keeps mediation in view while avoiding a new philosophy lecture.'))
-S.append(content('SAME REFRAME BLOCK / DECISION CHECKPOINT', 'Keep the disagreement.', [
-    'We used to think ___. The evidence makes us reconsider ___.',
-    'Our revised question is ___. We still assume ___.',
-    'The strongest counterargument is ___. A missing perspective is ___.',
-    'Choose a reader, sketcher, test lead and observer; share roles if needed.',
-], body_size=38,
-    notes='Final three minutes of the same block. Invite a short within-team explanation, not a compulsory public pitch. A team can retain its question if it explains why the evidence did not warrant change. Record dissent, not artificial consensus. Roles are workshop roles only; do not change assessed contribution requirements.'))
-S.append(activity('02 / DEVELOP', 20, 'Two responses. One uncertainty.', ['0-7 / Sketch two different responses.', '7-12 / Compare autonomy. 12-17 / Choose one risk.', '17-20 / Write the test contract.'], notes="55-75, one twenty-minute block across slides 12-14. Two differently coloured screens are not necessarily different responses. Cafe example: automatic single choice versus a comparison card with editable constraints. Ask what changes in the person's role. The project still incorporates AI; a non-AI alternative is a comparator, not a rewritten assessment brief. Facilitation detail retained from the prior slide: 0-7 min: draw two meaningfully different responses to your revised question. 7-12 min: compare an AI option with a non-AI or lower-autonomy route where relevant. 12-17 min: choose the assumption whose failure would most change the design. 17-20 min: write the test contract before you build."))
-S.append(two_col('SAME DEVELOP BLOCK / SELECT A RISK', 'Test the decision, not the decoration.',
-    ['WEAK: do people like the screen?', 'BETTER: can someone compare the reasons and reject an unsuitable suggestion?',
-     'Choose one uncertainty: comprehension, choice, correction or recovery.'],
-    ['WHAT PAPER CAN SHOW', 'Where a participant looks, what they interpret, what they choose and whether they find an exit.',
-     'WHAT PAPER CANNOT SHOW', 'Actual model reliability, recommendation accuracy or real-world safety.'],
-    right_font='body', left_size=33, right_size=31, lang=None,
-    notes='During selection. A satisfaction question may add context, but satisfaction alone is not proof of accuracy, safety or effectiveness. Existing code also requires an explicit task and comparator. Do not require an artificial quantitative score from one classmate. The chosen observation must correspond to the uncertainty, not simply be easy to collect.'))
-S.append(content('SAME DEVELOP BLOCK / TEST CONTRACT', 'Decide what would change your mind.', [
-    'Person + context: a volunteer classmate in a fictional ten-minute cafe scenario.',
-    'Task + comparison: choose an option and explain why; compare two explanation cards.',
-    'Observe: first choice, stated reason, hesitation, rejection and help needed.',
-    'Revise if: the reason is mistaken or rejection needs coaching. This is a design trigger, not a validated threshold.',
-], body_size=34,
-    notes='Final three minutes of Develop. Teams replace the example with their own ordinary low-risk task. Write a neutral prompt and a result that would challenge the design before looking at outcomes. The example comparison is formative, not a controlled experiment: order, familiarity and tiny convenience samples limit attribution. Do not manufacture a percentage pass target. Keep this contract beside the prototype.'))
-S.append(statement('Break.\n15 minutes.', eyebrow_text='75-90 / RELATIVE CLASS TIME', size=120,
-    notes='Protect the full break. Announce an actual return time only after the timetable is confirmed. On return, paper, pens and prepared synthetic cards are enough. Do not spend the break creating accounts or installing tools.'))
-S.append(activity('03 / PROTOTYPE', 25, 'Build only enough to learn.', ['0-5 / Choose the simplest useful format.', '5-18 / Build task, choice and fallback.', '18-23 / Label simulation. 23-25 / Rehearse.'], notes='90-115, one 25-minute block across slides 16-18. Fidelity follows the uncertainty, not prestige. Paper works with no tool account or network. Existing code teams freeze broad new features and isolate the tested interaction. A manually supplied response can test the interface promise but cannot establish model capability. If the prototype is unfinished, test a single paper decision rather than lose the test block. Facilitation detail retained from the prior slide: 0-5 min: choose paper sequence, role-play, clickable flow or existing code. 5-18 min: make the task, suggestion, choice and fallback visible. 18-23 min: label simulated AI and prepare an unsuitable-result card. 23-25 min: rehearse the neutral task prompt; remove extra features.'))
-S.append(two_col('SAME PROTOTYPE BLOCK / MANUAL FALLBACK', 'Three cards are enough.',
-    ['1 / REQUEST', 'Fictional commuter: ten minutes; compare two cafes. No real location or account.',
-     '2 / SUGGESTION', 'Two invented options with visible reasons. Label: SIMULATED AI - prepared by the team.'],
-    ['3 / CONTROL + RECOVERY', 'Show change constraints, choose another, reject all or continue without AI.',
-     'A teammate reveals the next card after the participant acts.',
-     'No device, login, purchase or model call is needed.'],
-    right_font='body', left_size=32, right_size=31, lang=None,
-    notes='Use within the build block, or print this slide as a three-card starter. Make the simulation visible to the participant BEFORE the task. The teammate follows a prepared branch, not a covert model impersonation. Invented cafe names and attributes are scenario props, not factual recommendations. Prepare one mismatch such as a suggestion outside the stated time constraint. Describe only its interface effects; do not imply measured hallucination rates.'))
-S.append(F.mediation_checkpoint(VERBEEK, notes='Same prototype block, final checkpoint; no extra lecture time or assumed pre-reading. Verbeek, Beyond Interaction, 2015, pp.28-31 (PDF positions 3-6), conceptual essay: technologies mediate human-world relations, shaping perception and action, not merely serving fixed intentions. The cafe recommendation is our application, not an empirical example from the essay. The essay discusses multiple relations and types of influence; this recap does not reduce mediation to an override button. Ask who does the work of noticing a bad suggestion, what becomes less visible, and whether refusal is meaningful before acceptance. Correction/rejection/fallback are hypotheses for the next walkthrough, not a validated remedy or an AI/no-AI result. The essay has no necessary data figure for this brief recap; no unrelated illustration is substituted.'))
-S.append(activity('04 / VOLUNTARY PEER TEST', 30, 'Give the task. Then watch.', ['0-5 / Explain simulation, voluntary participation, right to stop.', '5-15 / Test. 15-25 / Swap if willing.', '25-30 / Compare notes. Declining is fine: internal walkthrough.', 'Synthetic scenarios only. No recording, names, sensitive stories or transactions.'], notes='115-145, one thirty-minute block across slides 19-21. Pair teams locally; no centralized student roster or new research recruitment. Consent is for a classroom walkthrough, not publication. Anyone may decline, pause or stop without pressure. No audio/video, personal health/legal/financial issues or sensitive data. Stop intrusive or unsafe tests; switch to an ordinary interface question. Internal walkthrough is an alternative with weaker outsider evidence, clearly labelled. Facilitation detail retained from the prior slide: 0-5 min: invite another team; explain simulation, voluntary participation and the right to stop. 5-15 min: one team tests while the other observes; 15-25 min: swap if willing. 25-30 min: compare notes. Declining is fine: use an internal walkthrough instead. Use synthetic, low-risk scenarios. No recording, names, sensitive stories or real transactions.'))
-S.append(two_col('SAME TEST BLOCK / NEUTRAL SCRIPT', 'Do not teach the answer.',
-    ['SAY', 'This is a simulated interface. You can stop at any time.',
-     'Imagine you have ten minutes. Use these cards to choose an option, or reject both.',
-     'What would you do next?'],
-    ['AVOID', 'Click the explanation so you can trust our AI.',
-     'You like this version better, right?',
-     'If stuck, note the difficulty before helping. Mark any help in the notes.'],
-    right_font='body', left_size=32, right_size=31, lang=None,
-    notes='Leave this on screen during walkthroughs if useful. The prompt permits rejection and does not demand a preferred answer. A think-aloud request may change behaviour; silence is also an observation. Do not interpret every pause as confusion without checking. After the attempt, ask what a label meant and what they expected. If two variants are compared, note order/familiarity; this small classroom exercise cannot isolate causal effects.'))
-S.append(two_col('SAME TEST BLOCK / NOTE TEMPLATE', 'Observation is not interpretation.',
-    ['OBSERVATION / DIRECT', 'Participant chose B, then asked where the quiet claim came from.',
-     'They found reject only after a hint. No names or identifiable quotes.',
-     'These are invented examples, not classroom results.'],
-    ['INTERPRETATION / TENTATIVE', 'The explanation may not show its evidence clearly.',
-     'NEXT MOVE', 'Try a source label and a visible reject option; test again.',
-     'Record task, action, outcome, help and uncertainty.'],
-    right_font='body', left_size=32, right_size=31, lang=None,
-    notes='Use the final five minutes to compare observer and test-lead notes. Record behaviour as specifically as possible without identifiers. Satisfaction can be noted separately, never substituted for task outcome. A classmate is not automatically an intended user; a single successful task does not prove accessibility, long-term benefit, safety or model performance. A failure may be due to the task wording or the prototype, not only the participant. Keep notes local.'))
-S.append(activity('05 / REVISE', 20, 'Change one consequential decision.', ['0-5 / What challenged the test contract?', '5-15 / Change one consequential decision.', '15-20 / Before/after + next uncertainty. No invented findings.'], notes='145-165, one twenty-minute block across slides 22-23. Deliver means testing and improving, not declaring a classroom mock-up ready to ship. It may be right to return to Define. Preserve one observation that did not support the preferred concept. If there was no external volunteer, state internal walkthrough rather than peer validation. Do not overwrite the original sketch; the before/after explains learning. Facilitation detail retained from the prior slide: 0-5 min: compare observation with your test contract. What challenged you? 5-15 min: revise one question, explanation, choice, boundary or recovery path. 15-20 min: make a before/after sketch and state the next uncertainty. An inconclusive result is useful. Do not invent a positive finding.'))
-S.append(content('SAME REVISE BLOCK / LIMITS AND NEXT EVIDENCE', 'Who still needs to be heard?', [
-    'Classmates are not necessarily intended users.',
-    'Next evidence: affected users, research or real model evaluation?',
-    'No clinical, legal or high-stakes validation here.',
-    'Name the evidence gap. Do not invent results or recruit.',
-], body_size=36,
-    notes='During revision, distinguish interface comprehension from real recommendation quality and outcomes over time. Teams must not begin high-stakes or sensitive participant testing here. Planning future evidence does not authorize recruitment or collection. Ask what result would make them abandon the concept, not only improve it. Research gaps should travel into the poster and mediation argument honestly.'))
-S.append(activity('06 / SHARE', 15, 'One changed decision. Its evidence.', ['0-5 / Prepare a before/after explanation.', '5-12 / Exchange evidence and limits with neighbours.', '12-15 / Record: changed ___ because ___; not established ___.'], notes='165-180, one fifteen-minute block across slides 24-25. Neighbour sharing scales to the cohort without a full-room presentation queue. Voluntary spoken examples may replace some neighbour discussion within the same time. Do not collect another artifact or impose a pitch grade. If the reserve was unused, add feedback/revision there rather than extending beyond three hours. Facilitation detail retained from the prior slide: 0-5 min: prepare a short before/after explanation in your team. 5-12 min: exchange with a neighbouring team; compare evidence and limits. 12-15 min: record what changed and what remains unresolved. Use: We changed ___ because we observed ___. This does not establish ___.'))
-S.append(content('FINISH / EXISTING PROJECT WORKSPACE', 'Keep the learning, not just the screen.', [
-    'Keep: question + source + test contract + before/after.',
-    'Separate observation, interpretation, simulation and uncertainty.',
-    'Use the trail in your existing research, poster and mediation brief.',
-    'No new graded submission or deadline. Syllabus + Canvas still apply.',
-], body_size=36,
-    notes='Final three minutes of Share, not another activity. Check each team has a changed or defensibly retained decision and an uncertainty, not only a screenshot. Never put student notes, names, recordings or test data in the public repository. Confirm Prototype v1 expectations with the instructor before delivery; this draft does not change them. Leave facilitator, actual date and school ESFQ placement as explicit pre-class decisions.'))
-S.append(content('REFERENCE SHELF / NOT EXTRA TIMED READING', 'Framework. Study. Mediation.', [
-    f'[Design Council: The Double Diamond]({DC}) - framework; official diagram under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).',
-    f'[Sözen & Börekçi (2026), AI EDAM 40, e9]({PAPER_URL}) - professional designers\' practices; not proof of better outcomes.',
-    f'[Verbeek (2015), Beyond Interaction, Interactions 22(3), 26-31]({VERBEEK}) - established course mediation reading.',
-    'Use your project-specific Weeks 8-9 evidence; check passages and transfer limits.',
+    notes='165-180 is a planning placeholder, not a confirmed school visit. Giovanni is confirmed absent; confirm the date, facilitation coverage and school arrangement. If the visit moves, move its reserve and recalculate the proposed sequence while protecting the break and workshop. Do not shorten a confirmed school slot. If no visit occurs, use these fifteen minutes for revision and feedback. No special survey or assessment is invented.'))
+S.append(content('REFERENCE SHELF / OUTSIDE THE TIMED ROUTE', 'Framework, mediation and course evidence.', [
+    f'[Design Council: The Double Diamond]({DC}) - framework; official diagram CC BY 4.0.',
+    f'[Verbeek (2015), Beyond Interaction]({VERBEEK}) - Week 8 mediation lens.',
+    'Weeks 8-9 project research and bias notes: check passages and transfer limits.',
+    f'[S\u00f6zen & B\u00f6rek\u00e7i (2026), AI EDAM 40, e9]({PAPER_URL}) - optional AI-as-design-tool context, not AI-product validation.',
 ], body_size=32,
-    notes='Untimed reference shelf. Full citation and passage ledger: lessons/week10-references.md. Original research author names: Tugce Sozen and Naz A. G. Z. Borekci (diacritics recorded in the reference companion). The official framework and the empirical study have different evidential roles. The archive is historical context only; no guest or old November 30 deadline is carried forward.'))
+    notes='Untimed reference shelf, not extra assigned reading. The following two preserved study slides are optional background only: they concern designers using AI tools, not evaluation of products with AI inside. Do not use them as evidence of AI-product benefit, safety or reliability. Primary source checks, licences and access limits remain in week10-references.md. The phase-specific AI-product prompts are the course\'s teaching synthesis of the framework and Weeks 8-9, not empirical results from the optional study.'))
+S.append(F.study_setup(PAPER_URL,
+    notes='Optional background, outside the 180-minute route. This study concerns AI as a design tool, not evaluation of AI-enabled products. Primary final Cambridge PDF methods pp.4-7 and results/discussion pp.13-16 were checked in the previous evidence pass; no new re-audit is claimed here. 88 valid AI-user survey responses from 103 replies to 3,004 invitations; 10 selected professional designers in Turkiye used chosen tools on a lunchbox task in May-June 2024. Low response, self-selection and sector limits; coding primarily first author with second-author checking and no formal inter-rater reliability. No randomized no-AI comparison. Do not infer superior outcomes, saved time or AI-product validation.'))
+S.append(F.study_result(PAPER_URL,
+    notes='Optional background, outside the timed route. Preserved authentic Figure 5, final Cambridge 19-page PDF, p.16: the top-panel crop keeps four phases and activity labels; crop provenance and full local figure remain in deck/assets/week10/. Widths are not measured time shares, participant counts or effect sizes. This maps how selected designers used AI tools, not model performance or consequences of an AI-enabled product. Persona generation is an observed practice, not evidence about real users. Retain CC BY 4.0 attribution and the clickable article; no extra workshop or reading requirement.'))
 
 attach_reports(S, Path(__file__).resolve().parent / 'week10-reports.json')
 DECK = dict(title='SD2112 / AI in Design / Week 10',
