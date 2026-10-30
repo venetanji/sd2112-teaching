@@ -9,7 +9,8 @@ on:
       - 'scripts/**'
       - 'deckgen.toml'
       - 'requirements.txt'
-      - '.github/workflows/news-preview.yml'
+      - '.github/workflows/**'
+      - '.github/actions/**'
 permissions:
   contents: read
 concurrency:
@@ -69,3 +70,8 @@ jobs:
             export/*.pptx
             export/*-activities.json
           retention-days: 7
+      - uses: ./.github/actions/upload-weekly-artifacts
+        with:
+          prefix: teaching-draft-${{ github.event.pull_request.number }}
+          retention-days: 7
+          decks-file: selected-decks.json

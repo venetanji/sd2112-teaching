@@ -13,8 +13,16 @@ Two GitHub Actions workflows run on every push to `main` (and on demand), and a 
 | Workflow | What it makes | Where it goes |
 |---|---|---|
 | **Publish site** (`.github/workflows/site.yml`) | The html decks, the syllabus page, the landing page, and a PDF of each deck without the ClassPoint buttons, printed one deck per job; a deck whose inputs did not change is restored from the Actions cache, not printed again. | GitHub Pages: `https://venetanji.github.io/sd2112-teaching/` (Week 1: `/week01/`, PDF: `/week01/SD2112-week01.pdf`). |
-| **Build PowerPoints** (`.github/workflows/pptx.yml`) | `week01.pptx` (plain), `week01-classpoint.pptx` (ait4x master, animations, ClassPoint buttons), the activity manifest, `.docx` of the syllabus and lesson plans, preview sheets. | The `sd2112-powerpoints` artifact of the run (Actions → the run → Artifacts), kept 90 days. Not published. |
-| **Build staging** (`.github/workflows/staging.yml`) | Everything above, from the `staging` branch: html decks, PDFs, PowerPoints, documents, previews. | The `staging-site` artifact of the run (kept 90 days) and `staging-powerpoints` (30 days); *Publish site* re-runs and shows `staging-site` under `https://venetanji.github.io/sd2112-teaching/staging/`. |
+| **Build PowerPoints** (`.github/workflows/pptx.yml`) | `week01.pptx` (plain), `week01-classpoint.pptx` (ait4x master, animations, ClassPoint buttons), the activity manifest, `.docx` of the syllabus and lesson plans, preview sheets. | Individual `sd2112-powerpoints-weekNN` artifacts and the complete `sd2112-powerpoints` bundle (Actions → the run → Artifacts), kept 90 days. Not published. |
+| **Build staging** (`.github/workflows/staging.yml`) | Everything above, from the `staging` branch: html decks, PDFs, PowerPoints, documents, previews. | The `staging-site` artifact (90 days), the complete `staging-powerpoints` bundle and individual `staging-powerpoints-weekNN` artifacts (30 days); *Publish site* re-runs and shows `staging-site` under `https://venetanji.github.io/sd2112-teaching/staging/`. |
+
+Pull requests run **Check teaching drafts**. The complete `teaching-draft-PR-SHA`
+artifact remains available, alongside one `teaching-draft-PR-weekNN` artifact for each
+week selected by the build, all kept seven days. Shared asset changes can select all weeks.
+Each weekly download includes its plain and ClassPoint PowerPoints, activity manifest,
+preview sheets and matching lesson documents. Staging and PR downloads also include the
+week's PDF; on main, PDFs are available separately from **Publish site** and the course site.
+Weekly packages reuse the build outputs and exclude local reading packs and other weeks.
 
 ## Staging: check a week before it reaches main
 
@@ -57,7 +65,7 @@ The PDF step needs node 18+ and Playwright's Chromium: `npm install --no-save pl
 Week 8 has a [plain-language recap for every paper](https://venetanji.github.io/sd2112-teaching/week08-papers.html).
 Collect the full papers for local reading with `.venv/Scripts/python.exe scripts/week08_reading_pack.py --from-dir C:/Users/giova/Downloads` on this laptop, or `python scripts/week08_reading_pack.py` in another configured environment. The pack is in `export/week08-reading/index.html`, with examples, findings, limitations and explicit download status. `--offline` only collects existing copies. A nonzero exit means some PDFs are still missing; a publisher page or access challenge is never saved as a paper. Full PDFs stay in the ignored local export folder.
 
-1. Download the PowerPoint from the latest *Build PowerPoints* run (Actions → Artifacts → `sd2112-powerpoints`).
+1. Download the needed week from the latest successful *Build PowerPoints* run (Actions → Artifacts → `sd2112-powerpoints-weekNN`), or choose `sd2112-powerpoints` for the full course bundle. Both contain separate plain and ClassPoint PowerPoints for each included week.
 2. Install Inter and JetBrains Mono on the classroom PC — they ship inside the `deckgen` package (`python -c "import deckgen, pathlib; print(pathlib.Path(deckgen.__file__).parent / 'fonts')"`), right-click → install for all users. Restart PowerPoint. Slide 1 should show *Inter Black* in the font box; Arial substitutes automatically if not.
 3. Open the deck with the ClassPoint add-in and fire one activity (slide 4, word cloud) before class; a malformed tag fails silently.
 4. Import the roster as the saved class. Students join with the last four digits and the letter of their ID (e.g. `3456A`).
