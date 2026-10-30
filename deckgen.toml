@@ -43,6 +43,10 @@ label = "Week 7 slides"
 href  = "week07/"
 
 [[nav]]
+label = "Week 8 slides"
+href  = "week08/"
+
+[[nav]]
 label = "Syllabus"
 href  = "syllabus.html"
 
@@ -53,3 +57,8 @@ href  = "syllabus.html"
 src   = "SD2112-syllabus-2026.md"
 out   = "syllabus.html"
 title = "SD2112 · Syllabus 2026/27"
+
+[[publish]]
+src   = "week08-paper-recaps.md"
+out   = "week08-papers.html"
+title = "SD2112 / Week 8 / Papers in plain language"

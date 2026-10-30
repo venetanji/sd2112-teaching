@@ -54,6 +54,9 @@ The PDF step needs node 18+ and Playwright's Chromium: `npm install --no-save pl
 
 ## Classroom checklist
 
+Week 8 has a [plain-language recap for every paper](https://venetanji.github.io/sd2112-teaching/week08-papers.html).
+Collect the full papers for local reading with `.venv/Scripts/python.exe scripts/week08_reading_pack.py --from-dir C:/Users/giova/Downloads` on this laptop, or `python scripts/week08_reading_pack.py` in another configured environment. The pack is in `export/week08-reading/index.html`, with examples, findings, limitations and explicit download status. `--offline` only collects existing copies. A nonzero exit means some PDFs are still missing; a publisher page or access challenge is never saved as a paper. Full PDFs stay in the ignored local export folder.
+
 1. Download the PowerPoint from the latest *Build PowerPoints* run (Actions → Artifacts → `sd2112-powerpoints`).
 2. Install Inter and JetBrains Mono on the classroom PC — they ship inside the `deckgen` package (`python -c "import deckgen, pathlib; print(pathlib.Path(deckgen.__file__).parent / 'fonts')"`), right-click → install for all users. Restart PowerPoint. Slide 1 should show *Inter Black* in the font box; Arial substitutes automatically if not.
 3. Open the deck with the ClassPoint add-in and fire one activity (slide 4, word cloud) before class; a malformed tag fails silently.
