@@ -150,7 +150,9 @@ class Week09Tests(unittest.TestCase):
         from deck.week09 import REFS
         for _, url in REFS.values():
             self.assertIn(url, urls)
-        self.assertEqual(len(urls), 17)
+        licence_url = 'https://creativecommons.org/licenses/by/4.0/'
+        self.assertEqual(urls.count(licence_url), 7)
+        self.assertEqual(len(urls), 24)
 
     def test_toy_arithmetic_outputs_and_boundaries(self):
         from deck.week09_demo import ITEMS, rank
@@ -236,6 +238,7 @@ class Week09Tests(unittest.TestCase):
                     self.assertIn(s.notes, texts)
                 rels = '\n'.join(z.read(n).decode() for n in z.namelist() if n.endswith('.rels'))
                 self.assertIn('https://doi.org/10.1038/s41586-026-10098-2', rels)
+                self.assertIn('https://creativecommons.org/licenses/by/4.0/', rels)
 
 
 if __name__ == '__main__':

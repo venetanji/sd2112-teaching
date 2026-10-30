@@ -55,7 +55,7 @@ STUDY_GUIDES = {
         comparison_label='WHAT THEY COMPARED',
         comparison='Baseline estimates versus estimates in counterbalanced advice blocks. Separate follow-ups used biased advice (n=50) or accurate advice (n=50) across five blocks.',
         example_label='ADAPTED FROM METHODS / WORKED ARITHMETIC',
-        example='Own estimate:53% right. Advice:73%. Give own answer40% weight:0.4x53 + 0.6x73 =65%. Choose the weight BEFORE the advice is revealed.',
+        example='Own estimate: 53% right. Advice: 73%. Give your own answer 40% weight: 0.4 × 53 + 0.6 × 73 = 65%. Choose the weight BEFORE the advice is revealed.',
         measurement_label='WHAT THEY MEASURED',
         measured='Own 0-100% rightward estimates, before current advice: signed error measures bias; absolute error measures inaccuracy. Compare each with baseline, in percentage points.',
         source_locations='Published NHB HTML Methods/RDK main experiment and effects across time; Results/Figure2a-c,e,g. Retained21Oct, targeted recheck22Oct.',

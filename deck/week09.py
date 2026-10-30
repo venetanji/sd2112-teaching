@@ -22,7 +22,10 @@ REFS = {
 
 def source(key):
     name, url = REFS[key]
-    return f'[{key} / {name}]({url})'
+    citation = f'[{key} / {name}]({url})'
+    if key in ('R3', 'R4'):
+        citation += ' · [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)'
+    return citation
 
 
 def native_table(eyebrow, heading, headers, rows, widths, notes, bottom):
