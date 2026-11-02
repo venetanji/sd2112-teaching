@@ -58,9 +58,12 @@ class Week10Tests(unittest.TestCase):
         self.assertIn('Do not assign one speaker per phase', guest.notes)
         self.assertIn('individual minutes remain unconfirmed', guest.notes)
         brief = (ROOT / 'lessons/week10-speaker-brief.md').read_text()
-        for phrase in ('Zhibin and four PhD researchers', '45 minutes collectively',
-                       'one researcher into each diamond phase', 'not confirmation',
-                       'No contact or booking', 'not using generative AI'):
+        for phrase in ('Speaking order, individual allocations and facilitation roles are not yet fixed',
+                       'Do not force a four-stage success story or assign a separate speaker to each stage',
+                       'AI used in the design process and AI inside a product',
+                       'Copy this whole prompt to your agent',
+                       'OUTLINE APPROVAL BEFORE SLIDE AUTHORING',
+                       'Teams may be at **any Double Diamond stage**'):
             self.assertIn(phrase, brief)
         for slide in self.slides[26:]:
             self.assertNotIn(slide.title, [s.title for s in self.slides[:26]])
