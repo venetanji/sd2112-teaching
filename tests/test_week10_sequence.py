@@ -58,7 +58,7 @@ class Week10Tests(unittest.TestCase):
         self.assertIn('Do not assign one speaker per phase', guest.notes)
         self.assertIn('individual minutes remain unconfirmed', guest.notes)
         brief = (ROOT / 'lessons/week10-speaker-brief.md').read_text()
-        for phrase in ('Speaking order, individual allocations and facilitation roles are not yet fixed',
+        for phrase in ('Speaking order and facilitation roles are not yet fixed',
                        'Do not force a four-stage success story or assign a separate speaker to each stage',
                        'AI used in the design process and AI inside a product',
                        'Copy this whole prompt to your agent',
@@ -69,6 +69,22 @@ class Week10Tests(unittest.TestCase):
             self.assertNotIn(slide.title, [s.title for s in self.slides[:26]])
         self.assertIn('outside the 180-minute route', self.slides[27].notes)
         self.assertIn('not evaluation of AI-enabled products', self.slides[27].notes)
+
+    def test_speaker_brief_uses_current_intro_and_four_inclusive_slots(self):
+        brief = (ROOT / 'lessons/week10-speaker-brief.md').read_text()
+        human, agent = brief.split('```text\n', 1)
+        for section in (human, agent):
+            for phrase in ('Double Diamond introduction', 'four 10-minute speaker slots',
+                           'each including Q&A', '40 minutes total'):
+                self.assertIn(phrase, section)
+        self.assertNotIn('ESFQ', brief)
+        self.assertNotIn('15-minute school', brief)
+        for stale in ('individual allocations and facilitation roles are not yet fixed',
+                      'not a confirmed speaking allowance',
+                      'adjustable to the eventual speaking slot',
+                      'proposed length (not an accepted slot)'):
+            self.assertNotIn(stale, brief)
+        self.assertIn('Q&A is part of each 10-minute slot, not extra time afterward', human)
 
     def test_workshop_substeps_fill_their_blocks(self):
         for i, intervals in ((10, ('0-4', '4-8', '8-12', '12-15')),
