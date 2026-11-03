@@ -2,7 +2,14 @@
 
 Contributor branch: `contrib/week10-nicolo-20261103`, based on verified PR #23 head `2330036350ed76a8433e8a6ac9b9fcb267412ccf`. Nicolo approved public HTML review, and Gio authorized a separate GitHub branch push and Cloudflare preview. PR #23, main, staging and the original Week 10 deck and companions remain unchanged. This preview is not a course release.
 
-Entry point: `deck/week10_nicolo.py`. Seven introduction slides plus seven explicitly provisional case-storyboard slides. The introduction duration remains open. The case has a proposed eight-minute presentation plus two minutes Q&A, within ten minutes total.
+Entry point: `deck/week10_nicolo.py`. Seven introduction slides, a case-study cover and seven explicitly provisional case-storyboard slides: 15 slides total. The introduction duration remains open. The case has a proposed eight-minute presentation plus two minutes Q&A, within ten minutes total; the cover is included in the first case minute.
+
+## Writing and navigation revision
+
+- Preserve the first reviewed commit `8cb0febbc29db33750d91c4514e9d4d3ee6f3505` in history and on local backup branch `backup/week10-nicolo-first-review-8cb0feb`; do not amend or force-push it. Its immutable Cloudflare preview remains the first-review snapshot.
+- Use the replacement document's direct wording, phase names and first-person professional account. Retain the three layers and the approved privacy/data and wishes/priorities additions, without replacing the explanation with slogans. Keep pending case content explicit and use short, literal placeholder labels.
+- Put a `space / phase` subtitle under each of the four phase titles, rendered with a centered bullet: `problem space / discover`, `problem space / define`, `solution space / develop`, `solution space / deliver`.
+- `deck/week10_nicolo_figures.py` draws four small text-free navigation maps after the Design Council Double Diamond (CC BY 4.0, source and licence linked on the opening slide). The official opening image remains unchanged. The navigation maps are simplified redraws: text and arrows omitted, all inactive halves black and white, only the active half teal. SVG and native PNG share the same geometry. The maps do not show an official recolored image or imply Design Council endorsement.
 
 ## Current instructions
 

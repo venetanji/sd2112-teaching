@@ -1,15 +1,18 @@
-"""Separate contributor draft: DD introduction and an evidence-pending product case."""
+"""Separate contributor draft, using Nicolo's document as the writing reference."""
 from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from deckgen import INK, PAPER
-from deckgen.layouts import T, Rect, _slide, eyebrow, figure_slide, finalize
+from deckgen.layouts import T, Rect, Figure, _slide, eyebrow, figure_slide, finalize, section
 import week10_figures as F
+from week10_nicolo_figures import phase_map
 
 DC = 'https://www.designcouncil.org.uk/resources/the-double-diamond/'
 S = []
-CASE_START = 7
+PHASES = [('problem space', 'discover'), ('problem space', 'define'),
+          ('solution space', 'develop'), ('solution space', 'deliver')]
+CASE_START = 8
 CASE_SPEAKING_MINUTES = [1, 1, 1, 1.5, 1.5, 1.5, .5]
 CASE_QA_MINUTES = 2
 TEAL = '#246E70'
@@ -47,173 +50,161 @@ def three(code, heading, items, label, summary, notes):
     return strip(s, label, summary)
 
 
+def phase_slide(number, items, summary, notes):
+    space, phase = PHASES[number]
+    s = _slide(notes=notes, title=phase.title())
+    svg, png = phase_map(phase)
+    s.els += [eyebrow(120, 96, 'DOUBLE DIAMOND', TEAL),
+              T(120, 184, 1200, 100, phase.title(), 'xbold', 88, INK,
+                lh=.95, spc=-.03, name='variant-heading'),
+              T(120, 306, 1200, 48, space+' \u2022 '+phase, 'body', 34, GREY,
+                lh=1.2, name='phase-subtitle'),
+              Figure(1440, 210, 360, 176, svg, png, name='phase-navigation')]
+    for i, (label, body) in enumerate(zip(
+            ('GENERAL PRINCIPLES', 'MY EXPERIENCE', 'POTENTIAL AI USE'), items)):
+        x = 120+i*580
+        s.els += [Rect(x, 416, 520, 2, '#BBBCB9'),
+                  T(x, 442, 520, 36, label, 'mono', 22, ORANGE,
+                    name=f'phase-{i}-label'),
+                  T(x, 502, 520, 250, body, 'body', 33, INK,
+                    lh=1.22, name=f'phase-{i}-body')]
+    return strip(s, 'WEEKS 8-9 / AI CONSIDERATIONS', summary)
+
+
 def slot(s, x, y, w, h, label, heading, detail):
-    """An explicitly empty media space, not a reconstructed product screenshot."""
+    """Keep pending product media visibly empty."""
     s.els += [Rect(x, y, w, h, PAPER, '#BBBCB9', name='pending-asset'),
               T(x+24, y+24, w-48, 60, label, 'mono', 21, TEAL),
               T(x+24, y+104, w-48, 114, heading, 'xbold', 38, INK, lh=1.05),
               T(x+24, y+240, w-48, h-264, detail, 'body', 29, GREY, lh=1.2)]
 
 
-# A / Introduction. Its duration is intentionally not invented from the case slot.
-S.append(figure_slide('A1 / NICOLO / SEPARATE INTRODUCTION DRAFT',
-    'Explore. Focus. Explore. Focus.',
+S.append(figure_slide('INTRODUCTION', 'Double Diamond',
     F.source_image('design-council-double-diamond.png',
                    'Unmodified official Design Council Double Diamond diagram'),
-    body=['Problem space: Discover + Define. Solution space: Develop + Deliver.',
-          'Diverge to explore possibilities. Converge to make a reasoned choice.'],
+    body=['A visual representation of the design and innovation process.',
+          'First diamond: problem space. Second diamond: solution space.',
+          'General principles, my experience in Software UX Design, and how I would approach it with AI today.'],
     caption=f'[Design Council: The Double Diamond]({DC}) / [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Official diagram, unchanged.',
-    notes='Introduction, separate from the ten-minute case including Q&A. Its duration and facilitator are not set here. The official Design Council describes Discover as understanding rather than assuming the problem, Define as using insights to reframe the challenge, Develop as exploring answers and co-design, and Deliver as small-scale testing, rejecting and improving. Problem/solution space is our plain-language explanation. This framework does not establish that any particular sequence guarantees success. The following slides keep three layers distinct: principle, Nicolo\'s attributed professional account, and proposed AI uses today. Source: official Design Council page, checked 3 November 2026; image already retained with CC BY 4.0 provenance in the course.'))
+    notes='The Double Diamond is a visual representation of the design and innovation process. The Design Council describes it as a simple way to describe the steps taken in a design and innovation project, irrespective of methods and tools used. I will present it in three layers: the general principles of each phase; how I used it in a real-world project as a Software UX Designer at Agilent Technologies in Germany; and how I would approach it now, being assisted by AI and having the possibility to integrate GenAI into the product. The first diamond is the problem space; the second is the solution space. The AI uses are possibilities I would explore today, not tools I claim to have used on the original project. The introduction is separate from the ten-minute case including Q&A; its duration is still open. The official image is unchanged. Source: Design Council, The Double Diamond, CC BY 4.0.'))
 
-S.append(three('A2 / DISCOVER / PEOPLE, CONTEXT AND AI EXPECTATIONS',
-    'Understand their world. Not your assumptions.', [
-        ('PRINCIPLE', 'Learn before proposing.',
-         'Meet affected people. Explore tasks, context, attitudes to AI and whose perspective is missing.'),
-        ('MY EXPERIENCE', 'An unfamiliar domain.',
-         'Learning chemistry and analytical-lab work came before making software UX decisions.'),
-        ('POTENTIAL GENAI USE', 'Explore permitted evidence.',
-         'Use AI to organise approved observations and suggest questions. Check against original material.'),
-    ], 'WEEKS 8-9 / RESEARCH USERS\' AI NEEDS AND DATA BOUNDARIES',
-    'How do users value privacy? What will they share? What may enter AI, stay local, or never be captured?',
-    'Use Nicolo\'s replacement document as an attributed account, not an independent audit of his employer. His unfamiliarity with analytical laboratories is the example. Following his feedback, foreground target users\' AI-related needs: expected benefits, willingness to share different types of data, privacy concerns, trust, acceptable automation and acceptable places of processing. Willingness is not permission to use data: check applicable consent, organizational rules, ownership and confidentiality; distinguish collection, inference, retention and sharing. Ask which people and contexts are missing from research. Do not feed a whole research folder into a service by default; use only the minimum permitted material in an approved environment. Removing names does not establish anonymity. Synthetic personas or role-play may suggest questions but cannot replace evidence from actual users, especially in a specialist domain. Week 8: AI cues, mediation and control; Week 9: Useful does not mean necessary, data boundaries and representation.'))
+S.append(phase_slide(0, [
+    'Spend enough time understanding your users. You cannot expect the user to be exactly like you. Do not assume the problem. Use divergent thinking.',
+    'As a Software UX Designer, I had to understand chemistry and analytical laboratories: a field quite far from my understanding of the world.',
+    'Have a conversation with the research data you are allowed to use. Synthetic users can help with role-play, but cannot replace reaching out to actual users.',
+], 'How do users value privacy? What data are they willing to share? What data can be fed to AI?',
+    'As designers, when you decide to work on a topic, any topic, it is fundamental to form an understanding of the context and your users. You cannot expect users to have the same needs, mindset or way of thinking as you. Do not assume the problem. Discover uses divergent thinking: you explore different insights and ideas rather than jumping to conclusions. In my professional career as a Software UX Designer, I had to deal with chemistry and analytical laboratories. I spent quite a lot of time understanding the field, and that was foundational for the rest of the experience. Today, I would use AI to help elaborate on the data gathered from users and have a conversation with that data. First, check what can be shared, with which service, and for what purpose; do not upload the whole research collection by default. Willingness is not permission to use data, and removing names does not establish anonymity. Synthetic-user role-play can help suggest questions, but it cannot replace reaching out to actual users, especially in niche fields. Understand their attitude towards AI, how they use it, how they value privacy and which data they are willing and permitted to share. These are the connections to Weeks 8-9. Navigation map: simplified redraw after Design Council, The Double Diamond, CC BY 4.0; labels and arrows omitted, inactive phases black and white, Discover highlighted.'))
 
-S.append(three('A3 / DEFINE / EVIDENCE INTO A FOCUSED CHALLENGE',
-    'Choose the challenge. Keep the evidence.', [
-        ('PRINCIPLE', 'Make priorities explicit.',
-         'Synthesize findings into a clear challenge, with user needs, business needs and unresolved assumptions.'),
-        ('MY EXPERIENCE', 'A clearer workflow goal.',
-         'Priorities: speed, efficiency, ease of use and support for less-experienced operators.'),
-        ('POTENTIAL GENAI USE', 'Compare possible framings.',
-         'Draft journeys or profiles from evidence. Label inferred details and verify them with people.'),
-    ], 'WEEK 9 / A MEASURABLE PROXY IS NOT THE WHOLE USER GOAL',
-    'Fewer clicks can help. Also ask whether people can complete the right task, understand it and recover.',
-    'The historical goals here are those in Nicolo\'s document; the detailed current product UX goals and their evidence will arrive later for Section B. Do not equate fewer clicks with usability in every setting. Define synthesizes and focuses; it is not an algorithm that discovers a single objectively best option. AI can draft a user journey or organize findings, but a generated quote, goal or persona detail is not research evidence. Keep traceability to actual observations and distinguish user wishes, business demands, safety requirements and feasibility. Week 9\'s value-versus-proxy example transfers as a question, not as proof about this laboratory product.'))
+S.append(phase_slide(1, [
+    'Use convergent thinking to narrow down your insights and clearly define the challenge: the problem you want to solve.',
+    'Connecting with users and considering business needs helped me focus on speed, efficiency and ease of use, including for less-experienced operators.',
+    'Use AI conversationally to narrow down the topic and draft personas, user profiles or user journeys from your findings. Consider users\' needs regarding AI.',
+], 'Define what users need from AI. Saving clicks is useful only if it helps them accomplish the task.',
+    'By now you should have gathered a lot of insights and thoughts about a topic. At this stage it is time to clearly define the challenge, the problem you want to solve. Define uses convergent thinking: narrowing down the options and insights gathered during Discover. In my professional career it took a while to reach this point, but after reaching it everything became clearer. Connecting with users and taking business needs into consideration was fundamental. I knew I had to work on speed, efficiency and ease of use of the workflow: less time dealing with different tools, and a system that people without extensive expertise could use. Today, I would use AI conversationally to narrow down the topic and produce useful artifacts such as personas, user profiles and user journeys. Keep those artifacts connected to the research: generated details and quotes are not findings from actual users. Consider the needs of users regarding AI, including what it should do and what people still need to decide. Week 9 helps distinguish a proxy such as fewer clicks from the actual user goal. There is not necessarily one objectively best framing; the choice still needs reasoning and evidence. Navigation map: simplified redraw after Design Council, The Double Diamond, CC BY 4.0; labels and arrows omitted, inactive phases black and white, Define highlighted.'))
 
-S.append(three('A4 / DEVELOP / CO-DESIGN AND ALTERNATIVES',
-    'Explore different experiences. Together.', [
-        ('PRINCIPLE', 'Do not polish the first idea.',
-         'Compare meaningful alternatives with users, designers, developers and product stakeholders.'),
-        ('MY EXPERIENCE', 'Bring other perspectives in.',
-         'Recurring design discussions and a co-design workshop with a product manager and developer.'),
-        ('POTENTIAL GENAI USE', 'Prototype beyond the visual.',
-         'Explore workflows, interactions and media. AI-generated code is a prototype, not production readiness.'),
-    ], 'WEEK 8 / DESIGN THE AI\'S ROLE AND THE PERSON\'S CONTROL',
-    'Using AI to make a prototype differs from AI inside the product. Can the person question, correct, reject and recover?',
-    'This combines the document\'s Develop account and Week 8 agency/calibrated trust. The workshop and recurring discussions are attributed to Nicolo, with no invented participants or outcomes. Generate diverse responses to the same problem, not only cosmetic screen changes. Prototypes can be paper, interactive software or media; use only enough fidelity to answer the question. Generated code needs technical, security, accessibility and integration review; do not describe it as a complete product merely because it runs. If AI is incorporated in the proposed product, make the model action, written rule and retained human decision explicit. An override button alone does not establish meaningful agency. No AI features are invented for the pending case.'))
+S.append(phase_slide(2, [
+    'Use divergent thinking to explore different solutions. Co-design with users and other stakeholders. Avoid going with the first thing that comes to your mind.',
+    'In my design team, we discussed ideas almost every week. I also had a co-design workshop with the Product Manager and a Developer.',
+    'Generate several prototype or media variants. Do not stop at the visual part: think about interactions, sounds, workflows, user contexts and environments.',
+], 'When integrating AI into the product, consider what AI does and what the person can understand, change or reject.',
+    'Now that we know what problem to solve, it is time to move to the second diamond, the solution space. Use the creative process again to think of different potential solutions. Develop uses divergent thinking: explore possibilities instead of going with the first thing that comes to your mind. Be in touch with users to co-design, and involve Product Managers, other UX Designers, designers from other disciplines and developers. Different stakeholders give different perspectives. A solution does not need to be perfect: a simple draft, paper sketch or prototype can be enough to communicate ideas. In my design team this happened almost every week. I also had a co-design workshop with the Product Manager and a Developer to gather their perspectives. Today, I would use AI to generate prototype or multimedia variants for discussion with the team. In this phase, quantity over quality means exploring alternatives, not ignoring safety or confidentiality. Vibe coding can help build testable software variants; running code is not the same as a production-ready product. Do not stop at visuals: consider interactions, sounds, workflows, user contexts and environments, and different ways AI could be integrated into the product. Following Week 8, consider what AI does, what the person still decides and how they can question, correct or reject an output. Navigation map: simplified redraw after Design Council, The Double Diamond, CC BY 4.0; labels and arrows omitted, inactive phases black and white, Develop highlighted.'))
 
-S.append(three('A5 / DELIVER / TEST, LISTEN AND PRIORITISE',
-    'What works? What do people want next?', [
-        ('PRINCIPLE', 'Test and ask why.',
-         'Observe realistic tasks. Ask what worked, what did not, what people wish for and why it matters.'),
-        ('MY EXPERIENCE', 'Test across development.',
-         'Usability tests and comparisons informed iteration: positive findings and wishes for improvement.'),
-        ('POTENTIAL GENAI USE', 'Assist analysis, not validation.',
-         'Compare AI-assisted themes with your own analysis. Return to users and original evidence.'),
-    ], 'WEEKS 8-9 / OUTCOMES, FAILURES AND THE PRIORITY OF USER WISHES',
-    'Which wish matters most, to whom and in what context? Compare importance with observed failures and task outcomes.',
-    'Reflect Nicolo\'s request to emphasize wishes and their priorities, not only failure detection. During testing, collect observed task behaviour separately from stated satisfaction and desired improvements. Ask why/how, clarify the need behind a requested feature, and ask users to prioritize wishes; keep minority and context-dependent needs visible rather than using a simple majority as a universal rule. Priority is a design judgment informed by user importance, observed severity, organizational constraints and feasibility, not an AI-generated ranking presented as users\' wishes. The document reports five usability-testing activities across the lifecycle, including comparisons; no participant count, effect size or new study result is invented. AI-assisted coding or synthesis needs checks against source records, permission and contradictory evidence. Agent walkthroughs or synthetic users can expose possible issues but cannot establish human usability, fairness, safety or model reliability.'))
+S.append(phase_slide(3, [
+    'Use convergent thinking to narrow down the options. Test ideas with users and observe them going through tasks: what works and what does not?',
+    'I ran five usability tests throughout the product lifecycle, including A/B testing. Ask what worked, what did not, and what users wish to improve.',
+    'Use AI to assist with data analysis and compare its findings with your own. Synthetic feedback can suggest issues to investigate, not validate the experience.',
+], 'Ask why and how. Understand users\' wishes and priorities, alongside what you observe during the tasks.',
+    'Once different potential solutions have been found, it is time to test them and see what works and what does not. Deliver uses convergent thinking again: narrow down the options explored in Develop. With usability testing, observe users going through a set of tasks with the prototype; for other design disciplines, compare variants using an appropriate method. In my professional experience I ran five usability tests throughout the product lifecycle, including A/B testing. Getting and validating ideas with users is an essential part of the workflow. Ask directly what worked, what did not work and what their wishes are about the product. Ask about specific aspects of the experience, and remember to ask why and how. Understand the priorities of those wishes; compare what people say with what happens during tasks. Today, I would use AI to assist in data analysis and compare its findings with my own. An agent can also role-play a persona or walk through a task, but generated feedback and improvement wishes are not actual users\' findings. Such walkthroughs cannot establish human usability, fairness, safety or model reliability. Test with actual users, and test the AI behaviour as well as the interface. Navigation map: simplified redraw after Design Council, The Double Diamond, CC BY 4.0; labels and arrows omitted, inactive phases black and white, Deliver highlighted.'))
 
-S.append(three('A6 / ITERATION / RETURN WHEN THE EVIDENCE CHANGES',
-    'The diamonds are not a one-way road.', [
-        ('RETURN TO DISCOVER', 'A missing need appears.',
-         'Testing reveals an unfamiliar context. Learn about it before deciding what to change.'),
-        ('RETURN TO DEFINE', 'The goal needs reframing.',
-         'A proposed solution does not address what matters. Revisit the challenge and priorities.'),
-        ('RETURN TO DEVELOP', 'An interaction needs work.',
-         'Compare a revised response, then test again. Record what changed and what remains uncertain.'),
-    ], 'REAL-WORLD PRACTICE / PROTECT LEARNING UNDER CONSTRAINTS',
-    'Time and budget are limited. Prioritise the uncertainty that could change the design, not just the next feature.',
-    'These are illustrative routes, not claims that every project follows all three. The official Design Council page explicitly describes returning to earlier work and early making/testing within discovery. Nicolo\'s document emphasizes iteration and practical prioritization. Preserve that professional insight without making the unsupported universal claim that only the second diamond creates business value. Discovery can prevent expensive wrong commitments. The official diagram remains unchanged on A1; this slide supplies our explanation rather than a modified official diagram. No introduction duration is silently added to the ten-minute case allowance.'))
+S.append(three('DOUBLE DIAMOND / ITERATION', 'An iterative and imperfect process', [
+    ('DISCOVER AGAIN', 'Understand a new need.',
+     'Testing may reveal a user need you did not notice before. Go back to understand the user and the context.'),
+    ('DEVELOP AGAIN', 'Revise the idea.',
+     'You may need to return to Develop to fix a detail you missed, then test the revised prototype.'),
+    ('REAL-WORLD PROJECTS', 'Prioritise your time.',
+     'You may never have enough time for everything. A designer needs to prioritise and manage time on a project.'),
+], 'ITERATION THROUGHOUT THE PROCESS',
+    'You may need to go back to an earlier phase. The Double Diamond is not a fixed sequence of steps.',
+    'Although the picture may not show every loop, the Double Diamond is iterative at every phase. Once you have defined the problem, you may still need to go back to discovery and understanding the user. During testing, you may notice different needs or a new need you had not seen before. Go back to Discover to understand the context, or return to Develop to fix a detail. In the real world, you may never have enough time for everything, so a designer should know how to prioritise and manage time on a project. Obtaining enough time and budget for the first diamond can be difficult. That does not mean only the second diamond creates value: finding out early that you are addressing the wrong problem can prevent wasted development. The introduction duration remains open.'))
 
-S.append(three('A7 / STAKEHOLDERS / FROM DESIGN PROCESS TO AI PRODUCT',
-    'Good design needs more than one viewpoint.', [
-        ('PEOPLE USING IT', 'Need, context and priorities.',
-         'Include intended and affected people. Classmates and generated personas are not substitutes.'),
-        ('PEOPLE BUILDING IT', 'Capabilities and constraints.',
-         'Designers, developers and product stakeholders negotiate alternatives, integration and trade-offs.'),
-        ('PEOPLE RESPONSIBLE', 'Data, access and consequences.',
-         'Identify who can permit data use, support a failure and approve a change in the real setting.'),
-    ], 'TRANSITION / TWO DIFFERENT AI CLAIMS',
-    'AI helping me design: a process choice. AI inside the product: a change to the user\'s experience and responsibilities.',
-    'Close the introduction with Nicolo\'s stakeholder-management emphasis. The categories are teaching prompts, not invented confirmed roles in his project. Users are not a final sign-off step: they matter throughout the process, alongside collaboration with design, engineering and management. Communicating findings is a design skill, but stakeholder agreement is not independent user evidence. Make the transition explicit: the retrospective AI-tool possibilities in A2-A5 are not claims those tools were used historically; Section B will consider proposed AI-enabled product features with context-specific constraints. Section A can be reviewed independently while B awaits approved assets.'))
+S.append(three('DOUBLE DIAMOND / COLLABORATION', 'Stakeholder management', [
+    ('USERS', 'Keep users involved.',
+     'Users are central throughout the process: understanding their context, co-designing ideas and testing the experience.'),
+    ('OTHER PROFESSIONALS', 'Work across disciplines.',
+     'Collaborate with other designers, engineers, developers and product managers. They bring different perspectives to the design.'),
+    ('COMMUNICATION', 'Share your findings.',
+     'Explain what you have learned to the people you work with. Communication is a fundamental skill for designers.'),
+], 'DESIGN DOES NOT HAPPEN IN A VACUUM',
+    'Involving people from different disciplines helps you develop better designs and move your ideas forward.',
+    'I would like to emphasise stakeholder management throughout the whole Double Diamond process. Design does not happen in a vacuum. In industry, whatever the design discipline, you will deal with different people. Users are central, but collaboration with other designers, engineers and product managers is also fundamental. During Discover, you work mostly with users and share findings with managers. During Define, you may work with other designers, developers or managers to narrow down the problem. During Develop, co-design helps you learn from different perspectives. During Deliver, users test the experience, and you communicate the findings to developers, engineers and managers. Communication is a fundamental skill for designers and an important part of your professional skillset. The following case moves from AI assisting the design process to a proposed product with AI inside it.'))
 
+S.append(section('CASE STUDY', 'Software UX Design',
+    'Current product / UX goals / Proposed AI redesign', bg=INK,
+    notes='This is the transition from the Double Diamond introduction to my Software UX Design case study. I will explain how the current product works, its current UX goals, and how I would integrate AI features by redesigning the product while enhancing those goals. The case is still waiting for portfolio slides, screenshots, context and the proposed AI experience. This divider is shown within the first case minute; it does not add time to the eight speaking minutes plus two minutes of Q&A. The introduction remains separate from that ten-minute slot.'))
 
-# B / Case storyboard: visible pending labels prevent a draft from posing as evidence.
-s = frame('B1 / CASE STORYBOARD / 10 MIN TOTAL INCLUDING Q&A',
-    'Today: how does the product work?',
-    'Proposed speaking allocation: one minute. The entire Section B has eight speaking minutes plus two for Q&A, not eight plus an unlimited discussion. This is a storyboard awaiting Nicolo\'s portfolio slides, approved product images, intended-use video, target users and context. Extract relevant material only after receipt and permission review. Do not invent a product name, workflow, user quote, laboratory scene or screenshot. Use a short permitted video excerpt or offline still sequence only if the content and slot support it. Current device and workflow must stay distinct from the proposed AI redesign. Private/company material must not be placed in repository history or an unauthenticated preview without permission.')
-slot(s, 120, 358, 1050, 400, 'CURRENT PRODUCT / MATERIAL PENDING', 'Approved portfolio screenshot',
-     'Intended users, setting and current workflow will come from your source material.')
-slot(s, 1220, 358, 580, 400, 'INTENDED USE / MATERIAL PENDING', 'Images or video',
-     'Use only the relevant permitted excerpt. No fabricated product demonstration.')
-S.append(strip(s, 'CASE STATUS / NOT YET A COMPLETE PRESENTATION',
-    'Screenshots, context, UX goals and sharing permissions are pending. The original Week 10 presentation is unchanged.'))
+s = frame('CASE STUDY / CURRENT PRODUCT', 'How the current product works',
+    'Proposed speaking allocation: one minute, including the case cover. The case has eight speaking minutes plus two minutes of Q&A. Portfolio slides, product images, intended-use video, users and context are still pending. Extract relevant material only after receipt and sharing permission. Do not invent a product name, workflow, user quote, laboratory scene or screenshot. Keep the current device and workflow distinct from the proposed AI redesign. Company material needs permission before it enters repository history or an unauthenticated preview.')
+slot(s, 120, 358, 1050, 400, 'CURRENT PRODUCT / TO ADD', 'Product screenshot',
+     'Users, context and current workflow.')
+slot(s, 1220, 358, 580, 400, 'INTENDED USE / TO ADD', 'Images or video',
+     'Relevant material from the portfolio.')
+S.append(strip(s, 'DRAFT / MATERIAL PENDING',
+    'Product screenshots, intended-use material, context and current UX goals will be added here.'))
 
-S.append(three('B2A / CURRENT PRODUCT / QUALITATIVE EVIDENCE PENDING',
-    'What works, and what should improve?', [
-        ('POSITIVE FINDING 1', 'Awaiting a real finding.',
-         'Add an observation and its task/context. No invented participant quote or success claim.'),
-        ('POSITIVE FINDING 2', 'Awaiting a real finding.',
-         'Use a distinct positive finding from the supplied portfolio or research material.'),
-        ('WISHES FOR IMPROVEMENT', 'Awaiting wishes and priority.',
-         'Record what users wanted, why it mattered and which improvements they prioritized.'),
-    ], 'ONE PROPOSED SPEAKING MINUTE / KEEP OBSERVATION AND INTERPRETATION DISTINCT',
-    'Evidence -> UX goal -> improvement priority. Preserve context, disagreement and remaining questions.',
-    'Nicolo asks for a couple of positive qualitative findings plus wishes for improvements before the quantitative slide. These slots deliberately contain no fake quotes or positive results. Await the source observations, method, intended users, task and permission to share. Distinguish the person\'s stated wish from designer interpretation; relate each to the actual UX goals when supplied. Do not imply all users agreed or infer prevalence from a handful of anecdotes. Proposed speaking allocation: one minute.'))
+S.append(three('CASE STUDY / CURRENT PRODUCT', 'Qualitative findings', [
+    ('POSITIVE FINDING 1', 'What worked.', 'Observation and context to be added.'),
+    ('POSITIVE FINDING 2', 'What else worked.', 'A second observation and context to be added.'),
+    ('WISHES FOR IMPROVEMENT', 'What users wanted.', 'Wishes and their priorities to be added.'),
+], 'DRAFT / FINDINGS PENDING',
+    'A couple of positive findings, followed by users\' wishes for improvement.',
+    'Proposed speaking allocation: one minute. This slide will show a couple of positive qualitative findings and wishes for improvements, as requested. Source observations, context, actual UX goals and sharing permission are pending. No quotes or research results have been invented. Keep users\' words distinct from my interpretation, explain why an improvement matters, and retain disagreement or context-specific needs rather than assuming all users wanted the same thing.'))
 
-s = frame('B2B / CURRENT PRODUCT / SPEAKER-REPORTED FIGURES',
-    'Reported gains. Context still matters.',
-    'Proposed speaking allocation: one minute. Nicolo supplied two historical current-product statements in chat: 30% faster than manual workflows, and one click to prepare and submit a sample list. He will provide context later. These are attributed claims awaiting the actual task, comparator, timing definition, method, sample, uncertainty, source and sharing clearance; they are not independently verified. Do not conflate 30% faster with 30% less completion time: the original definition and calculation must be checked. Clarify where the one-click action begins and ends and what setup/preparation remains outside it. Do not show an invented chart, sample size or confidence interval. These figures do not measure the proposed AI redesign and must not become its claimed benefit.')
-for x, number, detail in [(120, '30%', 'Reported faster than manual workflows'),
-                           (1000, '1 click', 'Reported to prepare and submit a sample list')]:
+s = frame('CASE STUDY / CURRENT PRODUCT', 'Quantitative findings',
+    'Proposed speaking allocation: one minute. I supplied two current-product statements: 30% faster than manual workflows, and one click to prepare and submit a sample list. Measurement context is still pending. These are speaker-reported figures, not independently verified findings. Do not conflate 30% faster with 30% less completion time: check the original definition and calculation. Clarify the task, manual comparator, method, uncertainty and action boundaries, including any setup. These figures do not measure the proposed AI redesign. Do not invent a sample size, study design or chart.')
+for x, number, detail in [(120, '30%', 'Faster than manual workflows'),
+                           (1000, '1 click', 'To prepare and submit a sample list')]:
     s.els += [Rect(x, 358, 800, 400, PAPER),
               T(x+32, 390, 736, 150, number, 'xbold', 112, INK, lh=1),
               T(x+32, 590, 736, 110, detail, 'body', 36, INK, lh=1.2)]
-S.append(strip(s, 'ATTRIBUTED TO NICOLO / NOT INDEPENDENTLY VERIFIED / NOT AI REDESIGN RESULTS',
-    'Await task, baseline, measurement method, action boundaries, source and permission. Do not infer a study design.'))
+S.append(strip(s, 'REPORTED CURRENT-PRODUCT FIGURES / DRAFT',
+    'Measurement context pending. These are not results of the AI redesign.'))
 
-s = frame('B3A / PROPOSED AI REDESIGN / NOT IMPLEMENTED',
-    'Before and after: one consequential change.',
-    'Proposed speaking allocation: one and a half minutes. Nicolo requests one before/after slide followed by a separate three-screen sequence. Use the genuine current screen and his proposed redesign, not a reconstruction presented as a product artifact. Both are pending. Connect the change to a supplied UX goal and clarify the AI action, retained human decision and failure route. No feature, measured improvement, screenshot or specific interaction is invented by these empty spaces. The after view must stay labelled proposed even if it later becomes a convincing high-fidelity mockup.')
-slot(s, 120, 358, 800, 400, 'BEFORE / CURRENT PRODUCT', 'Current screen pending',
-     'Show the real workflow and relevant UX friction.')
-slot(s, 1000, 358, 800, 400, 'AFTER / PROPOSED, NOT IMPLEMENTED', 'Redesign screen pending',
-     'Annotate the AI-enabled change against an actual UX goal.')
-S.append(strip(s, 'ANNOTATION CONTRACT',
-    'What does AI do? What still needs a person? What happens when the output is wrong, unavailable or rejected?'))
+s = frame('CASE STUDY / PROPOSED AI REDESIGN', 'Before and after',
+    'Proposed speaking allocation: one and a half minutes. Show the current product screen and the proposed redesign on one slide. The genuine current screen, actual UX goals and proposed changes are pending. Explain how the AI feature relates to a UX goal, what it does, what the person still decides and what happens if it is wrong or unavailable. Do not reconstruct a screenshot and present it as an actual product screen. Keep the redesign labelled proposed, not implemented; no feature or measured improvement has been invented.')
+slot(s, 120, 358, 800, 400, 'BEFORE / CURRENT PRODUCT', 'Current screen', 'Screenshot to be added.')
+slot(s, 1000, 358, 800, 400, 'AFTER / PROPOSED REDESIGN', 'Redesigned screen', 'Proposed screen and annotations to be added.')
+S.append(strip(s, 'CONNECT THE CHANGE TO THE UX GOALS',
+    'Explain the AI feature, how it changes the experience, and what the user still needs to do.'))
 
-s = frame('B3B / PROPOSED AI EXPERIENCE / THREE-SCREEN SEQUENCE',
-    'Show the experience, not just a feature.',
-    'Proposed speaking allocation: one and a half minutes. Nicolo explicitly asks for a sequence of three annotated screenshots on this slide. Screens are pending: do not invent their actions or order. Populate them from his approved proposed flow, then make annotations legible and connect them to actual UX goals. Identify AI work, human choice and a recovery/uncertainty condition where those occur in the real proposal. Keep all three screenshots as proposed, not implemented, and distinguish synthetic placeholders from actual screenshots. Provide full explanation in native notes rather than crowding the images.')
+s = frame('CASE STUDY / PROPOSED AI REDESIGN', 'The redesigned experience',
+    'Proposed speaking allocation: one and a half minutes. Show a sequence of three annotated screenshots of the proposed redesigned experience. The screens, actions and order are pending, so do not invent them. Explain the user action, AI contribution and relevant UX goal at each actual step. Include human choice, uncertainty or recovery where they occur in the proposal. Keep these screens labelled proposed, not implemented. Put fuller explanations in native notes so annotations can remain readable.')
 for i in range(3):
-    slot(s, 120+i*580, 358, 520, 400, f'PROPOSED SCREEN {i+1} / PENDING',
-         f'Flow step {i+1}', 'Approved screenshot and precise on-slide annotations to follow.')
-S.append(strip(s, 'WAITING FOR THE ACTUAL PROPOSED FLOW',
-    'Use three supplied screens in order. Annotate the user action, the AI contribution and the relevant UX goal.'))
+    slot(s, 120+i*580, 358, 520, 400, f'PROPOSED SCREEN {i+1}',
+         f'Step {i+1}', 'Screenshot and annotations to be added.')
+S.append(strip(s, 'DRAFT / PROPOSED FLOW PENDING',
+    'Three screenshots in sequence, with annotations showing how the AI features support the UX goals.'))
 
-S.append(three('B4A / FEASIBILITY / CONTEXT IS PART OF THE DESIGN',
-    'A lab is not a frictionless demo.', [
-        ('ENVIRONMENT + CAMERAS', 'Can it work here?',
-         'Check low light, camera placement and occlusion. Is image capture permitted and appropriate in this lab?'),
-        ('SYSTEMS + CONNECTIVITY', 'Can it fit this site?',
-         'Check legacy integration, digital readiness, network reliability, cloud policy and an offline route.'),
-        ('DEVICE + PROCESSING', 'What must change?',
-         'Assess compute, memory, power, latency and device adaptation. Local versus cloud processing has trade-offs.'),
-    ], 'POTENTIAL CONSTRAINTS TO INVESTIGATE / NOT A COMPLETED TECHNICAL AUDIT',
-    'Ask users, lab operations, IT and engineering. Validate feasibility in the intended setting, not only at a desk.',
-    'Proposed speaking allocation: one and a half minutes. Nicolo wants environmental and implementation constraints to demonstrate why understanding users and context matters. Treat low light, lab camera restrictions, cloud/digital readiness, compute and device adaptation as potential constraints, not verified characteristics of the specific site or universal facts about modern laboratories. Do not claim that all labs are currently unready for digital/cloud systems or that an industry trend was audited. Ask what this site can support: permissions, confidentiality and camera field of view; lighting/occlusion; actual systems interfaces, approved processing and reliability; measured target hardware latency, memory and power. On-device processing may reduce some transfers but is not automatically private or feasible. Cloud processing can create connectivity, latency and policy issues; requirements and implementation need actual technical review. PPE, cleaning and safety issues may be explored if relevant, not assumed. Tie each confirmed constraint back to the UX goal and a test, fallback or scope change.'))
+S.append(three('CASE STUDY / IMPLEMENTATION', 'Technical constraints', [
+    ('ENVIRONMENT + CAMERAS', 'Using cameras in a lab.',
+     'Consider low light, camera placement and obstruction. Is image capture permitted in this setting?'),
+    ('SYSTEMS + CONNECTIVITY', 'Digital and cloud systems.',
+     'Investigate digital readiness, existing systems, network reliability and cloud policy in the lab.'),
+    ('DEVICE + PROCESSING', 'Adapting the device.',
+     'Check compute and memory requirements, processing power and the device adaptation needed for the AI features.'),
+], 'POTENTIAL CONSTRAINTS / TO INVESTIGATE',
+    'Understanding the user, environment and constraints is important when designing how AI fits into a product.',
+    'Proposed speaking allocation: one and a half minutes. These are potential technical constraints, not verified characteristics of this site or a completed technical audit. Consider low-light conditions, camera placement, obstruction and whether image capture is permitted and appropriate in the laboratory. Investigate the site\'s digital readiness, existing systems, cloud policy and network reliability. Do not claim all laboratories are unready for digital or cloud systems. Check the actual processing power, memory, latency, power and device changes needed for the proposed AI features. Local processing is not automatically private or feasible; cloud processing raises different connectivity and policy questions. Confirm these constraints with users and the relevant technical colleagues. This illustrates why understanding user context matters, without inventing an audit of the product.'))
 
-S.append(three('B4B / PROPOSED EVALUATION + Q&A',
-    'Would this improve the experience here?', [
-        ('USEFUL OUTCOME', 'Test the UX goal.',
-         'Compare current and proposed workflows on a relevant task, with a meaningful baseline.'),
-        ('FAILURE + CONTROL', 'Test difficult conditions.',
-         'Check errors, low light, disconnection, rejection and recovery where relevant to the actual proposal.'),
-        ('USER PRIORITY', 'Ask what matters next.',
-         'Combine observed outcomes with users\' wishes, their priorities and the burden of the change.'),
-    ], 'PROPOSED .5-MINUTE CLOSE + 2 MINUTES Q&A / TOTAL CASE SLOT: 10 MINUTES',
-    'Which user need or environmental constraint could change this AI redesign most, and how would we investigate it?',
-    'Half-minute close, followed by two minutes of Q&A within the same ten-minute case slot. Total proposed speaking allocations for B1-B4B are eight minutes. This is a bounded evaluation plan, not proof of benefit or deployment readiness. Metrics, task and comparator must be specified after the actual current UX goals and redesign are provided. Do not reuse the historical 30% and one-click statements as predictions of AI benefits. Distinguish interface comprehension, actual model/device performance and the user\'s ability to complete a meaningful task in context. State what could disconfirm the proposal, including unequal burdens and an unusable fallback. The proposed audience question is optional facilitation, not a new assessed task or submission.'))
+S.append(three('CASE STUDY / TESTING + Q&A', 'Testing the redesign', [
+    ('CURRENT UX GOALS', 'Does it help users?',
+     'Compare the current and proposed workflows on the tasks users need to accomplish.'),
+    ('TECHNICAL CONSTRAINTS', 'Does it work here?',
+     'Test relevant conditions, such as low light or disconnection, and what happens when AI makes a mistake.'),
+    ('WISHES + PRIORITIES', 'What should improve?',
+     'Ask users what worked, what did not, and what they would like to improve. Understand their priorities.'),
+], 'CLOSE + Q&A / WITHIN THE TEN-MINUTE CASE',
+    'What would you need to test before taking this proposed redesign further?',
+    'Proposed speaking allocation: half a minute, followed by two minutes of Q&A within the ten-minute case slot. The seven case-content slides have eight speaking minutes altogether; the cover is included in the first minute. The actual current UX goals and redesign are pending, so the task, comparison and measures must still be defined. This is a proposal for testing, not a claim that the redesign works. Do not reuse the current-product 30% or one-click figures as predicted AI benefits. Observe task outcomes and test the AI behaviour as well as the interface. Ask users about wishes and priorities, including disagreements. The audience question is optional facilitation, not an assessed task or new submission.'))
 
 DECK = dict(title='SD2112 / Week 10 / Nicolo separate contributor draft',
             slides=finalize(S, 'SD2112 / AI IN DESIGN / WEEK 10 / NICOLO VARIANT'),
