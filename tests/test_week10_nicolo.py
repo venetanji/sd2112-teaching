@@ -83,6 +83,44 @@ class NicoloVariantTests(unittest.TestCase):
         self.assertIn('CASE STUDY', text(self.slides[7]))
         self.assertIn('within', self.slides[7].notes)
 
+    def test_opening_definition_explanation_and_diagram_labels(self):
+        from deck.week10_nicolo import DD_DEFINITION
+        expected = ('The\u00a0Double Diamond\u00a0is a visual representation of the design and innovation process. '
+                    'It\u2019s a simple way to describe the steps taken in any design\u00a0and innovation\u00a0project, '
+                    'irrespective of methods and tools used.')
+        self.assertEqual(DD_DEFINITION, expected)
+        slide = self.slides[0]
+        definition = next(e for e in slide.els if e.name == 'dd-definition')
+        self.assertEqual(''.join(r.text for p in definition.paras for r in p.runs),
+                         '\u201c'+expected+'\u201d')
+        opening = text(slide)
+        for phrase in ('Presenting it in three layers', 'general principles',
+                       'Agilent Technologies in Germany', 'AI assistance',
+                       'GenAI integrated into the product'):
+            self.assertIn(phrase, opening)
+        diagram = next(e for e in slide.els if e.name == 'dd-official-diagram')
+        labels = [e for e in slide.els if e.name == 'dd-space-label']
+        self.assertEqual(len(labels), 2)
+        for label, name, center in zip(labels, ('Problem Space', 'Solution Space'), (246, 694)):
+            self.assertEqual(label.paras[0].runs[0].text, name)
+            self.assertAlmostEqual(label.x+label.w/2, diagram.x+diagram.w*center/936)
+            self.assertLessEqual(label.y+label.h, diagram.y)
+
+    def test_experience_is_impersonal_in_slides_and_notes(self):
+        import re
+        for slide in self.slides:
+            self.assertIsNone(re.search(r'\b(I|my|me|mine|myself|we|our|ours)\b',
+                                        text(slide)+' '+slide.notes))
+        for slide in self.slides[1:5]:
+            self.assertIn('INDUSTRY EXPERIENCE', text(slide))
+        self.assertIn('Five usability tests were run', text(self.slides[4]))
+
+    def test_notes_companion_matches_current_slides(self):
+        companion = (ROOT/'lessons/week10-nicolo-speaker-notes.md').read_text()
+        expected = ''.join(f'## {i:02d} / {s.title}\n\n{s.notes}\n\n'
+                           for i, s in enumerate(self.slides, 1)).rstrip()+'\n'
+        self.assertEqual(companion[companion.index('## 01 /'):], expected)
+
     def test_phase_subtitles_maps_and_reading_order(self):
         from deck.week10_nicolo import PHASES
         from deck.week10_nicolo_figures import phase_map
@@ -90,7 +128,11 @@ class NicoloVariantTests(unittest.TestCase):
             slide = self.slides[i+1]
             self.assertIn('divergent thinking' if i in (0, 2) else 'convergent thinking', text(slide))
             subtitle = next(e for e in slide.els if e.name == 'phase-subtitle')
-            self.assertIn(space+' \u2022 '+phase, text(slide))
+            runs = subtitle.paras[0].runs
+            self.assertEqual(''.join(r.text for r in runs), space+' \u25c6 '+phase)
+            self.assertEqual([r.text for r in runs], [space+' ', '\u25c6', ' '+phase])
+            self.assertEqual([r.color for r in runs], ['#5A626B', '#246E70', '#5A626B'])
+            self.assertNotIn('\u2022', text(slide))
             title = next(e for e in slide.els if e.name == 'variant-heading')
             self.assertGreaterEqual(subtitle.y, title.y+title.h)
             maps = [e for e in slide.els if e.name == 'phase-navigation']
