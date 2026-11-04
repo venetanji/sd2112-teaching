@@ -14,7 +14,7 @@ CASE_QA_MINUTES = 2
 SCREEN_RATIO = 2420/1525
 ASSETS = Path(__file__).resolve().parent/'assets/week10'
 PRODUCT_SCREEN = ASSETS/'nicolo-current-product.png'
-SCREEN_CAPTION = 'Original Software Product / Workbench Tablet Device'
+SCREEN_CAPTION = 'Workbench Tablet Device'
 TEAL, GREY, ORANGE = '#246E70', '#5A626B', '#C74600'
 PAPER_STEPS = [
     'Find the right sample in the sample rack by checking labels',
@@ -152,7 +152,7 @@ def build_case():
     slides.append(s)
 
     notes = (
-        'Proposed speaking allocation: two minutes, including one complete 49.365-second video pass. Space toggles playback; the video loops until paused. '
+        'Proposed speaking allocation: two minutes, including one complete 49.365-second video pass. The video starts automatically, muted, and loops until paused; Space toggles playback. '
         'Sources: 16.pdf and 17.pdf, PDF page 1 in each, plus the original screenshot and promotional video supplied earlier. '
         'Gather qualitative data on the experience: Ease of use and Learnability. Task-based usability testing with a follow up semi-structured interview. '
         'Positive participant quotations: '+'; '.join(POSITIVE_QUOTES)+'. '
@@ -164,7 +164,7 @@ def build_case():
         'These are reported current-product outcomes, not results of the AI redesign. Do not conflate 30% faster with 30% less completion time. '
         'Participant count, task/sample count, raw timings, baseline click count, study date, uncertainty and calculation method are not supplied; do not invent them. '
         'The one-click statement is limited to preparing and submitting a sample list, not the whole sample-transfer workflow. '
-        'The original tablet screenshot remains uncropped at its 2420:1525 aspect ratio. The original 1920x1080 video remains complete, silent, untrimmed, without autoplay, looping continuously after Play until paused. '
+        'The original tablet screenshot remains uncropped at its 2420:1525 aspect ratio. The original 1920x1080 video remains complete, silent, untrimmed, autoplaying silently and looping continuously until paused. Space toggles play/pause. '
         'Both are on this Deliver slide, replacing the earlier dedicated video slide to meet the four-slide case request. '
         'The seven case-content slides total eight speaking minutes including one full video pass, followed by two minutes of Q&A within ten minutes. Pause the loop after one pass to preserve that budget. '
         'The following three slides present the supplied AI redesign as a proposed concept, not an implemented or validated system. '
@@ -179,21 +179,23 @@ def build_case():
                  F.source_image('nicolo-product-video-poster.png',
                                 'Original product promotional video, still at 25 seconds'))
     s.els += [T(120, 812, 500, 28, 'Quantitative findings', 'mono', 20, ORANGE),
-              T(120, 854, 144, 60, '30%', 'xbold', 48, TEAL, name='reported-speed'),
+              T(120, 854, 144, 54, '30%', 'xbold', 44, TEAL, name='reported-speed'),
               T(284, 854, 336, 60, 'faster than manual workflows', 'body', 25, INK,
                 lh=1.15),
-              T(284, 916, 336, 24, 'Time on Task', 'mono', 17, GREY),
-              T(120, 942, 148, 50, '1 Click', 'xbold', 40, TEAL, name='reported-clicks'),
-              T(284, 940, 336, 54, 'to prepare and submit a sample list', 'body', 24, INK,
+              T(120, 922, 148, 44, '1 Click', 'xbold', 36, TEAL, name='reported-clicks'),
+              T(284, 918, 336, 54, 'to prepare and submit a sample list', 'body', 24, INK,
                 lh=1.1),
               T(700, 812, 500, 28, 'Qualitative findings', 'mono', 20, ORANGE),
               T(700, 856, 500, 138,
                 '\n'.join('\u201c'+q+'\u201d' for q in POSITIVE_QUOTES),
-                'body', 26, INK, lh=1.15, italic=True, name='participant-positive-quotes'),
+                'body', 25, INK, lh=1.08, italic=True, name='participant-positive-quotes'),
               T(1280, 812, 520, 28, 'Improvement wishes', 'mono', 20, ORANGE),
               T(1280, 856, 520, 138,
                 'Add weight and volume information to the container.\nSplit and merge samples in the system.',
                 'body', 26, INK, lh=1.15, name='participant-improvement-wishes')]
+    quotes = next(e for e in s.els if e.name == 'participant-positive-quotes')
+    for paragraph in quotes.paras[1:]:
+        paragraph.before = 10
     slides.append(s)
     slides.extend(build_ai_concept())
     return slides
@@ -237,8 +239,8 @@ def build_ai_concept():
         s.els += [eyebrow(120, 96, 'PROPOSED AI REDESIGN / '+code, TEAL),
                   T(120, 184, 1680, 100, title, 'xbold', 64, INK,
                     lh=.95, spc=-.03, name='variant-heading'),
-                  Image(120, 330, 1040, round(1040*757/1200),
-                        str(ASSETS/f'nicolo-asl-{i}.jpg'), 'contain', name=f'asl-{i}-concept'),
+                  Image(120, 330, 1040, round(1040/SCREEN_RATIO),
+                        str(ASSETS/f'nicolo-asl-{i}.png'), 'contain', name=f'asl-{i}-concept'),
                   T(1220, 344, 580, 168, body, 'xbold', 34, INK, lh=1.14,
                     name='concept-explanation'),
                   T(1220, 532, 580, 128, detail, 'body', 29, INK, lh=1.2),

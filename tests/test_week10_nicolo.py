@@ -20,8 +20,9 @@ class NicoloVariantTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from deck.week10_nicolo import S, CASE_START, CASE_SPEAKING_MINUTES, CASE_QA_MINUTES
-        cls.slides = S
-        cls.start = CASE_START
+        cls.full_slides = S
+        cls.slides = S[1:-1]
+        cls.start = CASE_START-1
         cls.minutes = CASE_SPEAKING_MINUTES
         cls.qa = CASE_QA_MINUTES
 
@@ -34,6 +35,24 @@ class NicoloVariantTests(unittest.TestCase):
                      'lessons/week10-speaker-brief.md'):
             self.assertEqual((ROOT/name).read_bytes(), subprocess.check_output(
                 ['git', 'show', ORIGINAL_REVISION+':'+name], cwd=ROOT), name)
+
+    def test_requested_opening_cover_and_simple_closing(self):
+        from deck.week10_nicolo import CASE_START
+        self.assertEqual(len(self.full_slides), 17)
+        self.assertEqual(CASE_START, 9)
+        cover, closing = self.full_slides[0], self.full_slides[-1]
+        self.assertEqual(cover.title, 'Double Diamond \U0001f48e\U0001f48e')
+        self.assertIn('Double Diamond', text(cover))
+        diamonds = next(e for e in cover.els if e.name == 'dd-cover-diamonds')
+        self.assertIn('\U0001f48e\U0001f48e', diamonds.svg)
+        self.assertEqual(closing.title, 'thanks!')
+        self.assertEqual(len(closing.els), 1)
+        thanks = closing.els[0]
+        self.assertEqual(text(closing), 'thanks!')
+        self.assertEqual(thanks.paras[0].align, 'c')
+        self.assertEqual(thanks.valign, 'm')
+        self.assertEqual((thanks.x+thanks.w/2, thanks.y+thanks.h/2), (960, 540))
+        self.assertEqual(thanks.paras[0].runs[0].size, 48)
 
     def test_structure_and_case_budget(self):
         self.assertEqual(self.start, 8)
@@ -120,7 +139,8 @@ class NicoloVariantTests(unittest.TestCase):
         self.assertAlmostEqual(player.w/player.h, 16/9)
         self.assertIn('49.365-second video', video.notes)
         self.assertIn('video.controls = true', player.code)
-        self.assertNotIn('autoplay = true', player.code)
+        self.assertIn('video.autoplay = true', player.code)
+        self.assertIn('video.muted = true', player.code)
         self.assertIn("parent.Reveal.on('slidechanged'", player.code)
         self.assertEqual(self.minutes[3], 2)
         self.assertGreater(self.minutes[3]*60, 49.365)
@@ -132,7 +152,7 @@ class NicoloVariantTests(unittest.TestCase):
             self.assertTrue(slide.title.startswith(f'ASL-{i} / '))
             self.assertIn('PROPOSED AI REDESIGN', text(slide))
             image = next(e for e in slide.els if e.name == f'asl-{i}-concept')
-            self.assertEqual(Path(image.src), ASSETS/f'nicolo-asl-{i}.jpg')
+            self.assertEqual(Path(image.src), ASSETS/f'nicolo-asl-{i}.png')
             self.assertEqual(image.fit, 'contain')
             import json
             manifest = json.loads((ASSETS/'nicolo-portfolio-sources.json').read_text())
@@ -181,6 +201,29 @@ class NicoloVariantTests(unittest.TestCase):
         self.assertEqual(len(labels), 3)
         self.assertEqual(len({e.y for e in labels}), 1)
         self.assertEqual(deliver.html_only[0].hint, '')
+
+    def test_deliver_caption_compact_metrics_and_quote_spacing(self):
+        from deck.week10_nicolo_case import SCREEN_CAPTION
+        self.assertEqual(SCREEN_CAPTION, 'Workbench Tablet Device')
+        slide = self.slides[11]
+        self.assertNotIn('Time on Task', text(slide))
+        self.assertNotIn('Original Software Product', text(slide))
+        speed = next(e for e in slide.els if e.name == 'reported-speed')
+        clicks = next(e for e in slide.els if e.name == 'reported-clicks')
+        self.assertEqual(speed.paras[0].runs[0].size, 44)
+        self.assertEqual(clicks.paras[0].runs[0].size, 36)
+        self.assertLessEqual(clicks.y+clicks.h, 972)
+        quotes = next(e for e in slide.els if e.name == 'participant-positive-quotes')
+        self.assertEqual(quotes.h, 138)
+        self.assertEqual([p.before for p in quotes.paras], [0, 10, 10])
+        self.assertTrue(all(p.lh == 1.08 for p in quotes.paras))
+        from PIL import Image
+        for i in range(1, 4):
+            image = next(e for e in self.slides[11+i].els if e.name == f'asl-{i}-concept')
+            with Image.open(image.src) as original:
+                self.assertEqual(original.size, (2420, 1525))
+                self.assertEqual(original.format, 'PNG')
+            self.assertLessEqual(abs(image.h-image.w*1525/2420), .5)
 
     def test_video_loops_with_scoped_space_and_cleanup(self):
         code = self.slides[11].html_only[0].code
@@ -268,7 +311,7 @@ class NicoloVariantTests(unittest.TestCase):
     def test_notes_companion_matches_current_slides(self):
         companion = (ROOT/'lessons/week10-nicolo-speaker-notes.md').read_text()
         expected = ''.join(f'## {i:02d} / {s.title}\n\n{s.notes}\n\n'
-                           for i, s in enumerate(self.slides, 1)).rstrip()+'\n'
+                           for i, s in enumerate(self.full_slides, 1)).rstrip()+'\n'
         self.assertEqual(companion[companion.index('## 01 /'):], expected)
 
     def test_phase_subtitles_maps_and_reading_order(self):

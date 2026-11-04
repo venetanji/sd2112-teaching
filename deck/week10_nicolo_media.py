@@ -9,6 +9,8 @@ function setup() {
   video.poster = '../../week10-nicolo-media/product-video-poster.png';
   video.controls = true;
   video.loop = true;
+  video.autoplay = true;
+  video.muted = true;
   video.playsInline = true;
   video.preload = 'metadata';
   video.setAttribute('aria-label', 'Original product promotional video; Space to play or pause');
@@ -37,6 +39,7 @@ function setup() {
     else pause();
   };
   window.addEventListener('keydown', onKey, true);
+  video.addEventListener('play', () => { if (!active()) pause(); });
   const onVisibility = () => { if (document.hidden) pause(); };
   document.addEventListener('visibilitychange', onVisibility);
   if (!standalone && parent.Reveal) {
@@ -44,8 +47,11 @@ function setup() {
     const chip = frameElement.parentElement.querySelector('.live');
     if (chip) chip.style.display = 'none';
     parent.window.addEventListener('keydown', onKey, true);
-    const onSlide = () => { if (!active()) pause(); };
-    const observer = new MutationObserver(onSlide);
+    const onSlide = () => {
+      if (active()) video.play().catch(() => {});
+      else pause();
+    };
+    const observer = new MutationObserver(() => { if (!active()) pause(); });
     parent.Reveal.on('slidechanged', onSlide);
     parent.Reveal.on('overviewshown', pause);
     observer.observe(parent.document.body, {attributes: true, attributeFilter: ['class']});
@@ -59,5 +65,6 @@ function setup() {
       pause();
     }, {once: true});
   }
+  if (active()) video.play().catch(() => {});
 }
 """

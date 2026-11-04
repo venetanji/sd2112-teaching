@@ -69,24 +69,39 @@
   "aiConceptImages": [
     {
       "code": "ASL-1",
-      "file": "nicolo-asl-1.jpg",
-      "sha256": "b4859b96c51a42fa49754bcbff6193a93d2c6d5652d72401e9259a55d9d28e34",
+      "file": "nicolo-asl-1.png",
+      "sha256": "d71b90ce1af5f9bc0bf7fe160e195cb2b2747aaa310b7178a03eb7dee42b55df",
       "description": "Mirror-like UI with sample-list overlay",
-      "status": "Contributor-supplied proposed concept mockup; not validated capabilities"
+      "status": "Contributor-supplied proposed concept mockup; not validated capabilities",
+      "dimensions": [
+        2420,
+        1525
+      ],
+      "format": "PNG; original supplied bytes; replaces compressed JPEG for projection"
     },
     {
       "code": "ASL-2",
-      "file": "nicolo-asl-2.jpg",
-      "sha256": "343b4305c8edf3f88cf09aa40f1b56282bd2dd9c1e56d6003537d2cf9e9bf146",
+      "file": "nicolo-asl-2.png",
+      "sha256": "e2e07efbb994dd9958b0358f4ec0742598e3c78278d0655ce76636d8f209bd3e",
       "description": "Recognised source tube and selected sample",
-      "status": "Contributor-supplied proposed concept mockup; not validated capabilities"
+      "status": "Contributor-supplied proposed concept mockup; not validated capabilities",
+      "dimensions": [
+        2420,
+        1525
+      ],
+      "format": "PNG; original supplied bytes; replaces compressed JPEG for projection"
     },
     {
       "code": "ASL-3",
-      "file": "nicolo-asl-3.jpg",
-      "sha256": "d83c11bcb348d1f6973f994a88b132c6ff9aa3dd77dcc2f60837941fb1b3357e",
+      "file": "nicolo-asl-3.png",
+      "sha256": "6ee6ece3d824f539e40b61efc23129c85b1db7bb115e2b434afe06cbfaab9154",
       "description": "Dispensing into target vial, history entry and editable draft comment",
-      "status": "Contributor-supplied proposed concept mockup; not validated capabilities"
+      "status": "Contributor-supplied proposed concept mockup; not validated capabilities",
+      "dimensions": [
+        2420,
+        1525
+      ],
+      "format": "PNG; original supplied bytes; replaces compressed JPEG for projection"
     }
   ]
 }

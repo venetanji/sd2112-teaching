@@ -1,5 +1,6 @@
 """Separate contributor draft, using Nicolo's document as the writing reference."""
 from pathlib import Path
+import base64
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -14,7 +15,7 @@ DC = 'https://www.designcouncil.org.uk/resources/the-double-diamond/'
 S = []
 PHASES = [('problem space', 'discover'), ('problem space', 'define'),
           ('solution space', 'develop'), ('solution space', 'deliver')]
-CASE_START = 8
+CASE_START = 9
 TEAL = '#246E70'
 GREY = '#5A626B'
 ORANGE = '#C74600'
@@ -166,8 +167,27 @@ case_cover.els += [eyebrow(120, 360, 'CASE STUDY', '#F2ECF5'),
                      'mono', 26, '#F2ECF5', lh=1.2)]
 S.append(case_cover)
 S.extend(build_case())
+intro_cover = _slide(INK, title='Double Diamond \U0001f48e\U0001f48e', notes=
+    'Opening cover for the Double Diamond introduction. The requested title is Double Diamond \U0001f48e\U0001f48e. The following slide retains the verbatim definition and official diagram; the cover does not replace that explanation or add speaking time to the case.')
+# A course-owned emoji twin avoids missing glyphs in native raster/PPTX exports.
+emoji_png = Path(__file__).resolve().parent/'assets/week10/nicolo-cover-diamonds.png'
+emoji_data = base64.b64encode(emoji_png.read_bytes()).decode('ascii')
+emoji_svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="272" height="128" '
+             'role="img" aria-label="\U0001f48e\U0001f48e"><title>\U0001f48e\U0001f48e</title>'
+             '<image width="272" height="128" href="data:image/png;base64,'+emoji_data+'"/></svg>')
+intro_cover.els += [T(120, 440, 900, 200, 'Double Diamond',
+                      'black', 112, '#FFFFFF', lh=1.05, spc=-.025,
+                      name='dd-cover-title'),
+                   Figure(1004, 440, 272, 128, emoji_svg, str(emoji_png),
+                          name='dd-cover-diamonds')]
+S.insert(0, intro_cover)
+closing = _slide(title='thanks!', chrome=False, notes=
+    'A simple closing slide after the proposed AI concept. Invite questions within the existing two-minute Q&A allowance. The separate four-TA ClassPoint Q&A deck can be used for collecting audience questions; this closing slide itself has no collection.')
+closing.els.append(T(120, 490, 1680, 100, 'thanks!', 'body', 48, INK,
+                     align='c', valign='m', name='closing-thanks'))
+S.append(closing)
 finalize(S, 'Double Diamond')
-for slide in S[CASE_START-1:]:
+for slide in S[CASE_START-1:-1]:
     footer = next(e for e in slide.els if e.name == 'chrome-footer')
     footer.paras[0].runs[0].text = CASE_TITLE
 
