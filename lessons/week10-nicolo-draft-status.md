@@ -1,58 +1,55 @@
-# Nicolo's separate Week 10 variant
+# Double Diamond / UX Design for Analytical Laboratory Software
 
-Contributor branch: `contrib/week10-nicolo-20261103`, based on verified PR #23 head `2330036350ed76a8433e8a6ac9b9fcb267412ccf`. Nicolo approved public HTML review, and Gio authorized a separate GitHub branch push and Cloudflare preview. PR #23, main, staging and the original Week 10 deck and companions remain unchanged. This preview is not a course release.
+Separate contributor entry: `deck/week10_nicolo.py`, branch `contrib/week10-nicolo-20261103`. The variant was based on the verified PR #23 snapshot `2330036350ed76a8433e8a6ac9b9fcb267412ccf`; it does not modify that PR, main, staging or the original Week 10 deck and companions. This is a draft preview, not a course release.
 
-Entry point: `deck/week10_nicolo.py`. Seven introduction slides, a case-study cover and eight case-content slides (including a dedicated video slide): 16 slides total. The introduction duration remains open. The case has a proposed eight-minute presentation plus two minutes Q&A, within ten minutes total; the cover is included in the first half-minute.
+## Current structure
 
-## Writing and navigation revision
+Nicolo's 4 Nov portfolio instructions replace the provisional case storyboard with four current-project slides, one for each Double Diamond phase. There are **12 slides total: seven introduction slides, one case cover, four case-content slides**. The earlier unfinished AI-redesign, implementation-constraints and testing placeholders are deferred for now, not silently represented as completed work. Previous versions remain recoverable in Git history.
 
-- Preserve the first reviewed commit `8cb0febbc29db33750d91c4514e9d4d3ee6f3505` in history and on local backup branch `backup/week10-nicolo-first-review-8cb0feb`; do not amend or force-push it. Its immutable Cloudflare preview remains the first-review snapshot.
-- Use the replacement document's direct wording and phase names, with an impersonal professional account as requested in the latest correction. Retain the three layers on the phase slides, labelled General Principles / Industry Example / Potential AI Use, and the approved privacy/data and wishes/priorities additions, without replacing the explanation with slogans. Keep pending case content explicit and use short, literal placeholder labels.
-- Put a `space [diamond] thinking mode` subtitle under each of the four phase titles, rendered with an accent-teal diamond (U+25C6) at one third of the 34 px text size, with its visual center aligned to the measured x-height center: Discover and Develop use `Divergent Thinking (Creative Thinking)`; Define and Deliver use `Convergent Thinking (Logical Thinking)`. Use equal explicit spacing around the diamond, without repeating the phase title.
-- `deck/week10_nicolo_figures.py` draws four small text-free navigation maps after the Design Council Double Diamond (CC BY 4.0, source and licence linked on the opening slide). The opening slide begins with the full definition verbatim from the replacement document (including its explanation of what the model is used for). No three-layer introduction appears on the opener; the larger official diagram takes the central stage. The official opening image remains unchanged; native Problem Space and Solution Space labels are centered above the corresponding diamonds. The navigation maps are simplified redraws: text and arrows omitted, all inactive halves black and white, only the active half teal. SVG and native PNG share the same geometry. The maps do not show an official recolored image or imply Design Council endorsement.
-
-## Current instructions
-
-- Introduction: retain the document's principle / professional account / potential GenAI use at each DD phase. Use official Design Council diagram with CC BY 4.0 attribution.
-- Discover: emphasize users' AI needs, privacy attitudes, willingness to share and permissible AI data; willingness is not permission.
-- Deliver: include what worked, user wishes and the priority of those wishes, alongside meaningful outcomes, failures and evidence limits.
-- B1: the original 2420 x 1525 tablet screenshot and a 1920 x 1080 promotional video have been received and integrated locally. After the local-only notice, Nicolo requested the link to this revised deck on 4 Nov; that request authorizes the separate draft-branch/public-preview path including these supplied assets, not production release or independent verification of company rights. No reconstructed product images. The full 49.365-second video has a dedicated slide; it has a silent audio stream. The current screen, before/after areas and three proposed-screen placeholders all preserve the 2420:1525 aspect ratio without cropping. Replace Developer with Engineer outside slide 07, which remains unchanged.
-- B2: qualitative positives and improvement wishes first; quantitative statements on a separate slide.
-- B3: one before/after slide, then a three-screen annotated proposed-flow slide. No invented AI feature, actual screen or implementation claim.
-- B4: investigate environmental/camera, site digital/cloud/integration, device compute and adaptation constraints. These are potential site-specific questions, not an audit of current lab infrastructure.
-
-## Evidence and permissions ledger
-
-| Claim or asset | Source and status | Remaining input or check |
+| Slides | Section and sources | Current content |
 |---|---|---|
-| DD phases, iteration and official image | Official Design Council page, consulted 3 Nov 2026; existing unmodified course PNG; CC BY 4.0 | Retain source and licence links |
-| Laboratory UX experience, learning the domain, workflow goals, co-design and usability testing | Nicolo's replacement DOCX attachment ending `3d5a17e8-e965-41f1-9206-db71041951e4.docx`; attributed personal account, not independent effect evidence | Contributor correction and public-sharing clearance |
-| AI assistance in discovery, definition, prototyping and analysis | Prospective ideas in Nicolo's DOCX; not historical claims of tools used or benefits measured | Keep proposed label and evidence/permission limits |
-| Week 8/9 links | Current course Python sources at the base: mediation/control, value versus proxy, privacy/data boundaries, representation and outcome testing | No new empirical findings inferred from transfer |
-| Two positive qualitative findings and improvement wishes | Requested by Nicolo, not supplied | Actual observations, context, priority and permission; no fake quotes |
-| 30% faster than manual workflows | Speaker-supplied current-product statement in 3 Nov feedback; context pending; not independently verified | Define faster vs less time, task, manual comparator, method, source, uncertainty and permission |
-| One click to prepare and submit a sample list | Speaker-supplied current-product statement; context pending, not an AI redesign result | Action boundaries, setup excluded/included, actual screen and permission |
-| Original tablet screenshot and promotional video | Received from Nicolo on 4 Nov 2026; original files inspected; contributor requested sharing this revised deck after the local-only notice | Contributor-authorized draft GitHub/HTML preview only; no production-release or independent company-rights claim |
-| Portfolio slides, additional intended-use material and product context | Not yet supplied | Receive actual files and confirm sharing rights separately |
-| Before/after and three-screen proposed AI flow | Requested structure only | Actual proposal, UX goals, screens, AI/human responsibilities and annotations |
-| Low light, cameras, digital/cloud readiness, compute and device adaptation | Contributor's potential constraint categories | Site-specific user, IT, lab and engineering evidence; no universal industry-readiness claim |
+| 01-07 | Double Diamond introduction | Verbatim opening definition; official diagram; principle / industry example / potential AI use for each phase; iteration; stakeholder management |
+| 08 | UX Design for Analytical Laboratory Software | Case cover, included in Discover's speaking allocation |
+| 09 | Discover: 3.pdf and 5.pdf, PDF page 1 each | Inexperienced Lab Analyst; cumbersome workflows and transcription errors; five-step paper-based workflow with return loop; genuine laboratory photograph |
+| 10 | Define: 7.pdf, PDF page 1 | Three leading principles, original questions, and their exact Task Completion Rate / Ease of use / Time on Task associations |
+| 11 | Develop: 8.pdf and 9.pdf, PDF page 1 each | Barcode scanner as primary input; automatic next-field focus; genuine historical predefined-list first draft; sequential constraints and missing source-container validation |
+| 12 | Deliver: 16.pdf and 17.pdf, PDF page 1 each | Qualitative findings and wishes; reported 30% faster / 1 Click outcomes; retained original tablet screenshot and complete original video |
 
-## Review boundary
+The case has proposed speaking allocations of 2 / 1.5 / 2 / 2.5 minutes, plus two minutes of Q&A: ten minutes total, including the cover and full 49.365-second video. The introduction remains separate and its duration is open. There are no ClassPoint collections, new submissions or assessment changes.
 
-This is not a completed case study or classroom-tested presentation. Native notes retain explanations and evidence boundaries. No ClassPoint collections, new submissions or assessment changes. No paid image/video generation or additional cloud-agent execution is needed. Public HTML review of this draft is approved. Additional portfolio material remains pending; Nicolo requested the link to this revised deck on 4 Nov after the public-sharing boundary was explained. That authorizes the supplied screenshot, video and extracted poster in this draft preview only. It does not authorize exposing future company assets merely because they are supplied for drafting.
+## Writing and visual contract
 
-## 4 Nov local revision
+- Retain the source PDFs' language and project distinctions. Full participant quotations and supporting source sentences remain in notes; on-screen wishes shorten only the introductory wording. First-person participant quotations are attributed evidence, not a return to first-person speaker narration.
+- All eight phase subtitles are lowercase before and after the tiny teal diamond. Discover and Develop use `divergent thinking (creative thinking)`; Define and Deliver use `convergent thinking (logical thinking)`. Keep the one-third-size glyph, x-height alignment, equal explicit 12 px advances and renderer-normalized SVG font instance.
+- The opening official diagram is 972 px wide, 90% of the preceding 1080 px version, centered on the slide. Its Problem Space and Solution Space labels stay centered above the appropriate diamonds. The full opening definition remains verbatim from the replacement DOCX; there is no three-layer explanation on the opener.
+- Navigation maps use the same geometry and active-phase teal in the introduction and case. The iteration slide's map remains black and white, without any highlighted half. Its paragraph states that the phases do not all take the same amount of time; equal diagram halves do not represent equal phase durations.
+- Retain the current typography, palette and section-cover treatment. Footer text is `Double Diamond` for slides 01-07 and `UX Design for Analytical Laboratory Software` for the cover and case. The case cover uses that same full title. The retained product image caption is `Original Software Product / Workbench Tablet Device` and travels with the image to Deliver, rather than remaining attached to the old slide number.
+- Retain Engineer in the industry examples. Slide 07's existing professional-role wording stays intact; only its footer and obsolete transition note are updated for the current case.
+- Native notes and the Markdown notes companion must match. Keep native slide numbering continuous across both sections.
 
-The 49.365-second original video is not trimmed or looped and is not represented as AI functionality. Proposed case allocations are 0.5 / 1 / 1 / 1 / 1.5 / 1.5 / 1 / 0.5 minutes, plus 2 minutes Q&A: 10 minutes including full video playback. No extra case time is added. The course-owned video player uses the pinned generator's existing live-frame API with a genuine poster for native exports; no shared package changes. Playback is user-initiated and pauses when leaving the slide or switching to reading view. The local-only QA was followed by Nicolo's explicit request to share this revised deck. Publish on the separate contributor branch and verify its exact-revision preview; do not merge or alter PR #23.
+## Assets and source fidelity
 
-Local QA completed 4 Nov: 27 Week 10 tests pass; both native exports retain all 16 source notes and the exact opening definition. Browser and raster checks confirm a 34/3 px separator with its center within 0.2 px of the browser-measured x-height center. All 16 desktop/mobile sections and source links pass; original-video playback, seeking, stopping on slide leave, stopping in reading mode and mobile-link playback pass without page errors. Supplied screenshot and MP4 copies are byte-identical to the attachments. Public branch remains at `847e96556f3974574764a983595b0b9a3332244d`; no commit or push was made for this local revision.
+Original input PDFs remain outside the repository. `deck/assets/week10/nicolo-portfolio-sources.json` records their hashes, PDF-page positions, phase mapping and extraction methods. The lab-context photograph is the original embedded JPEG from 5.pdf. The first-draft mockup is an authentic rendered crop from 9.pdf, including its magenta sequential-focus annotations and source placeholder identifiers; it is not a reconstructed final screen or an AI redesign.
 
-## 4 Nov requested preview publication
+The previously supplied product screenshot, full MP4 and genuine poster remain byte-identical to the preceding reviewed version `2fdb10f`. The screenshot preserves its 2420:1525 aspect ratio with `contain`, without cropping. The 1920x1080 video remains 49.365 seconds, untrimmed, without autoplay or looping. Its digitally silent stream is described as no audio. The course-owned player uses the existing live-frame API, has a real poster for native output, and must stop when leaving the slide or opening reading view. Both media now belong to the single Deliver slide, superseding the earlier dedicated-video-slide arrangement to meet the four-slide case request.
 
-At 05:09 UTC, Nicolo requested the link to this revision after the prior reply explained that public GitHub/preview sharing included the supplied assets. Proceed with the authorized separate contributor-branch preview, preserving all existing commits and the original deck. PR #23 has independently advanced to `e9ad463c37db10e05c75449e3668d762d582972b`; do not change it. The earlier 03:30 local-only QA receipt remains historical. This preview authorization is not a production release or a claim of independently verified rights.
+## Evidence boundaries
 
-## 4 Nov thinking-mode and iteration revision
+| Evidence | Source/status | Boundary |
+|---|---|---|
+| DD phases and official opening diagram | Design Council, The Double Diamond, CC BY 4.0 | Retain source and licence links; small maps are simplified redraws without an endorsement claim |
+| General principles, industry examples and potential GenAI uses | Contributor replacement DOCX | Keep personal project account, proposed AI ideas and independently established effects distinct |
+| Target user, paper-based workflow and UX principles | 3.pdf, 5.pdf, 7.pdf | Project framing and evaluation dimensions, not a measured error-reduction claim |
+| Scanner input and predefined-list draft | 8.pdf, 9.pdf | Preserve the failed sequential constraint and missing source-container validation; do not call the draft the final product |
+| Three positive comments and two improvement wishes | 16.pdf | Wishes are requested capabilities, not evidence that those capabilities exist; priorities are not supplied |
+| 30% faster than manual workflows / Time on Task | 17.pdf, reported comparative portfolio outcome | Do not convert to 30% less time; participant/task counts, raw timings, calculation, study date and uncertainty are not supplied |
+| 1 Click to prepare and submit a sample list | 17.pdf, reported current-product outcome | Limited to that action; not the entire transfer workflow or an AI benefit |
+| Testing methods | 16.pdf | Task-based usability testing with follow-up semi-structured interview; comparative manual/digital workflow testing; do not invent statistics |
+| Original screenshot/video | Contributor supplied and already reviewed | Illustrates the current product, not independent efficiency evidence or proposed AI capability |
+| Later AI redesign and site-specific implementation constraints | Deferred in this four-slide case | No invented AI screen, implementation, performance result or laboratory-readiness audit |
 
-Requested at 08:20 UTC: scale the opening official diagram to 90% of the preceding reviewed width (1080 to 972 design pixels), retaining its center and aligning the Problem Space / Solution Space labels above their diamonds. The four phase subtitles now show the appropriate Divergent Thinking (Creative Thinking) / Convergent Thinking (Logical Thinking) wording. The tiny teal separator retains its one-third size and x-height alignment. Equal explicit 12 px advance gaps replace renderer-dependent spaces; one SVG text run shapes the three spans naturally. Normalize local SVG optical sizing and stylistic features to match the raster font instance, rather than guessing fixed browser positions from mismatched PIL metrics.
+## Review permission and preservation
 
-Slide 06 has the same upper-right navigation geometry as the phase slides, with all four halves white and black outlines, no accent highlight. Its time-prioritisation paragraph adds: The phases do not all take the same amount of time. Notes distinguish equal-sized map halves from actual phase durations. The case, its supplied media, 10-minute inclusive timing, slide 07 wording, original deck and protected PR remain unchanged.
+Nicolo authorized extracting relevant text and resources from the supplied PDFs to rewrite this separate presentation, following the already authorized GitHub/Cloudflare draft-preview path. This authorizes that draft use, not production release or independent verification of company rights. No confidential watermark, named research participant or real laboratory record was observed in the supplied PDF pages. Do not include the unused persona portrait or invent identifying information. Future supplied company assets need their own scoped assessment.
+
+Keep the first reviewed commit `8cb0febbc29db33750d91c4514e9d4d3ee6f3505` and the successive reviewed versions in history; do not amend or force-push. The immediately preceding reviewed preview is `2fdb10f459978d321e59e082f159ea50a06ebcbf`. PR #23 was independently at `e9ad463c37db10e05c75449e3668d762d582972b` when this revision began; this variant must not change it. Verify the exact new Cloudflare check and route before delivering the next link. Do not merge or publish production.

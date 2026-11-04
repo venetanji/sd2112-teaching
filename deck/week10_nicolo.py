@@ -3,21 +3,18 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from deckgen import INK, PAPER, Image
-from deckgen.layouts import T, Rect, Figure, _slide, eyebrow, finalize, section, live, place_sketch
+from deckgen import INK, PAPER
+from deckgen.layouts import T, Rect, Figure, _slide, eyebrow, finalize
 import week10_figures as F
 from week10_nicolo_figures import phase_map, phase_subtitle
-from week10_nicolo_media import PRODUCT_VIDEO
+from week10_nicolo_case import (build_case, CASE_TITLE, CASE_SPEAKING_MINUTES,
+                               CASE_QA_MINUTES, SCREEN_RATIO, PRODUCT_SCREEN)
 
 DC = 'https://www.designcouncil.org.uk/resources/the-double-diamond/'
 S = []
 PHASES = [('problem space', 'discover'), ('problem space', 'define'),
           ('solution space', 'develop'), ('solution space', 'deliver')]
 CASE_START = 8
-CASE_SPEAKING_MINUTES = [.5, 1, 1, 1, 1.5, 1.5, 1, .5]
-CASE_QA_MINUTES = 2
-SCREEN_RATIO = 2420/1525
-PRODUCT_SCREEN = Path(__file__).resolve().parent/'assets/week10/nicolo-current-product.png'
 TEAL = '#246E70'
 GREY = '#5A626B'
 ORANGE = '#C74600'
@@ -86,21 +83,6 @@ def phase_slide(number, items, summary, notes):
                   T(x, 502, 520, 250, body, 'body', 33, INK,
                     lh=1.22, name=f'phase-{i}-body')]
     return strip(s, 'WEEKS 8-9 / AI CONSIDERATIONS', summary)
-
-
-def screen_slot(s, x, y, w, label, heading, detail, source=None):
-    """Keep all tablet screens at the supplied 2420:1525 ratio without cropping."""
-    h = round(w/SCREEN_RATIO)
-    s.els.append(T(x, y-52, w, 36, label, 'mono', 21, TEAL))
-    if source:
-        s.els.append(Image(x, y, w, h, str(source), 'contain', name='current-product-screenshot'))
-    else:
-        s.els += [Rect(x, y, w, h, PAPER, '#BBBCB9', name='pending-asset'),
-                  T(x+24, y+h//2-48, w-48, 96, heading, 'xbold', 38, INK,
-                    align='c', lh=1.05)]
-    if detail:
-        s.els.append(T(x, y+h+24, w, 130, detail, 'body', 28, GREY, lh=1.2,
-                       name='screen-annotation'))
 
 
 s = _slide(title='Double Diamond', notes=
@@ -173,93 +155,21 @@ S.append(three('DOUBLE DIAMOND / COLLABORATION', 'Stakeholder management', [
      'Explain what you have learned to the people you work with. Communication is a fundamental skill for designers.'),
 ], 'DESIGN DOES NOT HAPPEN IN A VACUUM',
     'Involving people from different disciplines helps you develop better designs and move your ideas forward.',
-    'Stakeholder management is important throughout the whole Double Diamond process. Design does not happen in a vacuum. In industry, whatever the design discipline, you will deal with different people. Users are central, but collaboration with other designers, engineers and product managers is also fundamental. During Discover, you work mostly with users and share findings with managers. During Define, you may work with other designers, developers or managers to narrow down the problem. During Develop, co-design helps you learn from different perspectives. During Deliver, users test the experience, and you communicate the findings to developers, engineers and managers. Communication is a fundamental skill for designers and an important part of your professional skillset. The following case moves from AI assisting the design process to a proposed product with AI inside it.'))
+    'Stakeholder management is important throughout the whole Double Diamond process. Design does not happen in a vacuum. In industry, whatever the design discipline, you will deal with different people. Users are central, but collaboration with other designers, engineers and product managers is also fundamental. During Discover, you work mostly with users and share findings with managers. During Define, you may work with other designers, developers or managers to narrow down the problem. During Develop, co-design helps you learn from different perspectives. During Deliver, users test the experience, and you communicate the findings to developers, engineers and managers. Communication is a fundamental skill for designers and an important part of your professional skillset. The following four-phase case explains the existing analytical laboratory software project. The later AI redesign is deferred in this version.'))
 
-S.append(section('CASE STUDY', 'Software UX Design',
-    'Current product / UX goals / Proposed AI redesign', bg=INK,
-    notes='This is the transition from the Double Diamond introduction to the Software UX Design case study. It explains how the current product works, its current UX goals, and how AI features could be integrated by redesigning the product while enhancing those goals. The original tablet screenshot and product video have been supplied. Portfolio slides, context, current UX goals and the proposed AI experience remain pending. This divider is included within the first half-minute of the case; it does not add time to the eight speaking minutes plus two minutes of Q&A. The introduction remains separate from that ten-minute slot.'))
+case_cover = _slide(INK, title=CASE_TITLE, notes=
+    'The case study is titled '+CASE_TITLE+'. It follows Discover, Define, Develop and Deliver using the supplied portfolio pages. The four content slides have eight speaking minutes including the complete original video, followed by two minutes of Q&A within ten minutes. The cover is included in the first two-minute Discover allocation. The introduction remains separate, with its duration open. This version presents the existing product, not the later proposed AI redesign.')
+case_cover.els += [eyebrow(120, 360, 'CASE STUDY', '#F2ECF5'),
+                   T(120, 460, 1680, 330, CASE_TITLE, 'black', 112, '#FFFFFF',
+                     lh=.97, spc=-.035, name='case-cover-title'),
+                   T(120, 870, 1680, 60, 'discover / define / develop / deliver',
+                     'mono', 26, '#F2ECF5', lh=1.2)]
+S.append(case_cover)
+S.extend(build_case())
+finalize(S, 'Double Diamond')
+for slide in S[CASE_START-1:]:
+    footer = next(e for e in slide.els if e.name == 'chrome-footer')
+    footer.paras[0].runs[0].text = CASE_TITLE
 
-s = frame('CASE STUDY / CURRENT PRODUCT', 'How the current product works',
-    'Proposed speaking allocation: half a minute, including the case cover. The case has eight speaking minutes plus two minutes of Q&A. This is the original tablet screenshot supplied by the contributor, shown uncropped at its 2420 by 1525 aspect ratio. It visibly shows a sample list, current-container entries and transfer history. Product context, intended users and actual UX goals still need the contributor\'s explanation. Do not infer efficiency, data accuracy or AI behaviour from this screen. Keep the current product distinct from the proposed AI redesign. The following slide contains the separate original promotional video.')
-screen_slot(s, 120, 380, 920, 'ORIGINAL PRODUCT / TABLET VERSION', '', '',
-            source=PRODUCT_SCREEN)
-s.els += [T(1120, 406, 680, 110, 'Sample list and transfer history', 'xbold', 42, INK,
-            lh=1.05),
-          T(1120, 560, 680, 220,
-            'Original tablet interface.\nProduct context and current UX goals to be added.',
-            'body', 34, INK, lh=1.25)]
-S.append(s)
-
-s = frame('CASE STUDY / CURRENT PRODUCT', 'The product in use',
-    'Proposed speaking allocation: one minute, including the complete 49.365-second video and a short introduction. This is the original product promotional video supplied by the contributor: 1920 by 1080 pixels, 25 frames per second. Its audio stream is digitally silent. The footage shows laboratory sample handling with a scanner and touchscreen; it is a promotional demonstration, not independent evidence of current company practice, UX outcomes or AI capability. Play on request; do not autoplay, loop, trim or treat the original footage as the proposed AI redesign. Native exports show a genuine frame from 25 seconds; HTML provides the playable video. The video remains within the eight speaking minutes plus two minutes of Q&A.')
-place_sketch(s, live('nicolo-product-video', PRODUCT_VIDEO, 1920, 1080,
-                     hint='Play the original 49-second product video'),
-             (448, 304, 1024, 576),
-             F.source_image('nicolo-product-video-poster.png',
-                            'Original product promotional video, still at 25 seconds'))
-s.els.append(T(448, 918, 1024, 52, 'ORIGINAL PRODUCT VIDEO / 49 SECONDS / NO AUDIO',
-               'mono', 22, TEAL, name='product-video-caption'))
-S.append(s)
-
-S.append(three('CASE STUDY / CURRENT PRODUCT', 'Qualitative findings', [
-    ('POSITIVE FINDING 1', 'What worked.', 'Observation and context to be added.'),
-    ('POSITIVE FINDING 2', 'What else worked.', 'A second observation and context to be added.'),
-    ('WISHES FOR IMPROVEMENT', 'What users wanted.', 'Wishes and their priorities to be added.'),
-], 'DRAFT / FINDINGS PENDING',
-    'A couple of positive findings, followed by users\' wishes for improvement.',
-    'Proposed speaking allocation: one minute. This slide will show a couple of positive qualitative findings and wishes for improvements, as requested. Source observations, context, actual UX goals and sharing permission are pending. No quotes or research results have been invented. Keep users\' words distinct from the design team\'s interpretation, explain why an improvement matters, and retain disagreement or context-specific needs rather than assuming all users wanted the same thing.'))
-
-s = frame('CASE STUDY / CURRENT PRODUCT', 'Quantitative findings',
-    'Proposed speaking allocation: one minute. The contributor supplied two current-product statements: 30% faster than manual workflows, and one click to prepare and submit a sample list. Measurement context is still pending. These are speaker-reported figures, not independently verified findings. Do not conflate 30% faster with 30% less completion time: check the original definition and calculation. Clarify the task, manual comparator, method, uncertainty and action boundaries, including any setup. These figures do not measure the proposed AI redesign. Do not invent a sample size, study design or chart.')
-for x, number, detail in [(120, '30%', 'Faster than manual workflows'),
-                           (1000, '1 click', 'To prepare and submit a sample list')]:
-    s.els += [Rect(x, 358, 800, 400, PAPER),
-              T(x+32, 390, 736, 150, number, 'xbold', 112, INK, lh=1),
-              T(x+32, 590, 736, 110, detail, 'body', 36, INK, lh=1.2)]
-S.append(strip(s, 'REPORTED CURRENT-PRODUCT FIGURES / DRAFT',
-    'Measurement context pending. These are not results of the AI redesign.'))
-
-s = frame('CASE STUDY / PROPOSED AI REDESIGN', 'Before and after',
-    'Proposed speaking allocation: one and a half minutes. The before image is the original tablet screenshot supplied by the contributor. Both screen areas use the supplied 2420 by 1525 aspect ratio. The proposed screen, actual UX goals and changes remain pending. Explain how the AI feature relates to a UX goal, what it does, what the person still decides and what happens if it is wrong or unavailable. Do not reconstruct a screenshot and present it as an actual product screen. Keep the redesign labelled proposed, not implemented; no feature or measured improvement has been invented.')
-screen_slot(s, 120, 386, 800, 'BEFORE / CURRENT PRODUCT', '', '', source=PRODUCT_SCREEN)
-screen_slot(s, 1000, 386, 800, 'AFTER / PROPOSED REDESIGN', 'Redesigned screen', '')
-s.els.append(T(120, 928, 1680, 64,
-               'Proposed AI redesign: connect each change to the UX goals and the user\'s decisions.',
-               'body', 28, INK, name='redesign-caption'))
-S.append(s)
-
-s = frame('CASE STUDY / PROPOSED AI REDESIGN', 'The redesigned experience',
-    'Proposed speaking allocation: one and a half minutes. Show a sequence of three annotated screenshots of the proposed redesigned experience. The screens, actions and order are pending, so do not invent them. Explain the user action, AI contribution and relevant UX goal at each actual step. Include human choice, uncertainty or recovery where they occur in the proposal. Keep these screens labelled proposed, not implemented. Put fuller explanations in native notes so annotations can remain readable.')
-for i in range(3):
-    screen_slot(s, 120+i*580, 412, 520, f'PROPOSED SCREEN {i+1}',
-                f'Step {i+1}', 'Screenshot and annotations to be added.')
-s.els.append(T(120, 934, 1680, 56,
-               'PROPOSED FLOW / Screens and annotations remain to be added.',
-               'mono', 22, TEAL))
-S.append(s)
-
-S.append(three('CASE STUDY / IMPLEMENTATION', 'Technical constraints', [
-    ('ENVIRONMENT + CAMERAS', 'Using cameras in a lab.',
-     'Consider low light, camera placement and obstruction. Is image capture permitted in this setting?'),
-    ('SYSTEMS + CONNECTIVITY', 'Digital and cloud systems.',
-     'Investigate digital readiness, existing systems, network reliability and cloud policy in the lab.'),
-    ('DEVICE + PROCESSING', 'Adapting the device.',
-     'Check compute and memory requirements, processing power and the device adaptation needed for the AI features.'),
-], 'POTENTIAL CONSTRAINTS / TO INVESTIGATE',
-    'Understanding the user, environment and constraints is important when designing how AI fits into a product.',
-    'Proposed speaking allocation: one minute. These are potential technical constraints, not verified characteristics of this site or a completed technical audit. Consider low-light conditions, camera placement, obstruction and whether image capture is permitted and appropriate in the laboratory. Investigate the site\'s digital readiness, existing systems, cloud policy and network reliability. Do not claim all laboratories are unready for digital or cloud systems. Check the actual processing power, memory, latency, power and device changes needed for the proposed AI features. Local processing is not automatically private or feasible; cloud processing raises different connectivity and policy questions. Confirm these constraints with users and the relevant technical colleagues. This illustrates why understanding user context matters, without inventing an audit of the product.'))
-
-S.append(three('CASE STUDY / TESTING + Q&A', 'Testing the redesign', [
-    ('CURRENT UX GOALS', 'Does it help users?',
-     'Compare the current and proposed workflows on the tasks users need to accomplish.'),
-    ('TECHNICAL CONSTRAINTS', 'Does it work here?',
-     'Test relevant conditions, such as low light or disconnection, and what happens when AI makes a mistake.'),
-    ('WISHES + PRIORITIES', 'What should improve?',
-     'Ask users what worked, what did not, and what they would like to improve. Understand their priorities.'),
-], 'CLOSE + Q&A / WITHIN THE TEN-MINUTE CASE',
-    'What would you need to test before taking this proposed redesign further?',
-    'Proposed speaking allocation: half a minute, followed by two minutes of Q&A within the ten-minute case slot. The eight case-content slides have eight speaking minutes altogether, including the full 49.365-second video; the cover is included in the first half-minute. The actual current UX goals and redesign are pending, so the task, comparison and measures must still be defined. This is a proposal for testing, not a claim that the redesign works. Do not reuse the current-product 30% or one-click figures as predicted AI benefits. Observe task outcomes and test the AI behaviour as well as the interface. Ask users about wishes and priorities, including disagreements. The audience question is optional facilitation, not an assessed task or new submission.'))
-
-DECK = dict(title='SD2112 / Week 10 / Nicolo separate contributor draft',
-            slides=finalize(S, 'SD2112 / AI IN DESIGN / WEEK 10 / NICOLO VARIANT'),
-            pdf='SD2112-week10-nicolo.pdf')
+DECK = dict(title='SD2112 / Double Diamond / '+CASE_TITLE,
+            slides=S, pdf='SD2112-week10-nicolo.pdf')

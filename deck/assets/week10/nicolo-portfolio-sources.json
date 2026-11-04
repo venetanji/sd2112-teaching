@@ -1,0 +1,69 @@
+{
+  "sources": [
+    {
+      "file": "3.pdf",
+      "pdfPage": 1,
+      "sha256": "4f58c1dc1b39d2336b73402b42bf1080968677a8087384e8754f6cfd8947b484"
+    },
+    {
+      "file": "5.pdf",
+      "pdfPage": 1,
+      "sha256": "b7ecf2403d7a623217f2b2665d0a7382f43e0490d75846dcfb89958664cf10a5"
+    },
+    {
+      "file": "7.pdf",
+      "pdfPage": 1,
+      "sha256": "c9827f1aee490dbc4992aacfdc8a6c9e1e4828c9f7602d22690c87ed77cd43c6"
+    },
+    {
+      "file": "8.pdf",
+      "pdfPage": 1,
+      "sha256": "e55b9bf43a2b2aa32b1f81c9d804409262bb9cb7f0e9176b8a174514d569b601"
+    },
+    {
+      "file": "9.pdf",
+      "pdfPage": 1,
+      "sha256": "a0e4829d18e96d5d24c5bdb53afb985e4bc038c931282ecf6f4c9378da4ffb82"
+    },
+    {
+      "file": "16.pdf",
+      "pdfPage": 1,
+      "sha256": "c8e99bc9e614df201c3eba8a74b3679ab696a90c688f0a6dec8e339a3cdfb74e"
+    },
+    {
+      "file": "17.pdf",
+      "pdfPage": 1,
+      "sha256": "59d25c40ce57b538b5602677c2c2b421142744f0034c097adc5e7f66a00d936d"
+    }
+  ],
+  "phaseMap": {
+    "discover": [
+      "3.pdf",
+      "5.pdf"
+    ],
+    "define": [
+      "7.pdf"
+    ],
+    "develop": [
+      "8.pdf",
+      "9.pdf"
+    ],
+    "deliver": [
+      "16.pdf",
+      "17.pdf"
+    ]
+  },
+  "assets": {
+    "nicolo-lab-context.jpg": {
+      "source": "5.pdf",
+      "pdfPage": 1,
+      "method": "Original embedded JPEG extracted with pdfimages, image index 2; no recoloring or reconstruction."
+    },
+    "nicolo-predefined-list-draft.png": {
+      "source": "9.pdf",
+      "pdfPage": 1,
+      "method": "Genuine vector mockup rendered at 144 dpi; crop x190/y508/width1700/height1072 output pixels. Includes original magenta sequential-focus annotations. Not a final or AI screen."
+    }
+  },
+  "boundary": "Contributor supplied for this separate course draft preview. Source claims are reported case evidence, not independently verified effects or AI-redesign results. Original PDFs remain outside repository."
+}

@@ -7,10 +7,10 @@ from deckgen.figures import Canvas
 
 PHASE_NAMES = ('discover', 'define', 'develop', 'deliver')
 THINKING_MODES = {
-    'discover': 'Divergent Thinking (Creative Thinking)',
-    'define': 'Convergent Thinking (Logical Thinking)',
-    'develop': 'Divergent Thinking (Creative Thinking)',
-    'deliver': 'Convergent Thinking (Logical Thinking)',
+    'discover': 'divergent thinking (creative thinking)',
+    'define': 'convergent thinking (logical thinking)',
+    'develop': 'divergent thinking (creative thinking)',
+    'deliver': 'convergent thinking (logical thinking)',
 }
 
 

@@ -1,4 +1,4 @@
-"""The isolated contributor variant must not turn pending case material into evidence."""
+"""Keep the isolated variant faithful to the supplied project evidence."""
 from pathlib import Path
 import subprocess
 import unittest
@@ -37,7 +37,7 @@ class NicoloVariantTests(unittest.TestCase):
 
     def test_structure_and_case_budget(self):
         self.assertEqual(self.start, 8)
-        self.assertEqual(len(self.slides), 16)
+        self.assertEqual(len(self.slides), 12)
         self.assertEqual(len(self.minutes), len(self.slides)-self.start)
         self.assertEqual(sum(self.minutes)+self.qa, 10)
         self.assertEqual(self.qa, 2)
@@ -54,35 +54,67 @@ class NicoloVariantTests(unittest.TestCase):
             self.assertIn(value, deliver.lower())
         self.assertIn('cannot establish human usability', self.slides[4].notes)
 
-    def test_case_has_no_fabricated_assets_or_research(self):
+    def test_case_has_four_source_mapped_phases_and_no_fabricated_research(self):
+        from deck.week10_nicolo_case import PAPER_STEPS, POSITIVE_QUOTES, WISH_QUOTES
+        case = self.slides[self.start:]
+        self.assertEqual([s.title.split(' / ')[0] for s in case],
+                         ['Discover', 'Define', 'Develop', 'Deliver'])
         for slide in self.slides[self.start:]:
             self.assertFalse(slide.cp or slide.report)
-        self.assertIn('positive qualitative findings', self.slide('Qualitative findings').notes)
-        metrics_slide = self.slide('Quantitative findings')
-        metrics = text(metrics_slide)
-        for value in ('30%', '1 click', 'context pending', 'not results of the AI redesign'):
-            self.assertIn(value, metrics)
-        self.assertIn('Do not conflate 30% faster with 30% less completion time', metrics_slide.notes)
-        before = self.slide('Before and after')
-        flow = self.slide('The redesigned experience')
-        self.assertEqual(sum(e.name == 'pending-asset' for e in before.els), 1)
-        self.assertEqual(sum(e.name == 'pending-asset' for e in flow.els), 3)
-        self.assertEqual(sum(e.name == 'current-product-screenshot' for e in before.els), 1)
-        for slide in (before, flow):
-            self.assertIn('PROPOSED', text(slide))
-            self.assertFalse(any(e.kind == 'image' and not e.name.startswith('chrome-')
-                                 and e.name != 'current-product-screenshot' for e in slide.els))
+            self.assertFalse(any(e.name == 'pending-asset' for e in slide.els))
+        for slide, files in zip(case, [('3.pdf', '5.pdf'), ('7.pdf',),
+                                       ('8.pdf', '9.pdf'), ('16.pdf', '17.pdf')]):
+            for name in files:
+                self.assertIn(name, slide.notes)
+            self.assertIn('PDF page 1', slide.notes)
+        for step in PAPER_STEPS:
+            self.assertIn(step, text(case[0]))
+        self.assertEqual(sum(e.name == 'paper-workflow-return' for e in case[0].els), 1)
+        for value in ('Inexperienced Lab Analyst', 'Cumbersome workflows', 'Transcription errors'):
+            self.assertIn(value, text(case[0]))
+        for value in ('Streamline interactions', 'Fit into current workflows',
+                      'Provide a clear information system on tracked samples',
+                      'Task Completion Rate', 'Ease of use / Time on Task'):
+            self.assertIn(value, text(case[1]))
+        for value in ('Barcode scanner as primary input', 'First Draft',
+                      'No validation on the source container'):
+            self.assertIn(value, text(case[2]))
+        self.assertIn('nullifying the gain in efficiency', case[2].notes)
+        self.assertEqual(sum(e.name == 'portfolio-predefined-list-draft' for e in case[2].els), 1)
+        for quote in POSITIVE_QUOTES:
+            self.assertIn(quote, text(case[3]))
+        for quote in POSITIVE_QUOTES+WISH_QUOTES:
+            self.assertIn(quote, case[3].notes)
+        for value in ('30%', 'faster than', 'manual workflows', '1 Click',
+                      'to prepare and submit', 'a sample list', 'Improvement wishes'):
+            self.assertIn(value, text(case[3]))
+        self.assertIn('not results of the AI redesign', case[3].notes)
+        self.assertIn('Do not conflate 30% faster with 30% less completion time', case[3].notes)
+        self.assertIn('calculation method are not supplied', case[3].notes)
+        names = [e.name for e in case[3].els]
+        self.assertLess(names.index('participant-positive-quotes'), names.index('reported-speed'))
+        self.assertLess(names.index('participant-improvement-wishes'), names.index('reported-speed'))
 
-    def test_screen_aspect_ratios_and_dedicated_video(self):
+    def test_retained_product_media_bytes_are_unchanged(self):
+        for name in ('deck/assets/week10/nicolo-current-product.png',
+                     'deck/assets/week10/nicolo-product-video-poster.png',
+                     'site/week10-nicolo-media/product-video-poster.png',
+                     'site/week10-nicolo-media/product-demo.mp4'):
+            actual = subprocess.check_output(['git', 'hash-object', name], cwd=ROOT).strip()
+            reviewed = subprocess.check_output(['git', 'rev-parse', '2fdb10f:'+name], cwd=ROOT).strip()
+            self.assertEqual(actual, reviewed, name)
+
+    def test_original_screen_and_complete_video_share_deliver(self):
         from deck.week10_nicolo import SCREEN_RATIO
-        for title in ('How the current product works', 'Before and after', 'The redesigned experience'):
-            for e in self.slide(title).els:
-                if e.name in ('pending-asset', 'current-product-screenshot'):
-                    self.assertLessEqual(abs(e.h-e.w/SCREEN_RATIO), .5)
-                    if e.kind == 'image':
-                        self.assertEqual(e.fit, 'contain')
-        video = self.slide('The product in use')
-        self.assertEqual(self.slides.index(video), 9)
+        from deck.week10_nicolo_case import SCREEN_CAPTION
+        video = self.slides[-1]
+        screenshots = [e for s in self.slides for e in s.els
+                       if e.name == 'current-product-screenshot']
+        self.assertEqual(len(screenshots), 1)
+        self.assertIn(screenshots[0], video.els)
+        self.assertLessEqual(abs(screenshots[0].h-screenshots[0].w/SCREEN_RATIO), .5)
+        self.assertEqual(screenshots[0].fit, 'contain')
+        self.assertIn(SCREEN_CAPTION, text(video))
         self.assertEqual(len(video.html_only), 1)
         player = video.html_only[0]
         self.assertEqual((player.cw, player.ch), (1920, 1080))
@@ -91,17 +123,25 @@ class NicoloVariantTests(unittest.TestCase):
         self.assertIn('video.controls = true', player.code)
         self.assertNotIn('autoplay = true', player.code)
         self.assertIn("parent.Reveal.on('slidechanged'", player.code)
-        self.assertEqual(self.minutes[1], 1)
-        self.assertGreater(self.minutes[1]*60, 49.365)
+        self.assertEqual(self.minutes[-1], 2.5)
+        self.assertGreater(self.minutes[-1]*60, 49.365)
 
-    def test_context_specific_constraints_are_questions_not_industry_facts(self):
-        slide = self.slide('Technical constraints')
-        projected = text(slide)
-        for value in ('low light', 'image capture permitted', 'digital readiness',
-                      'cloud policy', 'compute', 'device adaptation',
-                      'Potential constraints'):
-            self.assertIn(value.lower(), projected.lower())
-        self.assertIn('not verified characteristics', slide.notes)
+    def test_four_slide_scope_defers_the_unfilled_ai_redesign(self):
+        self.assertNotIn('Before and after', [s.title for s in self.slides])
+        self.assertNotIn('The redesigned experience', [s.title for s in self.slides])
+        self.assertNotIn('Technical constraints', [s.title for s in self.slides])
+        self.assertIn('AI-redesign placeholders are deferred for now', self.slides[-1].notes)
+        self.assertIn('not an AI redesign', self.slides[8].notes)
+
+    def test_section_footers_and_case_cover(self):
+        from deck.week10_nicolo_case import CASE_TITLE
+        for i, slide in enumerate(self.slides):
+            footer = next(e for e in slide.els if e.name == 'chrome-footer')
+            value = ''.join(r.text for p in footer.paras for r in p.runs)
+            self.assertEqual(value, 'Double Diamond' if i < 7 else CASE_TITLE)
+            self.assertNotIn('NICOLO VARIANT', text(slide))
+        cover = next(e for e in self.slides[7].els if e.name == 'case-cover-title')
+        self.assertEqual(''.join(r.text for p in cover.paras for r in p.runs), CASE_TITLE)
 
     def test_document_voice_and_case_separator(self):
         self.assertEqual([s.title for s in self.slides[:7]], [
@@ -112,7 +152,7 @@ class NicoloVariantTests(unittest.TestCase):
                        'Do not assume the problem'):
             self.assertIn(phrase, text(self.slides[1]))
         self.assertIn('design does not happen in a vacuum', text(self.slides[6]).lower())
-        self.assertEqual(self.slides[7].title, 'Software UX Design')
+        self.assertEqual(self.slides[7].title, 'UX Design for Analytical Laboratory Software')
         self.assertIn('CASE STUDY', text(self.slides[7]))
         self.assertIn('within', self.slides[7].notes)
 
@@ -141,9 +181,13 @@ class NicoloVariantTests(unittest.TestCase):
 
     def test_experience_is_impersonal_in_slides_and_notes(self):
         import re
+        from deck.week10_nicolo_case import POSITIVE_QUOTES, WISH_QUOTES
         for slide in self.slides:
+            content = text(slide)+' '+slide.notes
+            for quote in POSITIVE_QUOTES+WISH_QUOTES:
+                content = content.replace(quote, '')
             self.assertIsNone(re.search(r'\b(I|my|me|mine|myself|we|our|ours)\b',
-                                        text(slide)+' '+slide.notes))
+                                        content))
         for slide in self.slides[1:5]:
             self.assertIn('INDUSTRY EXAMPLE', text(slide))
             self.assertNotIn('INDUSTRY EXPERIENCE', text(slide))
@@ -159,9 +203,9 @@ class NicoloVariantTests(unittest.TestCase):
                                       cwd=ROOT, text=True)
         current = (ROOT/'deck/week10_nicolo.py').read_text()
         start = "S.append(three('DOUBLE DIAMOND / COLLABORATION'"
-        stop = "S.append(section('CASE STUDY'"
+        stop = 'The following case'
         self.assertEqual(old[old.index(start):old.index(stop)],
-                         current[current.index(start):current.index(stop)])
+                         current[current.index(start):current.index('The following four-phase case')])
 
     def test_notes_companion_matches_current_slides(self):
         companion = (ROOT/'lessons/week10-nicolo-speaker-notes.md').read_text()
@@ -172,12 +216,14 @@ class NicoloVariantTests(unittest.TestCase):
     def test_phase_subtitles_maps_and_reading_order(self):
         from deck.week10_nicolo import PHASES
         from deck.week10_nicolo_figures import phase_map, THINKING_MODES
-        for i, (space, phase) in enumerate(PHASES):
-            slide = self.slides[i+1]
-            self.assertIn('divergent thinking' if i in (0, 2) else 'convergent thinking', text(slide))
+        for i, (space, phase) in enumerate(PHASES*2):
+            phase_index = i % 4
+            slide = self.slides[i+1 if i < 4 else i+4]
+            self.assertIn('divergent thinking' if phase_index in (0, 2) else 'convergent thinking', text(slide))
             subtitle = next(e for e in slide.els if e.name == 'phase-subtitle')
             root = ET.fromstring(subtitle.svg)
             self.assertEqual(root.get('aria-label'), space+' \u25c6 '+THINKING_MODES[phase])
+            self.assertEqual(root.get('aria-label'), root.get('aria-label').lower())
             texts = list(root.iter('{http://www.w3.org/2000/svg}tspan'))
             row = root.find('{http://www.w3.org/2000/svg}text')
             for setting in ('font-optical-sizing:none', 'font-feature-settings:normal',
