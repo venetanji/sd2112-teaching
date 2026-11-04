@@ -2,14 +2,18 @@
 from pathlib import Path
 import subprocess
 import unittest
+from xml.etree import ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 ORIGINAL_REVISION = '2330036350ed76a8433e8a6ac9b9fcb267412ccf'
 
 
 def text(slide):
-    return ' '.join(r.text for e in slide.els if hasattr(e, 'paras')
-                    for p in e.paras for r in p.runs)
+    parts = [r.text for e in slide.els if hasattr(e, 'paras')
+             for p in e.paras for r in p.runs]
+    parts += [ET.fromstring(e.svg).get('aria-label', '') for e in slide.els
+              if e.name == 'phase-subtitle']
+    return ' '.join(parts)
 
 
 class NicoloVariantTests(unittest.TestCase):
@@ -21,6 +25,9 @@ class NicoloVariantTests(unittest.TestCase):
         cls.minutes = CASE_SPEAKING_MINUTES
         cls.qa = CASE_QA_MINUTES
 
+    def slide(self, title):
+        return next(s for s in self.slides if s.title == title)
+
     def test_separate_original_sources_are_byte_unchanged(self):
         for name in ('deck/week10.py', 'deck/week10_figures.py',
                      'lessons/week10-lesson-plan.md', 'lessons/week10-speaker-notes.md',
@@ -30,7 +37,7 @@ class NicoloVariantTests(unittest.TestCase):
 
     def test_structure_and_case_budget(self):
         self.assertEqual(self.start, 8)
-        self.assertEqual(len(self.slides), 15)
+        self.assertEqual(len(self.slides), 16)
         self.assertEqual(len(self.minutes), len(self.slides)-self.start)
         self.assertEqual(sum(self.minutes)+self.qa, 10)
         self.assertEqual(self.qa, 2)
@@ -50,25 +57,51 @@ class NicoloVariantTests(unittest.TestCase):
     def test_case_has_no_fabricated_assets_or_research(self):
         for slide in self.slides[self.start:]:
             self.assertFalse(slide.cp or slide.report)
-        self.assertIn('positive qualitative findings', self.slides[9].notes)
-        metrics = text(self.slides[10])
+        self.assertIn('positive qualitative findings', self.slide('Qualitative findings').notes)
+        metrics_slide = self.slide('Quantitative findings')
+        metrics = text(metrics_slide)
         for value in ('30%', '1 click', 'context pending', 'not results of the AI redesign'):
             self.assertIn(value, metrics)
-        self.assertIn('Do not conflate 30% faster with 30% less completion time', self.slides[10].notes)
-        self.assertEqual(sum(e.name == 'pending-asset' for e in self.slides[11].els), 2)
-        self.assertEqual(sum(e.name == 'pending-asset' for e in self.slides[12].els), 3)
-        for i in (11, 12):
-            self.assertIn('PROPOSED', text(self.slides[i]))
+        self.assertIn('Do not conflate 30% faster with 30% less completion time', metrics_slide.notes)
+        before = self.slide('Before and after')
+        flow = self.slide('The redesigned experience')
+        self.assertEqual(sum(e.name == 'pending-asset' for e in before.els), 1)
+        self.assertEqual(sum(e.name == 'pending-asset' for e in flow.els), 3)
+        self.assertEqual(sum(e.name == 'current-product-screenshot' for e in before.els), 1)
+        for slide in (before, flow):
+            self.assertIn('PROPOSED', text(slide))
             self.assertFalse(any(e.kind == 'image' and not e.name.startswith('chrome-')
-                                 for e in self.slides[i].els))
+                                 and e.name != 'current-product-screenshot' for e in slide.els))
+
+    def test_screen_aspect_ratios_and_dedicated_video(self):
+        from deck.week10_nicolo import SCREEN_RATIO
+        for title in ('How the current product works', 'Before and after', 'The redesigned experience'):
+            for e in self.slide(title).els:
+                if e.name in ('pending-asset', 'current-product-screenshot'):
+                    self.assertLessEqual(abs(e.h-e.w/SCREEN_RATIO), .5)
+                    if e.kind == 'image':
+                        self.assertEqual(e.fit, 'contain')
+        video = self.slide('The product in use')
+        self.assertEqual(self.slides.index(video), 9)
+        self.assertEqual(len(video.html_only), 1)
+        player = video.html_only[0]
+        self.assertEqual((player.cw, player.ch), (1920, 1080))
+        self.assertAlmostEqual(player.w/player.h, 16/9)
+        self.assertIn('49.365-second video', video.notes)
+        self.assertIn('video.controls = true', player.code)
+        self.assertNotIn('autoplay = true', player.code)
+        self.assertIn("parent.Reveal.on('slidechanged'", player.code)
+        self.assertEqual(self.minutes[1], 1)
+        self.assertGreater(self.minutes[1]*60, 49.365)
 
     def test_context_specific_constraints_are_questions_not_industry_facts(self):
-        projected = text(self.slides[13])
+        slide = self.slide('Technical constraints')
+        projected = text(slide)
         for value in ('low light', 'image capture permitted', 'digital readiness',
                       'cloud policy', 'compute', 'device adaptation',
                       'Potential constraints'):
             self.assertIn(value.lower(), projected.lower())
-        self.assertIn('not verified characteristics', self.slides[13].notes)
+        self.assertIn('not verified characteristics', slide.notes)
 
     def test_document_voice_and_case_separator(self):
         self.assertEqual([s.title for s in self.slides[:7]], [
@@ -94,11 +127,11 @@ class NicoloVariantTests(unittest.TestCase):
         self.assertEqual(''.join(r.text for p in definition.paras for r in p.runs),
                          '\u201c'+expected+'\u201d')
         opening = text(slide)
-        for phrase in ('Presenting it in three layers', 'general principles',
-                       'Agilent Technologies in Germany', 'AI assistance',
-                       'GenAI integrated into the product'):
-            self.assertIn(phrase, opening)
+        self.assertNotIn('Presenting it in three layers', opening)
+        self.assertNotIn('dd-opening-explanation', [e.name for e in slide.els])
         diagram = next(e for e in slide.els if e.name == 'dd-official-diagram')
+        self.assertGreater(diagram.w, 868)
+        self.assertEqual(diagram.x+diagram.w/2, 960)
         labels = [e for e in slide.els if e.name == 'dd-space-label']
         self.assertEqual(len(labels), 2)
         for label, name, center in zip(labels, ('Problem Space', 'Solution Space'), (246, 694)):
@@ -112,8 +145,23 @@ class NicoloVariantTests(unittest.TestCase):
             self.assertIsNone(re.search(r'\b(I|my|me|mine|myself|we|our|ours)\b',
                                         text(slide)+' '+slide.notes))
         for slide in self.slides[1:5]:
-            self.assertIn('INDUSTRY EXPERIENCE', text(slide))
+            self.assertIn('INDUSTRY EXAMPLE', text(slide))
+            self.assertNotIn('INDUSTRY EXPERIENCE', text(slide))
         self.assertIn('Five usability tests were run', text(self.slides[4]))
+
+    def test_engineer_role_except_unchanged_slide07(self):
+        import re
+        self.assertIn('an Engineer', text(self.slides[3]))
+        for i, slide in enumerate(self.slides):
+            if i != 6:
+                self.assertIsNone(re.search(r'\bdevelopers?\b', text(slide)+' '+slide.notes, re.I))
+        old = subprocess.check_output(['git', 'show', '847e965:deck/week10_nicolo.py'],
+                                      cwd=ROOT, text=True)
+        current = (ROOT/'deck/week10_nicolo.py').read_text()
+        start = "S.append(three('DOUBLE DIAMOND / COLLABORATION'"
+        stop = "S.append(section('CASE STUDY'"
+        self.assertEqual(old[old.index(start):old.index(stop)],
+                         current[current.index(start):current.index(stop)])
 
     def test_notes_companion_matches_current_slides(self):
         companion = (ROOT/'lessons/week10-nicolo-speaker-notes.md').read_text()
@@ -128,10 +176,13 @@ class NicoloVariantTests(unittest.TestCase):
             slide = self.slides[i+1]
             self.assertIn('divergent thinking' if i in (0, 2) else 'convergent thinking', text(slide))
             subtitle = next(e for e in slide.els if e.name == 'phase-subtitle')
-            runs = subtitle.paras[0].runs
-            self.assertEqual(''.join(r.text for r in runs), space+' \u25c6 '+phase)
-            self.assertEqual([r.text for r in runs], [space+' ', '\u25c6', ' '+phase])
-            self.assertEqual([r.color for r in runs], ['#5A626B', '#246E70', '#5A626B'])
+            root = ET.fromstring(subtitle.svg)
+            self.assertEqual(root.get('aria-label'), space+' \u25c6 '+phase)
+            texts = root.findall('{http://www.w3.org/2000/svg}text')
+            self.assertEqual([t.text for t in texts], [space+' ', '\u25c6', ' '+phase])
+            self.assertEqual([t.get('fill') for t in texts], ['#5A626B', '#246E70', '#5A626B'])
+            self.assertAlmostEqual(float(texts[1].get('font-size')), 34/3)
+            self.assertLess(float(texts[1].get('y')), float(texts[0].get('y')))
             self.assertNotIn('\u2022', text(slide))
             title = next(e for e in slide.els if e.name == 'variant-heading')
             self.assertGreaterEqual(subtitle.y, title.y+title.h)

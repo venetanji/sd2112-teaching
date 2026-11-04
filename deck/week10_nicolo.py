@@ -3,18 +3,21 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from deckgen import INK, PAPER, Run
-from deckgen.layouts import T, Rect, Figure, _slide, eyebrow, finalize, section
+from deckgen import INK, PAPER, Image
+from deckgen.layouts import T, Rect, Figure, _slide, eyebrow, finalize, section, live, place_sketch
 import week10_figures as F
-from week10_nicolo_figures import phase_map
+from week10_nicolo_figures import phase_map, phase_subtitle
+from week10_nicolo_media import PRODUCT_VIDEO
 
 DC = 'https://www.designcouncil.org.uk/resources/the-double-diamond/'
 S = []
 PHASES = [('problem space', 'discover'), ('problem space', 'define'),
           ('solution space', 'develop'), ('solution space', 'deliver')]
 CASE_START = 8
-CASE_SPEAKING_MINUTES = [1, 1, 1, 1.5, 1.5, 1.5, .5]
+CASE_SPEAKING_MINUTES = [.5, 1, 1, 1, 1.5, 1.5, 1, .5]
 CASE_QA_MINUTES = 2
+SCREEN_RATIO = 2420/1525
+PRODUCT_SCREEN = Path(__file__).resolve().parent/'assets/week10/nicolo-current-product.png'
 TEAL = '#246E70'
 GREY = '#5A626B'
 ORANGE = '#C74600'
@@ -59,17 +62,15 @@ def phase_slide(number, items, summary, notes):
     space, phase = PHASES[number]
     s = _slide(notes=notes, title=phase.title())
     svg, png = phase_map(phase)
+    subtitle_w, subtitle_svg, subtitle_png = phase_subtitle(space, phase)
     s.els += [eyebrow(120, 96, 'DOUBLE DIAMOND', TEAL),
               T(120, 184, 1200, 100, phase.title(), 'xbold', 88, INK,
                 lh=.95, spc=-.03, name='variant-heading'),
-              T(120, 306, 1200, 48, '', 'body', 34, GREY,
-                lh=1.2, name='phase-subtitle'),
+              Figure(120, 306, subtitle_w, 48, subtitle_svg, subtitle_png,
+                     name='phase-subtitle'),
               Figure(1440, 210, 360, 176, svg, png, name='phase-navigation')]
-    s.els[-2].paras[0].runs = [Run(space+' ', size=34, color=GREY),
-                              Run('\u25c6', size=34, color=TEAL),
-                              Run(' '+phase, size=34, color=GREY)]
     for i, (label, body) in enumerate(zip(
-            ('GENERAL PRINCIPLES', 'INDUSTRY EXPERIENCE', 'POTENTIAL AI USE'), items)):
+            ('GENERAL PRINCIPLES', 'INDUSTRY EXAMPLE', 'POTENTIAL AI USE'), items)):
         x = 120+i*580
         s.els += [Rect(x, 416, 520, 2, '#BBBCB9'),
                   T(x, 442, 520, 36, label, 'mono', 22, ORANGE,
@@ -79,33 +80,36 @@ def phase_slide(number, items, summary, notes):
     return strip(s, 'WEEKS 8-9 / AI CONSIDERATIONS', summary)
 
 
-def slot(s, x, y, w, h, label, heading, detail):
-    """Keep pending product media visibly empty."""
-    s.els += [Rect(x, y, w, h, PAPER, '#BBBCB9', name='pending-asset'),
-              T(x+24, y+24, w-48, 60, label, 'mono', 21, TEAL),
-              T(x+24, y+104, w-48, 114, heading, 'xbold', 38, INK, lh=1.05),
-              T(x+24, y+240, w-48, h-264, detail, 'body', 29, GREY, lh=1.2)]
+def screen_slot(s, x, y, w, label, heading, detail, source=None):
+    """Keep all tablet screens at the supplied 2420:1525 ratio without cropping."""
+    h = round(w/SCREEN_RATIO)
+    s.els.append(T(x, y-52, w, 36, label, 'mono', 21, TEAL))
+    if source:
+        s.els.append(Image(x, y, w, h, str(source), 'contain', name='current-product-screenshot'))
+    else:
+        s.els += [Rect(x, y, w, h, PAPER, '#BBBCB9', name='pending-asset'),
+                  T(x+24, y+h//2-48, w-48, 96, heading, 'xbold', 38, INK,
+                    align='c', lh=1.05)]
+    if detail:
+        s.els.append(T(x, y+h+24, w, 130, detail, 'body', 28, GREY, lh=1.2,
+                       name='screen-annotation'))
 
 
-s = frame('INTRODUCTION', 'Double Diamond',
-    DD_DEFINITION+' Presenting it in three layers: the general principles of each phase; how it was used in a real-world Software UX Design project at Agilent Technologies in Germany; and how the process could be approached today with AI assistance and the possibility to integrate GenAI into the product. The first diamond is the problem space; the second is the solution space. Potential AI uses are proposals for today, not historical claims about the original project. The introduction is separate from the ten-minute case including Q&A; its duration is still open. The official image is unchanged; the two space labels sit above it. Source: Design Council, The Double Diamond, CC BY 4.0.')
+s = _slide(title='Double Diamond', notes=
+    DD_DEFINITION+' The first diamond is the problem space; the second is the solution space. The following slides explain each phase through its general principles, an industry example and potential AI uses. Potential AI uses are proposals for today, not historical claims about the original project. The introduction is separate from the ten-minute case including Q&A; its duration is still open. Source: Design Council, The Double Diamond, CC BY 4.0.')
 svg, png = F.source_image('design-council-double-diamond.png',
                           'Unmodified official Design Council Double Diamond diagram')
-s.els += [T(120, 300, 1680, 150, '\u201c'+DD_DEFINITION+'\u201d', 'body', 36, INK,
+s.els += [eyebrow(120, 96, 'INTRODUCTION', TEAL),
+          T(120, 184, 1680, 90, 'Double Diamond', 'xbold', 64, INK,
+            lh=.95, spc=-.03, name='variant-heading'),
+          T(120, 286, 1680, 80, '\u201c'+DD_DEFINITION+'\u201d', 'body', 30, INK,
             lh=1.22, name='dd-definition'),
-          T(120, 452, 650, 32, '\u2014 Design Council', 'mono', 22, TEAL,
-            name='dd-attribution'),
-          T(120, 528, 650, 42, 'Presenting it in three layers', 'xbold', 34, INK),
-          T(120, 592, 650, 328,
-            'The general principles of each phase.\n'
-            'How it was used in a real-world Software UX Design project at Agilent Technologies in Germany.\n'
-            'How the process could be approached today with AI assistance and GenAI integrated into the product.',
-            'body', 32, INK, lh=1.25, name='dd-opening-explanation')]
+          ]
 # The official image's diamond centres are at x=246 and x=694 of its 936 px width.
-diagram_x, diagram_y, diagram_w = 900, 530, 868
+diagram_x, diagram_y, diagram_w = 420, 428, 1080
 for label, center in [('Problem Space', 246), ('Solution Space', 694)]:
-    s.els.append(T(diagram_x+diagram_w*center/936-200, 478, 400, 42,
-                   label, 'xbold', 30, INK, align='c', name='dd-space-label'))
+    s.els.append(T(diagram_x+diagram_w*center/936-200, 380, 400, 42,
+                   label, 'xbold', 34, INK, align='c', name='dd-space-label'))
 s.els += [Figure(diagram_x, diagram_y, diagram_w, round(diagram_w*453/936),
                  svg, png, name='dd-official-diagram'),
           T(120, 956, 1680, 44,
@@ -129,10 +133,10 @@ S.append(phase_slide(1, [
 
 S.append(phase_slide(2, [
     'Use divergent thinking to explore different solutions. Co-design with users and other stakeholders. Avoid going with the first thing that comes to your mind.',
-    'The design team discussed ideas almost every week. A co-design workshop with the Product Manager and a Developer brought in other perspectives.',
+    'The design team discussed ideas almost every week. A co-design workshop with the Product Manager and an Engineer brought in other perspectives.',
     'Generate several prototype or media variants. Do not stop at the visual part: think about interactions, sounds, workflows, user contexts and environments.',
 ], 'When integrating AI into the product, consider what AI does and what the person can understand, change or reject.',
-    'Once the problem to solve is defined, it is time to move to the second diamond, the solution space. Use the creative process again to think of different potential solutions. Develop uses divergent thinking: explore possibilities instead of going with the first thing that comes to your mind. Be in touch with users to co-design, and involve Product Managers, other UX Designers, designers from other disciplines and developers. Different stakeholders give different perspectives. A solution does not need to be perfect: a simple draft, paper sketch or prototype can be enough to communicate ideas. In the design team, ideas were discussed almost every week. A co-design workshop with the Product Manager and a Developer also helped gather their perspectives. Today, AI could generate prototype or multimedia variants for discussion with the team. In this phase, quantity over quality means exploring alternatives, not ignoring safety or confidentiality. Vibe coding can help build testable software variants; running code is not the same as a production-ready product. Do not stop at visuals: consider interactions, sounds, workflows, user contexts and environments, and different ways AI could be integrated into the product. Following Week 8, consider what AI does, what the person still decides and how they can question, correct or reject an output. Navigation map: simplified redraw after Design Council, The Double Diamond, CC BY 4.0; labels and arrows omitted, inactive phases black and white, Develop highlighted.'))
+    'Once the problem to solve is defined, it is time to move to the second diamond, the solution space. Use the creative process again to think of different potential solutions. Develop uses divergent thinking: explore possibilities instead of going with the first thing that comes to your mind. Be in touch with users to co-design, and involve Product Managers, other UX Designers, designers from other disciplines and engineers. Different stakeholders give different perspectives. A solution does not need to be perfect: a simple draft, paper sketch or prototype can be enough to communicate ideas. In the design team, ideas were discussed almost every week. A co-design workshop with the Product Manager and an Engineer also helped gather their perspectives. Today, AI could generate prototype or multimedia variants for discussion with the team. In this phase, quantity over quality means exploring alternatives, not ignoring safety or confidentiality. Vibe coding can help build testable software variants; running code is not the same as a production-ready product. Do not stop at visuals: consider interactions, sounds, workflows, user contexts and environments, and different ways AI could be integrated into the product. Following Week 8, consider what AI does, what the person still decides and how they can question, correct or reject an output. Navigation map: simplified redraw after Design Council, The Double Diamond, CC BY 4.0; labels and arrows omitted, inactive phases black and white, Develop highlighted.'))
 
 S.append(phase_slide(3, [
     'Use convergent thinking to narrow down the options. Test ideas with users and observe them going through tasks: what works and what does not?',
@@ -165,16 +169,29 @@ S.append(three('DOUBLE DIAMOND / COLLABORATION', 'Stakeholder management', [
 
 S.append(section('CASE STUDY', 'Software UX Design',
     'Current product / UX goals / Proposed AI redesign', bg=INK,
-    notes='This is the transition from the Double Diamond introduction to the Software UX Design case study. It explains how the current product works, its current UX goals, and how AI features could be integrated by redesigning the product while enhancing those goals. The case is still waiting for portfolio slides, screenshots, context and the proposed AI experience. This divider is shown within the first case minute; it does not add time to the eight speaking minutes plus two minutes of Q&A. The introduction remains separate from that ten-minute slot.'))
+    notes='This is the transition from the Double Diamond introduction to the Software UX Design case study. It explains how the current product works, its current UX goals, and how AI features could be integrated by redesigning the product while enhancing those goals. The original tablet screenshot and product video have been supplied. Portfolio slides, context, current UX goals and the proposed AI experience remain pending. This divider is included within the first half-minute of the case; it does not add time to the eight speaking minutes plus two minutes of Q&A. The introduction remains separate from that ten-minute slot.'))
 
 s = frame('CASE STUDY / CURRENT PRODUCT', 'How the current product works',
-    'Proposed speaking allocation: one minute, including the case cover. The case has eight speaking minutes plus two minutes of Q&A. Portfolio slides, product images, intended-use video, users and context are still pending. Extract relevant material only after receipt and sharing permission. Do not invent a product name, workflow, user quote, laboratory scene or screenshot. Keep the current device and workflow distinct from the proposed AI redesign. Company material needs permission before it enters repository history or an unauthenticated preview.')
-slot(s, 120, 358, 1050, 400, 'CURRENT PRODUCT / TO ADD', 'Product screenshot',
-     'Users, context and current workflow.')
-slot(s, 1220, 358, 580, 400, 'INTENDED USE / TO ADD', 'Images or video',
-     'Relevant material from the portfolio.')
-S.append(strip(s, 'DRAFT / MATERIAL PENDING',
-    'Product screenshots, intended-use material, context and current UX goals will be added here.'))
+    'Proposed speaking allocation: half a minute, including the case cover. The case has eight speaking minutes plus two minutes of Q&A. This is the original tablet screenshot supplied by the contributor, shown uncropped at its 2420 by 1525 aspect ratio. It visibly shows a sample list, current-container entries and transfer history. Product context, intended users and actual UX goals still need the contributor\'s explanation. Do not infer efficiency, data accuracy or AI behaviour from this screen. Keep the current product distinct from the proposed AI redesign. The following slide contains the separate original promotional video.')
+screen_slot(s, 120, 380, 920, 'ORIGINAL PRODUCT / TABLET VERSION', '', '',
+            source=PRODUCT_SCREEN)
+s.els += [T(1120, 406, 680, 110, 'Sample list and transfer history', 'xbold', 42, INK,
+            lh=1.05),
+          T(1120, 560, 680, 220,
+            'Original tablet interface.\nProduct context and current UX goals to be added.',
+            'body', 34, INK, lh=1.25)]
+S.append(s)
+
+s = frame('CASE STUDY / CURRENT PRODUCT', 'The product in use',
+    'Proposed speaking allocation: one minute, including the complete 49.365-second video and a short introduction. This is the original product promotional video supplied by the contributor: 1920 by 1080 pixels, 25 frames per second. Its audio stream is digitally silent. The footage shows laboratory sample handling with a scanner and touchscreen; it is a promotional demonstration, not independent evidence of current company practice, UX outcomes or AI capability. Play on request; do not autoplay, loop, trim or treat the original footage as the proposed AI redesign. Native exports show a genuine frame from 25 seconds; HTML provides the playable video. The video remains within the eight speaking minutes plus two minutes of Q&A.')
+place_sketch(s, live('nicolo-product-video', PRODUCT_VIDEO, 1920, 1080,
+                     hint='Play the original 49-second product video'),
+             (448, 304, 1024, 576),
+             F.source_image('nicolo-product-video-poster.png',
+                            'Original product promotional video, still at 25 seconds'))
+s.els.append(T(448, 918, 1024, 52, 'ORIGINAL PRODUCT VIDEO / 49 SECONDS / NO AUDIO',
+               'mono', 22, TEAL, name='product-video-caption'))
+S.append(s)
 
 S.append(three('CASE STUDY / CURRENT PRODUCT', 'Qualitative findings', [
     ('POSITIVE FINDING 1', 'What worked.', 'Observation and context to be added.'),
@@ -195,19 +212,23 @@ S.append(strip(s, 'REPORTED CURRENT-PRODUCT FIGURES / DRAFT',
     'Measurement context pending. These are not results of the AI redesign.'))
 
 s = frame('CASE STUDY / PROPOSED AI REDESIGN', 'Before and after',
-    'Proposed speaking allocation: one and a half minutes. Show the current product screen and the proposed redesign on one slide. The genuine current screen, actual UX goals and proposed changes are pending. Explain how the AI feature relates to a UX goal, what it does, what the person still decides and what happens if it is wrong or unavailable. Do not reconstruct a screenshot and present it as an actual product screen. Keep the redesign labelled proposed, not implemented; no feature or measured improvement has been invented.')
-slot(s, 120, 358, 800, 400, 'BEFORE / CURRENT PRODUCT', 'Current screen', 'Screenshot to be added.')
-slot(s, 1000, 358, 800, 400, 'AFTER / PROPOSED REDESIGN', 'Redesigned screen', 'Proposed screen and annotations to be added.')
-S.append(strip(s, 'CONNECT THE CHANGE TO THE UX GOALS',
-    'Explain the AI feature, how it changes the experience, and what the user still needs to do.'))
+    'Proposed speaking allocation: one and a half minutes. The before image is the original tablet screenshot supplied by the contributor. Both screen areas use the supplied 2420 by 1525 aspect ratio. The proposed screen, actual UX goals and changes remain pending. Explain how the AI feature relates to a UX goal, what it does, what the person still decides and what happens if it is wrong or unavailable. Do not reconstruct a screenshot and present it as an actual product screen. Keep the redesign labelled proposed, not implemented; no feature or measured improvement has been invented.')
+screen_slot(s, 120, 386, 800, 'BEFORE / CURRENT PRODUCT', '', '', source=PRODUCT_SCREEN)
+screen_slot(s, 1000, 386, 800, 'AFTER / PROPOSED REDESIGN', 'Redesigned screen', '')
+s.els.append(T(120, 928, 1680, 64,
+               'Proposed AI redesign: connect each change to the UX goals and the user\'s decisions.',
+               'body', 28, INK, name='redesign-caption'))
+S.append(s)
 
 s = frame('CASE STUDY / PROPOSED AI REDESIGN', 'The redesigned experience',
     'Proposed speaking allocation: one and a half minutes. Show a sequence of three annotated screenshots of the proposed redesigned experience. The screens, actions and order are pending, so do not invent them. Explain the user action, AI contribution and relevant UX goal at each actual step. Include human choice, uncertainty or recovery where they occur in the proposal. Keep these screens labelled proposed, not implemented. Put fuller explanations in native notes so annotations can remain readable.')
 for i in range(3):
-    slot(s, 120+i*580, 358, 520, 400, f'PROPOSED SCREEN {i+1}',
-         f'Step {i+1}', 'Screenshot and annotations to be added.')
-S.append(strip(s, 'DRAFT / PROPOSED FLOW PENDING',
-    'Three screenshots in sequence, with annotations showing how the AI features support the UX goals.'))
+    screen_slot(s, 120+i*580, 412, 520, f'PROPOSED SCREEN {i+1}',
+                f'Step {i+1}', 'Screenshot and annotations to be added.')
+s.els.append(T(120, 934, 1680, 56,
+               'PROPOSED FLOW / Screens and annotations remain to be added.',
+               'mono', 22, TEAL))
+S.append(s)
 
 S.append(three('CASE STUDY / IMPLEMENTATION', 'Technical constraints', [
     ('ENVIRONMENT + CAMERAS', 'Using cameras in a lab.',
@@ -218,7 +239,7 @@ S.append(three('CASE STUDY / IMPLEMENTATION', 'Technical constraints', [
      'Check compute and memory requirements, processing power and the device adaptation needed for the AI features.'),
 ], 'POTENTIAL CONSTRAINTS / TO INVESTIGATE',
     'Understanding the user, environment and constraints is important when designing how AI fits into a product.',
-    'Proposed speaking allocation: one and a half minutes. These are potential technical constraints, not verified characteristics of this site or a completed technical audit. Consider low-light conditions, camera placement, obstruction and whether image capture is permitted and appropriate in the laboratory. Investigate the site\'s digital readiness, existing systems, cloud policy and network reliability. Do not claim all laboratories are unready for digital or cloud systems. Check the actual processing power, memory, latency, power and device changes needed for the proposed AI features. Local processing is not automatically private or feasible; cloud processing raises different connectivity and policy questions. Confirm these constraints with users and the relevant technical colleagues. This illustrates why understanding user context matters, without inventing an audit of the product.'))
+    'Proposed speaking allocation: one minute. These are potential technical constraints, not verified characteristics of this site or a completed technical audit. Consider low-light conditions, camera placement, obstruction and whether image capture is permitted and appropriate in the laboratory. Investigate the site\'s digital readiness, existing systems, cloud policy and network reliability. Do not claim all laboratories are unready for digital or cloud systems. Check the actual processing power, memory, latency, power and device changes needed for the proposed AI features. Local processing is not automatically private or feasible; cloud processing raises different connectivity and policy questions. Confirm these constraints with users and the relevant technical colleagues. This illustrates why understanding user context matters, without inventing an audit of the product.'))
 
 S.append(three('CASE STUDY / TESTING + Q&A', 'Testing the redesign', [
     ('CURRENT UX GOALS', 'Does it help users?',
@@ -229,7 +250,7 @@ S.append(three('CASE STUDY / TESTING + Q&A', 'Testing the redesign', [
      'Ask users what worked, what did not, and what they would like to improve. Understand their priorities.'),
 ], 'CLOSE + Q&A / WITHIN THE TEN-MINUTE CASE',
     'What would you need to test before taking this proposed redesign further?',
-    'Proposed speaking allocation: half a minute, followed by two minutes of Q&A within the ten-minute case slot. The seven case-content slides have eight speaking minutes altogether; the cover is included in the first minute. The actual current UX goals and redesign are pending, so the task, comparison and measures must still be defined. This is a proposal for testing, not a claim that the redesign works. Do not reuse the current-product 30% or one-click figures as predicted AI benefits. Observe task outcomes and test the AI behaviour as well as the interface. Ask users about wishes and priorities, including disagreements. The audience question is optional facilitation, not an assessed task or new submission.'))
+    'Proposed speaking allocation: half a minute, followed by two minutes of Q&A within the ten-minute case slot. The eight case-content slides have eight speaking minutes altogether, including the full 49.365-second video; the cover is included in the first half-minute. The actual current UX goals and redesign are pending, so the task, comparison and measures must still be defined. This is a proposal for testing, not a claim that the redesign works. Do not reuse the current-product 30% or one-click figures as predicted AI benefits. Observe task outcomes and test the AI behaviour as well as the interface. Ask users about wishes and priorities, including disagreements. The audience question is optional facilitation, not an assessed task or new submission.'))
 
 DECK = dict(title='SD2112 / Week 10 / Nicolo separate contributor draft',
             slides=finalize(S, 'SD2112 / AI IN DESIGN / WEEK 10 / NICOLO VARIANT'),
