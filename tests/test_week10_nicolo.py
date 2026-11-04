@@ -21,7 +21,8 @@ class NicoloVariantTests(unittest.TestCase):
     def setUpClass(cls):
         from deck.week10_nicolo import S, CASE_START, CASE_SPEAKING_MINUTES, CASE_QA_MINUTES
         cls.full_slides = S
-        cls.slides = S[1:-1]
+        # Content-only view keeps speaking allocations separate from section covers.
+        cls.slides = [s for s in S[1:-1] if s.title != 'Proposed AI Redesign']
         cls.start = CASE_START-1
         cls.minutes = CASE_SPEAKING_MINUTES
         cls.qa = CASE_QA_MINUTES
@@ -38,7 +39,7 @@ class NicoloVariantTests(unittest.TestCase):
 
     def test_requested_opening_cover_and_simple_closing(self):
         from deck.week10_nicolo import CASE_START
-        self.assertEqual(len(self.full_slides), 17)
+        self.assertEqual(len(self.full_slides), 18)
         self.assertEqual(CASE_START, 9)
         cover, closing = self.full_slides[0], self.full_slides[-1]
         self.assertEqual(cover.title, 'Double Diamond \U0001f48e\U0001f48e')
@@ -139,7 +140,8 @@ class NicoloVariantTests(unittest.TestCase):
         self.assertAlmostEqual(player.w/player.h, 16/9)
         self.assertIn('49.365-second video', video.notes)
         self.assertIn('video.controls = true', player.code)
-        self.assertIn('video.autoplay = true', player.code)
+        self.assertIn('video.autoplay = false', player.code)
+        self.assertNotIn('video.autoplay = true', player.code)
         self.assertIn('video.muted = true', player.code)
         self.assertIn("parent.Reveal.on('slidechanged'", player.code)
         self.assertEqual(self.minutes[3], 2)
@@ -149,7 +151,9 @@ class NicoloVariantTests(unittest.TestCase):
         from hashlib import sha256
         from deck.week10_nicolo_case import ASSETS
         for i, slide in enumerate(self.slides[12:], 1):
-            self.assertTrue(slide.title.startswith(f'ASL-{i} / '))
+            self.assertTrue(slide.title.startswith('AST / '))
+            self.assertIn('PROPOSED AI REDESIGN / AST', text(slide))
+            self.assertNotRegex(text(slide), r'ASL-[123]')
             self.assertIn('PROPOSED AI REDESIGN', text(slide))
             image = next(e for e in slide.els if e.name == f'asl-{i}-concept')
             self.assertEqual(Path(image.src), ASSETS/f'nicolo-asl-{i}.png')
@@ -233,6 +237,31 @@ class NicoloVariantTests(unittest.TestCase):
                       "parent.window.removeEventListener('keydown', onKey, true)",
                       "chip.style.display = 'none'"):
             self.assertIn(value, code)
+
+    def test_deliver_precise_spacing_and_redesign_cover_order(self):
+        slide = self.full_slides[12]
+        self.assertTrue(slide.title.startswith('Deliver'))
+        image = next(e for e in slide.els if e.name == 'current-product-screenshot')
+        video = slide.html_only[0]
+        self.assertEqual(video.x-(image.x+image.w), 32)
+        self.assertEqual((video.y, video.w, video.h), (350, 720, 405))
+        labels = [e for e in slide.els if hasattr(e, 'paras') and
+                  ''.join(r.text for p in e.paras for r in p.runs) in
+                  ('Quantitative findings', 'Qualitative findings', 'Improvement wishes')]
+        self.assertEqual([e.y for e in labels], [800, 800, 800])
+        self.assertEqual(next(e for e in slide.els if e.name == 'reported-speed').y, 842)
+        self.assertEqual(next(e for e in slide.els if e.name == 'reported-clicks').y, 910)
+        self.assertEqual(next(e for e in slide.els if e.name == 'participant-positive-quotes').y, 844)
+        self.assertEqual(next(e for e in slide.els if e.name == 'participant-improvement-wishes').y, 844)
+        cover = self.full_slides[13]
+        self.assertEqual(cover.title, 'Proposed AI Redesign')
+        self.assertEqual(cover.bg, '#000B1C')
+        self.assertIn('Proposed AI Redesign', text(cover))
+        self.assertEqual([s.title for s in self.full_slides[14:17]], [
+            'AST / Mirror-like UI with overlays',
+            'AST / Automatic sample selection',
+            'AST / Registering the transfer'])
+        self.assertEqual(self.full_slides[17].title, 'thanks!')
 
     def test_section_footers_and_case_cover(self):
         from deck.week10_nicolo_case import CASE_TITLE

@@ -9,7 +9,7 @@ function setup() {
   video.poster = '../../week10-nicolo-media/product-video-poster.png';
   video.controls = true;
   video.loop = true;
-  video.autoplay = true;
+  video.autoplay = false;
   video.muted = true;
   video.playsInline = true;
   video.preload = 'metadata';
@@ -47,10 +47,7 @@ function setup() {
     const chip = frameElement.parentElement.querySelector('.live');
     if (chip) chip.style.display = 'none';
     parent.window.addEventListener('keydown', onKey, true);
-    const onSlide = () => {
-      if (active()) video.play().catch(() => {});
-      else pause();
-    };
+    const onSlide = () => { if (!active()) pause(); };
     const observer = new MutationObserver(() => { if (!active()) pause(); });
     parent.Reveal.on('slidechanged', onSlide);
     parent.Reveal.on('overviewshown', pause);
@@ -65,6 +62,5 @@ function setup() {
       pause();
     }, {once: true});
   }
-  if (active()) video.play().catch(() => {});
 }
 """

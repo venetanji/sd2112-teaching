@@ -152,7 +152,7 @@ def build_case():
     slides.append(s)
 
     notes = (
-        'Proposed speaking allocation: two minutes, including one complete 49.365-second video pass. The video starts automatically, muted, and loops until paused; Space toggles playback. '
+        'Proposed speaking allocation: two minutes, including one complete 49.365-second video pass. The video starts paused and loops after Play until paused; Space toggles playback. '
         'Sources: 16.pdf and 17.pdf, PDF page 1 in each, plus the original screenshot and promotional video supplied earlier. '
         'Gather qualitative data on the experience: Ease of use and Learnability. Task-based usability testing with a follow up semi-structured interview. '
         'Positive participant quotations: '+'; '.join(POSITIVE_QUOTES)+'. '
@@ -164,10 +164,10 @@ def build_case():
         'These are reported current-product outcomes, not results of the AI redesign. Do not conflate 30% faster with 30% less completion time. '
         'Participant count, task/sample count, raw timings, baseline click count, study date, uncertainty and calculation method are not supplied; do not invent them. '
         'The one-click statement is limited to preparing and submitting a sample list, not the whole sample-transfer workflow. '
-        'The original tablet screenshot remains uncropped at its 2420:1525 aspect ratio. The original 1920x1080 video remains complete, silent, untrimmed, autoplaying silently and looping continuously until paused. Space toggles play/pause. '
+        'The original tablet screenshot remains uncropped at its 2420:1525 aspect ratio. The original 1920x1080 video remains complete, silent, untrimmed, without autoplay, looping continuously after Play until paused. Space toggles play/pause. '
         'Both are on this Deliver slide, replacing the earlier dedicated video slide to meet the four-slide case request. '
         'The seven case-content slides total eight speaking minutes including one full video pass, followed by two minutes of Q&A within ten minutes. Pause the loop after one pass to preserve that budget. '
-        'The following three slides present the supplied AI redesign as a proposed concept, not an implemented or validated system. '
+        'The following Proposed AI Redesign section cover introduces three AST slides presenting a proposed concept, not an implemented or validated system. '
         'Navigation map: simplified redraw after Design Council, The Double Diamond, CC BY 4.0; Deliver highlighted.')
     s = case_frame(3, 'Validating the Experience', notes)
     s.els += [Image(120, 350, 580, round(580/SCREEN_RATIO), str(PRODUCT_SCREEN), 'contain',
@@ -175,10 +175,10 @@ def build_case():
               T(120, 730, 580, 56, SCREEN_CAPTION, 'mono', 20, TEAL,
                 lh=1.15, name='current-product-caption')]
     place_sketch(s, live('nicolo-product-video', PRODUCT_VIDEO, 1920, 1080),
-                 (900, 350, 720, 405),
+                 (732, 350, 720, 405),
                  F.source_image('nicolo-product-video-poster.png',
                                 'Original product promotional video, still at 25 seconds'))
-    s.els += [T(120, 812, 500, 28, 'Quantitative findings', 'mono', 20, ORANGE),
+    findings = [T(120, 812, 500, 28, 'Quantitative findings', 'mono', 20, ORANGE),
               T(120, 854, 144, 54, '30%', 'xbold', 44, TEAL, name='reported-speed'),
               T(284, 854, 336, 60, 'faster than manual workflows', 'body', 25, INK,
                 lh=1.15),
@@ -193,6 +193,9 @@ def build_case():
               T(1280, 856, 520, 138,
                 'Add weight and volume information to the container.\nSplit and merge samples in the system.',
                 'body', 26, INK, lh=1.15, name='participant-improvement-wishes')]
+    for element in findings:
+        element.y -= 12
+    s.els.extend(findings)
     quotes = next(e for e in s.els if e.name == 'participant-positive-quotes')
     for paragraph in quotes.paras[1:]:
         paragraph.before = 10
@@ -203,35 +206,42 @@ def build_case():
 
 def build_ai_concept():
     concepts = [
-        ('ASL-1', 'Mirror-like UI with overlays',
+        ('AST', 'Mirror-like UI with overlays',
          'Mirror-like UI with overlays.',
          'A live camera view with interface elements overlaid on the workbench view.',
          'Computer Vision (CV / CNN)',
          'Recognise containers and actions in the camera view.'),
-        ('ASL-2', 'Automatic sample selection',
+        ('AST', 'Automatic sample selection',
          'AI automatically selects the sample in the UI based on the recognised barcode and container type.',
          'The selected sample and its transfer history remain visible alongside the container.',
          'Computer Vision + barcode decoding',
          'Recognise the container type and decode its barcode to identify the sample.'),
-        ('ASL-3', 'Registering the transfer',
+        ('AST', 'Registering the transfer',
          'AI recognises dispensing into the vial and registers the transfer in the transfer history.',
          'A comment on the sample is also added. The user can edit it with voice recognition.',
          'Vision Language Model + Voice Recognition',
          'Draft sample comments with a VLM. Use voice recognition + function calling to control the software and edit AI-generated data.'),
     ]
-    slides = []
+    cover = _slide(INK, title='Proposed AI Redesign', notes=
+        'Section cover introducing three proposed AST concept screens, not an implemented or validated AI system. '
+        'Use this as a transition within the existing speaking allocation; it adds no separate timed block. '
+        'The original product findings on the preceding Deliver slide are not measured benefits of this proposed redesign.')
+    cover.els.append(T(120, 460, 1680, 330, 'Proposed AI Redesign',
+                       'black', 112, '#FFFFFF', lh=.97, spc=-.035,
+                       name='redesign-cover-title'))
+    slides = [cover]
     for i, (code, title, body, detail, technology, explanation) in enumerate(concepts, 1):
         notes = (
             f'Proposed speaking allocation: {CASE_SPEAKING_MINUTES[i+3]:g} minutes. '
             f'{code}: {body} {detail} AI technologies: {technology}. {explanation} '
-            'Source: the contributor-supplied ASL concept image and explanation, 4 November 2026. '
+            'Source: the contributor-supplied AST concept image and explanation, 4 November 2026. '
             'This is a proposed AI redesign illustrated by a static mockup, not a working system, validated outcome or current-product capability. '
             'The proposed experience aims to fit the software to the analyst\'s actions, reduce manual selection and preserve a visible sample history. '
             'Computer Vision can include CNN-based container/action recognition; decoding a barcode does not inherently require a CNN. '
             'Camera use, privacy, low light, occlusion, reflections, local processing power and integration with existing laboratory systems need site-specific assessment. '
             'Recognising a likely dispensing action does not verify successful transfer, correct volume, chemical identity, purity or absence of contamination. '
             'Source-target association, duplicate-event prevention and confirmation/correction for uncertain events must be designed and tested. '
-            'VLM comments are editable draft visual observations, not scientific conclusions. The ASL-3 mockup\'s recommendation requiring additional processing is unvalidated and must not be treated as a laboratory instruction. '
+            'VLM comments are editable draft visual observations, not scientific conclusions. The third AST mockup\'s recommendation requiring additional processing is unvalidated and must not be treated as a laboratory instruction. '
             'Voice recognition transcribes the user; function calling requests validated software actions with appropriate user control. '
             'A manual correction path and traceable edits are needed. Evaluate with actual analysts in the actual workbench context before claiming an efficiency or accuracy improvement.'
         )
