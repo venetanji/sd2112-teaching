@@ -130,7 +130,7 @@ class NicoloVariantTests(unittest.TestCase):
         self.assertNotIn('Presenting it in three layers', opening)
         self.assertNotIn('dd-opening-explanation', [e.name for e in slide.els])
         diagram = next(e for e in slide.els if e.name == 'dd-official-diagram')
-        self.assertGreater(diagram.w, 868)
+        self.assertEqual(diagram.w, round(1080*.9))
         self.assertEqual(diagram.x+diagram.w/2, 960)
         labels = [e for e in slide.els if e.name == 'dd-space-label']
         self.assertEqual(len(labels), 2)
@@ -171,18 +171,26 @@ class NicoloVariantTests(unittest.TestCase):
 
     def test_phase_subtitles_maps_and_reading_order(self):
         from deck.week10_nicolo import PHASES
-        from deck.week10_nicolo_figures import phase_map
+        from deck.week10_nicolo_figures import phase_map, THINKING_MODES
         for i, (space, phase) in enumerate(PHASES):
             slide = self.slides[i+1]
             self.assertIn('divergent thinking' if i in (0, 2) else 'convergent thinking', text(slide))
             subtitle = next(e for e in slide.els if e.name == 'phase-subtitle')
             root = ET.fromstring(subtitle.svg)
-            self.assertEqual(root.get('aria-label'), space+' \u25c6 '+phase)
-            texts = root.findall('{http://www.w3.org/2000/svg}text')
-            self.assertEqual([t.text for t in texts], [space+' ', '\u25c6', ' '+phase])
+            self.assertEqual(root.get('aria-label'), space+' \u25c6 '+THINKING_MODES[phase])
+            texts = list(root.iter('{http://www.w3.org/2000/svg}tspan'))
+            row = root.find('{http://www.w3.org/2000/svg}text')
+            for setting in ('font-optical-sizing:none', 'font-feature-settings:normal',
+                            'text-rendering:geometricPrecision'):
+                self.assertIn(setting, row.get('style'))
+            self.assertTrue(all(not t.tail for t in texts))
+            self.assertEqual([t.text for t in texts], [space, '\u25c6', THINKING_MODES[phase]])
             self.assertEqual([t.get('fill') for t in texts], ['#5A626B', '#246E70', '#5A626B'])
             self.assertAlmostEqual(float(texts[1].get('font-size')), 34/3)
             self.assertLess(float(texts[1].get('y')), float(texts[0].get('y')))
+            self.assertEqual(float(texts[1].get('dx')), float(texts[2].get('dx')))
+            self.assertLessEqual(float(texts[1].get('dx')), 14)
+            self.assertLessEqual(subtitle.x+subtitle.w, 1440)
             self.assertNotIn('\u2022', text(slide))
             title = next(e for e in slide.els if e.name == 'variant-heading')
             self.assertGreaterEqual(subtitle.y, title.y+title.h)
@@ -196,6 +204,20 @@ class NicoloVariantTests(unittest.TestCase):
             self.assertIn('after Design Council', slide.notes)
             names = [e.name for e in slide.els]
             self.assertLess(names.index('phase-subtitle'), names.index('phase-navigation'))
+
+    def test_iteration_map_has_no_accent_and_phase_durations_are_explicit(self):
+        slide = self.slides[5]
+        maps = [e for e in slide.els if e.name == 'phase-navigation']
+        self.assertEqual(len(maps), 1)
+        self.assertEqual((maps[0].x, maps[0].y, maps[0].w, maps[0].h), (1440, 210, 360, 176))
+        self.assertNotIn('#246E70', maps[0].svg)
+        self.assertEqual(maps[0].svg.count('fill="#FFFFFF"'), 4)
+        self.assertIn('The phases do not all take the same amount of time.', text(slide))
+        self.assertIn('do not represent equal durations', slide.notes)
+        title = next(e for e in slide.els if e.name == 'variant-heading')
+        self.assertLessEqual(title.x+title.w, maps[0].x)
+        columns = [e for e in slide.els if e.name.startswith('column-')]
+        self.assertTrue(all(e.y > maps[0].y+maps[0].h for e in columns))
 
     def test_links_notes_privacy_and_geometry(self):
         links = [r.url for e in self.slides[0].els if hasattr(e, 'paras')

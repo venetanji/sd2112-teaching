@@ -44,16 +44,24 @@ def strip(s, label, text, y=796):
     return s
 
 
-def three(code, heading, items, label, summary, notes):
+def three(code, heading, items, label, summary, notes, neutral_navigation=False):
     s = frame(code, heading, notes)
+    if neutral_navigation:
+        title = s.els[-1]
+        title.w, title.h = 1200, 100
+        title.paras[0].runs[0].size = 64
+        svg, png = phase_map()
+        s.els.append(Figure(1440, 210, 360, 176, svg, png, name='phase-navigation'))
     for i, (kicker, title, body) in enumerate(items):
         x = 120+i*580
-        s.els += [Rect(x, 358, 520, 2, '#BBBCB9'),
-                  T(x, 384, 520, 36, kicker, 'mono', 22, ORANGE,
+        s.els += [Rect(x, 416 if neutral_navigation else 358, 520, 2, '#BBBCB9'),
+                  T(x, 442 if neutral_navigation else 384, 520, 36, kicker, 'mono', 22, ORANGE,
                     name=f'column-{i}-label'),
-                  T(x, 438, 520, 92, title, 'xbold', 42, INK,
+                  T(x, 498 if neutral_navigation else 438, 520,
+                    72 if neutral_navigation else 92, title, 'xbold',
+                    38 if neutral_navigation else 42, INK,
                     lh=1.05, name=f'column-{i}-heading'),
-                  T(x, 558, 520, 202, body, 'body', 31, INK,
+                  T(x, 582 if neutral_navigation else 558, 520, 202, body, 'body', 31, INK,
                     lh=1.25, name=f'column-{i}-body')]
     return strip(s, label, summary)
 
@@ -106,9 +114,9 @@ s.els += [eyebrow(120, 96, 'INTRODUCTION', TEAL),
             lh=1.22, name='dd-definition'),
           ]
 # The official image's diamond centres are at x=246 and x=694 of its 936 px width.
-diagram_x, diagram_y, diagram_w = 420, 428, 1080
+diagram_x, diagram_y, diagram_w = 474, 454, 972
 for label, center in [('Problem Space', 246), ('Solution Space', 694)]:
-    s.els.append(T(diagram_x+diagram_w*center/936-200, 380, 400, 42,
+    s.els.append(T(diagram_x+diagram_w*center/936-200, diagram_y-48, 400, 42,
                    label, 'xbold', 34, INK, align='c', name='dd-space-label'))
 s.els += [Figure(diagram_x, diagram_y, diagram_w, round(diagram_w*453/936),
                  svg, png, name='dd-official-diagram'),
@@ -151,10 +159,10 @@ S.append(three('DOUBLE DIAMOND / ITERATION', 'An iterative and imperfect process
     ('DEVELOP AGAIN', 'Revise the idea.',
      'You may need to return to Develop to fix a detail you missed, then test the revised prototype.'),
     ('REAL-WORLD PROJECTS', 'Prioritise your time.',
-     'You may never have enough time for everything. A designer needs to prioritise and manage time on a project.'),
+     'The phases do not all take the same amount of time. A designer needs to prioritise and manage time on a project.'),
 ], 'ITERATION THROUGHOUT THE PROCESS',
     'You may need to go back to an earlier phase. The Double Diamond is not a fixed sequence of steps.',
-    'Although the picture may not show every loop, the Double Diamond is iterative at every phase. Once you have defined the problem, you may still need to go back to discovery and understanding the user. During testing, you may notice different needs or a new need you had not seen before. Go back to Discover to understand the context, or return to Develop to fix a detail. In the real world, you may never have enough time for everything, so a designer should know how to prioritise and manage time on a project. Obtaining enough time and budget for the first diamond can be difficult. That does not mean only the second diamond creates value: finding out early that you are addressing the wrong problem can prevent wasted development. The introduction duration remains open.'))
+    'Although the picture may not show every loop, the Double Diamond is iterative at every phase. Once you have defined the problem, you may still need to go back to discovery and understanding the user. During testing, you may notice different needs or a new need you had not seen before. Go back to Discover to understand the context, or return to Develop to fix a detail. The phases do not all take the same amount of time; the equal-sized halves in this map do not represent equal durations. In the real world, you may never have enough time for everything, so a designer should know how to prioritise and manage time on a project. Obtaining enough time and budget for the first diamond can be difficult. That does not mean only the second diamond creates value: finding out early that you are addressing the wrong problem can prevent wasted development. The introduction duration remains open. Navigation map: simplified redraw after Design Council, The Double Diamond, CC BY 4.0; labels and arrows omitted, all phases black and white without an accent highlight.', neutral_navigation=True))
 
 S.append(three('DOUBLE DIAMOND / COLLABORATION', 'Stakeholder management', [
     ('USERS', 'Keep users involved.',
