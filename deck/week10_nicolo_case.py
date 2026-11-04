@@ -243,12 +243,15 @@ def build_ai_concept():
             'Source-target association, duplicate-event prevention and confirmation/correction for uncertain events must be designed and tested. '
             'VLM comments are editable draft visual observations, not scientific conclusions. The third AST mockup\'s recommendation requiring additional processing is unvalidated and must not be treated as a laboratory instruction. '
             'Voice recognition transcribes the user; function calling requests validated software actions with appropriate user control. '
-            'A manual correction path and traceable edits are needed. Evaluate with actual analysts in the actual workbench context before claiming an efficiency or accuracy improvement.'
+            'A manual correction path and traceable edits are needed. Evaluate with actual analysts in the actual workbench context before claiming an efficiency or accuracy improvement. '
+            'Navigation map: simplified redraw after Design Council, The Double Diamond, CC BY 4.0; the whole solution space (Develop and Deliver) is highlighted.'
         )
         s = _slide(title=code+' / '+title, notes=notes)
+        svg, png = phase_map('solution')
         s.els += [eyebrow(120, 96, 'PROPOSED AI REDESIGN / '+code, TEAL),
-                  T(120, 184, 1680, 100, title, 'xbold', 64, INK,
+                  T(120, 184, 1200, 100, title, 'xbold', 64, INK,
                     lh=.95, spc=-.03, name='variant-heading'),
+                  Figure(1440, 164, 360, 176, svg, png, name='phase-navigation'),
                   Image(120, 330, 1040, round(1040/SCREEN_RATIO),
                         str(ASSETS/f'nicolo-asl-{i}.png'), 'contain', name=f'asl-{i}-concept'),
                   T(1220, 344, 580, 168, body, 'xbold', 34, INK, lh=1.14,

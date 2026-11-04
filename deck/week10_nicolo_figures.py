@@ -49,11 +49,13 @@ def phase_subtitle(space, phase):
 
 
 def phase_map(phase=None):
-    """Simplified Double Diamond after Design Council; color only the active half."""
-    if phase is not None and phase not in PHASE_NAMES:
+    """Highlight one phase, the full solution space, or neither diamond."""
+    if phase is not None and phase not in (*PHASE_NAMES, 'solution'):
         raise ValueError(f'Unknown Double Diamond phase: {phase}')
     c = Canvas(360, 176)
     description = phase.title()+' highlighted' if phase else 'all phases, no highlight'
+    if phase == 'solution':
+        description = 'solution space (Develop and Deliver) highlighted'
     c.svg.append(f'<title>Double Diamond navigation: {description}</title>')
     halves = [
         [(12, 88), (96, 4), (96, 172)],
@@ -62,5 +64,6 @@ def phase_map(phase=None):
         [(264, 4), (348, 88), (264, 172)],
     ]
     for name, points in zip(PHASE_NAMES, halves):
-        c.poly(points, '#246E70' if name == phase else '#FFFFFF', '#222222', 2)
+        active = name == phase or (phase == 'solution' and name in ('develop', 'deliver'))
+        c.poly(points, '#246E70' if active else '#FFFFFF', '#222222', 2)
     return c.finish('week10-nicolo-map-'+(phase or 'all'))

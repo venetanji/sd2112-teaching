@@ -206,6 +206,32 @@ class NicoloVariantTests(unittest.TestCase):
         self.assertEqual(len({e.y for e in labels}), 1)
         self.assertEqual(deliver.html_only[0].hint, '')
 
+    def test_ast_maps_highlight_the_whole_solution_space(self):
+        from PIL import Image
+        from deck.week10_nicolo_figures import phase_map
+        expected = ['#FFFFFF', '#FFFFFF', '#246E70', '#246E70']
+        for slide in self.full_slides[14:17]:
+            maps = [e for e in slide.els if e.name == 'phase-navigation']
+            self.assertEqual(len(maps), 1)
+            nav = maps[0]
+            self.assertEqual((nav.x, nav.y, nav.w, nav.h), (1440, 164, 360, 176))
+            svg = ET.fromstring(nav.svg)
+            ns = {'svg': 'http://www.w3.org/2000/svg'}
+            self.assertEqual([p.get('fill') for p in svg.findall('svg:polygon', ns)], expected)
+            self.assertIn('Develop and Deliver', nav.svg)
+            self.assertIn('CC BY 4.0', slide.notes)
+            heading = next(e for e in slide.els if e.name == 'variant-heading')
+            self.assertLessEqual(heading.x+heading.w, nav.x)
+            with Image.open(nav.png) as im:
+                rgb = im.convert('RGB')
+                for x, color in zip((68, 124, 236, 292), ((255, 255, 255),)*2+((36, 110, 112),)*2):
+                    self.assertEqual(rgb.getpixel((round(x*rgb.width/360), round(88*rgb.height/176))), color)
+        for phase in ('discover', 'define', 'develop', 'deliver'):
+            svg, _ = phase_map(phase)
+            self.assertEqual(svg.count('fill="#246E70"'), 1)
+        neutral, _ = phase_map()
+        self.assertNotIn('fill="#246E70"', neutral)
+
     def test_deliver_caption_compact_metrics_and_quote_spacing(self):
         from deck.week10_nicolo_case import SCREEN_CAPTION
         self.assertEqual(SCREEN_CAPTION, 'Workbench Tablet Device')
