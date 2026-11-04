@@ -8,9 +8,10 @@ function setup() {
   video.src = '../../week10-nicolo-media/product-demo.mp4';
   video.poster = '../../week10-nicolo-media/product-video-poster.png';
   video.controls = true;
+  video.loop = true;
   video.playsInline = true;
   video.preload = 'metadata';
-  video.setAttribute('aria-label', 'Original product promotional video');
+  video.setAttribute('aria-label', 'Original product promotional video; Space to play or pause');
   const standalone = self === top;
   Object.assign(video.style, {
     position: 'absolute', left: '0', top: standalone ? '44px' : '0',
@@ -18,26 +19,42 @@ function setup() {
     objectFit: 'contain', background: '#000B1C'
   });
   document.body.appendChild(video);
-  // Native controls own their keys; the slide shell must not turn Space into Next.
-  video.addEventListener('keydown', event => {
-    event.stopPropagation();
-    if (event.key === 'Escape') video.pause();
-  });
   const pause = () => video.pause();
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) pause();
-  });
+  const active = () => standalone || (
+    frameElement.closest('section').classList.contains('present') &&
+    !parent.document.body.classList.contains('ho') && !parent.Reveal.isOverview()
+  );
+  // Capture before native controls and Reveal's embed forwarding: one key, one toggle.
+  const onKey = event => {
+    if (!active() || event.ctrlKey || event.altKey || event.metaKey) return;
+    const target = event.target;
+    if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(target.tagName))) return;
+    if (event.code !== 'Space' && event.key !== ' ') return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (event.repeat) return;
+    if (video.paused) video.play().catch(() => {});
+    else pause();
+  };
+  window.addEventListener('keydown', onKey, true);
+  const onVisibility = () => { if (document.hidden) pause(); };
+  document.addEventListener('visibilitychange', onVisibility);
   if (!standalone && parent.Reveal) {
-    const onSlide = () => {
-      if (!frameElement.closest('section').classList.contains('present')) pause();
-    };
-    const observer = new MutationObserver(() => {
-      if (parent.document.body.classList.contains('ho')) pause();
-    });
+    // Only this course-owned player omits the generic LIVE overlay.
+    const chip = frameElement.parentElement.querySelector('.live');
+    if (chip) chip.style.display = 'none';
+    parent.window.addEventListener('keydown', onKey, true);
+    const onSlide = () => { if (!active()) pause(); };
+    const observer = new MutationObserver(onSlide);
     parent.Reveal.on('slidechanged', onSlide);
+    parent.Reveal.on('overviewshown', pause);
     observer.observe(parent.document.body, {attributes: true, attributeFilter: ['class']});
     addEventListener('pagehide', () => {
+      parent.window.removeEventListener('keydown', onKey, true);
+      window.removeEventListener('keydown', onKey, true);
+      document.removeEventListener('visibilitychange', onVisibility);
       parent.Reveal.off('slidechanged', onSlide);
+      parent.Reveal.off('overviewshown', pause);
       observer.disconnect();
       pause();
     }, {once: true});

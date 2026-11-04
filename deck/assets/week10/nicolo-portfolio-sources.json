@@ -65,5 +65,28 @@
       "method": "Genuine vector mockup rendered at 144 dpi; crop x190/y508/width1700/height1072 output pixels. Includes original magenta sequential-focus annotations. Not a final or AI screen."
     }
   },
-  "boundary": "Contributor supplied for this separate course draft preview. Source claims are reported case evidence, not independently verified effects or AI-redesign results. Original PDFs remain outside repository."
+  "boundary": "Contributor supplied for this separate course draft preview. Source claims are reported case evidence, not independently verified effects or AI-redesign results. Original PDFs remain outside repository.",
+  "aiConceptImages": [
+    {
+      "code": "ASL-1",
+      "file": "nicolo-asl-1.jpg",
+      "sha256": "b4859b96c51a42fa49754bcbff6193a93d2c6d5652d72401e9259a55d9d28e34",
+      "description": "Mirror-like UI with sample-list overlay",
+      "status": "Contributor-supplied proposed concept mockup; not validated capabilities"
+    },
+    {
+      "code": "ASL-2",
+      "file": "nicolo-asl-2.jpg",
+      "sha256": "343b4305c8edf3f88cf09aa40f1b56282bd2dd9c1e56d6003537d2cf9e9bf146",
+      "description": "Recognised source tube and selected sample",
+      "status": "Contributor-supplied proposed concept mockup; not validated capabilities"
+    },
+    {
+      "code": "ASL-3",
+      "file": "nicolo-asl-3.jpg",
+      "sha256": "d83c11bcb348d1f6973f994a88b132c6ff9aa3dd77dcc2f60837941fb1b3357e",
+      "description": "Dispensing into target vial, history entry and editable draft comment",
+      "status": "Contributor-supplied proposed concept mockup; not validated capabilities"
+    }
+  ]
 }
