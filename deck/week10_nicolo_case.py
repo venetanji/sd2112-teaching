@@ -15,6 +15,7 @@ SCREEN_RATIO = 2420/1525
 ASSETS = Path(__file__).resolve().parent/'assets/week10'
 PRODUCT_SCREEN = ASSETS/'nicolo-current-product.png'
 SCREEN_CAPTION = 'Workbench Tablet Device'
+AI_CHALLENGES = 'AI Challenges: "Control + Interactivity"'
 TEAL, GREY, ORANGE = '#246E70', '#5A626B', '#C74600'
 PAPER_STEPS = [
     'Find the right sample in the sample rack by checking labels',
@@ -170,12 +171,18 @@ def build_case():
         'The following Proposed AI Redesign section cover introduces three AST slides presenting a proposed concept, not an implemented or validated system. '
         'Navigation map: simplified redraw after Design Council, The Double Diamond, CC BY 4.0; Deliver highlighted.')
     s = case_frame(3, 'Validating the Experience', notes)
-    s.els += [Image(120, 350, 580, round(580/SCREEN_RATIO), str(PRODUCT_SCREEN), 'contain',
+    media_height = 405
+    # Native raster placement requires integer boxes; contain preserves the source ratio.
+    screen_width = round(media_height*SCREEN_RATIO)
+    video_x = 120+screen_width+32
+    caption_x = video_x+720+32
+    s.els += [Image(120, 350, screen_width, media_height, str(PRODUCT_SCREEN), 'contain',
                     name='current-product-screenshot'),
-              T(120, 730, 580, 56, SCREEN_CAPTION, 'mono', 20, TEAL,
-                lh=1.15, name='current-product-caption')]
+              T(caption_x, 350, 1800-caption_x, media_height,
+                SCREEN_CAPTION.replace(' ', '\n', 1), 'mono', 20, TEAL,
+                lh=1.15, valign='m', name='current-product-caption')]
     place_sketch(s, live('nicolo-product-video', PRODUCT_VIDEO, 1920, 1080),
-                 (732, 350, 720, 405),
+                 (video_x, 350, 720, media_height),
                  F.source_image('nicolo-product-video-poster.png',
                                 'Original product promotional video, still at 25 seconds'))
     findings = [T(120, 812, 500, 28, 'Quantitative findings', 'mono', 20, ORANGE),
@@ -246,18 +253,25 @@ def build_ai_concept():
             'A manual correction path and traceable edits are needed. Evaluate with actual analysts in the actual workbench context before claiming an efficiency or accuracy improvement. '
             'Navigation map: simplified redraw after Design Council, The Double Diamond, CC BY 4.0; the whole solution space (Develop and Deliver) is highlighted.'
         )
+        if i == 3:
+            notes += ' '+AI_CHALLENGES+'.'
         s = _slide(title=code+' / '+title, notes=notes)
         svg, png = phase_map('solution')
         s.els += [eyebrow(120, 96, 'PROPOSED AI REDESIGN / '+code, TEAL),
                   T(120, 184, 1200, 100, title, 'xbold', 64, INK,
                     lh=.95, spc=-.03, name='variant-heading'),
-                  Figure(1440, 164, 360, 176, svg, png, name='phase-navigation'),
+                  Figure(1620, 184, 180, 88, svg, png, name='phase-navigation'),
                   Image(120, 330, 1040, round(1040/SCREEN_RATIO),
                         str(ASSETS/f'nicolo-asl-{i}.png'), 'contain', name=f'asl-{i}-concept'),
                   T(1220, 344, 580, 168, body, 'xbold', 34, INK, lh=1.14,
                     name='concept-explanation'),
-                  T(1220, 532, 580, 128, detail, 'body', 29, INK, lh=1.2),
-                  Rect(1220, 696, 580, 2, '#BBBCB9'),
+                  T(1220, 544 if i == 3 else 532, 580, 68 if i == 3 else 128,
+                    detail, 'body', 28 if i == 3 else 29, INK,
+                    lh=1.2, name='concept-detail')]
+        if i == 3:
+            s.els.append(T(1220, 632, 580, 32, AI_CHALLENGES,
+                           'xbold', 28, INK, lh=1.14, name='ai-challenges'))
+        s.els += [Rect(1220, 696, 580, 2, '#BBBCB9'),
                   T(1220, 722, 580, 28, 'AI technologies', 'mono', 21, ORANGE),
                   T(1220, 772, 580, 76, technology, 'xbold', 28, TEAL, lh=1.14),
                   T(1220, 868, 580, 126, explanation, 'body', 25, INK, lh=1.2)]

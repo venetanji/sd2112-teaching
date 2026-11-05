@@ -214,7 +214,7 @@ class NicoloVariantTests(unittest.TestCase):
             maps = [e for e in slide.els if e.name == 'phase-navigation']
             self.assertEqual(len(maps), 1)
             nav = maps[0]
-            self.assertEqual((nav.x, nav.y, nav.w, nav.h), (1440, 164, 360, 176))
+            self.assertEqual((nav.x, nav.y, nav.w, nav.h), (1620, 184, 180, 88))
             svg = ET.fromstring(nav.svg)
             ns = {'svg': 'http://www.w3.org/2000/svg'}
             self.assertEqual([p.get('fill') for p in svg.findall('svg:polygon', ns)], expected)
@@ -271,6 +271,14 @@ class NicoloVariantTests(unittest.TestCase):
         video = slide.html_only[0]
         self.assertEqual(video.x-(image.x+image.w), 32)
         self.assertEqual((video.y, video.w, video.h), (350, 720, 405))
+        self.assertEqual((image.y, image.h), (video.y, video.h))
+        self.assertLessEqual(abs(image.w-image.h*2420/1525), .5)
+        self.assertEqual(image.fit, 'contain')
+        caption = next(e for e in slide.els if e.name == 'current-product-caption')
+        self.assertEqual(caption.x-(video.x+video.w), 32)
+        self.assertEqual(caption.x+caption.w, 1800)
+        self.assertEqual(caption.y+caption.h/2, video.y+video.h/2)
+        self.assertEqual(caption.valign, 'm')
         labels = [e for e in slide.els if hasattr(e, 'paras') and
                   ''.join(r.text for p in e.paras for r in p.runs) in
                   ('Quantitative findings', 'Qualitative findings', 'Improvement wishes')]
@@ -288,6 +296,23 @@ class NicoloVariantTests(unittest.TestCase):
             'AST / Automatic sample selection',
             'AST / Registering the transfer'])
         self.assertEqual(self.full_slides[17].title, 'thanks!')
+
+    def test_transfer_comment_and_bold_ai_challenges_are_vertically_balanced(self):
+        from deck.week10_nicolo_case import AI_CHALLENGES
+        slide = self.full_slides[16]
+        detail = next(e for e in slide.els if e.name == 'concept-detail')
+        challenge = next(e for e in slide.els if e.name == 'ai-challenges')
+        value = ' '.join(r.text for p in challenge.paras for r in p.runs)
+        self.assertEqual(value, AI_CHALLENGES)
+        self.assertEqual(AI_CHALLENGES, 'AI Challenges: "Control + Interactivity"')
+        self.assertTrue(all(r.font == 'xbold' for p in challenge.paras for r in p.runs))
+        self.assertIn(AI_CHALLENGES, slide.notes)
+        self.assertEqual((detail.x, detail.w), (challenge.x, challenge.w))
+        self.assertEqual(challenge.y-(detail.y+detail.h), 20)
+        self.assertEqual((detail.y+challenge.y+challenge.h)/2, (512+696)/2)
+        self.assertEqual(challenge.y+challenge.h, 696-32)
+        for other in self.full_slides[14:16]:
+            self.assertNotIn('ai-challenges', [e.name for e in other.els])
 
     def test_section_footers_and_case_cover(self):
         from deck.week10_nicolo_case import CASE_TITLE
