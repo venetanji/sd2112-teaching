@@ -304,7 +304,7 @@ class NicoloVariantTests(unittest.TestCase):
         challenge = next(e for e in slide.els if e.name == 'ai-challenges')
         value = ' '.join(r.text for p in challenge.paras for r in p.runs)
         self.assertEqual(value, AI_CHALLENGES)
-        self.assertEqual(AI_CHALLENGES, 'AI Challenges: "Control + Interactivity"')
+        self.assertEqual(AI_CHALLENGES, 'AI Challenges: Control + Interactivity')
         self.assertTrue(all(r.font == 'xbold' for p in challenge.paras for r in p.runs))
         self.assertIn(AI_CHALLENGES, slide.notes)
         self.assertEqual((detail.x, detail.w), (challenge.x, challenge.w))

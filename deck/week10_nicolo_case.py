@@ -15,7 +15,7 @@ SCREEN_RATIO = 2420/1525
 ASSETS = Path(__file__).resolve().parent/'assets/week10'
 PRODUCT_SCREEN = ASSETS/'nicolo-current-product.png'
 SCREEN_CAPTION = 'Workbench Tablet Device'
-AI_CHALLENGES = 'AI Challenges: "Control + Interactivity"'
+AI_CHALLENGES = 'AI Challenges: Control + Interactivity'
 TEAL, GREY, ORANGE = '#246E70', '#5A626B', '#C74600'
 PAPER_STEPS = [
     'Find the right sample in the sample rack by checking labels',
