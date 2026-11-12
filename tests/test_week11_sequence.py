@@ -186,6 +186,11 @@ class Week11Tests(unittest.TestCase):
         self.assertIn('week11', tomllib.loads((ROOT / 'deckgen.toml').read_text())['course']['decks'])
         self.assertEqual(self.deck['pdf'], 'SD2112-week11.pdf')
 
+    def test_ci_builds_before_export_dependent_tests(self):
+        workflow = (ROOT / '.github/workflows/news-preview.yml').read_text()
+        self.assertLess(workflow.index("subprocess.run(['deckgen', 'build', *decks]"),
+                        workflow.index('python -m unittest discover -s tests -v'))
+
     def test_report_hook_and_clean_export(self):
         import deckgen
         original = deckgen.attach_reports
