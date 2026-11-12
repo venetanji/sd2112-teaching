@@ -6,12 +6,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from deckgen import attach_reports, INK, PAPER
 from deckgen.reports import load as load_reports
-from deckgen.layouts import (title, content, cards, statement, figure_slide,
+from deckgen.layouts import (title, agenda, journey, content, cards, statement, figure_slide,
                              two_col, activity, question, finalize, section, T, Image, Rect, _slide, eyebrow)
-from course import footer
+from course import footer, JOURNEY
 import week05_mediation_figures as M
 import week08_figures as F
-from week08_studies import STUDY_GUIDES
+from week08_studies import STUDY_GUIDES, EXTENSION_GUIDES
 
 S = []
 PRIVATE_REFLECTION_TITLES = (
@@ -29,6 +29,10 @@ REFS = {
     'R7': ('Maheshka, Folk & Dunn, 2026', 'https://doi.org/10.1177/19485506261444068'),
     'R8': ('Wenger, Cameron & Inzlicht, 2026', 'https://doi.org/10.1038/s44271-025-00387-3'),
     'R9': ('Heinz et al., NEJM AI, 2025', 'https://doi.org/10.1056/AIoa2400802'),
+    'R10': ('Cao et al., SOUPS, 2026', 'https://www.usenix.org/conference/soups2026/presentation/cao'),
+    'R11': ('Joshi & Vogel, GI, 2026', 'https://arxiv.org/abs/2507.03670v3'),
+    'R12': ('Sozen & Borekci, AI EDAM, 2026', 'https://doi.org/10.1017/S0890060426100304'),
+    'R13': ('Yu et al., 2025', 'https://doi.org/10.1186/s41239-025-00545-x'),
 }
 
 
@@ -73,9 +77,10 @@ def study(key, heading, prompt, notes,
                 name='study-comparison')
     example_label = ('ILLUSTRATIVE EXAMPLE / NOT STUDY WORDING'
                      if guide['example_kind'] == 'illustrative' else 'ADAPTED FROM THE STUDY')
-    paper_block(task, 1020, 348, 780, example_label, guide['example'], 210,
-                name='study-example')
-    paper_block(task, 1020, 676, 780, 'WHAT THEY MEASURED', guide['measured'], 190,
+    task.els.append(Rect(990, 328, 840, 330, '#EAF4F3'))
+    paper_block(task, 1020, 348, 780, example_label, guide['example'], 244,
+                size=38, name='study-example')
+    paper_block(task, 1020, 700, 780, 'WHAT THEY MEASURED', guide['measured'], 190,
                 name='study-measurement')
     task.els.append(T(120, 956, 1680, 38, source(key), 'mono', 21, INK, lh=1.1))
 
@@ -115,7 +120,17 @@ def paper_detail(key, heading, image, caption, notes):
 # 0-10 minutes: reconnect to the existing Week 7 concept, not a new pitch round.
 S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 08',
     'Humanizing AI.', 'Research. Relationships. Product responsibility.',
-    notes='Three-hour class. Research -> AI product -> existing student project. Main route is slides 1-48; the appendix is a reference shelf, not extra lecture time. Relative minutes, not confirmed clock times: opening 0-10; mediation 10-30; research 30-65; implications 65-75; break 75-90; demo 90-105; research 105-145; revision 145-170; discussion 170-180. Keep the full break and research activity. Two optional personal questions use about three minutes inside mediation, not extra time; discuss design conditions rather than secrets. Each student submits a different paper URL and relevance during the existing research block. No new grade or deadline is introduced. If late, shorten optional study detail. Use the same conceptual level and native visual system as Weeks 5-7. No pre-reading is assumed: teach each summary before interpreting its figure. No personal mental-health disclosure is needed.'))
+    notes='Three-hour class. Research -> AI product -> existing student project. Main route is slides 1-50; the appendix is a reference shelf, not extra lecture time. Relative minutes, not confirmed clock times: opening 0-10; mediation 10-30; research 30-65; implications 65-75; break 75-90; demo 90-105; research 105-145; revision 145-170; discussion 170-180. Keep the full break and research activity. Two optional personal questions use about three minutes inside mediation, not extra time; discuss design conditions rather than secrets. Each student submits a different paper URL and relevance during the existing research block. No new grade or deadline is introduced. If late, shorten optional study detail. Use the same conceptual level and native visual system as Weeks 5-7. No pre-reading is assumed: teach each summary before interpreting its figure. No personal mental-health disclosure is needed.'))
+S.append(journey('SD2112 / THE SEMESTER', 'Where we are: AI inside products.', JOURNEY,
+    here=(3, 0), notes='Reuse the semester blocks from Weeks 1 and 2. The orange outline marks Week 8, the beginning of module 3: AI inside products. We move from using AI to make an artifact to designing what AI does during use. This is orientation inside the existing ten-minute opening, not an additional lecture block.'))
+S.append(agenda('SD2112 / WEEK 08', [
+    'Your Week 7 concept and today\'s question',
+    'Mediation: what relationship does AI invite?',
+    'Research: care, choice, agreement and action',
+    'From a finding to a product test',
+    '15-minute break, then a library search demo',
+    'Find papers, revise your concept, compare',
+], notes='The route through the existing three-hour session: opening 0-10; mediation 10-30; research 30-65; product implications 65-75; break 75-90; library demo 90-105; group research 105-145; concept revision 145-170; comparison 170-180. The map and agenda share the opening allocation. Optional appendix papers are a reference shelf, not extra required lecture time.'))
 S.append(content('0-10 / FROM WEEK 7 TO WEEK 8', 'Your concept is a starting claim.', [
     'Keep your existing team, product idea and image in view.',
     'What does the AI do during use? What does the person still decide?',
@@ -255,14 +270,18 @@ S.append(content('65-75 / A CASE IS A DIFFERENT KIND OF EVIDENCE', 'An update ca
 S.append(figure_slide('PRODUCT ANALYSIS / FROM THE HISTORICAL WEEK 8 FRAME', 'Data. AI. Experience.', F.layers(),
     caption='Illustrative product: an AI rehearsal partner for a difficult conversation. Not a validated intervention.',
     notes='Work through one example: collect a fictional scenario, not a real identifiable transcript; generate alternatives, not a judgment about who is right; let a person edit, reject and leave. Data: minimum needed, access, retention/deletion. AI: what feedback rewards, source uncertainty and failure modes. Experience: what warmth or memory implies, what the user actually does next. These are candidate design responses, not proven safeguards. Psychological ownership is not legal ownership: optional R11 stays in appendix. R10 can deepen privacy later.'))
-S.append(two_col('RESEARCH -> PRODUCT -> YOUR PROJECT', 'Make the inference small enough to test.',
-    ['R7: AI preparation versus an unrelated chatbot task increased reported initiation.',
-     'Our design hypothesis: offer rehearsal that ends with a user-chosen next step.',
-     source('R7')],
-    ['NOT JUSTIFIED', '"Our companion improves every relationship."',
-     'TESTABLE NEXT QUESTION', 'Does optional rehearsal help our intended users prepare, without pressure to disclose?'],
-    right_font='body', left_size=32, right_size=30,
-    notes='Two-minute worked transfer. Show the distinction between published finding, our product hypothesis and a future test. The study does not validate this new population or product, conversation quality, therapeutic effectiveness, or an always-on companion. Teams need project-specific papers; do not require every project to become a mental-health product. End lecture by asking which assumption about their AI + X is least supported.'))
+transfer = paper_frame('R7', 'From a finding to a product test.', 'RESEARCH -> YOUR PROJECT',
+    'Replaces original slide 35. Read the three steps aloud. Evidence: 65% versus 59% of follow-up respondents reported initiating a difficult conversation, comparing AI preparation with unrelated factual chat. Our proposed team-feedback rehearsal feature was not tested in that study. Proposed test: randomly offer optional AI rehearsal or preparation on their own, then ask next week whether intended users started their chosen conversation; this comparator differs from R7. Participation and disclosure remain optional. This is a test plan, not a new result, a validated safeguard or a claim of better relationships. Measure actual self-reported initiation separately from feeling ready. Teams should repeat this reasoning with papers relevant to their own product. Two minutes within the existing implications block.')
+for y, label, value in [
+    (350, '1 / FINDING', 'After AI preparation, 65% reported starting a difficult conversation; after unrelated factual chat, 59% did. This is R7\'s result.'),
+    (540, '2 / FEATURE IDEA', 'For a team-feedback app: let someone rehearse asking a teammate to share the work. This is our idea; R7 did not test it.'),
+    (730, '3 / PROPOSED TEST', 'Offer AI rehearsal or preparation on their own. Next week, ask: did you start the conversation? Compare the groups.'),
+]:
+    transfer.els += [Rect(120, y, 1680, 2, '#D5DCDA'),
+                     T(120, y + 28, 330, 60, label, 'mono', 26, '#246E70'),
+                     T(490, y + 24, 1310, 145, value, 'body', 36, INK, lh=1.2)]
+transfer.els.append(T(120, 956, 1680, 38, source('R7'), 'mono', 21, INK, lh=1.1))
+S.append(transfer)
 S.append(statement('Break.\n15 minutes.', eyebrow_text='75-90 / RELATIVE CLASS TIME', size=120,
     notes='Preserve the full fifteen-minute break. Announce the actual return clock time only after the dated timetable is confirmed. Next: fifteen-minute library demo, forty-minute search/read, twenty-five-minute scope/design/test revision and ten-minute comparison. Open the manual fallback and checked reading links before the return.'))
 
@@ -358,6 +377,20 @@ S.extend(study('R9',
                       ('INTERVENTION', 'Expert-built + human-supervised'),
                       ('OUTCOME', 'Symptom scales at 4 and 8 weeks')],
     block='APPENDIX / OPTIONAL CONTRAST'))
+
+
+for key, guide in EXTENSION_GUIDES.items():
+    recap = paper_frame(key, guide['title'], 'OPTIONAL / PAPER RECAP',
+        guide['task'] + ' ' + guide['measured'] + ' ' + guide['result'] + ' ' + guide['limit'] +
+        ' Example is a teaching adaptation, not a verbatim study prompt. ' + guide['source_locations'] +
+        ' This is an untimed reference slide; keep the scheduled research and revision blocks.')
+    paper_block(recap, 120, 348, 780, 'TRY THE STUDY / TEACHING EXAMPLE', guide['example'], 260, size=38)
+    paper_block(recap, 120, 716, 780, 'WHAT THEY STUDIED', guide['task'], 165, size=30)
+    paper_block(recap, 1020, 348, 780, 'WHAT THEY MEASURED', guide['measured'], 135, size=30)
+    paper_block(recap, 1020, 550, 780, 'WHAT THEY FOUND', guide['result'], 135, size=30)
+    paper_block(recap, 1020, 752, 780, 'WHAT IT DOES NOT SHOW', guide['limit'], 135, size=30)
+    recap.els.append(T(120, 956, 1680, 38, source(key), 'mono', 21, INK, lh=1.1))
+    S.append(recap)
 
 
 def bibliography(heading, paragraphs, notes, size=30):
