@@ -264,6 +264,210 @@ for sl in S:
     sl.notes = sl.notes.replace('32 slides plus one optional historical appendix',str(MAIN_SLIDE_COUNT)+' slides plus one optional bibliography')
     sl.notes = sl.notes.replace('slides25-27','the audit slides').replace('slides28-30','the peer-reading slides')
 
+# Reassemble the timed route around a theory-first question, rather than
+# presenting each paper as a successive lecture topic.
+previous = {s.title: s for s in S}
+
+def theory_slide(kicker, heading, rows, explanation):
+    s = content(kicker, heading, [], title_size=64, bg=PAPER, notes=explanation)
+    s.els = s.els[:2]
+    for i, (tag, point, consequence) in enumerate(rows):
+        y = 350 + i * 190
+        s.els += [Rect(120, y, 1680, 2, '#A4B4B5'),
+                  T(120, y + 27, 290, 45, tag, 'monomed', 25, '#246E70'),
+                  T(425, y + 22, 575, 100, point, 'xbold', 37, INK, lh=1.08),
+                  T(1040, y + 22, 760, 116, consequence, 'body', 29, INK, lh=1.24)]
+    return s
+
+def diagram_frame(kicker, heading, notes):
+    s = content(kicker, heading, [], title_size=64, bg=PAPER, notes=notes)
+    s.els = s.els[:2]
+    return s
+
+
+def diagram_node(s, x, y, w, h, label, heading, detail, name, fill='#FFFFFF'):
+    s.els += [Rect(x, y, w, h, fill, name=name+'-panel'),
+              T(x+27, y+27, w-54, 38, label, 'monomed', 22, '#246E70', name=name+'-label'),
+              T(x+27, y+88, w-54, 120, heading, 'xbold', 38, INK, lh=1.08, name=name+'-title'),
+              T(x+27, y+224, w-54, h-242, detail, 'body', 28, INK, lh=1.2, name=name+'-detail')]
+
+
+def diagram_arrow(s, x, y, direction='→', name='flow'):
+    s.els.append(T(x, y, 66, 80, direction, 'body', 54, '#246E70',
+                   align='c', name=name+'-arrow'))
+
+intro = title('SD2112 / WEEK 11',
+    'Whose design?', 'From making outputs to making judgments.',
+    notes='0-3 minutes. Open with a decision the class heard about in the Week 10 guest session, not an assumed prototype or test outcome. Ask: if an AI tool offered three descriptions, who decides which account visitors see? This week analyzes mediation, curation, authorship and responsibility before reading selected research and the Suno dispute. The guide throughout is fictional; no generated text is presented as observed evidence. No new assignment or pre-reading.')
+guest = theory_slide('0-28 / THE QUESTION / FICTIONAL EXHIBITION GUIDE', 'Start with one decision.', [
+    ('INPUT', 'Three possible accounts.', 'An exhibition guide could present an institutional account, a community account or an explicit gap.'),
+    ('CHOICE', 'Which one appears first?', 'The team chooses what visitors can read, compare and question.'),
+    ('COST', 'Who is left out?', 'The contributor, visitor or absent community may bear the consequence.')],
+    '3-6 minutes. Connect to a decision from the guest lecture, without claiming guests tested the students\' work. The three accounts are original teaching possibilities, not screenshots, observations or actual machine outputs. Ask who can disagree and what evidence would change the choice. Do not turn this into a new submission. Optional 11 November supplement: Adobe announced beta creative agents and preview connectivity on 10 November 2026; this vendor announcement is not evidence of quality or a classroom test. If useful, substitute a three-minute paper-sketch example inside this opening; do not add time. https://news.adobe.com/news/2026/11/adobe-transforms-creative-cloud-tools')
+mediation = diagram_frame('0-28 / MEDIATION / VERBEEK 2015', 'The tool frames what we notice.',
+    '6-11 minutes. Reconnect Peter-Paul Verbeek, Beyond Interaction (2015), printed pp. 28-30, to the Week 5 and Week 8 discussion of mediation. His metal detector illustrates a hermeneutic relation: a beep mediates how a person reads unseen metal. Our guide similarly mediates interpretation, but the three-step layout is an instructor illustration, not Verbeek\'s measured model. Do not claim fluent text causes trust; ask what must be tested. Primary text: https://ris.utwente.nl/ws/files/6973415/p26-verbeek.pdf')
+for i, node in enumerate([
+    ('01 / SOURCE', 'An account exists.', 'A named, dated account of the exhibit.'),
+    ('02 / TOOL FRAMING', 'The guide summarises.', 'Selection and fluent wording can hide another account.'),
+    ('03 / VISITOR', 'Interpret, then act.', 'Can a visitor compare sources or flag an error?')]):
+    x = 120 + i * 580
+    diagram_node(mediation, x, 360, 500, 440, *node, f'mediation-{i+1}')
+    if i < 2:
+        diagram_arrow(mediation, x+510, 528, name=f'mediation-{i+1}-to-{i+2}')
+mediation.els.append(T(120, 837, 1680, 66, 'Mediation changes what can be noticed and done; it is not a direct view of the exhibit.',
+                       'body', 31, INK, name='mediation-inference'))
+mediation.els.append(T(120, 951, 1680, 40, source('V'), 'mono', 21, INK))
+curation = diagram_frame('0-28 / CURATION / CHOICE HAS POWER', 'Selection makes a world visible.',
+    '11-16 minutes. Selection is not a neutral final click: training sets, retrieval collections, reference boards and final displayed outputs allocate visibility in different technical ways. The fictional guide uses a retrieval/display decision, not model retraining. The criterion is inspectable provenance and a genuine alternative; it is a proposed design choice, not proven to achieve fairness.')
+diagram_node(curation, 120, 380, 500, 410, 'INCLUDED / VISIBLE', 'Sourced account.',
+             'Why this account? Name the source and selection criterion.', 'curation-include')
+diagram_arrow(curation, 627, 520, name='curation-include-to-choice')
+diagram_node(curation, 700, 380, 500, 410, 'EDITORIAL CHOICE', 'What appears first?',
+             'A team selects the guide text; a polished summary is not neutral.', 'curation-choice', '#E2EDEB')
+diagram_arrow(curation, 1207, 520, name='curation-choice-to-gap')
+diagram_node(curation, 1280, 380, 500, 410, 'EXCLUDED / MISSING', 'Name the gap.',
+             'Do not invent an absent voice. Invite correction by a contributor.', 'curation-gap')
+curation.els.append(T(120, 832, 1680, 72, 'Representation is an editorial choice: visibility for one account can obscure another.',
+                      'body', 31, INK, name='curation-tradeoff'))
+agency = diagram_frame('0-28 / AGENCY + AUTHORSHIP / ORIGINAL CONTRIBUTION MAP', 'Trace four different decisions.',
+    '16-21 minutes. Generation, selection, revision and authorization are different forms of action. A machine proposing a draft does not remove the upstream creator or the person who approves release. The diagram is an instructor contribution map, not a legal authorship determination. Use the fictional guide: the team chooses a sourced account and records why it rejected an unsourced fluent one.')
+for i, node in enumerate([
+    ('01 / GENERATE', 'Tool proposes.', 'Creators and sources precede the prompt.'),
+    ('02 / SELECT', 'Designer chooses.', 'Reject the unsourced, fluent account.'),
+    ('03 / REVISE', 'Designer edits.', 'Check provenance and change the claim.'),
+    ('04 / AUTHORISE', 'Team releases.', 'Name who can answer an objection.')]):
+    x = 120 + i * 430
+    diagram_node(agency, x, 362, 380, 428, *node, f'agency-{i+1}')
+    if i < 3:
+        diagram_arrow(agency, x+382, 526, name=f'agency-{i+1}-to-{i+2}')
+agency.els.append(T(120, 835, 1680, 70, 'An output has a contribution trail; the model is not the person who authorises display.',
+                    'body', 31, INK, name='agency-trail'))
+ownership = diagram_frame('0-28 / FOUR DISTINCT QUESTIONS', 'Feeling, work, permission, law.',
+    '21-25 minutes. Four questions: felt ownership, actual credited contribution, permission to use another person\'s work, and copyright protection for human expression. The last two do not follow from how hard someone worked or how much they liked the output. US Copyright Office Part 2 (January 2025) addresses US copyrightability, not Hong Kong rights or licenses to train. Joshi and Vogel measure feelings in short prompting tasks; the study does not establish legal rights. Explain each without an automatic yes/no answer.')
+for i, node in enumerate([
+    ('01 / FEEL', 'Does it feel mine?', 'A reported feeling is not a copyright certificate.'),
+    ('02 / CONTRIBUTE', 'Who did what?', 'Credit sources, selection, edits and review.'),
+    ('03 / PERMISSION', 'May we reuse it?', 'Check rights and consent for the material.'),
+    ('04 / PROTECTION', 'What is protected?', 'Human expression is a separate legal question.')]):
+    x = 120 + (i % 2) * 855
+    y = 350 + (i // 2) * 300
+    label, heading, detail = node
+    ownership.els += [Rect(x, y, 825, 270, '#FFFFFF', name=f'ownership-{i+1}-panel'),
+        T(x+28, y+27, 765, 35, label, 'monomed', 23, '#246E70', name=f'ownership-{i+1}-label'),
+        T(x+28, y+91, 765, 65, heading, 'xbold', 39, INK, name=f'ownership-{i+1}-title'),
+        T(x+28, y+175, 765, 70, detail, 'body', 28, INK, name=f'ownership-{i+1}-detail')]
+responsibility = diagram_frame('0-28 / RESPONSIBILITY / DISTRIBUTED DOES NOT MEAN LOST', 'Name who can answer.',
+    '25-28 minutes. Accountability is a role plus an action, not a claim that a human was somewhere in the loop. Multiple contributors and a model do not erase the publishing team\'s responsibility to respond. The proposed correction route has not been validated with visitors or contributors. This is the transition from the conceptual spine to empirical and documentary evidence.')
+for i, node in enumerate([
+    ('BEFORE / TEAM', 'Check the source.', 'Verify provenance and permitted use.'),
+    ('DURING / GUIDE', 'Show the limits.', 'Visitors can compare another account.'),
+    ('AFTER / VISITOR', 'Raise an objection.', 'A contributor can contest a claim.')]):
+    x = 120 + i * 580
+    diagram_node(responsibility, x, 350, 500, 355, *node, f'responsibility-{i+1}')
+    if i < 2:
+        diagram_arrow(responsibility, x+510, 480, name=f'responsibility-{i+1}-to-{i+2}')
+diagram_arrow(responsibility, 1500, 705, '↓', 'responsibility-objection-to-editor')
+responsibility.els += [Rect(1080, 789, 700, 142, '#E2EDEB', name='responsibility-editor-panel'),
+    T(1104, 802, 655, 45, 'ACCOUNTABLE ACTOR / EDITORIAL TEAM', 'monomed', 23, '#246E70', name='responsibility-editor-label'),
+    T(1104, 856, 655, 68, 'Pause, correct or withdraw.', 'xbold', 36, INK, name='responsibility-editor-action'),
+    Rect(196, 864, 876, 4, '#246E70', name='responsibility-feedback-line'),
+    T(120, 834, 76, 74, '←', 'body', 54, '#246E70', name='responsibility-feedback-arrow'),
+    T(225, 885, 820, 40, 'Return to source record and displayed account.', 'body', 27, INK, name='responsibility-feedback-label'),
+    T(136, 709, 66, 80, '↑', 'body', 54, '#246E70', name='responsibility-return-arrow')]
+
+def suno_case(kicker, heading, rows, notes, citation=None):
+    s = theory_slide(kicker, heading, rows, notes)
+    if citation:
+        s.els.append(T(120, 951, 1680, 40, citation, 'mono', 20, INK, lh=1.1))
+    return s
+
+suno1 = diagram_frame('60-75 / SUNO / US COURT RECORD', 'A complaint is not a verdict.',
+    '60-65 minutes. Primary case: UMG Recordings et al. v. Suno, No. 1:24-cv-11611, D. Mass.; original complaint, Document 1 filed June 24 2024, PDF pp. 1-3, 8-16. These are plaintiffs\' allegations, not findings. Suno\'s answer, Document 28 filed August 1 2024, located by docket-indexed primary filing but host PDF returned 403; fair-use position corroborated by Reuters on August 1 2024: https://www.reuters.com/legal/litigation/music-ai-startups-suno-udio-slam-record-label-lawsuits-court-filings-2024-08-01/ . Warner Music Group\'s November 25 2025 primary announcement says its litigation with Suno settled and new licensed models were planned. It does not establish that every Suno model or all historical training was licensed. First ask who supplied recordings, who decided to train, who could grant permission and who might receive credit. Do not treat a US lawsuit as Hong Kong law. Last directly read primary records: complaint and Warner release on November 12 2026; response identified but full filing not retrieved.')
+for i, node in enumerate([
+    ('PLAINTIFFS / JUN 2024', 'Complaint.', 'Universal, Sony + Warner allege unlicensed training copies.'),
+    ('DEFENDANT / AUG 2024', 'Answer.', 'Suno disputes liability; argues US fair use.'),
+    ('PARTY DEAL / NOV 2025', 'Settlement.', 'Warner + Suno announce a licensed-model partnership.')]):
+    x = 120 + i * 580
+    diagram_node(suno1, x, 350, 500, 430, *node, f'suno-timeline-{i+1}', '#FFFFFF' if i<2 else '#E2EDEB')
+    if i < 2:
+        diagram_arrow(suno1, x+510, 515, name=f'suno-timeline-{i+1}-to-{i+2}')
+suno1.els += [T(120, 824, 1680, 70, 'An allegation, a defence and a settlement are different kinds of evidence.',
+                  'body', 31, INK, name='suno-timeline-distinction'),
+    T(120, 951, 1680, 40,
+      '[2024 complaint](https://www.riaa.com/wp-content/uploads/2024/06/Suno-complaint-file-stamped20.pdf) / [2025 Warner statement](https://www.wmg.com/news/warner-music-group-and-suno-forge-groundbreaking-partnership)',
+      'mono', 20, INK, lh=1.1)]
+suno2 = suno_case('60-75 / SUNO / KEEP QUESTIONS APART', 'Four questions, not one ruling.', [
+    ('TRAINING', 'What recordings were copied?', 'The complaint alleges unlicensed training copies; legality is contested.'),
+    ('OUTPUT', 'Is a generated song protected?', 'Human contribution to a new song is a different copyrightability question.'),
+    ('SIMILARITY + CREDIT', 'Does it resemble a track?', 'Specific resemblance, attribution and payment are separate factual and ethical questions.')],
+    '65-70 minutes. The original complaint includes output-imitation examples as support for its training allegations; reproducing an example would not itself resolve copying, similarity, fair use or entitlement to credit. US Copyright Office Part 2 January 2025 analyzes protection of human expressive contributions case by case, separate from permission to use training recordings. Warner\'s settlement is an agreement between parties, not an adjudication of all these issues. Avoid an invented song, waveform, artist screenshot or categorical judgment. In Hong Kong or another market, seek current local advice for a real release.',
+    '[Complaint / alleged examples](https://www.riaa.com/wp-content/uploads/2024/06/Suno-complaint-file-stamped20.pdf) / '+source('U'))
+suno3 = diagram_frame('60-75 / CASE STATUS / VERIFIED BOUNDARY', 'Settlement is not universal clearance.',
+    '70-75 minutes. Do not describe the Universal/Sony case as finally resolved or definitively pending as of today: no authoritative current docket access. A filing indexed as Case 1:26-cv-14275, Document 1 filed September 18 2026, could not be retrieved from this environment (403). Reuters June 5 2026 reported Universal\'s Suno case was ongoing then; that is the last corroborated status, not a live November status. Warner\'s own November 25 2025 release confirms its separate settlement. The 2026 filing is a lead for instructor verification before class, not a newly established court finding. Mark uncertainty explicitly. Ask what record of input source, permission, output selection and revision the fictional guide team would need; do not turn the dispute into legal advice.')
+diagram_node(suno3, 120, 365, 800, 420, 'WARNER / VERIFIED 25 NOV 2025', 'Settled with Suno.',
+             'Their release reports a licensing partnership; it covers their dispute, not every label.',
+             'suno-warner', '#E2EDEB')
+diagram_node(suno3, 980, 365, 800, 420, 'UNIVERSAL + SONY / STATUS BOUNDARY',
+             'Latest status unverified.',
+             'Reuters reported Universal ongoing on 5 June 2026; that is not a live status check. Sony was a plaintiff in 2024.',
+             'suno-other-parties')
+suno3.els += [T(120, 828, 1680, 76, 'Design question: who records sources, permission, selection and credit for a public work?',
+                 'body', 31, INK, name='suno-design-trail'),
+    T(120, 951, 1680, 40,
+      '[Warner agreement](https://www.wmg.com/news/warner-music-group-and-suno-forge-groundbreaking-partnership) / [Reuters / June 2026](https://www.reuters.com/legal/litigation/musicians-union-sues-record-labels-over-ai-licensing-2026-06-05/)',
+      'mono', 20, INK, lh=1.1)]
+
+for heading in ('What did designers describe?', 'A participant view is not a legal rule.',
+                'Write a story. Change the starting help.', 'Higher ratings can accompany convergence.',
+                'Similar to what? Read the axis.', 'Control and variety are not the same goal.'):
+    previous[heading].notes = '28-46 minutes / selected evidence after the theory spine. ' + previous[heading].notes
+    previous[heading].notes = previous[heading].notes.replace('About four minutes within the Naqvi pair', 'About three minutes within the Naqvi pair').replace('About three minutes within the Naqvi pair', 'About two minutes for the Naqvi result') if heading == 'A participant view is not a legal rule.' else previous[heading].notes
+    if heading == 'What did designers describe?':
+        previous[heading].notes = previous[heading].notes.replace('About four minutes within the Naqvi pair', 'About three minutes for the Naqvi task')
+    previous[heading].notes = previous[heading].notes.replace('Task and result share eight minutes', 'Task and result share seven minutes').replace('task and result share eight minutes', 'task and result share seven minutes')
+    if heading == 'Control and variety are not the same goal.':
+        previous[heading].notes = previous[heading].notes.replace('About five minutes', 'About four minutes')
+for heading in ('What must a dataset explain?', 'Document the choice, including the unknowns.',
+                'Would you type more to avoid friction?', 'More input can feel more yours.',
+                'Which human expression is protected?', 'Separate protection, permission and credit.'):
+    previous[heading].notes = '46-60 minutes / selected support and complication. ' + previous[heading].notes
+    previous[heading].notes = previous[heading].notes.replace('The task and result share seven minutes', 'The task and result share five minutes').replace('The legal question and position share eight minutes, ending at 75', 'The legal question and position share four minutes, ending by 60').replace('question and application share four minutes', 'question and application share five minutes')
+    previous[heading].notes = previous[heading].notes.replace('45-75 block', '46-60 block')
+    previous[heading].notes = previous[heading].notes.replace(
+        'No live lawsuit status, Thaler, Google Books analogy, Udio/Suno verdict or fair-use clearance is asserted.',
+        'This Office report alone establishes no Suno verdict, training fair-use clearance or local legal status.')
+guest.notes += " This guide is fictional throughout; no student's guest-session outcome is assumed."
+suno3.notes += ' Exact present procedural status remains unverified on 12 November 2026.'
+worked_choice = previous['Three candidates. One stated criterion.']
+worked_choice.notes = '90-110 minutes / worked communication example after the break. ' + worked_choice.notes.replace('45-75 block, about five minutes.', 'About four minutes.')
+previous['Make the inference visible.'].notes = previous['Make the inference visible.'].notes.replace('About six minutes of 90-110', 'About five minutes of 90-110')
+S = [intro, guest, mediation, curation, agency, ownership, responsibility,
+     previous['What did designers describe?'], previous['A participant view is not a legal rule.'],
+     previous['Write a story. Change the starting help.'], previous['Higher ratings can accompany convergence.'],
+     previous['Similar to what? Read the axis.'], previous['Control and variety are not the same goal.'],
+     previous['What must a dataset explain?'], previous['Document the choice, including the unknowns.'],
+     previous['Would you type more to avoid friction?'], previous['More input can feel more yours.'],
+     previous['Which human expression is protected?'], previous['Separate protection, permission and credit.'],
+     suno1, suno2, suno3, previous['Break.\n15 minutes.']]
+S += [previous[x] for x in ('Design the relation.', 'Three candidates. One stated criterion.',
+    'Make the inference visible.', 'Name the relation and the responsible actor.',
+    'Show a decision and its consequences.', 'Find one claim and one choice.',
+    'Narrow the claim until it fits.', 'Make the curation decision inspectable.',
+    'Let the argument travel without you.', 'What did you understand - and miss?',
+    'Revise the argument, not just the decoration.', 'What became more defensible?',
+    'Research. Choice. Responsibility.')]
+S[-1].notes += ' Week 12 follows this handover by examining delegated action, justified reliance, transparency and contestability with investigated Tesla incidents. Do not imply a verdict about those incidents in Week 11. Week 13 is quiz and posters, not another theory lecture.'
+S[-1].els.append(T(120, 907, 1660, 46, 'WEEK 12 / When may we delegate a decision - and how can it be challenged?', 'monomed', 24, '#246E70'))
+MAIN_SLIDE_COUNT = len(S)
+S.append(previous['Historical context, if useful.'])
+SCHEDULE = [(0,28,'Mediation, curation, agency and responsibility',(1,7)),
+            (28,46,'Agency and collective diversity studies',(8,13)),
+            (46,60,'Documentation, felt ownership and US copyrightability',(14,19)),
+            (60,75,'Suno primary case and disputed status',(20,22)),
+            (75,90,'Break',(23,23)), (90,110,'Research to communication',(24,28)),
+            (110,140,'Team evidence and curation audit',(29,31)),
+            (140,165,'Peer reading and revision',(32,34)),
+            (165,180,'Compare and prepare',(35,36))]
 attach_reports(S, Path(__file__).resolve().parent / 'week11-reports.json')
 DECK = dict(title='SD2112 / AI in Design / Week 11',
             slides=finalize(S, footer(11)), pdf='SD2112-week11.pdf')

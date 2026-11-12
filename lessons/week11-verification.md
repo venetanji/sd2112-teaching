@@ -1,5 +1,10 @@
 # Week 11 revision verification / 22 October 2026
 
+**Historical receipt.** The entries below refer to the October paper-first
+deck, not the 12 November theory-first revision. For the current 37-slide route,
+case status and QA, see `week11-revision-20261112.md`. Do not carry the old slide
+numbers or timing into teaching.
+
 Current source set is the isolated prepared worktree at `tmp/weeks09-13-standard-20261022/week11/worktree`, baseline d7c43ba (published main54f38c7 plus canonical Week11 remote). No commits, pushes, PR edits, deployments, registration changes, shared-generator edits or original-worktree edits.
 
 ## Reconciliation and teaching contract
