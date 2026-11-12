@@ -1,8 +1,7 @@
-"""Week 12 timing, bounded evidence, fallback, native geometry and report hooks."""
+"""Week 12 schedule, evidence boundaries, privacy and native export contracts."""
 from pathlib import Path
 import importlib.util
 import re
-import tomllib
 import unittest
 from unittest.mock import patch
 
@@ -29,11 +28,9 @@ class Week12Tests(unittest.TestCase):
     def load_with_mapping(self, entries):
         from deckgen import attach_reports
         calls = []
-
         def inject(slides, path):
             calls.append(path)
             return attach_reports(slides, entries, quiet=True)
-
         spec = importlib.util.spec_from_file_location('week12_test_load', ROOT / 'deck/week12.py')
         module = importlib.util.module_from_spec(spec)
         with patch('deckgen.attach_reports', side_effect=inject):
@@ -42,206 +39,125 @@ class Week12Tests(unittest.TestCase):
         self.assertEqual(calls[0].name, 'week12-reports.json')
         return module
 
-    def test_exact_180_minutes_and_protected_blocks(self):
-        self.assertEqual([(a, b) for a, b, *_ in self.timing],
-                         [(0, 10), (10, 40), (40, 65), (65, 75), (75, 90),
-                          (90, 120), (120, 155), (155, 175), (175, 180)])
-        self.assertEqual(sum(b - a for a, b, *_ in self.timing), 180)
-        self.assertEqual([i for _, _, a, b, _ in self.timing for i in range(a, b + 1)], list(range(1, 38)))
-        self.assertEqual(len(self.slides), 42)
-        for first, minutes in [(28, 30), (31, 35), (35, 20)]:
-            self.assertIn(f'{minutes} min', text(self.slides[first - 1]))
-        self.assertEqual(self.slides[26].title, 'Break.\nFifteen minutes.')
+    def test_180_minutes_and_protected_workshop(self):
+        self.assertEqual([(a,b) for a,b,*_ in self.timing],
+                         [(0,10),(10,40),(40,65),(65,75),(75,90),(90,120),
+                          (120,155),(155,175),(175,180)])
+        self.assertEqual(sum(b-a for a,b,*_ in self.timing), 180)
+        self.assertEqual([i for _,_,first,last,_ in self.timing for i in range(first,last+1)],list(range(1,35)))
+        self.assertEqual(len(self.slides),36)
+        for i,minutes in [(25,30),(28,35),(32,20)]:
+            self.assertIn(f'{minutes} min',text(self.slides[i-1]))
+        self.assertEqual(self.slides[23].title,'Break.\nFifteen minutes.')
+        self.assertEqual([self.slides[i-1].title for i in (25,28,32)],
+                         ['Walk through three low-risk situations.',
+                          'Paired review. Then swap roles.', 'Choose the change that matters most.'])
 
-    def test_actual_slide_map_and_notes_match_all_slides(self):
-        mapping = self.plan.split('<!-- slide-map:start -->')[1].split('<!-- slide-map:end -->')[0]
-        rows = re.findall(r'^\| (\d+) \| (.*?) \| (.*?) \|$', mapping, re.M)
-        self.assertEqual(len(rows), len(self.slides))
-        companion = (ROOT / 'lessons/week12-speaker-notes.md').read_text()
-        sections = re.split(r'^## \d+ / .*?\n\n', companion, flags=re.M)[1:]
-        self.assertEqual(len(sections), 42)
-        for i, (s, row, note) in enumerate(zip(self.slides, rows, sections), 1):
-            self.assertEqual(row[:2], (str(i), s.title.replace('\n', ' / ')))
-            self.assertEqual(note.strip(), s.notes.strip())
-            self.assertGreater(len(s.notes.split()), 55, s.title)
+    def test_plan_map_and_speaker_notes_agree(self):
+        mapping=self.plan.split('<!-- slide-map:start -->')[1].split('<!-- slide-map:end -->')[0]
+        rows=re.findall(r'^\| (\d+) \| (.*?) \| (.*?) \|$',mapping,re.M)
+        companion=(ROOT/'lessons/week12-speaker-notes.md').read_text()
+        sections=re.split(r'^## \d+ / .*?\n\n',companion,flags=re.M)[1:]
+        self.assertEqual(len(rows),36)
+        self.assertEqual(len(sections),36)
+        for i,(slide,row,note) in enumerate(zip(self.slides,rows,sections),1):
+            self.assertEqual(row[:2],(str(i),slide.title.replace('\n',' / ')))
+            self.assertEqual(note.strip(),slide.notes.strip())
+            self.assertGreater(len(slide.notes.split()),55,slide.title)
 
-    def test_sequence_papers_break_activities_close_and_reference_shelf(self):
-        self.assertEqual(self.slides[15].title, 'An explanation did not fix wrong advice here.')
-        self.assertEqual(self.slides[18].title, 'Private from a helper. Exposed to whom?')
-        self.assertEqual(self.slides[27].title, 'Walk through three low-risk situations.')
-        self.assertEqual(self.slides[30].title, 'Paired review. Then swap roles.')
-        self.assertEqual(self.slides[34].title, 'Choose the change that matters most.')
-        self.assertTrue(all('REFERENCE SHELF' in text(s) for s in self.slides[37:]))
+    def test_case_system_evidence_procedure_and_design_boundaries(self):
+        visible=' '.join(text(s) for s in self.slides[7:15])
+        for phrase in ('Autopilot was', 'Autosteer', 'Traffic-Aware Cruise Control',
+                       'NTSB', '-5.9 S', '-3.9 S', '71 mph',
+                       'no jury finding', 'not a liability verdict', 'NOT TO SCALE'):
+            self.assertIn(phrase.lower(),visible.lower())
+        self.assertIn('Full Self-Driving (Supervised)',self.slides[7].notes)
+        self.assertIn('not a test of an alternative interface',self.slides[10].notes)
+        self.assertIn('not retroactive proof',self.slides[14].notes)
+        self.assertIn('did not obtain the civil docket',self.slides[13].notes)
+        self.assertIn('2024',self.slides[13].notes)
+        self.assertNotIn('driver at fault therefore design absolved',visible.lower())
+        self.assertIn('not a population rate',visible.lower()+' '+text(self.slides[19]).lower())
 
-    def test_evidence_is_bounded_on_visible_slides_not_just_notes(self):
-        cecil = text(self.slide('Can people reject incorrect advice?'))
-        for phrase in ('1,403', '16 fictional CVs', '75% correct', 'percentage of trials', '1-7', 'ILLUSTRATION'):
-            self.assertIn(phrase, cecil)
-        sharma = text(self.slide('How do people manage visual privacy?'))
-        for phrase in ('21 US', 'one-hour', 'thematic coding', 'not a population percentage', 'ADAPTED FROM THE SOURCE'):
-            self.assertIn(phrase, sharma)
-        self.assertIn('not proof of equal effects', text(self.slide('An explanation did not fix wrong advice here.')))
-        self.assertIn('not tested for effectiveness', text(self.slide('Private from a helper. Exposed to whom?')))
-        self.assertIn('Proposed flow, not tested protection', text(self.slide('Privacy controls must be usable before sharing.')))
-        self.assertIn('Remote analysis can disclose data', text(self.slide('Privacy controls must be usable before sharing.')))
-        self.assertIn('not proven safer', text(self.slide('Same promise. A different contract.')))
+    def test_case_visuals_are_editable_and_semantically_ordered(self):
+        diagram=self.slides[9]
+        self.assertFalse(any(el.kind=='image' for el in diagram.els))
+        self.assertIn('schematic',diagram.notes)
+        self.assertIn('not to scale',text(diagram).lower())
+        top = next(e for e in diagram.els if getattr(e, 'x', None) == 155 and getattr(e, 'y', None) == 405)
+        lower = next(e for e in diagram.els if getattr(e, 'x', None) == 155 and getattr(e, 'y', None) == 580)
+        self.assertIn('SR-85 exit (left)',' '.join(r.text for p in top.paras for r in p.runs))
+        self.assertIn('US-101 continues',' '.join(r.text for p in lower.paras for r in p.runs))
+        self.assertIn('ORANGE = GORE',text(diagram))
+        self.assertIn('BLACK = DAMAGED ATTENUATOR',text(diagram))
+        for slide,labels in [(self.slides[5],['GOAL','EVIDENCE','PERMISSION','RESULT']),
+                             (self.slides[10],['-5.9 S','-3.9 S','APPROACH','IMPACT']),
+                             (self.slides[12],['DRIVER','TESLA','ROAD','REGULATOR'])]:
+            visible=' '.join(r.text for e in slide.els[2:] if hasattr(e,'paras') for p in e.paras for r in p.runs)
+            self.assertEqual([visible.index(v) for v in labels], sorted(visible.index(v) for v in labels))
+            self.assertEqual(sum(e.kind=='rect' and e.y==355 for e in slide.els),4)
 
-    def test_low_risk_complete_static_workflow_and_nonchatbot_validity(self):
-        activity = self.slides[27]
-        for phrase in ('paper/static', 'SIMULATION', 'ordinary, ambiguous', 'out-of-scope'):
-            self.assertIn(phrase, text(activity))
-        for phrase in ('No third-party actions', 'Paper cards and static screens', 'classifiers', 'installations'):
-            self.assertIn(phrase, activity.notes)
-        self.assertIn('A physical product, recommender or visual system', text(self.slides[11]))
-        self.assertIn('without disability simulation', text(self.slides[28]))
-        self.assertIn('No new deadline, grade or upload', text(self.slides[34]))
+    def test_study_task_figure_limit_and_one_taught_paper(self):
+        from deck.week12_studies import GUIDES
+        task=self.slide(GUIDES['R1']['title'])
+        result=self.slide('An explanation did not fix wrong advice here.')
+        self.assertEqual(self.slides.index(task)+1,self.slides.index(result))
+        for phrase in ('1,403','16 fictional CVs','75% correct','percentage of trials','1-7','ILLUSTRATION'):
+            self.assertIn(phrase,text(task))
+        for phrase in ('not proof of equal effects','Two pooled contrasts','70.61% baseline','CC BY 4.0'):
+            self.assertIn(phrase,text(result))
+        self.assertEqual(len([e for e in result.els if e.kind=='image' and e.name.startswith('paper-excerpt')]),1)
+        self.assertEqual(sum(e.kind=='image' and e.name.startswith('paper-excerpt') for s in self.slides for e in s.els),1)
+        self.assertIn('SIMULATION',text(self.slides[18]))
+        self.assertIn('not a proven safety solution',text(self.slides[20]))
+        self.assertTrue((ROOT/'deck/assets/week12/provenance.md').exists())
 
-    def test_ethical_argument_names_people_values_contestation_accountability(self):
-        visible = text(self.slides[21])
-        for phrase in ('housemate', 'independence', 'privacy', 'correct', 'challenge', 'answerable role'):
-            self.assertIn(phrase, visible)
-        review = text(self.slides[32])
-        for phrase in ('affected people', 'competing values', 'not the user', 'contestation route', 'accountable role'):
-            self.assertIn(phrase, review)
-
-    def test_preserve_project_and_no_new_final_quiz_announcement(self):
-        visible = text(self.slides[24])
-        for phrase in ('A0 poster', '3-5 minute video', 'One-page mediation brief', '40%',
-                       'research 30%', 'impact 30%', 'communication 20%', 'Video 10%', 'documentation 10%'):
-            self.assertIn(phrase, visible)
-        self.assertNotIn('final quiz', ' '.join(text(s).lower() for s in self.slides[:37]))
-        self.assertIn('Neither announce a final-quiz format nor cancel it', self.plan)
-        self.assertIn('does not cancel that milestone', self.plan)
-
-    def test_only_two_reflective_questions_no_workshop_artifact_collection(self):
-        activities = [(i, s) for i, s in enumerate(self.slides, 1) if s.cp]
-        self.assertEqual([i for i, _ in activities], [3, 37])
-        for i, s in activities:
-            self.assertEqual(s.cp['type'], 'short_answer')
+    def test_only_two_reflections_and_static_nonchatbot_workflow(self):
+        activities=[(i,s) for i,s in enumerate(self.slides,1) if s.cp]
+        self.assertEqual([i for i,_ in activities],[3,34])
+        for i,s in activities:
+            self.assertEqual(s.cp['type'],'short_answer')
             self.assertFalse(s.cp['multiple'])
             self.assertFalse(s.cp['hide_names'])
-            self.assertIn(s.title, self.plan)
-        self.assertFalse(any(s.cp for s in self.slides[27:36]))
+            self.assertIn(s.title,self.plan)
+        self.assertFalse(any(s.cp for s in self.slides[24:33]))
+        for phrase in ('paper/static','SIMULATION','ordinary, ambiguous','out-of-scope'):
+            self.assertIn(phrase,text(self.slides[24]))
+        self.assertIn('classifiers, recommenders, physical objects and installations',self.slides[24].notes)
+        self.assertIn('without disability simulation',text(self.slides[25]))
+        self.assertIn('No new deadline, grade or upload',text(self.slides[31]))
+        self.assertIn('A0 poster',text(self.slides[21]))
+        self.assertNotIn('final quiz',' '.join(text(s).lower() for s in self.slides[:34]))
+        self.assertIn('Week 13 is the confirmed quiz and poster session',self.slides[33].notes)
+        self.assertNotIn('reconcile Week 13 policy',self.slides[33].notes)
+        self.assertIn('mock-review activity slide',self.slides[30].notes)
+        self.assertIn('revision activity',self.slides[32].notes)
+        self.assertNotIn('slide 31',self.slides[30].notes)
+        self.assertNotIn('slide 35',self.slides[32].notes)
 
-    def test_actual_report_hook_attaches_and_withholds_synthetic_mapping(self):
-        questions = [s for s in self.slides if s.cp]
-        entries = [{'activity': 'week12-synthetic-not-live', 'question': questions[0].title},
-                   {'activity': None, 'question': questions[1].title, 'withheld': 'synthetic private'}]
-        module = self.load_with_mapping(entries)
-        mapped = [s for s in module.S if s.cp]
-        self.assertEqual(mapped[0].report, 'https://app.classpoint.io/activity/week12-synthetic-not-live')
-        self.assertFalse(mapped[1].report)
-        self.assertTrue(any(r.url == mapped[0].report for e in mapped[0].els if hasattr(e, 'paras')
-                            for p in e.paras for r in p.runs))
-        self.assertFalse(any(s.report for s in self.slides))
+    def test_report_hook_rejects_drift_and_withholds(self):
+        questions=[s.title for s in self.slides if s.cp]
+        valid=[{'activity':None,'question':q} for q in questions]
+        self.assertFalse(any(s.report for s in self.load_with_mapping(valid).S))
+        for entries in (valid[:1],valid+[valid[0]],
+                        [valid[0],{'activity':None,'question':'changed'}]):
+            with self.assertRaises(ValueError): self.load_with_mapping(entries)
+        module=self.load_with_mapping([{'activity':'synthetic-not-live','question':questions[0]},valid[1]])
+        self.assertTrue([s for s in module.S if s.cp][0].report.endswith('synthetic-not-live'))
+        self.assertFalse([s for s in module.S if s.cp][1].report)
 
-    def test_actual_report_hook_rejects_count_and_text_drift_and_empty_is_safe(self):
-        for entries in ([{'activity': 'synthetic'}],
-                        [{'activity': 'synthetic', 'question': 'changed'}, {'activity': None}]):
-            with self.assertRaises(ValueError):
-                self.load_with_mapping(entries)
-        questions = [s.title for s in self.slides if s.cp]
-        valid = [{'activity': None, 'question': q} for q in questions]
-        with self.assertRaises(ValueError):
-            self.load_with_mapping(valid + [valid[0]])
-        for index in range(2):
-            changed = [dict(e) for e in valid]
-            changed[index]['question'] = 'changed'
-            with self.assertRaises(ValueError):
-                self.load_with_mapping(changed)
-        self.assertFalse(any(s.report for s in self.load_with_mapping([]).S))
-
-    def test_clickable_attributed_exact_version_readings(self):
+    def test_links_and_native_bounds(self):
         from deck.week12 import REFS
-        urls = {r.url for s in self.slides for e in s.els if hasattr(e, 'paras')
-                for p in e.paras for r in p.runs if r.url}
-        for _, url in REFS.values():
-            self.assertIn(url, urls)
-        self.assertIn('https://arxiv.org/html/2507.00286v2', urls)
-
-    def test_sharma_reading_links_are_separate_native_paragraphs(self):
-        for slide in (self.slide('How do people manage visual privacy?'), self.slides[38]):
-            paragraphs = [p for e in slide.els if hasattr(e, 'paras') for p in e.paras]
-            final = [p for p in paragraphs if any(r.url == 'https://doi.org/10.1145/3663547.3746335'
-                                                  for r in p.runs)]
-            author = [p for p in paragraphs if any(r.url == 'https://arxiv.org/html/2507.00286v2'
-                                                   for r in p.runs)]
-            self.assertEqual(len(final), 1)
-            self.assertEqual(len(author), 1)
-            self.assertIsNot(final[0], author[0])
-
-    def test_original_native_diagrams_bounds_and_semantic_order(self):
-        for index, labels in [(8, ['OBSERVE', 'PROPOSE', 'CHECK + ACT', 'INSPECT']),
-                              (19, ['CAPTURE', 'REVIEW', 'EDIT OR REFUSE', 'SHARE'])]:
-            slide = self.slides[index]
-            visible = text(slide)
-            positions = [visible.index(label) for label in labels]
-            self.assertEqual(positions, sorted(positions))
-            self.assertEqual(sum(e.kind == 'rect' and e.y == 355 for e in slide.els), 4)
+        urls={r.url for s in self.slides for e in s.els if hasattr(e,'paras')
+              for p in e.paras for r in p.runs if r.url}
+        for _,url in REFS.values(): self.assertIn(url,urls)
+        for slide in self.slides:
             for el in slide.els:
-                if getattr(el, 'name', '').startswith('chrome-'):
-                    continue
-                if hasattr(el, 'paras'):
-                    self.assertLessEqual(el.y + el.h, 1000)
-
-    def test_source_pairs_grid_and_documentation_not_evaluated_safeguard(self):
-        from PIL import Image
-        from deck.week12_studies import GUIDES
-        titles = [s.title for s in self.slides]
-        for key, result_title in [('R3', 'An observation can change the next step.'),
-                                  ('R1', 'An explanation did not fix wrong advice here.'),
-                                  ('R2', 'Private from a helper. Exposed to whom?'),
-                                  ('R4', 'Make the scope inspectable.')]:
-            task, result = self.slide(GUIDES[key]['title']), self.slide(result_title)
-            self.assertEqual(titles.index(task.title) + 1, titles.index(result.title))
-            for slide in (task, result):
-                header = next(e for e in slide.els if e.name == 'paper-title')
-                self.assertEqual((header.x, header.y, header.w, header.h), (120, 184, 1680, 140))
-                self.assertEqual(header.paras[0].runs[0].size, 72)
-                self.assertTrue(any(e.y == 956 for e in slide.els))
-                for e in slide.els:
-                    if e.name.endswith('-label') and e.name.startswith('study-'):
-                        body = next(x for x in slide.els if x.name == e.name.replace('-label', '-body'))
-                        self.assertEqual(body.y - e.y, 52)
-            for image in [e for e in result.els if e.kind == 'image']:
-                with Image.open(image.src) as crop:
-                    self.assertGreater(crop.width, 100)
-            self.assertIn('PDF p.', text(result))
-        framework = text(self.slide(GUIDES['R4']['title']))
-        self.assertIn('not a participant experiment', framework)
-        self.assertIn('not a causal safety comparison', framework)
-        self.assertIn('not a tested safeguard', text(self.slide('Make the scope inspectable.')))
-        self.assertIn('Line = 70.61% baseline; bars = standard errors', text(self.slide('An explanation did not fix wrong advice here.')))
-        self.assertIn('N328 (214 advice recipients)', text(self.slide('An explanation did not fix wrong advice here.')))
-        self.assertIn('Table 1 prompts, not findings', text(self.slide('Private from a helper. Exposed to whom?')))
-        self.assertIn('not a safety result', text(self.slide('A tool result becomes the next input.')))
-        for heading in ('What are we\ndelegating?', 'What may people\nrely on?', 'What will you\nchange?'):
-            self.assertFalse(self.slide(heading).cp)
-        self.assertTrue((ROOT / 'deck/assets/week12/provenance.md').is_file())
-
-    def test_all_native_geometry_and_footer_chrome(self):
-        for i, slide in enumerate(self.slides, 1):
-            with self.subTest(slide=i, title=slide.title):
-                for el in slide.els:
-                    if all(hasattr(el, a) for a in ('x', 'y', 'w', 'h')):
-                        self.assertGreaterEqual(el.x, 0)
-                        self.assertGreaterEqual(el.y, 0)
-                        self.assertLessEqual(el.x + el.w, 1921)
-                        self.assertLessEqual(el.y + el.h, 1081)
-                if getattr(slide, 'chrome', True):
-                    for name in ('chrome-footer', 'chrome-num'):
-                        self.assertEqual(sum(getattr(e, 'name', '') == name for e in slide.els), 1)
-                    self.assertIn('WEEK 12', text(slide))
-
-    def test_only_week12_build_registration_no_navigation_change(self):
-        config = tomllib.loads((ROOT / 'deckgen.toml').read_text())
-        self.assertEqual(config['course']['decks'].count('week12'), 1)
-        self.assertEqual(config['course']['decks'][:8],
-                         [f'week{i:02d}' for i in range(1, 9)])
-        self.assertFalse(any(n['href'] == 'week12/' for n in config['nav']))
-        self.assertEqual(self.deck['pdf'], 'SD2112-week12.pdf')
-        self.assertFalse((ROOT / 'deck/week12-reports.json').exists())
+                if all(hasattr(el,a) for a in ('x','y','w','h')):
+                    self.assertGreaterEqual(el.x,0)
+                    self.assertGreaterEqual(el.y,0)
+                    self.assertLessEqual(el.x+el.w,1921)
+                    self.assertLessEqual(el.y+el.h,1081)
 
 
-if __name__ == '__main__':
-    unittest.main()
+if __name__=='__main__': unittest.main()

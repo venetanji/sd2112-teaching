@@ -1,3 +1,73 @@
+# Week 12 / assets and source rights / 12 November 2026
+
+Current deck redistributes only `cecil-fig6a.png` (published *Scientific Reports* Figure 6a crop). DOI https://doi.org/10.1038/s41598-024-60220-5 ; original PDF https://www.nature.com/articles/s41598-024-60220-5.pdf ; article/PDF p. 15 states CC BY 4.0, https://creativecommons.org/licenses/by/4.0/ , without a separate figure credit exclusion. Source consulted 12 November 2026 against retained provenance; crop bounds (175,117,583,373) in a 1522x2000 render of publisher PDF p. 9, hash `d7b45e99a83c0b3b2fa944de93c732e662e45c1891082c42446121de9e81723d`. Cropped only; source axes, baseline, legend and error bars unaltered. Visible figure credit and clickable DOI on slide 18; native text explains axes and grouping. Earlier raw source was consulted 22 October 2026; no new figure download or image alteration in this revision.
+
+All case graphics are original editable teaching shapes/text based on NTSB HAR-20/01 (https://www.ntsb.gov/investigations/AccidentReports/Reports/HAR2001.pdf), retrieved 12 November 2026. The NTSB report is linked rather than copied or rasterized. `incident_map` is an explicitly not-to-scale schematic, not a Google Earth road image, actual Tesla UI screenshot, crash photo or quantitative data chart. Chronology/responsibility models are original native text/shapes from cited findings and keep explanatory notes. No new redistributed third-party case image. No generic decorative image is added.
+
+## Archived provenance, not current placements
+
+The following record applies to older Week 12 drafts; ReAct, Sharma and Model Cards crops remain in the source tree but are not used in this timed deck. Its former slide indices are historical only.
+
+# Week 12 / assets and source rights / 12 November 2026
+
+Current deck redistributes only `cecil-fig6a.png` (published *Scientific Reports* Figure 6a crop). DOI https://doi.org/10.1038/s41598-024-60220-5 ; original PDF https://www.nature.com/articles/s41598-024-60220-5.pdf ; article/PDF p. 15 states CC BY 4.0, https://creativecommons.org/licenses/by/4.0/ , without a separate figure credit exclusion. Source consulted 12 November 2026 against retained provenance; crop bounds (175,117,583,373) in a 1522x2000 render of publisher PDF p. 9, hash `d7b45e99a83c0b3b2fa944de93c732e662e45c1891082c42446121de9e81723d`. Cropped only; source axes, baseline, legend and error bars unaltered. Visible figure credit and clickable DOI on slide 18; native text explains axes and grouping. Earlier raw source was consulted 22 October 2026; no new figure download or image alteration in this revision.
+
+All case graphics are original editable teaching shapes/text based on NTSB HAR-20/01 (https://www.ntsb.gov/investigations/AccidentReports/Reports/HAR2001.pdf), retrieved 12 November 2026. The NTSB report is linked rather than copied or rasterized. `incident_map` is an explicitly not-to-scale schematic, not a Google Earth road image, actual Tesla UI screenshot, crash photo or quantitative data chart. Chronology/responsibility models are original native text/shapes from cited findings and keep explanatory notes. No new redistributed third-party case image. No generic decorative image is added.
+
+## Archived provenance, not current placements
+
+The following record applies to older Week 12 drafts; ReAct, Sharma and Model Cards crops remain in the source tree but are not used in this timed deck. Its former slide indices are historical only.
+
+# Week 12 / assets and source rights / 12 November 2026
+
+Current deck redistributes only `cecil-fig6a.png` (published *Scientific Reports* Figure 6a crop). DOI https://doi.org/10.1038/s41598-024-60220-5 ; original PDF https://www.nature.com/articles/s41598-024-60220-5.pdf ; article/PDF p. 15 states CC BY 4.0, https://creativecommons.org/licenses/by/4.0/ , without a separate figure credit exclusion. Exact publisher PDF freshly downloaded and p. 9/p. 15 text checked 12 November 2026; crop bounds (175,117,583,373) in a 1522x2000 render of publisher PDF p. 9, hash `d7b45e99a83c0b3b2fa944de93c732e662e45c1891082c42446121de9e81723d`. Cropped only; source axes, baseline, legend and error bars unaltered. Visible figure credit and clickable DOI on slide 18; native text explains axes and grouping. Earlier raw source was consulted 22 October 2026; no new figure download or image alteration in this revision.
+
+All case graphics are original editable teaching shapes/text based on NTSB HAR-20/01 (https://www.ntsb.gov/investigations/AccidentReports/Reports/HAR2001.pdf), retrieved 12 November 2026. The NTSB report is linked rather than copied or rasterized. `incident_map` is an explicitly not-to-scale schematic, not a Google Earth road image, actual Tesla UI screenshot, crash photo or quantitative data chart. Chronology/responsibility models are original native text/shapes from cited findings and keep explanatory notes. No new redistributed third-party case image. No generic decorative image is added.
+
+## Archived provenance, not current placements
+
+The following record applies to older Week 12 drafts; ReAct, Sharma and Model Cards crops remain in the source tree but are not used in this timed deck. Its former slide indices are historical only.
+
+# Week 12 / assets and source rights / 12 November 2026
+
+Current deck redistributes only `cecil-fig6a.png` (published *Scientific Reports* Figure 6a crop). DOI https://doi.org/10.1038/s41598-024-60220-5 ; original PDF https://www.nature.com/articles/s41598-024-60220-5.pdf ; article/PDF p. 15 states CC BY 4.0, https://creativecommons.org/licenses/by/4.0/ , without a separate figure credit exclusion. Exact publisher PDF freshly downloaded and p. 9/p. 15 text checked 12 November 2026; crop bounds (175,117,583,373) in a 1522x2000 render of publisher PDF p. 9, hash `d7b45e99a83c0b3b2fa944de93c732e662e45c1891082c42446121de9e81723d`. Cropped only; source axes, baseline, legend and error bars unaltered. Visible figure credit and clickable DOI on slide 18; native text explains axes and grouping. Earlier raw source was consulted 22 October 2026; no new figure download or image alteration in this revision.
+
+All case graphics are original editable teaching shapes/text based on NTSB HAR-20/01 (https://www.ntsb.gov/investigations/AccidentReports/Reports/HAR2001.pdf), retrieved 12 November 2026. The NTSB report is linked rather than copied or rasterized. `incident_map` is an explicitly not-to-scale schematic, not a Google Earth road image, actual Tesla UI screenshot, crash photo or quantitative data chart. Chronology/responsibility models are original native text/shapes from cited findings and keep explanatory notes. No new redistributed third-party case image. No generic decorative image is added.
+
+## Archived provenance, not current placements
+
+The following record applies to older Week 12 drafts; ReAct, Sharma and Model Cards crops remain in the source tree but are not used in this timed deck. Its former slide indices are historical only.
+
+# Week 12 / assets and source rights / 12 November 2026
+
+Current deck redistributes only `cecil-fig6a.png` (published *Scientific Reports* Figure 6a crop). DOI https://doi.org/10.1038/s41598-024-60220-5 ; original PDF https://www.nature.com/articles/s41598-024-60220-5.pdf ; article/PDF p. 15 states CC BY 4.0, https://creativecommons.org/licenses/by/4.0/ , without a separate figure credit exclusion. Exact publisher PDF freshly downloaded and p. 9/p. 15 text checked 12 November 2026; crop bounds (175,117,583,373) in a 1522x2000 render of publisher PDF p. 9, hash `d7b45e99a83c0b3b2fa944de93c732e662e45c1891082c42446121de9e81723d`. Cropped only; source axes, baseline, legend and error bars unaltered. Visible figure credit and clickable DOI on slide 18; native text explains axes and grouping. Earlier raw source was consulted 22 October 2026; no new figure download or image alteration in this revision.
+
+All case graphics are original editable teaching shapes/text based on NTSB HAR-20/01 (https://www.ntsb.gov/investigations/AccidentReports/Reports/HAR2001.pdf), retrieved 12 November 2026. The NTSB report is linked rather than copied or rasterized. `incident_map` is an explicitly not-to-scale schematic, not a Google Earth road image, actual Tesla UI screenshot, crash photo or quantitative data chart. Chronology/responsibility models are original native text/shapes from cited findings and keep explanatory notes. No new redistributed third-party case image. No generic decorative image is added.
+
+## Archived provenance, not current placements
+
+The following record applies to older Week 12 drafts; ReAct, Sharma and Model Cards crops remain in the source tree but are not used in this timed deck. Its former slide indices are historical only.
+
+# Week 12 / assets and source rights / 12 November 2026
+
+Current deck redistributes only `cecil-fig6a.png` (published *Scientific Reports* Figure 6a crop). DOI https://doi.org/10.1038/s41598-024-60220-5 ; original PDF https://www.nature.com/articles/s41598-024-60220-5.pdf ; article/PDF p. 15 states CC BY 4.0, https://creativecommons.org/licenses/by/4.0/ , without a separate figure credit exclusion. Exact publisher PDF freshly downloaded and p. 9/p. 15 text checked 12 November 2026; crop bounds (175,117,583,373) in a 1522x2000 render of publisher PDF p. 9, hash `d7b45e99a83c0b3b2fa944de93c732e662e45c1891082c42446121de9e81723d`. Cropped only; source axes, baseline, legend and error bars unaltered. Visible figure credit and clickable DOI on slide 18; native text explains axes and grouping. Earlier raw source was consulted 22 October 2026; no new figure download or image alteration in this revision.
+
+All case graphics are original editable teaching shapes/text based on NTSB HAR-20/01 (https://www.ntsb.gov/investigations/AccidentReports/Reports/HAR2001.pdf), retrieved 12 November 2026. The NTSB report is linked rather than copied or rasterized. `incident_map` is an explicitly not-to-scale schematic, not a Google Earth road image, actual Tesla UI screenshot, crash photo or quantitative data chart. Chronology/responsibility models are original native text/shapes from cited findings and keep explanatory notes. No new redistributed third-party case image. No generic decorative image is added.
+
+## Archived provenance, not current placements
+
+The following record applies to older Week 12 drafts; ReAct, Sharma and Model Cards crops remain in the source tree but are not used in this timed deck. Its former slide indices are historical only.
+
+# Week 12 / assets and source rights / 12 November 2026
+
+Current deck redistributes only `cecil-fig6a.png` (published *Scientific Reports* Figure 6a crop). DOI https://doi.org/10.1038/s41598-024-60220-5 ; original PDF https://www.nature.com/articles/s41598-024-60220-5.pdf ; article/PDF p. 15 states CC BY 4.0, https://creativecommons.org/licenses/by/4.0/ , without a separate figure credit exclusion. Exact publisher PDF freshly downloaded and p. 9/p. 15 text checked 12 November 2026; crop bounds (175,117,583,373) in a 1522x2000 render of publisher PDF p. 9, hash `d7b45e99a83c0b3b2fa944de93c732e662e45c1891082c42446121de9e81723d`. Cropped only; source axes, baseline, legend and error bars unaltered. Visible figure credit and clickable DOI on slide 18; native text explains axes and grouping. Earlier raw source was consulted 22 October 2026; no new figure download or image alteration in this revision.
+
+All case graphics are original editable teaching shapes/text based on NTSB HAR-20/01 (https://www.ntsb.gov/investigations/AccidentReports/Reports/HAR2001.pdf), retrieved 12 November 2026. The NTSB report is linked rather than copied or rasterized. `incident_map` is an explicitly not-to-scale schematic, not a Google Earth road image, actual Tesla UI screenshot, crash photo or quantitative data chart. Chronology/responsibility models are original native text/shapes from cited findings and keep explanatory notes. No new redistributed third-party case image. No generic decorative image is added.
+
+## Archived provenance, not current placements
+
+The following record applies to older Week 12 drafts; ReAct, Sharma and Model Cards crops remain in the source tree but are not used in this timed deck. Its former slide indices are historical only.
+
 # Week 12 / source excerpts and public-review reuse
 
 22 October 2026. Current placements: ReAct slide8, Cecil slide16, Sharma slide19, Model Cards slide41. Task/analysis explanations precede them at7/15/18/40. Five unchanged PNG assets contain six bounded source crops. Exact source versions, full-paper hashes and historical crop descriptions are retained below; old slide positions belong only to that dated record. No full PDF is placed in the repository.

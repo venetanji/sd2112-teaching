@@ -1,38 +1,23 @@
-# SD2112 / Week 12 lesson plan
+# SD2112 Week 12 / lesson plan / 12 November 2026
 
-**Ethics II: calibrated reliance, accessible privacy, delegation and accountability** / draft for instructor review / 22 October 2026
+From judgment to justified reliance. Instructor draft; no commit or deployment by this worker. Source `deck/week12.py`; notes companion `lessons/week12-speaker-notes.md`; evidence/provenance in the Week 12 ledger and `deck/assets/week12/provenance.md`. The timed route is 34 slides, plus two untimed references (36 total). Week 11 owns Verbeek mediation, curation/authorship and Suno. Week 12 applies that language to when reliance and delegated action are warranted. No Week 13 theory or edits; Week 13 remains quiz and posters. The case is the 23 March 2018 Model X using **Autopilot (TACC + Autosteer), supervised Level 2 assistance**, not Full Self-Driving (Supervised) or autonomous driving.
 
-## Status and continuity
+## Exactly 180 minutes
 
-Actual source: `deck/week12.py`, with authentic paper excerpts plus original editable native diagrams in `deck/week12_figures.py`. There are **42 slides: 37 in the timed route and five reference slides**. Native speaker notes are reproduced in `lessons/week12-speaker-notes.md`. The primary-text claim/version ledger is `lessons/week12-evidence-ledger.md`; build and inspection evidence is in `lessons/week12-verification.md`. This is an uncommitted reconciliation for instructor review. Parent owns authorized public repository/Cloudflare branch-preview updates; no main release or assessment change is authorized here.
-
-Week 11's evidence/curation audit becomes a question about what a product invites people to rely on. Week 5/8 mediation remains the vocabulary, but Week 8's full empathy/sycophancy lecture is not repeated. Machine A, Machine B and the harness are recalled only to locate consequential choices and permission. Non-chatbot products, services, recommenders, classifiers, objects and installations are valid throughout.
-
-Learning goals:
-
-- Distinguish an answer, a tool proposal and a consequential action.
-- Evaluate advice using task performance, not trust or confidence alone.
-- Explain accessibility/privacy trade-offs without treating interview preferences as tested protection.
-- Name affected people, competing values, a contestation route and an accountable role.
-- Improve existing project communication using a bounded peer walkthrough and formative review.
-
-The visible ethical argument is not a checklist that certifies safety: independence and access can conflict with privacy and reliability; non-users can bear consequences; delegation does not remove the deploying organization's responsibility to investigate and repair. Teams must justify their own trade-offs and acknowledge untested assumptions.
-
-## Exactly three hours
-
-| Relative minutes | Duration | Segment | Actual slides |
-|---|---|---|---|
+| Relative minutes | Duration | Segment | Slides |
+|---|---:|---|---|
 | 0-10 | 10 | Reconnect | 1-3 |
-| 10-40 | 30 | 01 / What are we delegating? | 4-13 |
-| 40-65 | 25 | 02 / What may people rely on? | 14-22 |
-| 65-75 | 10 | 03 / Turn evidence into a revision | 23-26 |
-| 75-90 | 15 | Break | 27-27 |
-| 90-120 | 30 | Interface walkthrough | 28-30 |
-| 120-155 | 35 | Mock review | 31-34 |
-| 155-175 | 20 | Revision | 35-36 |
-| 175-180 | 5 | Close | 37-37 |
+| 10-40 | 30 | Delegation / Autopilot case | 4-15 |
+| 40-65 | 25 | Evidence for reliance | 16-20 |
+| 65-75 | 10 | Evidence to revision | 21-23 |
+| 75-90 | 15 | Break | 24-24 |
+| 90-120 | 30 | Interface walkthrough | 25-27 |
+| 120-155 | 35 | Mock review | 28-31 |
+| 155-175 | 20 | Revision | 32-33 |
+| 175-180 | 5 | Close | 34-34 |
 
-Total: **180 minutes**. Slides 38-42 are a reference shelf, not additional lecture time. If late, reduce spoken lecture detail; protect the 15-minute break, 30-minute interface walkthrough, 35-minute mock review and 20-minute revision. Slides within a workshop block are reference screens within the same timer, not separate timed activities.
+
+Slides 35-36 are untimed reference material, not extra lecture. Keep 15-minute break, 30-minute walkthrough, 35-minute mock review, 20-minute revision. If late, shorten case discussion within its block, not practice. The first 75 minutes move from a limited delegation model to the 2018 case, one bounded experiment, then an illustrative project revision. Case discussion receives about 17 minutes within the 30-minute delegation block. The Cecil pair and project evidence distinctions fit within the 25-minute reliance block.
 
 ## Actual slide map
 
@@ -40,111 +25,58 @@ Total: **180 minutes**. Slides 38-42 are a reference shelf, not additional lectu
 
 | Slide | Actual title | Block |
 |---|---|---|
-| 1 | Trust is not / the target. | 0-10 |
-| 2 | Evidence -> boundary -> revision. | 0-10 |
+| 1 | From judgment / to justified reliance. | 0-10 |
+| 2 | Evidence -> permission -> revision. | 0-10 |
 | 3 | What should a person NOT delegate to your product? | 0-10 |
-| 4 | What are we / delegating? | 10-40 |
+| 4 | What can the / system decide? | 10-40 |
 | 5 | "Find an available workshop slot." | 10-40 |
-| 6 | A sentence can become a commitment. | 10-40 |
-| 7 | How does a tool result change the next step? | 10-40 |
-| 8 | An observation can change the next step. | 10-40 |
-| 9 | A tool result becomes the next input. | 10-40 |
-| 10 | Make permission specific. | 10-40 |
-| 11 | Easy to use. Hard to see through. | 10-40 |
-| 12 | A better prompt is not the whole design. | 10-40 |
-| 13 | Delegation does not erase responsibility. | 10-40 |
-| 14 | What may people / rely on? | 40-65 |
-| 15 | Can people reject incorrect advice? | 40-65 |
-| 16 | An explanation did not fix wrong advice here. | 40-65 |
-| 17 | Test rejection of an error - not trust alone. | 40-65 |
-| 18 | How do people manage visual privacy? | 40-65 |
-| 19 | Private from a helper. Exposed to whom? | 40-65 |
-| 20 | Privacy controls must be usable before sharing. | 40-65 |
-| 21 | Design the moment it should stop. | 40-65 |
-| 22 | Name the trade-off - and who can contest it. | 40-65 |
-| 23 | What will you / change? | 65-75 |
-| 24 | Same promise. A different contract. | 65-75 |
-| 25 | Review the project you already owe. | 65-75 |
-| 26 | Can the work speak without an oral rescue? | 65-75 |
-| 27 | Break. / Fifteen minutes. | 75-90 |
-| 28 | Walk through three low-risk situations. | 90-120 |
-| 29 | Show the next action. Do not explain it away. | 90-120 |
-| 30 | One observation. One bounded revision. | 90-120 |
-| 31 | Paired review. Then swap roles. | 120-155 |
-| 32 | Read the poster before the pitch. | 120-155 |
-| 33 | Who benefits? Who can challenge it? | 120-155 |
-| 34 | Does the same product appear in all three? | 120-155 |
-| 35 | Choose the change that matters most. | 155-175 |
-| 36 | A stronger claim can be a narrower claim. | 155-175 |
-| 37 | What will you change - and who can contest the result? | 175-180 |
-| 38 | Cecil et al. / evidence card | Reference shelf |
-| 39 | Sharma et al. / evidence card | Reference shelf |
-| 40 | What should a model report make inspectable? | Reference shelf |
-| 41 | Make the scope inspectable. | Reference shelf |
-| 42 | Carry forward the question - not old logistics. | Reference shelf |
+| 6 | Reliance is a loop, not a button. | 10-40 |
+| 7 | Persuasive is not justified. | 10-40 |
+| 8 | Autopilot was / not autonomy. | 10-40 |
+| 9 | What was the system allowed to do? | 10-40 |
+| 10 | Autosteer followed the wrong path. | 10-40 |
+| 11 | An invitation to intervene had a time limit. | 10-40 |
+| 12 | Could oversight actually happen in time? | 10-40 |
+| 13 | An accident has more than one control point. | 10-40 |
+| 14 | Investigation is not a civil verdict. | 10-40 |
+| 15 | Control before, during and after. | 10-40 |
+| 16 | What warrants / the next step? | 40-65 |
+| 17 | Can people reject incorrect advice? | 40-65 |
+| 18 | An explanation did not fix wrong advice here. | 40-65 |
+| 19 | Can someone reject an incorrect suggestion? | 40-65 |
+| 20 | Ask what each kind of evidence can support. | 40-65 |
+| 21 | Same goal. Different authority. | 65-75 |
+| 22 | Review the project you already owe. | 65-75 |
+| 23 | Can the work speak without an oral rescue? | 65-75 |
+| 24 | Break. / Fifteen minutes. | 75-90 |
+| 25 | Walk through three low-risk situations. | 90-120 |
+| 26 | Show the next action. Do not explain it away. | 90-120 |
+| 27 | One observation. One bounded revision. | 90-120 |
+| 28 | Paired review. Then swap roles. | 120-155 |
+| 29 | Read the poster before the pitch. | 120-155 |
+| 30 | Who benefits? Who can challenge it? | 120-155 |
+| 31 | Does the same product appear in all three? | 120-155 |
+| 32 | Choose the change that matters most. | 155-175 |
+| 33 | A stronger claim can be a narrower claim. | 155-175 |
+| 34 | What will you change - and who can contest the result? | 175-180 |
+| 35 | NTSB / case evidence | Reference shelf |
+| 36 | Cecil et al. / task and limits | Reference shelf |
 
 <!-- slide-map:end -->
 
-## Reflective question / report map
+## Evidence and teaching boundaries
 
-| Actual slide | Exact question | Native type | Classroom alternative |
-|---|---|---|---|
-| 3 | What should a person NOT delegate to your product? | short_answer | Oral discussion or private team notes |
-| 37 | What will you change - and who can contest the result? | short_answer | Oral share or private team notes |
+NTSB HAR-20/01 (2020) identifies Autopilot steering into a gore due to limitations, likely distracted nonresponse/overreliance and ineffective engagement monitoring; damaged/nonoperational crash attenuator contributed to injury severity. Its pp. 5-6 log supports the 5.9-second steering, 3.9-second acceleration and ~71-mph impact sequence; pp. 14-15, 20 and 40 support the warnings/monitoring discussion. The native road graphic is a **schematic reconstruction, not a scaled plan, screenshot or crash photo**. A visible human override is not evidence it was usable in time. Do not exonerate system design because a driver had responsibilities or erase a driver role because the system failed. The civil settlement was reported on 8 April 2024 with undisclosed terms; absent access to the civil docket, later procedural status is unverified as of 12 November 2026. Do not say a jury assigned liability.
 
-These are brief formative discussions, not new assessed uploads. Two optional ClassPoint short answers are emitted; activity slides 28/31/35 do not collect artifacts. Default settings are named, single response; do not promise anonymity. Check actual classroom add-in/privacy settings before use. `attach_reports(S, ... / 'week12-reports.json')` runs before `finalize`; a missing/empty map is a safe pre-class no-op. Do not create fictitious live activity IDs. Later public answer links must withhold anonymous/private activities under the existing course policy.
+Cecil et al. (2024) supply a separate experiment about immediate decisions on fictional CVs: advice about 75% correct; 16 CVs per participant, 1,403 across five experiments. The figure is specifically experiment 2a and shows two pooled contrasts, not four arms or the entire series. Tested explanations did not clearly fix wrong-advice reliance; a null does not demonstrate equivalence or invalidate all explanations. Classroom room-capacity example is labelled a fictional simulation. Paper/static/non-chatbot products remain equally valid; a peer walkthrough cannot establish safe deployment.
 
-## Activity A / interface walkthrough / 30 minutes
+## Studio / no new assessment
 
-Relative 90-120. Use the team's actual concept without requiring a chat interface. For an installation, examine the operator controls and feedback; for a recommender, examine labels, evidence and overrides.
+Two optional named short-answer reflections remain on slides 3 and 34; oral or private team notes work equally well. No artifact is collected in walkthrough, review or revision. Do not publicly link named/private responses without normal course checks.
 
-1. **0-5:** choose ordinary, ambiguous and out-of-scope situations with fictional, low-risk data.
-2. **5-20:** reviewer walks through paper/static screens; a teammate plays the system; an observer records visible choices and confusion. Combine roles if needed.
-3. **20-25:** separate observation from interpretation. What evidence was inspected? Could the reviewer refuse, correct or recover?
-4. **25-30:** revise one claim, control or fallback; state what remains untested.
+- **90-120, walkthrough:** 0-5 choose ordinary/ambiguous/out-of-scope situations; 5-20 peer walks through static screens/paper while teammate simulates the system; 20-25 separate observation and interpretation; 25-30 revise one boundary/control. Fictional data only; no live actions, accounts or required prototype.
+- **120-155, mock review:** 0-3 pair; 3-15 first review; 15-27 swap; 27-35 synthesize a strength, a revision and open question. Start each turn with silent/accessible poster inspection, then evidence/ethics and video or storyboard/brief. No compulsory printing, fixed group count, upload or marking.
+- **155-175, revision:** 0-5 compare feedback; 5-15 fix one essential claim/control; 15-20 identify remaining evidence and communication gap. Preserve private team notes.
+- **175-180, close:** invite brief answers, connect to the poster/quiz consolidation; no invented quiz format or requirements.
 
-Label all scripted/manual model behavior **SIMULATION**. If a local prototype is available, distinguish actual output from manual intervention and restrict it to fictional data/read-only operations. No third-party action, account creation, subscription, cloud upload, booking, payment or private personal input. Paper cards/static screens are a complete workflow. Do not simulate disability; accessibility evaluation needs appropriate affected participants and consent, not blindfolded sighted peers. A classroom peer walkthrough is not safety, access or usability validation.
-
-Prepared no-network example: fictional Room C has eight seats; twelve people need a room; a card explicitly labelled SIMULATION incorrectly recommends Room C. A reviewer checks the visible rule, rejects or questions the advice, and explains what evidence they used. This is not a replication of the personnel-selection experiments and not a measurement of general trust.
-
-## Activity B / mock review / 35 minutes
-
-Relative 120-155. Available draft posters/concept boards/readable layouts suffice for feedback; printing is not compulsory. Use an existing video or a storyboard/static frames and acknowledge that playback/pacing/audio remain untested when appropriate.
-
-- **0-3:** pair teams and open readable materials; adapt a local cluster for odd team counts/access needs without inventing a fixed four-group rotation.
-- **3-15:** Team A reviews Team B: three minutes silent/accessible poster inspection; four minutes evidence and ethics; five minutes video/storyboard, brief and clarification.
-- **15-27:** swap roles using the same twelve-minute structure.
-- **27-35:** synthesize one strength, one specific revision and one unresolved question for each team.
-
-Review questions: What product is it, for whom, and what does AI decide? What is built versus simulated? Which source supports its claim and what are the task/population/outcome limits? Who benefits, who bears failure, which values conflict, who can contest it and who remains answerable? Does the proposed response address a real risk, and what could show it fails? Do poster, video and mediation brief describe the same relation, data, bias and guardrails?
-
-Feedback stays in private team working notes. No student names, draft work, grades or responses enter this public repository. Do not promise a mark or create a new rubric/submission. More pairings are optional only if genuine spare time/room exists; do not displace revision.
-
-## Activity C / revision / 20 minutes
-
-Relative 155-175: five minutes compare notes, ten minutes make one essential correction, five minutes identify a remaining evidence gap and communication improvement. Prefer correcting misleading claims or consequential boundaries before decorative polish. Assign a team action owner in working notes if useful. Narrow a claim only when the narrower version is actually supported; do not fabricate a citation or user test. No new deadline, grade or upload.
-
-## Selected evidence and reading load
-
-This is a synthesis/reflection week, not a new four-paper lecture. Cecil and Sharma are the two empirical teaching lenses; ReAct is a mechanism recap; Model Cards is an optional documentation reminder on the reference shelf. Each taught source has a task/analysis screen before its finding/figure screen: task, comparison, concrete labelled example, and measurement or analytical basis. No pre-reading is required. ReAct is a mechanism example, not a safety result; Model Cards is a documentation proposal, not an evaluated safeguard. The existing prepared excerpt/background reading load is unchanged; no additional compulsory reading is imposed. Three topic signposts are inside the original budgets, not extra timed material. Authentic source excerpts are on slides 8, 16, 19 and 41; our diagrams on slides 9 and 20 remain explicitly illustrative. Sharma v2 has no figures, so two explicitly labelled Table 1 column excerpts stand in for a figure that version does not contain. They are joined at original scale with a white gutter to preserve row alignment in mobile. Figure meanings are also stated in native text for mobile reading. Descriptive attributed links are visible on research slides and the reference shelf.
-
-- [Cecil et al. (2024), Scientific Reports](https://doi.org/10.1038/s41598-024-60220-5): five controlled online experiments, fictional CV advice, 1,403 students/HRM employees. Wrong advice harmed trial-level accuracy; tested heatmaps/charts did not reliably reduce overreliance. Advice quality/confidence are distinct outcomes. Not universal evidence against explanations or a test of real hiring.
-- [Sharma et al. (2025), ASSETS record](https://doi.org/10.1145/3663547.3746335); [consulted author preprint v2](https://arxiv.org/html/2507.00286v2): interviews with 21 US BLV GenAI users. Independence, helpers/providers and others' privacy; experiences/preferences, not tested control efficacy. Full author version read; final typeset text not compared.
-- [Yao et al., ReAct, ICLR 2023 / v3](https://arxiv.org/abs/2210.03629v3): primary mechanism for interleaved reasoning/action/observation, not proof of safe delegation.
-- [Mitchell et al., Model Cards, 2019 / v2](https://arxiv.org/abs/1810.03993v2): primary documentation framework, not a certificate or new required report.
-
-The syllabus's Van Den Eede reading remains background; its full text was not newly retrieved, so the deck labels its transparency distinction as a working design distinction rather than attributing detailed claims to an unread text. ELIZA and contemporary incidents are not used. Optional Week 8 empathy/sycophancy sources are not retaught.
-
-## Archive comparison and retained synthesis
-
-The 2025 Week 12 PDF has **70 pages**. Positions 54-69 were extracted and rendered: language as interface, rules/data, designer as curator, authorship/ownership, then fair/research logistics. Positions 27 and 29 were separately rendered: page 27 is a thought/action/observation loop under an imprecise "Agent prompt" title; page 29 is diffusion, not agents. Original illustrative diagrams remain native elements, separately labelled from authentic paper excerpts or assertions of faithful internal cognition.
-
-The editable OneDrive Week 12 deck has **71 slides**, including Ask Me Anything at 54; subsequent synthesis is shifted by one (PDF54 -> PPTX55). Retain the designer's curation/accountability question and process disclosure, not unverified Ihde language claims, universal "ultimate interface" predictions or legal ownership assertions. Do not carry over the 2025 exam date, four-group requirement, shared board link or upload date. Old PR #3 remains historical background, not tooling or operational authority; no logistics are copied from it.
-
-## Existing assessment and instructor decisions
-
-Keep the **A0 poster, 3-5 minute video and one-page mediation brief**, together **40% of the course**. Existing project rubric proportions are research/context 30%, ethical/sociological impact 30%, communication/poster 20%, video 10%, collaboration/process 10%. Mock feedback does not add assessment criteria or change those proportions.
-
-The syllabus still lists final poster/video ready in Week 12. This mock review does not cancel that milestone or move its deadline: confirm actual Canvas instructions. The syllabus also still lists a 20% whole-course final quiz in Week 13, while the latest direction is showcase-first. **Instructor must reconcile that policy before any announcement. Neither announce a final-quiz format nor cancel it.** Midterm and 2025 quiz rules are not authority for this decision.
-
-Before teaching, confirm actual team count, room/pairing, displays, accessibility requirements, local playback and facilitation roles without assuming named staff accepted tasks. Check ClassPoint add-in/report/privacy settings if used; oral/team-note alternatives remain complete. Confirm review material access and feedback privacy. No new room map, print requirement, visitor list, deadline, grade, submission platform or live-system capability is approved by this draft.
+Existing A0 poster, 3-5 minute video, one-page mediation brief and 40% course project remain unchanged. The within-project rubric percentages remain 30/30/20/10/10. Confirm actual Canvas operational instructions separately; no new dates or policy claims.

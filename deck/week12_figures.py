@@ -38,7 +38,7 @@ def paper_pair(eyebrow, heading, images, reading, caption, notes,
     g = GUIDES[key]
     extra = (' Targeted primary-source recheck, 22 October 2026: ' +
              g['location'] + ' This pair replaces the compressed summary within '
-             'the existing teaching allocation, not extra class minutes. ')
+             'the existing teaching allocation, not extra class minutes.')
     task = paper_frame(eyebrow + ' / TASK + EVIDENCE', g['title'], notes + extra)
     for x, y, label, value, height, name in [
         (120, 348, g['task_label'], g['task'], 210, 'study-task'),
@@ -112,3 +112,24 @@ def privacy_flow():
             ('SHARE', 'Confirm the recipient.', 'Preview what leaves and to whom. Explain retention and the limits of recall.'),
         ], 'Proposed flow, not tested protection. Remote analysis can disclose data before a later Share button.',
         'Our teaching hypothesis motivated by Sharma et al. (2025), author preprint v2, sections 4-6. Interviews establish practices and design preferences, not the effectiveness of this flow, redaction or on-device processing. A cloud-based preview has already transmitted the input: confirmation before public sharing does not undo provider disclosure. Make the data boundary explicit, including bystanders and the cost of asking a helper. A screen-reader description of a control does not establish that a real person can use it effectively. Do not ask sighted classmates to simulate blindness; ask them to identify an untested access requirement and plan participatory evaluation with appropriate participants and consent. No personal photos, camera activation, cloud upload or third-party account is needed. About four minutes within 40-65.')
+
+
+def incident_map(source_url):
+    """Schematic roadway relation from NTSB, not a scale drawing or crash photo."""
+    slide = content('CASE / ROAD SPLIT / NOT TO SCALE',
+                    'Autosteer followed the wrong path.', [], bg=PAPER, title_size=65,
+                    notes='This is an original schematic course diagram based on NTSB HAR-20/01 pp. 1-6 and Figure 5, not a reproduction of the road geometry or a source image. At the US-101/SR-85 split, Autosteer moved a 2017 Model X from a continuing HOV lane toward the painted gore, a nontravel area dividing the highway from the exit. The vehicle struck a previously damaged crash attenuator at the end of the median. The log locates the steering input about 5.9 seconds before collision and impact at about 71 mph. The drawn paths and spacing are illustrative; the exit lane is above the continuing lane to indicate the left-side branch; orange highlights the nontravel gore rather than claiming an orange road marking, and black labels the damaged attenuator. No coordinate, exact lane width, or alternative route is claimed. Source: ' + source_url)
+    slide.els = slide.els[:2]
+    slide.els.extend([
+        Rect(120, 385, 1680, 112, '#D9E3E6'),
+        Rect(120, 560, 1680, 112, '#D9E3E6'),
+        T(155, 405, 1530, 65, 'SR-85 exit (left) ->', 'mono', 30, INK),
+        T(155, 580, 1510, 65, 'US-101 continues ->', 'mono', 30, INK),
+        Rect(905, 510, 525, 35, '#ED6D24'),
+        T(920, 695, 850, 60, 'ORANGE = GORE / NOT A TRAVEL LANE', 'mono', 28, TEAL),
+        Rect(1430, 500, 80, 110, INK),
+        T(1320, 795, 490, 90, 'BLACK = DAMAGED ATTENUATOR', 'mono', 28, INK),
+        T(220, 785, 1040, 55, 'Model X: from US-101 -> left into gore -> barrier', 'body', 37, INK),
+        T(120, 925, 1680, 45, f'[NTSB HAR-20/01 / pp. 1-6]({source_url})', 'mono', 22, TEAL),
+    ])
+    return slide
