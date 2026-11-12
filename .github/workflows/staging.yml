@@ -51,6 +51,10 @@ jobs:
             export/docs/
             export/preview/*.jpg
           retention-days: 30
+      - uses: ./.github/actions/upload-weekly-artifacts
+        with:
+          prefix: staging-powerpoints
+          retention-days: 30
       - name: Where to look
         run: |
           {
@@ -58,4 +62,5 @@ jobs:
             echo
             echo "- **html decks and PDFs**: https://venetanji.github.io/sd2112-teaching/staging/ once *Publish site* has run for this push (it starts when this run ends), or the \`staging-site\` artifact below"
             echo "- **PowerPoints, ClassPoint manifest, documents, previews**: the \`staging-powerpoints\` artifact below"
+            echo "- **One week at a time**: the \`staging-powerpoints-weekNN\` artifacts below (include the week's PDF)"
           } >> "$GITHUB_STEP_SUMMARY"

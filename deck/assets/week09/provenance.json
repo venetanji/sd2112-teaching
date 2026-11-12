@@ -1,0 +1,421 @@
+[
+  {
+    "asset": "covington-fig2.png",
+    "paper": "R1",
+    "label": "Figure 2",
+    "pdf_page_position": 2,
+    "version": "RecSys 2016; 8-page primary archive PDF",
+    "source_url": "https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/45530.pdf",
+    "source_image": "youtube-p2.png",
+    "crop_pixels": [
+      780,
+      125,
+      1400,
+      520
+    ],
+    "source_render_dpi": 180,
+    "sha256": "7c6067b4fb2a0dce20d921b3abfe4ddad4f6b3ea2390764f20f4414646c6b63b",
+    "shows_and_limits": "Two-stage retrieval/ranking funnel and inputs. Architecture, not current product or measured social effects.",
+    "distribution_review_20261022": {
+      "intended_distribution": "public GitHub source repository and Cloudflare branch preview; downloadable public HTML/PDF/PPTX workflow artifacts; exact excerpts within critically explained Week 9 deck, not standalone gallery",
+      "licence": "personal/classroom notice only; not an open public-reuse grant",
+      "public_reuse_status": "SUPPORTED_BOUNDED_EXCEPTION: previous public-basis gate resolved; preserve title/author/source acknowledgment and critical context",
+      "historical_author_review": {
+        "intended_distribution": "public GitHub sources and Cloudflare branch preview, public export artifacts",
+        "licence": "personal/classroom notice only; not an open public-reuse grant",
+        "public_reuse_status": "GATED: permission or distribution-specific applicable exception not established"
+      },
+      "basis": "Hong Kong Copyright Ordinance section 39(1) criticism/review and section 39(2) quotation; distribution-specific assessment, not licence permission",
+      "basis_supported": true,
+      "assessment": "README.md#current-distribution-assessment--22-october-2026-follow-up",
+      "official_guidance": "https://www.ipd.gov.hk/en/copyright/legislative-proposals-and-amendments/copyright-amendment-ordinance-2022/details-faqs/index.html#a16 (FAQ 16, 17 and 18 bodies read)",
+      "sufficient_acknowledgment": {
+        "authors": "Covington, P.; Adams, J.; Sargin, E.",
+        "title": "Deep Neural Networks for YouTube Recommendations",
+        "source_and_version": "See source_url/version and full citation in README.md and lessons/week09-evidence-ledger.md"
+      },
+      "boundary": "Not blanket legal clearance or open sublicence. No unrestricted downstream image reuse; no full papers; reassess commercial/promotional or standalone distribution and other jurisdictions."
+    }
+  },
+  {
+    "asset": "gender-shades-table4.png",
+    "paper": "R4",
+    "label": "Table 4",
+    "pdf_page_position": 9,
+    "version": "PMLR 81 (2018), 15-page primary PDF; tested Apr-May 2017",
+    "source_url": "https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf",
+    "source_image": "shades-p9.png",
+    "crop_pixels": [
+      210,
+      220,
+      1350,
+      680
+    ],
+    "source_render_dpi": 180,
+    "sha256": "63e9492f7f30b8abb41bfced87f8062d99de016bb20da3e254bfa73cbbca34da",
+    "shows_and_limits": "Full table: subgroup performance differences. Does not isolate causes or audit current vendors; binary perceived categories and portrait benchmark limit transfer.",
+    "distribution_review_20261022": {
+      "intended_distribution": "public GitHub sources and Cloudflare branch preview, public export artifacts",
+      "licence": "CC BY 4.0 (PMLR series)",
+      "public_reuse_status": "attribution and identified crops under CC BY 4.0"
+    }
+  },
+  {
+    "asset": "datasheets-collection-excerpt.png",
+    "paper": "R5",
+    "label": "Section 3.3 complete compensation question",
+    "pdf_page_position": 7,
+    "version": "arXiv:1803.09010v8, 1 Dec 2021, 18-page manuscript",
+    "source_url": "https://arxiv.org/pdf/1803.09010v8",
+    "source_image": "datasheets-p7.png",
+    "crop_pixels": [
+      200,
+      730,
+      1050,
+      835
+    ],
+    "source_render_dpi": 180,
+    "sha256": "8c7f27c9613f4d7df3c75bdea638f34b86c89300e2e90e57f134c23b40a9929f",
+    "shows_and_limits": "A documentation question, not an empirical figure or proof of fair labour/compliance.",
+    "distribution_review_20261022": {
+      "intended_distribution": "public GitHub source repository and Cloudflare branch preview; downloadable public HTML/PDF/PPTX workflow artifacts; exact excerpts within critically explained Week 9 deck, not standalone gallery",
+      "licence": "arXiv v8; no open artwork licence established",
+      "public_reuse_status": "SUPPORTED_BOUNDED_EXCEPTION: full title and author credits verified in native reference shelf; no ND-licence permission asserted",
+      "historical_author_review": {
+        "intended_distribution": "public GitHub sources and Cloudflare branch preview, public export artifacts",
+        "licence": "arXiv v8; no open artwork licence established",
+        "public_reuse_status": "GATED: permission or distribution-specific applicable exception not established"
+      },
+      "basis": "Hong Kong Copyright Ordinance section 39(1) criticism/review and section 39(2) quotation; distribution-specific assessment, not licence permission",
+      "basis_supported": true,
+      "assessment": "README.md#current-distribution-assessment--22-october-2026-follow-up",
+      "official_guidance": "https://www.ipd.gov.hk/en/copyright/legislative-proposals-and-amendments/copyright-amendment-ordinance-2022/details-faqs/index.html#a16 (FAQ 16, 17 and 18 bodies read)",
+      "sufficient_acknowledgment": {
+        "authors": "Gebru, T.; Morgenstern, J.; Vecchione, B.; Vaughan, J. W.; Wallach, H.; Daume III, H.; Crawford, K.",
+        "title": "Datasheets for Datasets",
+        "source_and_version": "See source_url/version and full citation in README.md and lessons/week09-evidence-ledger.md",
+        "standalone_native_verified": true
+      },
+      "boundary": "Not blanket legal clearance or open sublicence. No unrestricted downstream image reuse; no full papers; reassess commercial/promotional or standalone distribution and other jurisdictions.",
+      "remaining_artifact_condition": null,
+      "historical_acknowledgment_condition": "Full source title is absent from current standalone deck/native reference shelf; parent must add title+author acknowledgment to deck/exports. Rights-doc-only reviewer did not alter projected source."
+    }
+  },
+  {
+    "asset": "glickman-fig2abc.png",
+    "paper": "R3",
+    "label": "Figure 2a-c",
+    "pdf_page_position": null,
+    "version": "Published NHB HTML, online 18 Dec 2024 / 2025 issue",
+    "source_url": "https://www.nature.com/articles/s41562-024-02077-2/figures/2",
+    "source_image": "glickman-fig2.png",
+    "crop_pixels": [
+      0,
+      0,
+      1676,
+      765
+    ],
+    "source_render_dpi": null,
+    "sha256": "8173d27b08b76ab8dd53a47bf88653d80024e2c73e4e0e65d4013038132ba647",
+    "shows_and_limits": "Task protocol and schematic algorithm distributions. Not newly measured field-feed data.",
+    "distribution_review_20261022": {
+      "intended_distribution": "public GitHub sources and Cloudflare branch preview, public export artifacts",
+      "licence": "CC BY 4.0",
+      "public_reuse_status": "attribution and identified crops under CC BY 4.0"
+    }
+  },
+  {
+    "asset": "glickman-fig2e.png",
+    "paper": "R3",
+    "label": "Figure 2e",
+    "pdf_page_position": null,
+    "version": "Published NHB HTML, online 18 Dec 2024 / 2025 issue",
+    "source_url": "https://www.nature.com/articles/s41562-024-02077-2/figures/2",
+    "source_image": "glickman-fig2.png",
+    "crop_pixels": [
+      920,
+      765,
+      1676,
+      1370
+    ],
+    "source_render_dpi": null,
+    "sha256": "00ba029994ac0d3059c1b514f7e29097926e88652c80b79c7e89caa865576df4",
+    "shows_and_limits": "Biased-advice follow-up n=50; signed induced bias across five blocks, bars s.e.m. Not years, permanence or a live recommendation effect.",
+    "distribution_review_20261022": {
+      "intended_distribution": "public GitHub sources and Cloudflare branch preview, public export artifacts",
+      "licence": "CC BY 4.0",
+      "public_reuse_status": "attribution and identified crops under CC BY 4.0"
+    }
+  },
+  {
+    "asset": "glickman-fig2g.png",
+    "paper": "R3",
+    "label": "Figure 2g",
+    "pdf_page_position": null,
+    "version": "Published NHB HTML, online 18 Dec 2024 / 2025 issue",
+    "source_url": "https://www.nature.com/articles/s41562-024-02077-2/figures/2",
+    "source_image": "glickman-fig2.png",
+    "crop_pixels": [
+      920,
+      1380,
+      1676,
+      1990
+    ],
+    "source_render_dpi": null,
+    "sha256": "e91cd6300e4e9f2475c6040462192829ae3310b3f28198fc47b85468a0188dfc",
+    "shows_and_limits": "Different n=50 accurate-advice follow-up; baseline error minus current error, bars s.e.m. Different vertical outcome from panel e; heights must not be directly compared.",
+    "distribution_review_20261022": {
+      "intended_distribution": "public GitHub sources and Cloudflare branch preview, public export artifacts",
+      "licence": "CC BY 4.0",
+      "public_reuse_status": "attribution and identified crops under CC BY 4.0"
+    }
+  },
+  {
+    "asset": "gauthier-fig4-focus.png",
+    "paper": "R2",
+    "label": "Figure 4 top political-leaning and activist rows",
+    "pdf_page_position": null,
+    "version": "Published Nature HTML, 18 Feb 2026",
+    "source_url": "https://www.nature.com/articles/s41586-026-10098-2/figures/4",
+    "source_image": "gauthier-fig4.png",
+    "crop_pixels": [
+      0,
+      0,
+      1593,
+      625
+    ],
+    "sha256": "2d3ee3ec62b6511917134a00ab77c97fc68e8e127ab75e2c353ef870adeaf685",
+    "shows_and_limits": "Separate faithful crop; top rows, original axis and legend displayed without data redrawing. News/entertainment/official rows omitted, not asserted absent; full figure linked. n=2387 follow-data subset; standardized ITT estimates, 90/95% CI; no proof of sole mediator or universal polarization.",
+    "distribution_review_20261022": {
+      "intended_distribution": "public GitHub source repository and Cloudflare branch preview; downloadable public HTML/PDF/PPTX workflow artifacts; exact excerpts within critically explained Week 9 deck, not standalone gallery",
+      "licence": "CC BY-NC-ND 4.0 (not CC BY; no licence permission asserted for crop/assembly)",
+      "public_reuse_status": "SUPPORTED_BOUNDED_EXCEPTION: full title and author credits verified in native reference shelf; no ND-licence permission asserted",
+      "historical_author_review": {
+        "intended_distribution": "public GitHub sources and Cloudflare branch preview, public export artifacts",
+        "licence": "CC BY-NC-ND 4.0 (corrects historical CC BY claim)",
+        "public_reuse_status": "GATED: permission or distribution-specific applicable exception not established"
+      },
+      "basis": "Hong Kong Copyright Ordinance section 39(1) criticism/review and section 39(2) quotation; distribution-specific assessment, not licence permission",
+      "basis_supported": true,
+      "assessment": "README.md#current-distribution-assessment--22-october-2026-follow-up",
+      "official_guidance": "https://www.ipd.gov.hk/en/copyright/legislative-proposals-and-amendments/copyright-amendment-ordinance-2022/details-faqs/index.html#a16 (FAQ 16, 17 and 18 bodies read)",
+      "sufficient_acknowledgment": {
+        "authors": "Gauthier, G.; Hodler, R.; Widmer, P.; Zhuravskaya, E.",
+        "title": "The political effects of X's feed algorithm",
+        "source_and_version": "See source_url/version and full citation in README.md and lessons/week09-evidence-ledger.md",
+        "standalone_native_verified": true
+      },
+      "boundary": "Not blanket legal clearance or open sublicence. No unrestricted downstream image reuse; no full papers; reassess commercial/promotional or standalone distribution and other jurisdictions.",
+      "remaining_artifact_condition": null,
+      "publisher_figure_credit_check": "Retained Nature HTML Figure 4 block/caption reviewed: no separate third-party restriction identified; article rights remain CC BY-NC-ND 4.0.",
+      "historical_source_fragment": true,
+      "historical_acknowledgment_condition": "Full source title is absent from current standalone deck/native reference shelf; parent must add title+author acknowledgment to deck/exports. Rights-doc-only reviewer did not alter projected source."
+    }
+  },
+  {
+    "asset": "gauthier-fig4-axis.png",
+    "paper": "R2",
+    "label": "Figure 4 original x-axis strip",
+    "pdf_page_position": null,
+    "version": "Published Nature HTML, 18 Feb 2026",
+    "source_url": "https://www.nature.com/articles/s41586-026-10098-2/figures/4",
+    "source_image": "gauthier-fig4.png",
+    "crop_pixels": [
+      0,
+      1120,
+      1593,
+      1220
+    ],
+    "sha256": "9f8c994e0a781028d4eeb424e46773c9ae30099a50dbcc241b1a609eb4106f4b",
+    "shows_and_limits": "Separate faithful crop; top rows, original axis and legend displayed without data redrawing. News/entertainment/official rows omitted, not asserted absent; full figure linked. n=2387 follow-data subset; standardized ITT estimates, 90/95% CI; no proof of sole mediator or universal polarization.",
+    "distribution_review_20261022": {
+      "intended_distribution": "public GitHub source repository and Cloudflare branch preview; downloadable public HTML/PDF/PPTX workflow artifacts; exact excerpts within critically explained Week 9 deck, not standalone gallery",
+      "licence": "CC BY-NC-ND 4.0 (not CC BY; no licence permission asserted for crop/assembly)",
+      "public_reuse_status": "SUPPORTED_BOUNDED_EXCEPTION: full title and author credits verified in native reference shelf; no ND-licence permission asserted",
+      "historical_author_review": {
+        "intended_distribution": "public GitHub sources and Cloudflare branch preview, public export artifacts",
+        "licence": "CC BY-NC-ND 4.0 (corrects historical CC BY claim)",
+        "public_reuse_status": "GATED: permission or distribution-specific applicable exception not established"
+      },
+      "basis": "Hong Kong Copyright Ordinance section 39(1) criticism/review and section 39(2) quotation; distribution-specific assessment, not licence permission",
+      "basis_supported": true,
+      "assessment": "README.md#current-distribution-assessment--22-october-2026-follow-up",
+      "official_guidance": "https://www.ipd.gov.hk/en/copyright/legislative-proposals-and-amendments/copyright-amendment-ordinance-2022/details-faqs/index.html#a16 (FAQ 16, 17 and 18 bodies read)",
+      "sufficient_acknowledgment": {
+        "authors": "Gauthier, G.; Hodler, R.; Widmer, P.; Zhuravskaya, E.",
+        "title": "The political effects of X's feed algorithm",
+        "source_and_version": "See source_url/version and full citation in README.md and lessons/week09-evidence-ledger.md",
+        "standalone_native_verified": true
+      },
+      "boundary": "Not blanket legal clearance or open sublicence. No unrestricted downstream image reuse; no full papers; reassess commercial/promotional or standalone distribution and other jurisdictions.",
+      "remaining_artifact_condition": null,
+      "publisher_figure_credit_check": "Retained Nature HTML Figure 4 block/caption reviewed: no separate third-party restriction identified; article rights remain CC BY-NC-ND 4.0.",
+      "historical_source_fragment": true,
+      "historical_acknowledgment_condition": "Full source title is absent from current standalone deck/native reference shelf; parent must add title+author acknowledgment to deck/exports. Rights-doc-only reviewer did not alter projected source."
+    }
+  },
+  {
+    "asset": "gauthier-fig4-legend.png",
+    "paper": "R2",
+    "label": "Figure 4 original legend strip",
+    "pdf_page_position": null,
+    "version": "Published Nature HTML, 18 Feb 2026",
+    "source_url": "https://www.nature.com/articles/s41586-026-10098-2/figures/4",
+    "source_image": "gauthier-fig4.png",
+    "crop_pixels": [
+      0,
+      1220,
+      1593,
+      1300
+    ],
+    "sha256": "86848e667e51d419f9a365b22c827559151f4a0e78f356a2c0c2bd09b03d911e",
+    "shows_and_limits": "Separate faithful crop; top rows, original axis and legend displayed without data redrawing. News/entertainment/official rows omitted, not asserted absent; full figure linked. n=2387 follow-data subset; standardized ITT estimates, 90/95% CI; no proof of sole mediator or universal polarization.",
+    "distribution_review_20261022": {
+      "intended_distribution": "public GitHub source repository and Cloudflare branch preview; downloadable public HTML/PDF/PPTX workflow artifacts; exact excerpts within critically explained Week 9 deck, not standalone gallery",
+      "licence": "CC BY-NC-ND 4.0 (not CC BY; no licence permission asserted for crop/assembly)",
+      "public_reuse_status": "SUPPORTED_BOUNDED_EXCEPTION: full title and author credits verified in native reference shelf; no ND-licence permission asserted",
+      "historical_author_review": {
+        "intended_distribution": "public GitHub sources and Cloudflare branch preview, public export artifacts",
+        "licence": "CC BY-NC-ND 4.0 (corrects historical CC BY claim)",
+        "public_reuse_status": "GATED: permission or distribution-specific applicable exception not established"
+      },
+      "basis": "Hong Kong Copyright Ordinance section 39(1) criticism/review and section 39(2) quotation; distribution-specific assessment, not licence permission",
+      "basis_supported": true,
+      "assessment": "README.md#current-distribution-assessment--22-october-2026-follow-up",
+      "official_guidance": "https://www.ipd.gov.hk/en/copyright/legislative-proposals-and-amendments/copyright-amendment-ordinance-2022/details-faqs/index.html#a16 (FAQ 16, 17 and 18 bodies read)",
+      "sufficient_acknowledgment": {
+        "authors": "Gauthier, G.; Hodler, R.; Widmer, P.; Zhuravskaya, E.",
+        "title": "The political effects of X's feed algorithm",
+        "source_and_version": "See source_url/version and full citation in README.md and lessons/week09-evidence-ledger.md",
+        "standalone_native_verified": true
+      },
+      "boundary": "Not blanket legal clearance or open sublicence. No unrestricted downstream image reuse; no full papers; reassess commercial/promotional or standalone distribution and other jurisdictions.",
+      "remaining_artifact_condition": null,
+      "publisher_figure_credit_check": "Retained Nature HTML Figure 4 block/caption reviewed: no separate third-party restriction identified; article rights remain CC BY-NC-ND 4.0.",
+      "historical_source_fragment": true,
+      "historical_acknowledgment_condition": "Full source title is absent from current standalone deck/native reference shelf; parent must add title+author acknowledgment to deck/exports. Rights-doc-only reviewer did not alter projected source."
+    }
+  },
+  {
+    "asset": "gauthier-fig4-on.png",
+    "paper": "R2",
+    "label": "Figure4 assembled condition excerpt / on",
+    "version": "Published Nature HTML,18Feb2026",
+    "source_url": "https://www.nature.com/articles/s41586-026-10098-2/figures/4",
+    "source_image": "gauthier-fig4.png",
+    "crop_pixels": [
+      [
+        0,
+        35,
+        1060,
+        625
+      ],
+      [
+        0,
+        1120,
+        1060,
+        1220
+      ],
+      [
+        0,
+        1220,
+        1593,
+        1300
+      ]
+    ],
+    "sha256": "f5a3e7d11e9d8cd3a7995d4ea16a2315d7bc66586ff9dfdccdfce7415689bfba",
+    "shows_and_limits": "Authentic top-row chart, corresponding original x-axis and unchanged full legend. Right condition repeats the shared source row labels; white gutters mark assembly. No values redrawn. Different initial-feed groups; n2387 subset; not sole mediator proof.",
+    "distribution_review_20261022": {
+      "intended_distribution": "public GitHub source repository and Cloudflare branch preview; downloadable public HTML/PDF/PPTX workflow artifacts; exact excerpts within critically explained Week 9 deck, not standalone gallery",
+      "licence": "CC BY-NC-ND 4.0 (not CC BY; no licence permission asserted for crop/assembly)",
+      "public_reuse_status": "SUPPORTED_BOUNDED_EXCEPTION: full title and author credits verified in native reference shelf; no ND-licence permission asserted",
+      "historical_author_review": {
+        "intended_distribution": "public GitHub sources and Cloudflare preview",
+        "licence": "CC BY-NC-ND4.0",
+        "public_reuse_status": "GATED: assembled/cropped material is not cleared by ND licence; permission or applicable exception not established"
+      },
+      "basis": "Hong Kong Copyright Ordinance section 39(1) criticism/review and section 39(2) quotation; distribution-specific assessment, not licence permission",
+      "basis_supported": true,
+      "assessment": "README.md#current-distribution-assessment--22-october-2026-follow-up",
+      "official_guidance": "https://www.ipd.gov.hk/en/copyright/legislative-proposals-and-amendments/copyright-amendment-ordinance-2022/details-faqs/index.html#a16 (FAQ 16, 17 and 18 bodies read)",
+      "sufficient_acknowledgment": {
+        "authors": "Gauthier, G.; Hodler, R.; Widmer, P.; Zhuravskaya, E.",
+        "title": "The political effects of X's feed algorithm",
+        "source_and_version": "See source_url/version and full citation in README.md and lessons/week09-evidence-ledger.md",
+        "standalone_native_verified": true
+      },
+      "boundary": "Not blanket legal clearance or open sublicence. No unrestricted downstream image reuse; no full papers; reassess commercial/promotional or standalone distribution and other jurisdictions.",
+      "remaining_artifact_condition": null,
+      "publisher_figure_credit_check": "Retained Nature HTML Figure 4 block/caption reviewed: no separate third-party restriction identified; article rights remain CC BY-NC-ND 4.0.",
+      "historical_source_fragment": false,
+      "historical_acknowledgment_condition": "Full source title is absent from current standalone deck/native reference shelf; parent must add title+author acknowledgment to deck/exports. Rights-doc-only reviewer did not alter projected source."
+    }
+  },
+  {
+    "asset": "gauthier-fig4-off.png",
+    "paper": "R2",
+    "label": "Figure4 assembled condition excerpt / off",
+    "version": "Published Nature HTML,18Feb2026",
+    "source_url": "https://www.nature.com/articles/s41586-026-10098-2/figures/4",
+    "source_image": "gauthier-fig4.png",
+    "crop_pixels": [
+      [
+        0,
+        35,
+        435,
+        625
+      ],
+      [
+        1080,
+        35,
+        1593,
+        625
+      ],
+      [
+        0,
+        1120,
+        435,
+        1220
+      ],
+      [
+        1080,
+        1120,
+        1593,
+        1220
+      ],
+      [
+        0,
+        1220,
+        1593,
+        1300
+      ]
+    ],
+    "sha256": "d40f67e0f6cee1c25955ca2fe8131090b9db93330cfebf63bfd89ee81848e0cd",
+    "shows_and_limits": "Authentic top-row chart, corresponding original x-axis and unchanged full legend. Right condition repeats the shared source row labels; white gutters mark assembly. No values redrawn. Different initial-feed groups; n2387 subset; not sole mediator proof.",
+    "distribution_review_20261022": {
+      "intended_distribution": "public GitHub source repository and Cloudflare branch preview; downloadable public HTML/PDF/PPTX workflow artifacts; exact excerpts within critically explained Week 9 deck, not standalone gallery",
+      "licence": "CC BY-NC-ND 4.0 (not CC BY; no licence permission asserted for crop/assembly)",
+      "public_reuse_status": "SUPPORTED_BOUNDED_EXCEPTION: full title and author credits verified in native reference shelf; no ND-licence permission asserted",
+      "historical_author_review": {
+        "intended_distribution": "public GitHub sources and Cloudflare preview",
+        "licence": "CC BY-NC-ND4.0",
+        "public_reuse_status": "GATED: assembled/cropped material is not cleared by ND licence; permission or applicable exception not established"
+      },
+      "basis": "Hong Kong Copyright Ordinance section 39(1) criticism/review and section 39(2) quotation; distribution-specific assessment, not licence permission",
+      "basis_supported": true,
+      "assessment": "README.md#current-distribution-assessment--22-october-2026-follow-up",
+      "official_guidance": "https://www.ipd.gov.hk/en/copyright/legislative-proposals-and-amendments/copyright-amendment-ordinance-2022/details-faqs/index.html#a16 (FAQ 16, 17 and 18 bodies read)",
+      "sufficient_acknowledgment": {
+        "authors": "Gauthier, G.; Hodler, R.; Widmer, P.; Zhuravskaya, E.",
+        "title": "The political effects of X's feed algorithm",
+        "source_and_version": "See source_url/version and full citation in README.md and lessons/week09-evidence-ledger.md",
+        "standalone_native_verified": true
+      },
+      "boundary": "Not blanket legal clearance or open sublicence. No unrestricted downstream image reuse; no full papers; reassess commercial/promotional or standalone distribution and other jurisdictions.",
+      "remaining_artifact_condition": null,
+      "publisher_figure_credit_check": "Retained Nature HTML Figure 4 block/caption reviewed: no separate third-party restriction identified; article rights remain CC BY-NC-ND 4.0.",
+      "historical_source_fragment": false,
+      "historical_acknowledgment_condition": "Full source title is absent from current standalone deck/native reference shelf; parent must add title+author acknowledgment to deck/exports. Rights-doc-only reviewer did not alter projected source."
+    }
+  }
+]

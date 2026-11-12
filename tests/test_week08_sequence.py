@@ -24,7 +24,7 @@ class Week08Tests(unittest.TestCase):
         return self.by_title[title]
 
     def test_weekly_news_is_in_opening_without_extra_time(self):
-        opening = self.slides[2]
+        opening = self.slide('Directing an AI-generated scene')
         visible = text(opening)
         for phrase in ('Kling 4.0', '15 October 2026', 'Vendor', 'keyframes'):
             self.assertIn(phrase.lower(), visible.lower())
@@ -35,15 +35,15 @@ class Week08Tests(unittest.TestCase):
                             for e in opening.els if hasattr(e, 'paras')
                             for p in e.paras for r in p.runs))
         plan = (ROOT / 'lessons/week08-lesson-plan.md').read_text()
-        self.assertIn(f'3. **{opening.title}**', plan)
+        self.assertIn(f'5. **{opening.title}**', plan)
         self.assertIn('replacing the previous pair prompt', plan)
         self.assertEqual(len(self.summaries), 9)
         news = (ROOT / 'lessons/week08-news-20261021.md').read_text()
-        self.assertIn('48 main-route plus 12 untimed appendix/reference slides (60 total)', news)
+        self.assertIn('50 main-route plus 16 untimed appendix/reference slides (66 total)', news)
 
     def test_main_route_and_protected_budgets(self):
-        self.assertEqual((self.main_count, len(self.slides)), (48, 60))
-        self.assertEqual(self.slides[35].title, 'Break.\n15 minutes.')
+        self.assertEqual((self.main_count, len(self.slides)), (50, 66))
+        self.assertEqual(self.slides[37].title, 'Break.\n15 minutes.')
         for title, duration in [('Break.\n15 minutes.', '75-90'),
                                 ('Find 2-3 papers for your product.', '40 min'),
                                 ('Change a claim before adding a feature.', '25 min'),
