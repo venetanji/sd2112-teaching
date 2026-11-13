@@ -300,17 +300,19 @@ example = theory_slide('FICTIONAL EXAMPLE / AN AI MUSEUM GUIDE', 'Which story do
     'Use this one concrete example throughout. An AI museum guide explains an old fishing boat. The museum can supply dates and technical facts; a fishing family could describe working life. If no family has been interviewed, that is missing information, not a third story to fabricate. These are fictional possibilities, not real quotations or AI outputs. Ask which story the guide should show first and why.')
 
 ama = content('AFTER THE BREAK / 15 MINUTES', 'Group project: ask me anything.', [
+    'Submit your questions in ClassPoint; ask more than one if needed.',
     'What is unclear about your idea, evidence or use of AI?',
     'What is unclear about the poster, video or mediation brief?',
     'What is the one thing your group is stuck on?',
-], body_size=40, notes='This slide must immediately follow the full fifteen-minute break. Spend fifteen minutes answering group-project questions. Invite questions verbally or in ordinary team notes; no new public collection. Clarify the current brief and Canvas instructions, not invented deadlines or criteria. Do not project private student data. Park individual troubleshooting for team work if needed, and protect the activity time.')
+], body_size=36, cp={'type': 'short_answer', 'hide_names': False, 'multiple': True},
+    notes='This slide must immediately follow the full fifteen-minute break. Open its ClassPoint short-answer button and spend fifteen minutes answering group-project questions from the scrollable overlay. Each person may submit up to three questions; verbal questions are also welcome. Submit questions suitable for classroom discussion and keep individual matters private. Clarify the current brief and Canvas instructions, not invented deadlines or criteria. Close submissions when the AMA ends, then move to the group activity. If ClassPoint is unavailable, take questions verbally or from ordinary team notes. Park individual troubleshooting for team work if needed, and protect the activity time.')
 
 activity_intro = content('ONE GROUP ACTIVITY / USE YOUR OWN PROJECT', 'Choose one topic. Improve one thing.', [
     'Choose ONE: mediation, curation and power, agency and authorship, or responsibility.',
     'Look at ONE part of your project: a screen, an AI output, or a step in the experience.',
     'Use your topic to spot one problem. Sketch or rewrite one change.',
     'Be ready to explain: what is the problem, what will change, and why?',
-], body_size=35, notes='Explain the activity before starting the work timer. Each group chooses one topic, not all four. Work with the project material the group already has: a concept sketch is enough. Students should make one concrete change or clearly labelled proposed change, not write an abstract ethical essay. One annotated sketch or a few sentences in existing project notes is enough; this is not a new submission or assessment.')
+], body_size=35, notes='Explain the activity before starting the work timer. Each group chooses one topic, not all four. Work with the project material the group already has: a concept sketch is enough. Students should make one concrete change or clearly labelled proposed change, not write an abstract ethical essay. Keep one annotated sketch or a few sentences in existing project notes, then nominate one person to submit the group summary through ClassPoint at share-back. This is an ungraded classroom response, not a new assessment.')
 
 prompts = diagram_frame('CHOOSE ONE / THESE ARE FOUR OPTIONS', 'Use one question to guide your change.',
     'Read only the option the group chooses. Mediation concerns how the AI changes what a person notices or understands. Curation concerns what the team selects and leaves out. Agency/authorship concerns who decides and contributes. Responsibility concerns who responds when something goes wrong. More than one may apply, but choose one focus for this exercise. Do not require four analyses.')
@@ -336,20 +338,22 @@ work = activity('APPLY ONE TOPIC / GROUP PROJECT', 30, 'Make your change.', [
     '5-15 min: agree on one problem and who it affects.',
     '15-25 min: sketch or rewrite one change.',
     '25-30 min: prepare a 60-second explanation.',
-], notes='Thirty minutes of actual group work. TAs ask which topic the group chose, where it appears in the project, who is affected and what they will change. If a prototype does not exist, annotate a concept sketch. Separate observed problems from assumptions; a proposed change is not a tested success. Keep work in existing project notes or drafts. No extra upload, new grading criterion or required paper search.')
+], notes='Thirty minutes of actual group work. TAs ask which topic the group chose, where it appears in the project, who is affected and what they will change. If a prototype does not exist, annotate a concept sketch. Separate observed problems from assumptions; a proposed change is not a tested success. Keep work in existing project notes or drafts; submit the revised group summary through ClassPoint at share-back. No new grading criterion or required paper search.')
 
 share = activity('SAME ACTIVITY / CHECK YOUR IDEA WITH ANOTHER GROUP', 20, 'Explain it. Hear a question. Improve it.', [
     '0-5 min: each group explains its problem and change in 60 seconds.',
     '5-10 min: ask each other, "How would this change help the person using it?"',
     '10-20 min: improve your sketch or wording.',
-], notes='This is the feedback stage of the same activity, not a second audit. Pair with one other group; do not impose a four-group quota. Each team gives a sixty-second explanation, then asks one clarifying question. Reserve the last ten minutes for revision. A team can reject advice with a reason. If pairing is impractical, use a TA or discuss within the group. Nothing new is collected or graded.')
+], notes='This is the feedback stage of the same activity, not a second audit. Pair with one other group; do not impose a four-group quota. Each team gives a sixty-second explanation, then asks one clarifying question. Reserve the last ten minutes for revision. A team can reject advice with a reason. If pairing is impractical, use a TA or discuss within the group. Prepare the revised summary for the following ClassPoint submission; it is ungraded.')
 
 shareback = content('SHARE BACK / 10 MINUTES', 'Show the change, not a checklist.', [
+    'One person per group: submit one text response in ClassPoint.',
     '"We chose [topic]."',
     '"In our project, the problem is ..."',
     '"We changed ... because ..."',
     '"We still need to find out ..."',
-], body_size=40, notes='Invite a few groups to show their actual sketch or wording. Allow one minute per explanation and a short question. Compare how the topic changed a concrete design decision, not which group named the most ethical concepts. Keep assumptions visible, avoid exposing private records and do not imply that a peer-approved sketch has been tested. If projection is unavailable, share verbally.')
+], body_size=36, cp={'type': 'short_answer', 'hide_names': False, 'multiple': False},
+    notes='Open the ClassPoint short-answer button on this slide. One nominated person per group submits one text response using the four prompts: chosen topic, project problem, revised change and reason, and what remains to find out. This is an ungraded classroom summary within the existing ten-minute share-back, not a new Canvas assessment or deadline. Responses are named and will be discussed in class; submit only project content suitable for display, without personal details or private records. Review answers in the scrollable presenter overlay, then close submissions and optionally award respondent stars. Invite a few groups to show their actual sketch or wording. Allow one minute per explanation and a short question. Compare how the topic changed a concrete design decision, not which group named the most ethical concepts. Keep assumptions visible and do not imply that a peer-approved sketch has been tested. If ClassPoint is unavailable, retain the summary in group notes and share verbally.')
 closing = content('NEXT / YOUR EXISTING GROUP PROJECT', 'Keep the change. Keep the question.', [
     'Use the improvement in your A0 poster, 3-5 minute video or one-page mediation brief.',
     'Group project: 40% of the course. Follow current Canvas milestones.',

@@ -51,6 +51,10 @@ label = "Week 9 slides"
 href  = "week09/"
 
 [[nav]]
+label = "Week 11 slides"
+href  = "week11/"
+
+[[nav]]
 label = "Syllabus"
 href  = "syllabus.html"
 

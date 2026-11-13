@@ -34,7 +34,26 @@ class Week11Tests(unittest.TestCase):
                          list(range(1,self.main_count+1)))
         pause = self.slides.index(self.slide('Break.\n15 minutes.'))
         self.assertEqual(self.slides[pause+1].title, 'Group project: ask me anything.')
-        self.assertFalse(any(s.cp or s.report for s in self.slides))
+        self.assertFalse(any(s.report for s in self.slides))
+
+    def test_final_exercise_collects_one_group_text_response(self):
+        submission = self.slide('Show the change, not a checklist.')
+        self.assertEqual([s for s in self.slides if s.cp],
+                         [self.slide('Group project: ask me anything.'), submission])
+        self.assertEqual(submission.cp,
+                         {'type': 'short_answer', 'hide_names': False, 'multiple': False})
+        self.assertIn('One person per group', text(submission))
+        self.assertIn('submit', text(submission).lower())
+        self.assertLess(self.slides.index(self.slide('Explain it. Hear a question. Improve it.')),
+                        self.slides.index(submission))
+
+    def test_ama_collects_questions_immediately_after_break(self):
+        pause = self.slides.index(self.slide('Break.\n15 minutes.'))
+        ama = self.slides[pause+1]
+        self.assertEqual(ama.title, 'Group project: ask me anything.')
+        self.assertEqual(ama.cp,
+                         {'type': 'short_answer', 'hide_names': False, 'multiple': True})
+        self.assertIn('Submit your questions in ClassPoint', text(ama))
 
     def test_four_topics_have_their_own_sections_and_plain_example(self):
         topics = ['Mediation', 'Curation and power', 'Agency and\nauthorship', 'Responsibility']
@@ -234,16 +253,20 @@ class Week11Tests(unittest.TestCase):
         self.assertLess(workflow.index("subprocess.run(['deckgen', 'build', *decks]"),
                         workflow.index('python -m unittest discover -s tests -v'))
 
-    def test_report_hook_and_clean_export(self):
+    def test_report_hook_rejects_drift(self):
         import deckgen
         original = deckgen.attach_reports
         with patch('deckgen.attach_reports', lambda slides, path: original(slides, [], quiet=True)):
             self.assertFalse(any(s.report for s in runpy.run_path(str(ROOT / 'deck/week11.py'))['S']))
-        with patch('deckgen.attach_reports', lambda slides, path: original(slides, [{'activity': 'synthetic', 'question': 'Not real'}], quiet=True)):
-            with self.assertRaisesRegex(ValueError, '1 activities but 0 ClassPoint'):
+        with patch('deckgen.attach_reports', lambda slides, path: original(slides, [{'activity': 'synthetic', 'question': 'Not real'}] * 3, quiet=True)):
+            with self.assertRaisesRegex(ValueError, '3 activities but 2 ClassPoint'):
                 runpy.run_path(str(ROOT / 'deck/week11.py'))
-        for path in (ROOT / '_site/week11/index.html', ROOT / 'export/week11.pptx',
-                     ROOT / 'export/week11-classpoint.pptx'):
+    def test_built_exports_match_deck(self):
+        paths = (ROOT / '_site/week11/index.html', ROOT / 'export/week11.pptx',
+                 ROOT / 'export/week11-classpoint.pptx')
+        if not any(path.exists() for path in paths):
+            self.skipTest('Week 11 exports are not part of this selected-week build')
+        for path in paths:
             self.assertTrue(path.exists(), f'build Week 11 exports before running this suite: {path}')
             self.assertGreater(path.stat().st_size, 10000)
         from zipfile import ZipFile

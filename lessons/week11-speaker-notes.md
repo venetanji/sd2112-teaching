@@ -1,6 +1,6 @@
 # Week 11 speaker notes / Whose design?
 
-Revised 13 November 2026. 36 timed slides + 2 optional reference slides. Exactly 180 minutes. No extra submission.
+Revised 13 November 2026. 36 timed slides + 2 optional reference slides. Exactly 180 minutes. ClassPoint questions at the AMA and one ungraded group summary at share-back.
 
 ## 1. Whose design?
 
@@ -116,11 +116,11 @@ Revised 13 November 2026. 36 timed slides + 2 optional reference slides. Exactly
 
 ## 29. Group project: ask me anything.
 
-90-105 minutes / Group-project AMA. This slide must immediately follow the full fifteen-minute break. Spend fifteen minutes answering group-project questions. Invite questions verbally or in ordinary team notes; no new public collection. Clarify the current brief and Canvas instructions, not invented deadlines or criteria. Do not project private student data. Park individual troubleshooting for team work if needed, and protect the activity time.
+90-105 minutes / Group-project AMA. This slide must immediately follow the full fifteen-minute break. Open its ClassPoint short-answer button and spend fifteen minutes answering group-project questions from the scrollable overlay. Each person may submit up to three questions; verbal questions are also welcome. Submit questions suitable for classroom discussion and keep individual matters private. Clarify the current brief and Canvas instructions, not invented deadlines or criteria. Close submissions when the AMA ends, then move to the group activity. If ClassPoint is unavailable, take questions verbally or from ordinary team notes. Park individual troubleshooting for team work if needed, and protect the activity time.
 
 ## 30. Choose one topic. Improve one thing.
 
-105-115 minutes / One activity: instructions and example. Explain the activity before starting the work timer. Each group chooses one topic, not all four. Work with the project material the group already has: a concept sketch is enough. Students should make one concrete change or clearly labelled proposed change, not write an abstract ethical essay. One annotated sketch or a few sentences in existing project notes is enough; this is not a new submission or assessment.
+105-115 minutes / One activity: instructions and example. Explain the activity before starting the work timer. Each group chooses one topic, not all four. Work with the project material the group already has: a concept sketch is enough. Students should make one concrete change or clearly labelled proposed change, not write an abstract ethical essay. Keep one annotated sketch or a few sentences in existing project notes, then nominate one person to submit the group summary through ClassPoint at share-back. This is an ungraded classroom response, not a new assessment.
 
 ## 31. Use one question to guide your change.
 
@@ -132,15 +132,15 @@ Revised 13 November 2026. 36 timed slides + 2 optional reference slides. Exactly
 
 ## 33. Make your change.
 
-115-145 minutes / Apply one topic to the project. Thirty minutes of actual group work. TAs ask which topic the group chose, where it appears in the project, who is affected and what they will change. If a prototype does not exist, annotate a concept sketch. Separate observed problems from assumptions; a proposed change is not a tested success. Keep work in existing project notes or drafts. No extra upload, new grading criterion or required paper search.
+115-145 minutes / Apply one topic to the project. Thirty minutes of actual group work. TAs ask which topic the group chose, where it appears in the project, who is affected and what they will change. If a prototype does not exist, annotate a concept sketch. Separate observed problems from assumptions; a proposed change is not a tested success. Keep work in existing project notes or drafts; submit the revised group summary through ClassPoint at share-back. No new grading criterion or required paper search.
 
 ## 34. Explain it. Hear a question. Improve it.
 
-145-165 minutes / Explain and improve the same change. This is the feedback stage of the same activity, not a second audit. Pair with one other group; do not impose a four-group quota. Each team gives a sixty-second explanation, then asks one clarifying question. Reserve the last ten minutes for revision. A team can reject advice with a reason. If pairing is impractical, use a TA or discuss within the group. Nothing new is collected or graded.
+145-165 minutes / Explain and improve the same change. This is the feedback stage of the same activity, not a second audit. Pair with one other group; do not impose a four-group quota. Each team gives a sixty-second explanation, then asks one clarifying question. Reserve the last ten minutes for revision. A team can reject advice with a reason. If pairing is impractical, use a TA or discuss within the group. Prepare the revised summary for the following ClassPoint submission; it is ungraded.
 
 ## 35. Show the change, not a checklist.
 
-165-180 minutes / Share back and next steps. Invite a few groups to show their actual sketch or wording. Allow one minute per explanation and a short question. Compare how the topic changed a concrete design decision, not which group named the most ethical concepts. Keep assumptions visible, avoid exposing private records and do not imply that a peer-approved sketch has been tested. If projection is unavailable, share verbally.
+165-180 minutes / Share back and next steps. Open the ClassPoint short-answer button on this slide. One nominated person per group submits one text response using the four prompts: chosen topic, project problem, revised change and reason, and what remains to find out. This is an ungraded classroom summary within the existing ten-minute share-back, not a new Canvas assessment or deadline. Responses are named and will be discussed in class; submit only project content suitable for display, without personal details or private records. Review answers in the scrollable presenter overlay, then close submissions and optionally award respondent stars. Invite a few groups to show their actual sketch or wording. Allow one minute per explanation and a short question. Compare how the topic changed a concrete design decision, not which group named the most ethical concepts. Keep assumptions visible and do not imply that a peer-approved sketch has been tested. If ClassPoint is unavailable, retain the summary in group notes and share verbally.
 
 ## 36. Keep the change. Keep the question.
 
