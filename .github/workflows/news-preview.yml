@@ -40,10 +40,6 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/deck-browser" --no-save --package-lock=false playwright@1.56.1
           node "$RUNNER_TEMP/deck-browser/node_modules/playwright/cli.js" install --with-deps chromium
           echo "NODE_PATH=$RUNNER_TEMP/deck-browser/node_modules" >> "$GITHUB_ENV"
-      - name: Check the complete repository test suite
-        run: |
-          python -m unittest discover -s tests -v
-          if test -f tests/exercises.test.py; then python tests/exercises.test.py; fi
       - name: Validate the registration union and select affected weeks
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -57,6 +53,10 @@ jobs:
               raise SystemExit('No registered decks selected')
           subprocess.run(['deckgen', 'build', *decks], check=True)
           PY
+      - name: Check the complete repository test suite after fresh exports
+        run: |
+          python -m unittest discover -s tests -v
+          if test -f tests/exercises.test.py; then python tests/exercises.test.py; fi
       - name: Require the selected export artifacts
         run: python scripts/verify_deck_artifacts.py selected-decks.json
       - uses: actions/upload-artifact@v4
