@@ -1,6 +1,16 @@
 # Week 11 evidence and references ledger
 
-## Current revision / 12 November 2026 / supersedes old slide map
+## Current revision / 13 November 2026
+
+Current route: 36 timed slides + 2 optional references (38 total). News is on slides 2-3 and the deep question on 4; the four section slides are mediation (5), curation and power (8), agency and authorship (14), and responsibility (23). Break is 28, group-project AMA immediately after it on 29. One choose-a-topic project activity runs through instructions/example/work/feedback on 30-34, then share-back and closing on 35-36. Optional Doshi figure detail and reference shelf are 37-38. Follow `week11-lesson-plan.md` and `week11-news-20261113.md`, not the historical numbered maps below.
+
+The guide is now a concrete fictional museum example: facts about an old fishing boat versus the fishing family's experience; if no family has been interviewed, explicitly say the information is missing. No interview or measured effect is invented. Empirical findings, samples, source figures and rights assessments below are retained; the result panels now use strong visual emphasis. Documentation and legal positions are separately labelled, not called experimental findings. No new source image or asset is added. Historical Yu bibliography is no longer part of the current reference shelf; no current claim relies on it.
+
+News sources were directly checked 13 November: Reuters/Euronext's dated 12 November closing changes; NVIDIA's official 12 November CEO transition release. **Resignation is confirmed; retirement is not established.** See the news register for exact URLs, values, access and limits. The source facts and legal limits of the Suno block are unchanged; no new docket check is claimed.
+
+The following 12 November and October sections are retained provenance history, not the current timing/slide map.
+
+## Historical revision / 12 November 2026
 
 The timed route is now slides 1-36: theory 1-7; selected empirical and documentary evidence 8-19; Suno 20-22; break 23; existing project work 24-36. Slide 37 remains an untimed bibliography. Earlier numbered references in this file record the October draft and are historical, not the current slide map. Naqvi, Doshi, Gebru, Joshi and US Copyright Office claims and figure-provenance/rights decisions remain as recorded below; their task/result pairs have moved, not become new experiments. Verbeek is now taught before the studies (slide 3); the post-break application does not repeat his research slide.
 

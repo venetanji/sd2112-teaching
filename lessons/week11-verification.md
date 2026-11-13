@@ -1,5 +1,6 @@
 # Week 11 revision verification / 22 October 2026
 
+**Current 13 November revision:** see `week11-revision-20261113.md`. The current deck has 38 slides (36 timed + 2 optional); the older slide counts and local-only status below describe the previous snapshot.
 **Historical receipt.** The entries below refer to the October paper-first
 deck, not the 12 November theory-first revision. For the current 37-slide route,
 case status and QA, see `week11-revision-20261112.md`. Do not carry the old slide

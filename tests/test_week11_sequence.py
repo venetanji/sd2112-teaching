@@ -25,40 +25,41 @@ class Week11Tests(unittest.TestCase):
         return next(slide for slide in self.slides if slide.title == heading)
 
     def test_timing_protected_blocks_and_full_route(self):
-        self.assertEqual((self.main_count, len(self.slides)), (36, 37))
+        self.assertEqual((self.main_count, len(self.slides)), (36, 38))
         self.assertEqual([(start, end) for start, end, _, _ in self.schedule],
-                         [(0, 28), (28, 46), (46, 60), (60, 75), (75, 90),
-                          (90, 110), (110, 140), (140, 165), (165, 180)])
-        self.assertEqual(sum(end - start for start, end, _, _ in self.schedule), 180)
-        self.assertEqual([n for _, _, _, (start, end) in self.schedule for n in range(start, end + 1)],
-                         list(range(1, 37)))
-        self.assertEqual(self.slides[22].title, 'Break.\n15 minutes.')
-        self.assertIn('30 min', text(self.slide('Find one claim and one choice.')))
-        self.assertIn('25 min', text(self.slide('Let the argument travel without you.')))
+                         [(0,10),(10,15),(15,25),(25,40),(40,62),(62,75),
+                          (75,90),(90,105),(105,115),(115,145),(145,165),(165,180)])
+        self.assertEqual(sum(end-start for start,end,_,_ in self.schedule), 180)
+        self.assertEqual([n for _,_,_,(start,end) in self.schedule for n in range(start,end+1)],
+                         list(range(1,self.main_count+1)))
+        pause = self.slides.index(self.slide('Break.\n15 minutes.'))
+        self.assertEqual(self.slides[pause+1].title, 'Group project: ask me anything.')
         self.assertFalse(any(s.cp or s.report for s in self.slides))
 
-    def test_theory_precedes_papers_and_reuses_single_example(self):
-        self.assertEqual([s.title for s in self.slides[:7]], ['Whose design?',
-            'Start with one decision.', 'The tool frames what we notice.',
-            'Selection makes a world visible.', 'Trace four different decisions.',
-            'Feeling, work, permission, law.', 'Name who can answer.'])
-        opening = ' '.join(map(text, self.slides[:7])).lower()
-        for term in ('source', 'tool framing', 'interpret, then act', 'included', 'excluded',
-                     'editorial choice', 'generate', 'select', 'revise', 'authorise',
-                     'feel', 'contribute', 'permission', 'protection',
-                     'accountable actor', 'correct or withdraw'):
-            self.assertIn(term, opening)
-        self.assertIn('fictional', self.slides[1].notes.lower())
-        self.assertIn('metal detector', self.slides[2].notes)
-        self.assertLess(self.slides.index(self.slide('Name who can answer.')),
-                        self.slides.index(self.slide('What did designers describe?')))
-        self.assertIn('Three candidates', self.slides[24].title)
-        self.assertEqual(sum(s.title == 'A tool also changes what we notice.' for s in self.slides), 0)
+    def test_four_topics_have_their_own_sections_and_plain_example(self):
+        topics = ['Mediation', 'Curation and power', 'Agency and\nauthorship', 'Responsibility']
+        for i, heading in enumerate(topics, 1):
+            sl = self.slide(heading)
+            self.assertIn(f'TOPIC {i} / 4', text(sl))
+            self.assertEqual(sl.bg, '#000B1C')
+        indexes = [self.slides.index(self.slide(t)) for t in topics]
+        self.assertEqual(indexes, sorted(indexes))
+        self.assertLess(indexes[0], self.slides.index(self.slide('Which story does the guide tell?')))
+        self.assertLess(indexes[1], self.slides.index(self.slide('Write a story. Change the starting help.')))
+        self.assertLess(indexes[2], self.slides.index(self.slide('What did designers describe?')))
+        self.assertLess(indexes[3], self.slides.index(self.slide('A complaint is not a verdict.')))
+        example = text(self.slide('Which story does the guide tell?'))
+        for term in ('fishing boat', 'museum', 'family', 'not invent'):
+            self.assertIn(term, example)
+        visible = ' '.join(map(text, self.slides))
+        for stale in ('institutional account', 'community account', 'explicit gap', 'Team evidence and curation audit'):
+            self.assertNotIn(stale, visible)
+        self.assertIn('metal detector', self.slide('The tool frames what we notice.').notes)
 
     def test_diagrams_show_relationships_not_repeated_row_tables(self):
         expected = {
             'The tool frames what we notice.': ('mediation-', 3, 2),
-            'Selection makes a world visible.': ('curation-', 3, 2),
+            'Choosing one story leaves another out.': ('curation-', 3, 2),
             'Trace four different decisions.': ('agency-', 4, 3),
             'Name who can answer.': ('responsibility-', 4, 3),
             'A complaint is not a verdict.': ('suno-timeline-', 3, 2),
@@ -84,7 +85,7 @@ class Week11Tests(unittest.TestCase):
 
     def test_studies_task_before_result_and_not_causal_overclaims(self):
         for task, result in [('What did designers describe?', 'A participant view is not a legal rule.'),
-                             ('Write a story. Change the starting help.', 'Higher ratings can accompany convergence.'),
+                             ('Write a story. Change the starting help.', 'Better ratings. More similar stories.'),
                              ('What must a dataset explain?', 'Document the choice, including the unknowns.'),
                              ('Would you type more to avoid friction?', 'More input can feel more yours.'),
                              ('Which human expression is protected?', 'Separate protection, permission and credit.')]:
@@ -99,7 +100,7 @@ class Week11Tests(unittest.TestCase):
         self.assertIn('do not infer that longer prompts earn copyright', self.slide('More input can feel more yours.').notes.lower())
 
     def test_suno_claims_are_attributed_and_status_is_bounded(self):
-        case = self.slides[19:22]
+        case = [self.slide(t) for t in ('A complaint is not a verdict.', 'Four questions, not one ruling.', 'Settlement is not universal clearance.')]
         self.assertEqual([s.title for s in case], ['A complaint is not a verdict.',
                          'Four questions, not one ruling.', 'Settlement is not universal clearance.'])
         visible = ' '.join(map(text, case))
@@ -120,15 +121,26 @@ class Week11Tests(unittest.TestCase):
         self.assertIn('https://www.wmg.com/news/warner-music-group-and-suno-forge-groundbreaking-partnership', links)
         self.assertIn('https://www.reuters.com/legal/litigation/musicians-union-sues-record-labels-over-ai-licensing-2026-06-05/', links)
 
-    def test_project_contract_and_week12_handover(self):
+    def test_one_topic_activity_and_unchanged_project_contract(self):
+        intro = text(self.slide('Choose one topic. Improve one thing.'))
+        for phrase in ('Choose ONE', 'ONE part', 'one problem', 'one change'):
+            self.assertIn(phrase, intro)
+        prompts = text(self.slide('Use one question to guide your change.'))
+        for phrase in ('MEDIATION', 'CURATION AND POWER', 'AGENCY AND AUTHORSHIP', 'RESPONSIBILITY'):
+            self.assertIn(phrase, prompts)
+        for heading in ('Find one claim and one choice.', 'Narrow the claim until it fits.',
+                        'Make the curation decision inspectable.', 'Let the argument travel without you.'):
+            self.assertFalse(any(s.title == heading for s in self.slides))
+        self.assertIn('60-second', text(self.slide('Make your change.')))
+        self.assertIn('30 min', text(self.slide('Make your change.')))
+        ending = text(self.slide('Keep the change. Keep the question.'))
+        for phrase in ('A0 poster', '3-5 minute video', 'one-page mediation brief', '40%',
+                       'current Canvas milestones', 'Week 12', 'Week 13: quiz + posters'):
+            self.assertIn(phrase, ending)
+        self.assertIn('not an extra deliverable', self.slide('Keep the change. Keep the question.').notes)
         all_text = ' '.join(map(text, self.slides))
-        for term in ('A0 poster', '3-5 minute video', 'one-page mediation brief', '40%',
-                     'current Canvas milestones', '30 / ethics 30 / poster 20 / video 10 / process 10',
-                     'WEEK 12', 'delegat'):
-            self.assertIn(term.lower(), all_text.lower())
-        for term in ('Nov 30', 'Week 14', 'Blackboard', 'Excalidraw', 'Tesla crashes'):
+        for term in ('Nov 30', 'Week 14', 'Blackboard', 'Excalidraw'):
             self.assertNotIn(term, all_text)
-        self.assertIn('Week 13 is quiz and posters', self.slides[-2].notes)
 
     def test_citations_assets_and_native_geometry(self):
         links = [r.url for s in self.slides for e in s.els if hasattr(e, 'paras')
@@ -160,9 +172,9 @@ class Week11Tests(unittest.TestCase):
             t = titles[0]
             self.assertEqual((t.x, t.y, t.w, t.h), (120, 184, 1680, 140))
             self.assertEqual(t.paras[0].runs[0].size, 72)
-            for label in [e for e in s.els if getattr(e, 'name', '').endswith('-label')]:
+            for label in [e for e in s.els if getattr(e, 'name', '').startswith('study-') and getattr(e, 'name', '').endswith('-label')]:
                 body = next(e for e in s.els if getattr(e, 'name', '') == label.name.replace('-label', '-body'))
-                self.assertEqual(body.y - label.y, 52)
+                self.assertEqual(body.y - label.y, 42 if any(getattr(e, 'name', '') == 'finding-panel' for e in s.els) and label.x == 1190 else 52)
         result = self.slide('More input can feel more yours.')
         image = next(e for e in result.els if getattr(e, 'name', '') == 'paper-image')
         self.assertEqual(Path(image.src).name, 'joshi-fig1a-motor.png')
@@ -185,6 +197,37 @@ class Week11Tests(unittest.TestCase):
             self.assertIn(s.notes, notes)
         self.assertIn('week11', tomllib.loads((ROOT / 'deckgen.toml').read_text())['course']['decks'])
         self.assertEqual(self.deck['pdf'], 'SD2112-week11.pdf')
+
+    def test_findings_have_distinct_native_highlight_panels(self):
+        results = ['A participant view is not a legal rule.', 'Better ratings. More similar stories.',
+                   'Document the choice, including the unknowns.', 'More input can feel more yours.',
+                   'Separate protection, permission and credit.']
+        for heading in results:
+            els = {getattr(e, 'name', ''): e for e in self.slide(heading).els}
+            self.assertIn('finding-panel', els)
+            self.assertIn('finding-accent', els)
+            self.assertGreaterEqual(els['finding-text'].paras[0].runs[0].size, 34)
+        self.assertIn('WHAT DESIGNERS REPORTED', text(self.slide(results[0])))
+        self.assertIn('THE PROPOSAL', text(self.slide(results[2])))
+        self.assertIn('THE OFFICE POSITION', text(self.slide(results[4])))
+
+    def test_news_then_deep_question_before_theory(self):
+        question = self.slides.index(self.slide('If AI makes the work,\nwhat makes it yours?'))
+        self.assertEqual(question, 3)
+        self.assertTrue(all('NEWS' in text(s) for s in self.slides[1:3]))
+        self.assertEqual(self.slides[question+1].title, 'Mediation')
+        self.assertTrue(all(any(r.url for e in s.els if hasattr(e, 'paras') for p in e.paras for r in p.runs)
+                            for s in self.slides[1:3]))
+
+    def test_news_keeps_dates_values_and_resignation_boundary(self):
+        market = text(self.slide('AI markets are unsettled.'))
+        for value in ('12 NOVEMBER 2026', '-4.3%', '-0.39%', '+5.9%', '+5.5%'):
+            self.assertIn(value, market)
+        leadership = text(self.slide('Jensen Huang steps down.'))
+        for phrase in ('resigned', 'Colette Kress', 'interim CEO', 'not retirement', 'not confirmed'):
+            self.assertIn(phrase, leadership)
+        self.assertIn('https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition',
+                      self.slide('Jensen Huang steps down.').notes)
 
     def test_ci_builds_before_export_dependent_tests(self):
         workflow = (ROOT / '.github/workflows/news-preview.yml').read_text()

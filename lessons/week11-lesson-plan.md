@@ -1,36 +1,58 @@
 # Week 11 lesson plan / Whose design?
 
-**From making outputs to making judgments** · revised 12 November 2026 · instructor draft, not a new assessment. Week 10 was a guest lecture. Start from a choice raised there, not presumed prototype/test outcomes. Use existing concept, notes or draft. No pre-reading, collection, extra submission or invented date. Check actual Canvas instructions for the existing draft A0 poster and one-page mediation brief.
+**Revision: 13 November 2026.** This replaces the earlier abstract guide example and evidence/curation audit. Week 12 is unchanged. Week 10 was the guest session; Week 13 remains quiz + posters. Current Canvas milestones and the existing project brief govern submissions.
 
 ## Teaching aim
 
-Explain mediation, curation, agency/authorship and responsibility through one fictional AI exhibition guide. The tool can make an institutional account seem definitive; the team chooses a source, rejects alternatives, edits the text and authorizes display. A missing community voice is a gap to acknowledge, not a story to invent. Distinguish felt ownership, credited work, reuse permission and legal copyright. Distributed production does not remove the publishing team's duty to hear objections and repair errors. The selected readings and Suno case test and complicate this argument rather than define the route. No paper or US report certifies a real team's design or supplies Hong Kong legal advice.
+Teach four clearly separated topics: mediation; curation and power; agency and authorship; responsibility. Each has its own section slide and a plain-language question. The fictional AI museum guide explains an old fishing boat: museum facts are not the same as a fishing family's experience. If no family has been interviewed, say that information is missing; do not invent it. This is an instructor illustration, not a real interview or validated interface.
+
+The selected empirical papers retain their tasks, comparisons, measures, source figures and limitations. Their findings now sit in bold, teal-tinted panels with an orange edge. The documentation proposal and US copyright report are labelled as such, not experimental findings. News comes first, followed by a deep discussion question; the group-project AMA immediately follows the full break.
 
 ## Run of show / exactly 180 minutes
 
-| Relative time | Minutes | Slides | Work |
+| Relative time | Minutes | Slides | Block |
 |---|---:|---:|---|
-| 0-28 | 28 | 1-7 | Guest-case decision; Verbeek mediation; selection/exclusion/representation; generate/select/revise/authorize; ownership distinctions; accountable response. Original native diagrams, fictional guide. |
-| 28-46 | 18 | 8-13 | Naqvi interview task, themes and limits; Doshi randomized short-story task, rating and similarity figures, bounded implication. |
-| 46-60 | 14 | 14-19 | Gebru documentation proposal; Joshi prompt-friction task, self-reported ownership and accessibility limit; US Copyright Office copyrightability distinction. |
-| 60-75 | 15 | 20-22 | Suno: complaint, answer, Warner settlement and status uncertainty; distinguish training, outputs, similarity and credit; infer a design trail, not a verdict. |
-| 75-90 | 15 | 23 | Full protected break. Give the actual return time in class. |
-| 90-110 | 20 | 24-28 | Apply the argument to three fictional candidate accounts, the existing A0 poster, one-page mediation brief and 3-5 minute video. |
-| 110-140 | 30 | 29-31 | Existing evidence/curation audit: choose a claim (0-5), verify/narrow source (5-15), record included/rejected material (15-25), show affected people, competing values, permission, responsible actor and uncertainty (25-30). |
-| 140-165 | 25 | 32-34 | Peer reading (0-8); one evidence and one communication question (8-15); actual revision (15-25). No four-team quota. |
-| 165-180 | 15 | 35-36 | Compare one before/after (first 10), next steps in the existing project (last 5); hand over to Week 12 delegation, justified reliance, transparency and contestability with investigated Tesla incidents. Week 13 is quiz and posters, not another theory block. |
+| 0-10 | 10 | 1-3 | Welcome and checked news |
+| 10-15 | 5 | 4-4 | Opening discussion |
+| 15-25 | 10 | 5-7 | Mediation |
+| 25-40 | 15 | 8-13 | Curation and power |
+| 40-62 | 22 | 14-22 | Agency and authorship |
+| 62-75 | 13 | 23-27 | Responsibility and Suno |
+| 75-90 | 15 | 28-28 | Break |
+| 90-105 | 15 | 29-29 | Group-project AMA |
+| 105-115 | 10 | 30-32 | One activity: instructions and example |
+| 115-145 | 30 | 33-33 | Apply one topic to the project |
+| 145-165 | 20 | 34-34 | Explain and improve the same change |
+| 165-180 | 15 | 35-36 | Share back and next steps |
 
-Slide 37 is untimed bibliography, not assigned reading. Zero ClassPoint activities. No change to group project (40% of course), its A0 poster, 3-5 minute video and one-page mediation brief, or within-project research/ethics/poster/video/process weights 30/30/20/10/10. Keep the Week 11 draft milestones subject to current Canvas, without inventing a date or changing submission routes.
+Slides 37-38 are optional figure detail/reference material, not extra teaching time or assigned reading. The enlarged Doshi similarity figure can replace time inside curation if needed. Zero ClassPoint collections.
 
-## Instructor route
+## One activity: apply one topic to the group project
 
-1. Ask about a decision in the guest case, not whether all teams completed a prototype. Show the guide example as original teacher illustration. Three candidate descriptions are not AI-generated evidence or a real product test.
-2. Reconnect Verbeek's human-world mediation (2015) to Week 5/8: a representation helps us perceive and interpret; the interface also shapes what actions are available. Discuss a sourced account and alternative as an untested design response, not a proven fairness safeguard.
-3. Make the selection criterion, exclusion, contributor roles, authorization and correction actor legible. On the ownership slide, separate the four questions aloud; felt ownership from Joshi's self-report is not proof of copyright or permission.
-4. For each taught empirical paper, establish task, comparison, example and measurement before result. Naqvi: 28 artifact-based interviews (10 juniors/10 seniors/8 professionals), no assigned control or skill-loss follow-up. Doshi: 293 completed short stories randomized to no/one/up-to-five AI ideas; separate 600 evaluators; novelty/usefulness 1-9 and embedding similarity, not a cultural-representation count. Joshi: 29 analyzed in one experiment, 30 new in a second; baseline/time/motor interfaces, words and 0-100 self-reported ownership; baseline always first. Source figures retain limits. Gebru proposes documentation, not a harm-reduction experiment. US Copyright Office analyzes US copyrightability, not permission for third-party material.
-5. Suno: identify the original plaintiffs, the alleged unlicensed training, Suno's contested fair-use position, Warner's 2025 settlement/licensing statement and the separate unresolved-current-status question for Universal/Sony. The original complaint is not a verdict. No imitation audio, screenshot or music sample is presented. Source and verification limits are in `week11-evidence-ledger.md`.
-6. During the protected audit and peer revision, teams work on their own existing poster/brief/video argument. Ask what evidence supports the selected claim, which material was excluded, who may object, which value is traded off, who can change the output and what remains unknown. Do not collect private student material or add a report activity.
+Students choose **one**, not all four. The output is one annotated sketch or short rewrite in their existing project draft, plus a 60-second explanation. No separate worksheet, source audit, upload or new grading requirement.
 
-The 11 November news supplement remains optional: Adobe's announced creative agents may replace three opening minutes as a labelled vendor claim, not an evaluated product. Do not turn its preview/private-beta connectivity into a classroom requirement or claim demonstrated quality. The Kiro comparison is not needed for Week 11's theory spine; Week 12 addresses action delegation.
+1. Choose one topic and one part of the current project: a screen, output or step in the experience.
+2. Use the topic question to identify one problem and the person affected.
+3. Sketch or rewrite one change. Distinguish an observed problem from an assumption and a proposed change from a tested result.
+4. Explain the problem, change and reason to another group; use one question to improve it.
 
-Primary evidence, exact versions, source-image rights and case status: `week11-evidence-ledger.md`. Mirrored native notes: `week11-speaker-notes.md`. Revision QA/status: `week11-revision-20261112.md`.
+| Choose one topic | Guiding question |
+|---|---|
+| Mediation | What might AI change about what the person notices, believes or does? |
+| Curation and power | Which voices, sources or options have you left out? |
+| Agency and authorship | Who makes the important choice, who can change the output and whose work gets credit? |
+| Responsibility | Who acts when it goes wrong, and how can a person report the problem? |
+
+Worked example: choose **curation and power**. The guide only tells the museum story. Ask a fishing family for its story and permission, then let visitors choose either story. Until that source exists, label it missing. This is a proposed change, not a fabricated interview or evidence of success.
+
+Work: 5 minutes choose; 10 minutes identify the problem; 10 minutes sketch/rewrite; 5 minutes prepare the explanation = 30 minutes. Feedback and revision: 5 minutes exchange explanations; 5 minutes ask a clarifying question; 10 minutes improve = 20 minutes. These are stages of the same activity, not two audits. No four-group feedback quota.
+
+## Instructor prompts and safeguards
+
+- Opening question: **If AI makes the work, what makes it yours?** One minute alone, two in pairs, two sharing views. Distinguish contribution, control, felt ownership and law; return to the question at the end.
+- AMA: fifteen minutes directly after the break. Invite questions on ideas, evidence, use of AI, poster/video/mediation brief, and what the team is stuck on. No new collection or invented deadline.
+- Source results: Naqvi's 28 interviews are reported views, not a legal rule or skill-loss experiment. Doshi's 293-story randomized task and 600 evaluators support bounded ratings/similarity findings, not all creativity. Joshi's 29/30 participants report felt ownership, not copyright. Gebru proposes documentation. The US Office report concerns US copyrightability, not permission to reuse material or Hong Kong legal advice.
+- Suno: distinguish complaint, response and Warner's settlement; latest other-party procedural status remains explicitly unverified. Do not use a settlement as blanket clearance.
+- End with a few 60-second explanations, then the existing project/Week 12/Week 13 handover. Keep private records off-screen. Existing A0 poster, 3-5 minute video and one-page mediation brief remain; group project is 40% of the course, with unchanged internal weights 30/30/20/10/10.
+
+News sources and current verification limits: `week11-news-20261113.md`. The 11 November news supplement and 12 November revision report are historical, not the current run of show. Notes are regenerated from the final source. No main/staging merge or production release is authorized by this revision.
