@@ -115,6 +115,7 @@ class Week12Tests(unittest.TestCase):
     def test_only_two_reflections_and_static_nonchatbot_workflow(self):
         activities=[(i,s) for i,s in enumerate(self.slides,1) if s.cp]
         self.assertEqual([i for i,_ in activities],[5,36])
+        self.assertIn('slides 5 and 36', self.plan)
         for i,s in activities:
             self.assertEqual(s.cp['type'],'short_answer')
             self.assertFalse(s.cp['multiple'])

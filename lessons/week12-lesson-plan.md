@@ -1,6 +1,6 @@
 # SD2112 Week 12 / lesson plan / 18 November 2026
 
-From judgment to justified reliance. Instructor draft; no commit or deployment by this worker. Source `deck/week12.py`; notes companion `lessons/week12-speaker-notes.md`; evidence/provenance in the Week 12 ledger and `deck/assets/week12/provenance.md`. The timed route is 36 slides, plus two untimed references (38 total). Week 11 owns Verbeek mediation, curation/authorship and Suno. Week 12 applies that language to when reliance and delegated action are warranted. No Week 13 theory or edits; Week 13 remains quiz and posters. The case is the 23 March 2018 Model X using **Autopilot (TACC + Autosteer), supervised Level 2 assistance**, not Full Self-Driving (Supervised) or autonomous driving.
+From judgment to justified reliance. Instructor draft. Source `deck/week12.py`; notes companion `lessons/week12-speaker-notes.md`; evidence/provenance in the Week 12 ledger and `deck/assets/week12/provenance.md`. The timed route is 36 slides, plus two untimed references (38 total). Week 11 owns Verbeek mediation, curation/authorship and Suno. Week 12 applies that language to when reliance and delegated action are warranted. No Week 13 theory or edits; Week 13 remains quiz and posters. The case is the 23 March 2018 Model X using **Autopilot (TACC + Autosteer), supervised Level 2 assistance**, not Full Self-Driving (Supervised) or autonomous driving.
 
 ## Exactly 180 minutes
 
@@ -78,7 +78,7 @@ Cecil et al. (2024) supply a separate experiment about immediate decisions on fi
 
 ## Studio / no new assessment
 
-Two optional named short-answer reflections remain on slides 3 and 34; oral or private team notes work equally well. No artifact is collected in walkthrough, review or revision. Do not publicly link named/private responses without normal course checks.
+Two optional named short-answer reflections remain on slides 5 and 36; oral or private team notes work equally well. No artifact is collected in walkthrough, review or revision. Do not publicly link named/private responses without normal course checks.
 
 - **90-120, walkthrough:** 0-5 choose ordinary/ambiguous/out-of-scope situations; 5-20 peer walks through static screens/paper while teammate simulates the system; 20-25 separate observation and interpretation; 25-30 revise one boundary/control. Fictional data only; no live actions, accounts or required prototype.
 - **120-155, mock review:** 0-3 pair; 3-15 first review; 15-27 swap; 27-35 synthesize a strength, a revision and open question. Start each turn with silent/accessible poster inspection, then evidence/ethics and video or storyboard/brief. No compulsory printing, fixed group count, upload or marking.
