@@ -44,12 +44,12 @@ class Week12Tests(unittest.TestCase):
                          [(0,10),(10,40),(40,65),(65,75),(75,90),(90,120),
                           (120,155),(155,175),(175,180)])
         self.assertEqual(sum(b-a for a,b,*_ in self.timing), 180)
-        self.assertEqual([i for _,_,first,last,_ in self.timing for i in range(first,last+1)],list(range(1,35)))
-        self.assertEqual(len(self.slides),36)
-        for i,minutes in [(25,30),(28,35),(32,20)]:
+        self.assertEqual([i for _,_,first,last,_ in self.timing for i in range(first,last+1)],list(range(1,37)))
+        self.assertEqual(len(self.slides),38)
+        for i,minutes in [(27,30),(30,35),(34,20)]:
             self.assertIn(f'{minutes} min',text(self.slides[i-1]))
-        self.assertEqual(self.slides[23].title,'Break.\nFifteen minutes.')
-        self.assertEqual([self.slides[i-1].title for i in (25,28,32)],
+        self.assertEqual(self.slides[25].title,'Break.\nFifteen minutes.')
+        self.assertEqual([self.slides[i-1].title for i in (27,30,34)],
                          ['Walk through three low-risk situations.',
                           'Paired review. Then swap roles.', 'Choose the change that matters most.'])
 
@@ -58,29 +58,29 @@ class Week12Tests(unittest.TestCase):
         rows=re.findall(r'^\| (\d+) \| (.*?) \| (.*?) \|$',mapping,re.M)
         companion=(ROOT/'lessons/week12-speaker-notes.md').read_text()
         sections=re.split(r'^## \d+ / .*?\n\n',companion,flags=re.M)[1:]
-        self.assertEqual(len(rows),36)
-        self.assertEqual(len(sections),36)
+        self.assertEqual(len(rows),38)
+        self.assertEqual(len(sections),38)
         for i,(slide,row,note) in enumerate(zip(self.slides,rows,sections),1):
             self.assertEqual(row[:2],(str(i),slide.title.replace('\n',' / ')))
             self.assertEqual(note.strip(),slide.notes.strip())
             self.assertGreater(len(slide.notes.split()),55,slide.title)
 
     def test_case_system_evidence_procedure_and_design_boundaries(self):
-        visible=' '.join(text(s) for s in self.slides[7:15])
+        visible=' '.join(text(s) for s in self.slides[9:17])
         for phrase in ('Autopilot was', 'Autosteer', 'Traffic-Aware Cruise Control',
                        'NTSB', '-5.9 S', '-3.9 S', '71 mph',
                        'no jury finding', 'not a liability verdict', 'NOT TO SCALE'):
             self.assertIn(phrase.lower(),visible.lower())
-        self.assertIn('Full Self-Driving (Supervised)',self.slides[7].notes)
-        self.assertIn('not a test of an alternative interface',self.slides[10].notes)
-        self.assertIn('not retroactive proof',self.slides[14].notes)
-        self.assertIn('did not obtain the civil docket',self.slides[13].notes)
-        self.assertIn('2024',self.slides[13].notes)
+        self.assertIn('Full Self-Driving (Supervised)',self.slides[9].notes)
+        self.assertIn('not a test of an alternative interface',self.slides[12].notes)
+        self.assertIn('not retroactive proof',self.slides[16].notes)
+        self.assertIn('did not obtain the civil docket',self.slides[15].notes)
+        self.assertIn('2024',self.slides[15].notes)
         self.assertNotIn('driver at fault therefore design absolved',visible.lower())
-        self.assertIn('not a population rate',visible.lower()+' '+text(self.slides[19]).lower())
+        self.assertIn('not a population rate',visible.lower()+' '+text(self.slides[21]).lower())
 
     def test_case_visuals_are_editable_and_semantically_ordered(self):
-        diagram=self.slides[9]
+        diagram=self.slides[11]
         self.assertFalse(any(el.kind=='image' for el in diagram.els))
         self.assertIn('schematic',diagram.notes)
         self.assertIn('not to scale',text(diagram).lower())
@@ -90,9 +90,9 @@ class Week12Tests(unittest.TestCase):
         self.assertIn('US-101 continues',' '.join(r.text for p in lower.paras for r in p.runs))
         self.assertIn('ORANGE = GORE',text(diagram))
         self.assertIn('BLACK = DAMAGED ATTENUATOR',text(diagram))
-        for slide,labels in [(self.slides[5],['GOAL','EVIDENCE','PERMISSION','RESULT']),
-                             (self.slides[10],['-5.9 S','-3.9 S','APPROACH','IMPACT']),
-                             (self.slides[12],['DRIVER','TESLA','ROAD','REGULATOR'])]:
+        for slide,labels in [(self.slides[7],['GOAL','EVIDENCE','PERMISSION','RESULT']),
+                             (self.slides[12],['-5.9 S','-3.9 S','APPROACH','IMPACT']),
+                             (self.slides[14],['DRIVER','TESLA','ROAD','REGULATOR'])]:
             visible=' '.join(r.text for e in slide.els[2:] if hasattr(e,'paras') for p in e.paras for r in p.runs)
             self.assertEqual([visible.index(v) for v in labels], sorted(visible.index(v) for v in labels))
             self.assertEqual(sum(e.kind=='rect' and e.y==355 for e in slide.els),4)
@@ -108,32 +108,32 @@ class Week12Tests(unittest.TestCase):
             self.assertIn(phrase,text(result))
         self.assertEqual(len([e for e in result.els if e.kind=='image' and e.name.startswith('paper-excerpt')]),1)
         self.assertEqual(sum(e.kind=='image' and e.name.startswith('paper-excerpt') for s in self.slides for e in s.els),1)
-        self.assertIn('SIMULATION',text(self.slides[18]))
-        self.assertIn('not a proven safety solution',text(self.slides[20]))
+        self.assertIn('SIMULATION',text(self.slides[20]))
+        self.assertIn('not a proven safety solution',text(self.slides[22]))
         self.assertTrue((ROOT/'deck/assets/week12/provenance.md').exists())
 
     def test_only_two_reflections_and_static_nonchatbot_workflow(self):
         activities=[(i,s) for i,s in enumerate(self.slides,1) if s.cp]
-        self.assertEqual([i for i,_ in activities],[3,34])
+        self.assertEqual([i for i,_ in activities],[5,36])
         for i,s in activities:
             self.assertEqual(s.cp['type'],'short_answer')
             self.assertFalse(s.cp['multiple'])
             self.assertFalse(s.cp['hide_names'])
             self.assertIn(s.title,self.plan)
-        self.assertFalse(any(s.cp for s in self.slides[24:33]))
+        self.assertFalse(any(s.cp for s in self.slides[26:35]))
         for phrase in ('paper/static','SIMULATION','ordinary, ambiguous','out-of-scope'):
-            self.assertIn(phrase,text(self.slides[24]))
-        self.assertIn('classifiers, recommenders, physical objects and installations',self.slides[24].notes)
-        self.assertIn('without disability simulation',text(self.slides[25]))
-        self.assertIn('No new deadline, grade or upload',text(self.slides[31]))
-        self.assertIn('A0 poster',text(self.slides[21]))
-        self.assertNotIn('final quiz',' '.join(text(s).lower() for s in self.slides[:34]))
-        self.assertIn('Week 13 is the confirmed quiz and poster session',self.slides[33].notes)
-        self.assertNotIn('reconcile Week 13 policy',self.slides[33].notes)
-        self.assertIn('mock-review activity slide',self.slides[30].notes)
-        self.assertIn('revision activity',self.slides[32].notes)
-        self.assertNotIn('slide 31',self.slides[30].notes)
-        self.assertNotIn('slide 35',self.slides[32].notes)
+            self.assertIn(phrase,text(self.slides[26]))
+        self.assertIn('classifiers, recommenders, physical objects and installations',self.slides[26].notes)
+        self.assertIn('without disability simulation',text(self.slides[27]))
+        self.assertIn('No new deadline, grade or upload',text(self.slides[33]))
+        self.assertIn('A0 poster',text(self.slides[23]))
+        self.assertNotIn('final quiz',' '.join(text(s).lower() for s in self.slides[:36]))
+        self.assertIn('Week 13 is the confirmed quiz and poster session',self.slides[35].notes)
+        self.assertNotIn('reconcile Week 13 policy',self.slides[35].notes)
+        self.assertIn('mock-review activity slide',self.slides[32].notes)
+        self.assertIn('revision activity',self.slides[34].notes)
+        self.assertNotIn('slide 31',self.slides[32].notes)
+        self.assertNotIn('slide 35',self.slides[34].notes)
 
     def test_report_hook_rejects_drift_and_withholds(self):
         questions=[s.title for s in self.slides if s.cp]
@@ -158,6 +158,23 @@ class Week12Tests(unittest.TestCase):
                     self.assertGreaterEqual(el.y,0)
                     self.assertLessEqual(el.x+el.w,1921)
                     self.assertLessEqual(el.y+el.h,1081)
+
+
+
+
+class Week12NewsTests(unittest.TestCase):
+    def test_four_sources_and_existing_time_budget(self):
+        from deck.week12 import S, TIMING, NEWS_SOURCES
+        news=S[1:3]
+        visible=' '.join(text(s) for s in news)
+        for phrase in ('GPT-6.2 Astra/Sol', 'Gemini 4 Hydrogen', 'Qwen4-Max', 'Seedream 5.5', '17 Nov', '16 Nov', '12 Nov', 'PNG', 'not vectors', 'Vendor'):
+            self.assertIn(phrase,visible)
+        urls={r.url for s in news for e in s.els if hasattr(e,'paras') for p in e.paras for r in p.runs if r.url}
+        self.assertEqual(urls,set(NEWS_SOURCES.values()))
+        self.assertFalse(any(s.cp for s in news))
+        self.assertEqual(TIMING[0][:4],(0,10,1,5))
+        self.assertEqual(len(S),38)
+        self.assertTrue((ROOT/'lessons/week12-news-20261118.md').exists())
 
 
 if __name__=='__main__': unittest.main()

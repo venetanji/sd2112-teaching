@@ -20,6 +20,22 @@ def source(key):
 S.append(title('POLYU SCHOOL OF DESIGN / SD2112 / WEEK 12',
     'From judgment\nto justified reliance.', "What may a system do on someone else's behalf?",
     notes='Week 11 introduced mediation: a technology shapes how people perceive, interpret and act. It also examined curation, authorship, responsibility and the Suno litigation. Do not reteach those cases. This week asks when the invitation to rely on a product is justified by task evidence and meaningful control, especially when action has consequences. Use the verified 2018 Tesla Autopilot case, not Full Self-Driving (Supervised), as the case. Then test an existing project with paper or static screens. Exactly 180 minutes; reference shelf is untimed.'))
+NEWS_SOURCES = {
+    'openai': 'https://openai.com/index/introducing-gpt-6-2-astra-sol/',
+    'google': 'https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/',
+    'qwen': 'https://www.alibabacloud.com/en/press-room/alibaba-unveils-qwen4-max?_p_lc=1',
+    'runway': 'https://docs.dev.runwayml.com/api-details/api_changelog/',
+}
+S.append(content('0-10 / NEWS / CHECKED 18 NOVEMBER 2026', 'New agents, familiar evidence gaps', [
+    '17 Nov: GPT-6.2 Astra/Sol. OpenAI reports stronger coding and 3D work, but omitted blockers in two tests. [OpenAI](' + NEWS_SOURCES['openai'] + ')',
+    '12 Nov: Gemini 4 Hydrogen. Google offers a faster execution model and automatic model switching. [Google](' + NEWS_SOURCES['google'] + ')',
+    'Vendor reports describe capabilities. What evidence would justify letting either system act for someone?',
+], body_size=33, notes='Spend two minutes here within the existing ten-minute opening. OpenAI released Astra/Sol on 17 November for Work/Codex Plus, Pro, Enterprise and Edu and the API. Its announcement reports better coding/3D work, but also more omitted blockers in two evaluations, mitigated with Codex instructions. This does not establish a universal failure rate. Google dated Hydrogen 12 November and updated its page 16 November. Gemini, AI Studio and API access span tiers; Antigravity requires paid Pro/Ultra. Orchestrator selects models during a task. Efficiency figures are vendor benchmark results, not independent classroom findings. Ask how a product would show a missing input before the next action. No account, purchase or live agent run is needed. Sources: ' + NEWS_SOURCES['openai'] + ' ; ' + NEWS_SOURCES['google']))
+S.append(content('0-10 / NEWS / CAPABILITY AND CONTROL', 'Long tasks and editable images', [
+    '16 Nov: Qwen4-Max. Vision, long context and tool use. Smaller open-weight models are promised; Max is not established as open source. [Alibaba](' + NEWS_SOURCES['qwen'] + ')',
+    '12 Nov: Runway adds Seedream 5.5 and Layers. A flat image can become a base plus transparent PNG layers, not vectors. [Runway](' + NEWS_SOURCES['runway'] + ')',
+    'What must a person inspect before accepting a long task or a reconstructed image?',
+], body_size=32, notes='Spend two minutes here, then use the existing opening question. Alibaba lists Qwen4-Max on QwenCloud Token Plan/API, QwenWork and QwenStudio. Its announcement describes native vision and one-million-token context; forthcoming smaller open weights do not establish an open-source Max release. Runway lists Seedream 5.5 image generation/editing and a separate Layers decomposition capability. Raster separation can introduce reconstruction errors: discuss moving one object in an instructor-owned synthetic poster and checking edges, occlusion and unintended changes. This is a proposed inspection, not a generation or validated result. No upload or payment is required. API access and costs differ by service; students need not adopt either. These vendor sources motivate the evidence/permission distinction and do not validate the later high-stakes case. Sources: ' + NEWS_SOURCES['qwen'] + ' ; ' + NEWS_SOURCES['runway']))
 S.append(content('0-10 / TODAY / 180 MINUTES', 'Evidence -> permission -> revision.', [
     '0-75: delegation, a real case, one study and a bounded design response.',
     '75-90: break. 90-120: interface walkthrough, 30 minutes.',
@@ -31,7 +47,7 @@ S.append(question('short_answer', 'What should a person NOT delegate to your pro
     eyebrow_text='0-10 / TEAM NOTES, ORAL SHARE OR CLASSPOINT',
     notes='Opening reflection takes about three minutes. A single blanket prohibition is less useful than a boundary for a particular task and person. For example, a booking aid may suggest rooms while the group retains final approval; an installation may adjust light while the operator sets a maximum. Ask what evidence would justify shifting the boundary. Do not request personal experiences or private material. The oral/team-note route is complete; ClassPoint is optional, named by default and not an assessed collection.'))
 S.append(section('01 / DELEGATION', 'What can the\nsystem decide?', 'Judgment, action and permission / 10-40 min', bg='#246E70',
-    notes='Carry Week 11 mediation forward without reteaching Verbeek or the Suno case. A product does not only offer information; its defaults and actions distribute opportunities to judge and act. Spend thirty minutes total on slides four through thirteen. Use a fictional room-booking example to make the concepts accessible before the Tesla case. The case is a high-stakes counterexample to the idea that a mere override always provides meaningful human supervision. Do not use crash images or speculate about the person who died.'))
+    notes='Carry Week 11 mediation forward without reteaching Verbeek or the Suno case. A product does not only offer information; its defaults and actions distribute opportunities to judge and act. Spend thirty minutes total on the delegation and Autopilot block. Use a fictional room-booking example to make the concepts accessible before the Tesla case. The case is a high-stakes counterexample to the idea that a mere override always provides meaningful human supervision. Do not use crash images or speculate about the person who died.'))
 S.append(cards('10-40 / ONE REQUEST / THREE BOUNDARIES', '"Find an available workshop slot."', [
     ('SUGGEST', 'Propose a room.', 'The person checks the capacity, access needs and schedule.'),
     ('READ', 'Check a timetable.', 'The product may expose private records even without changing them.'),
@@ -218,7 +234,7 @@ S.append(content('REFERENCE SHELF / EXPERIMENT', 'Cecil et al. / task and limits
     'Five experiments, 1,403 participants; 16 fictional CV decisions per participant.',
     'Wrong advice reduced trial accuracy; the tested explanations did not clearly fix it. No real hiring.',
 ], body_size=29, notes='Untimed primary-source shelf; not a newly compulsory reading. The publisher open article was consulted by the earlier Week 12 draft and the retained figure crop is CC BY 4.0, see asset provenance. Results refer to specified tasks, correctness, comparison and measurement; confidence and perceived quality are separate outcomes. The figure shown in the timed block is Experiment 2a, not a pooled five-study statistic. No universal claim that explanations never help. Other former Week 12 paper sources are removed from this timed route to give the case and coherent theoretical argument room.'))
-TIMING = [(0, 10, 1, 3, 'Reconnect'), (10, 40, 4, 15, 'Delegation / Autopilot case'), (40, 65, 16, 20, 'Evidence for reliance'), (65, 75, 21, 23, 'Evidence to revision'), (75, 90, 24, 24, 'Break'), (90, 120, 25, 27, 'Interface walkthrough'), (120, 155, 28, 31, 'Mock review'), (155, 175, 32, 33, 'Revision'), (175, 180, 34, 34, 'Close')]
+TIMING = [(0, 10, 1, 5, 'Reconnect / news'), (10, 40, 6, 17, 'Delegation / Autopilot case'), (40, 65, 18, 22, 'Evidence for reliance'), (65, 75, 23, 25, 'Evidence to revision'), (75, 90, 26, 26, 'Break'), (90, 120, 27, 29, 'Interface walkthrough'), (120, 155, 30, 33, 'Mock review'), (155, 175, 34, 35, 'Revision'), (175, 180, 36, 36, 'Close')]
 
 
 

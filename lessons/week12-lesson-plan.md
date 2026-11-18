@@ -1,23 +1,23 @@
-# SD2112 Week 12 / lesson plan / 12 November 2026
+# SD2112 Week 12 / lesson plan / 18 November 2026
 
-From judgment to justified reliance. Instructor draft; no commit or deployment by this worker. Source `deck/week12.py`; notes companion `lessons/week12-speaker-notes.md`; evidence/provenance in the Week 12 ledger and `deck/assets/week12/provenance.md`. The timed route is 34 slides, plus two untimed references (36 total). Week 11 owns Verbeek mediation, curation/authorship and Suno. Week 12 applies that language to when reliance and delegated action are warranted. No Week 13 theory or edits; Week 13 remains quiz and posters. The case is the 23 March 2018 Model X using **Autopilot (TACC + Autosteer), supervised Level 2 assistance**, not Full Self-Driving (Supervised) or autonomous driving.
+From judgment to justified reliance. Instructor draft; no commit or deployment by this worker. Source `deck/week12.py`; notes companion `lessons/week12-speaker-notes.md`; evidence/provenance in the Week 12 ledger and `deck/assets/week12/provenance.md`. The timed route is 36 slides, plus two untimed references (38 total). Week 11 owns Verbeek mediation, curation/authorship and Suno. Week 12 applies that language to when reliance and delegated action are warranted. No Week 13 theory or edits; Week 13 remains quiz and posters. The case is the 23 March 2018 Model X using **Autopilot (TACC + Autosteer), supervised Level 2 assistance**, not Full Self-Driving (Supervised) or autonomous driving.
 
 ## Exactly 180 minutes
 
 | Relative minutes | Duration | Segment | Slides |
 |---|---:|---|---|
-| 0-10 | 10 | Reconnect | 1-3 |
-| 10-40 | 30 | Delegation / Autopilot case | 4-15 |
-| 40-65 | 25 | Evidence for reliance | 16-20 |
-| 65-75 | 10 | Evidence to revision | 21-23 |
-| 75-90 | 15 | Break | 24-24 |
-| 90-120 | 30 | Interface walkthrough | 25-27 |
-| 120-155 | 35 | Mock review | 28-31 |
-| 155-175 | 20 | Revision | 32-33 |
-| 175-180 | 5 | Close | 34-34 |
+| 0-10 | 10 | Reconnect / news | 1-5 |
+| 10-40 | 30 | Delegation / Autopilot case | 6-17 |
+| 40-65 | 25 | Evidence for reliance | 18-22 |
+| 65-75 | 10 | Evidence to revision | 23-25 |
+| 75-90 | 15 | Break | 26-26 |
+| 90-120 | 30 | Interface walkthrough | 27-29 |
+| 120-155 | 35 | Mock review | 30-33 |
+| 155-175 | 20 | Revision | 34-35 |
+| 175-180 | 5 | Close | 36-36 |
 
 
-Slides 35-36 are untimed reference material, not extra lecture. Keep 15-minute break, 30-minute walkthrough, 35-minute mock review, 20-minute revision. If late, shorten case discussion within its block, not practice. The first 75 minutes move from a limited delegation model to the 2018 case, one bounded experiment, then an illustrative project revision. Case discussion receives about 17 minutes within the 30-minute delegation block. The Cecil pair and project evidence distinctions fit within the 25-minute reliance block.
+Slides 37-38 are untimed reference material, not extra lecture. Keep 15-minute break, 30-minute walkthrough, 35-minute mock review, 20-minute revision. If late, shorten case discussion within its block, not practice. The first 75 minutes move from a limited delegation model to the 2018 case, one bounded experiment, then an illustrative project revision. Case discussion receives about 17 minutes within the 30-minute delegation block. The Cecil pair and project evidence distinctions fit within the 25-minute reliance block.
 
 ## Actual slide map
 
@@ -26,43 +26,49 @@ Slides 35-36 are untimed reference material, not extra lecture. Keep 15-minute b
 | Slide | Actual title | Block |
 |---|---|---|
 | 1 | From judgment / to justified reliance. | 0-10 |
-| 2 | Evidence -> permission -> revision. | 0-10 |
-| 3 | What should a person NOT delegate to your product? | 0-10 |
-| 4 | What can the / system decide? | 10-40 |
-| 5 | "Find an available workshop slot." | 10-40 |
-| 6 | Reliance is a loop, not a button. | 10-40 |
-| 7 | Persuasive is not justified. | 10-40 |
-| 8 | Autopilot was / not autonomy. | 10-40 |
-| 9 | What was the system allowed to do? | 10-40 |
-| 10 | Autosteer followed the wrong path. | 10-40 |
-| 11 | An invitation to intervene had a time limit. | 10-40 |
-| 12 | Could oversight actually happen in time? | 10-40 |
-| 13 | An accident has more than one control point. | 10-40 |
-| 14 | Investigation is not a civil verdict. | 10-40 |
-| 15 | Control before, during and after. | 10-40 |
-| 16 | What warrants / the next step? | 40-65 |
-| 17 | Can people reject incorrect advice? | 40-65 |
-| 18 | An explanation did not fix wrong advice here. | 40-65 |
-| 19 | Can someone reject an incorrect suggestion? | 40-65 |
-| 20 | Ask what each kind of evidence can support. | 40-65 |
-| 21 | Same goal. Different authority. | 65-75 |
-| 22 | Review the project you already owe. | 65-75 |
-| 23 | Can the work speak without an oral rescue? | 65-75 |
-| 24 | Break. / Fifteen minutes. | 75-90 |
-| 25 | Walk through three low-risk situations. | 90-120 |
-| 26 | Show the next action. Do not explain it away. | 90-120 |
-| 27 | One observation. One bounded revision. | 90-120 |
-| 28 | Paired review. Then swap roles. | 120-155 |
-| 29 | Read the poster before the pitch. | 120-155 |
-| 30 | Who benefits? Who can challenge it? | 120-155 |
-| 31 | Does the same product appear in all three? | 120-155 |
-| 32 | Choose the change that matters most. | 155-175 |
-| 33 | A stronger claim can be a narrower claim. | 155-175 |
-| 34 | What will you change - and who can contest the result? | 175-180 |
-| 35 | NTSB / case evidence | Reference shelf |
-| 36 | Cecil et al. / task and limits | Reference shelf |
+| 2 | New agents, familiar evidence gaps | 0-10 |
+| 3 | Long tasks and editable images | 0-10 |
+| 4 | Evidence -> permission -> revision. | 0-10 |
+| 5 | What should a person NOT delegate to your product? | 0-10 |
+| 6 | What can the / system decide? | 10-40 |
+| 7 | "Find an available workshop slot." | 10-40 |
+| 8 | Reliance is a loop, not a button. | 10-40 |
+| 9 | Persuasive is not justified. | 10-40 |
+| 10 | Autopilot was / not autonomy. | 10-40 |
+| 11 | What was the system allowed to do? | 10-40 |
+| 12 | Autosteer followed the wrong path. | 10-40 |
+| 13 | An invitation to intervene had a time limit. | 10-40 |
+| 14 | Could oversight actually happen in time? | 10-40 |
+| 15 | An accident has more than one control point. | 10-40 |
+| 16 | Investigation is not a civil verdict. | 10-40 |
+| 17 | Control before, during and after. | 10-40 |
+| 18 | What warrants / the next step? | 40-65 |
+| 19 | Can people reject incorrect advice? | 40-65 |
+| 20 | An explanation did not fix wrong advice here. | 40-65 |
+| 21 | Can someone reject an incorrect suggestion? | 40-65 |
+| 22 | Ask what each kind of evidence can support. | 40-65 |
+| 23 | Same goal. Different authority. | 65-75 |
+| 24 | Review the project you already owe. | 65-75 |
+| 25 | Can the work speak without an oral rescue? | 65-75 |
+| 26 | Break. / Fifteen minutes. | 75-90 |
+| 27 | Walk through three low-risk situations. | 90-120 |
+| 28 | Show the next action. Do not explain it away. | 90-120 |
+| 29 | One observation. One bounded revision. | 90-120 |
+| 30 | Paired review. Then swap roles. | 120-155 |
+| 31 | Read the poster before the pitch. | 120-155 |
+| 32 | Who benefits? Who can challenge it? | 120-155 |
+| 33 | Does the same product appear in all three? | 120-155 |
+| 34 | Choose the change that matters most. | 155-175 |
+| 35 | A stronger claim can be a narrower claim. | 155-175 |
+| 36 | What will you change - and who can contest the result? | 175-180 |
+| 37 | NTSB / case evidence | Reference shelf |
+| 38 | Cecil et al. / task and limits | Reference shelf |
 
 <!-- slide-map:end -->
+
+## News within the existing opening
+
+Keep 0-10 minutes total: title/reconnection and agenda 3 minutes, two news slides 4 minutes, existing optional question 3 minutes. Four dated developments bridge capability to evidence and permission. Use discussion, not live account setup or generation. No new activity, collection, assessment or required reading. See `week12-news-20261118.md` for sources and limits. The actual class date remains unconfirmed here.
 
 ## Evidence and teaching boundaries
 
