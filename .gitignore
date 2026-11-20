@@ -15,3 +15,4 @@ package.json
 # student data never goes in the repository
 classpoint/*.csv
 ids.csv
+deck/week12-poster-fair-link.txt
