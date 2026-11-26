@@ -9,10 +9,11 @@ The latest explicit direction calls Week 13 the showcase. Plan around that showc
 The current [SD2112 syllabus](https://github.com/venetanji/sd2112-teaching/blob/7596f50f620d5000ad32445ab3851aec29dc67da/syllabus/SD2112-syllabus-2026.md) establishes:
 
 - A Week 13 poster fair and final quiz within the three-hour class.
+- **November 27, 2026:** A0 poster submission and poster fair. The video and mediation brief are not due that day.
 - Group project worth **40% of the course**: an **A0 poster**, **3–5 minute video** and **one-page mediation brief**.
 - Final quiz worth **20% of the course**, multiple choice on the whole course, in the last part of the class.
 
-This plan does not establish the calendar date, room, team count, grading rota, submission deadline, printing route, final-quiz question count, duration, platform, permitted resources, attempt rules or accommodation arrangements. Confirm those before issuing operational instructions.
+This plan does not establish the room, team count, grading rota, video or mediation brief deadline, printing route, final-quiz question count, duration, platform, permitted resources, attempt rules or accommodation arrangements. Confirm those before issuing operational instructions.
 
 The old [whole-course PR #3](https://github.com/venetanji/sd2112-teaching/pull/3) contains an unmerged Week 13 deck and plan. Its 26-team assumption, four 12-minute rounds, five graders, two grades per team, peer prize and 30-question/35-minute quiz are proposals, not current policy. Blackboard references are obsolete for the current Canvas course. Do not copy those numbers or commitments as facts. The midterm's separate format does not determine the final's rules.
 
@@ -69,7 +70,7 @@ No numerical quiz duration, question count or round allocation is assumed in thi
 
 | Slides | Actual content | Facilitation boundary |
 | --- | --- | --- |
-| 1-5 | Purpose, route, existing deliverables/rubric, Showcase signpost | No new submission or speaking allocation. |
+| 1-5 | Purpose, route, existing deliverables/rubric, Showcase signpost | November 27: submit your A0 poster and take part in the poster fair. The video and mediation brief are not due that day. |
 | 6-10 | Visitor/presenter lenses, bounded claim, ethical choice, fictional route | Conversation guides, not a research lecture or new criteria. |
 | 11-14 | Critique signpost, formative feedback, receiving critique, fair hold | No score, quota, collection or automated timer. |
 | 15-17 | Debrief, manual break hold, Synthesis signpost | Spoken or private thinking; provisional break unchanged. |
@@ -93,7 +94,7 @@ A built draft is not classroom-operational approval. Record the decision, author
 | Conditional assessment operation | Only if retained here: approved count/time/platform/resources/attempt/access/recovery/results rules; private blueprint matches taught whole-course scope; authorized test route. | Unresolved; no default Q or platform. |
 | Fair feasibility | Confirm date, room, actual teams, equitable presenting/visiting, transitions, circulation and display access; check conditional time budget. | Unresolved; no rounds or visit quota. |
 | Assessment procedure | Confirm rubric use, grader coverage, moderation and any accommodations through authorized procedures. | Unresolved; no staffing promise or peer marks. |
-| Existing deliverables | Confirm actual Canvas route, deadlines, printing and approved failures/contingencies for existing deliverables only. | Unresolved; no new submission. |
+| Existing deliverables | Confirm actual Canvas route, video and mediation brief deadlines, printing and approved contingencies. | A0 poster due November 27, 2026. Other project deadlines to be confirmed separately. |
 | Actual room and media | Test display, captions/audio, secure offline playback, accessible nonmovement route and clear support/transition cues. | Classroom test pending; build QA is separate. |
 | Feedback/privacy | Confirm whether feedback is collected, by whom, consent/handling/access and whether any claimed anonymity is real. | Spoken/formative draft; no public collection or anonymity promise. |
 

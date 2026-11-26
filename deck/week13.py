@@ -21,13 +21,14 @@ S.append(content('SHOWCASE / THE ROUTE', 'Make the decision visible.', [
     'Present the product: who it is for, what the AI does, and why it matters.',
     'Encounter other work: ask about evidence, consequences and control.',
     'Compare what we learned: rules, examples, mediation and the designer\'s role.',
+    'November 27: submit your A0 poster and take part in the poster fair. The video and mediation brief are not due that day.',
     'Follow the teaching team\'s confirmed presenting and visiting arrangements.',
 ], body_size=36, notes='Do not infer that this is the entire three-hour schedule. Announce only separately confirmed movements, access/support routes and assessment arrangements. The separate instructor record names the decisions needed before classroom use.'))
 S.append(cards('EXISTING GROUP PROJECT / 40% OF THE COURSE', 'Three ways to explain one product.', [
     ('A0 POSTER', 'Research + concept.', 'Person + problem + evidence. Show the AI action.'),
     ('3-5 MINUTE VIDEO', 'A moment of use.', 'Show a moment of use. Label simulated behaviour.'),
     ('ONE-PAGE BRIEF', 'The mediation.', 'Relation + data + bias + guardrails. Explain your design choice.'),
-], text_size=30, notes='Existing syllabus deliverables only. This slide does not create another submission, deadline, printing route or presentation duration. The video length is not a speaking allocation. Confirm actual Canvas instructions separately.'))
+], text_size=30, notes='The A0 poster is the only project component due November 27, 2026. The video and mediation brief remain project components and are not due that day. The video length is not a speaking allocation. Confirm actual Canvas instructions separately.'))
 S.append(content('EXISTING PROJECT RUBRIC / NOT COURSE WEIGHTS', 'Polish is only part of the argument.', [
     '30% research and contextual analysis: credible sources, situated claims.',
     '30% ethical and sociological impact: relation, data, bias and guardrails.',
@@ -253,7 +254,7 @@ STAFF_SLIDES.append(content('INSTRUCTOR REVIEW ONLY / READINESS GATE 2', 'Prove 
     'With a provisional 15-minute break, showcase + synthesis + transitions must fit 180 - Q - A - 15.',
 ], body_size=33, notes='Conditional reserve equation only, not a universal classroom schedule or a chosen Q/A. If an authorized revision moves/removes the component, record it before reallocating time. Include setup/transition and equitable access, not just speaking time. Check room/team feasibility before duplicating the manual holding slide into confirmed rounds.'))
 STAFF_SLIDES.append(content('INSTRUCTOR REVIEW ONLY / READINESS GATE 3', 'Test the actual delivery conditions.', [
-    'Confirm existing submission route, deadlines, printing and approved failure contingencies; add no new deliverables.',
+    'A0 poster due November 27 at the fair. Confirm other project deadlines, submission route, printing and approved contingencies.',
     'Test classroom display, captions/audio, offline playback and an accessible nonmovement route.',
     'Confirm feedback handling and consent. Keep student work and assessment content out of public artifacts.',
     'If a quiz is retained: preflight approved settings with authorized test data and confirm private support/recovery.',
