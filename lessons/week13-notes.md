@@ -18,7 +18,7 @@ Do not infer that this is the entire three-hour schedule. Announce only separate
 
 ### 03 / Three ways to explain one product.
 
-Existing syllabus deliverables only. This slide does not create another submission, deadline, printing route or presentation duration. The video length is not a speaking allocation. Confirm actual Canvas instructions separately.
+The A0 poster is the only project component due November 27, 2026. The video and mediation brief remain project components and are not due that day. The video length is not a speaking allocation. Confirm actual Canvas instructions separately.
 
 ### 04 / Polish is only part of the argument.
 
@@ -170,7 +170,7 @@ Conditional reserve equation only, not a universal classroom schedule or a chose
 
 - INSTRUCTOR REVIEW ONLY / READINESS GATE 3
 - Test the actual delivery conditions.
-- Confirm existing submission route, deadlines, printing and approved failure contingencies; add no new deliverables.
+- A0 poster due November 27 at the fair. Confirm other project deadlines, submission route, printing and approved contingencies.
 - Test classroom display, captions/audio, offline playback and an accessible nonmovement route.
 - Confirm feedback handling and consent. Keep student work and assessment content out of public artifacts.
 - If a quiz is retained: preflight approved settings with authorized test data and confirm private support/recovery.
