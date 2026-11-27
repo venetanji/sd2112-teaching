@@ -76,14 +76,16 @@ class Week12RecapTests(unittest.TestCase):
 
     def test_links_and_registration(self):
         settings = tomllib.loads((ROOT / 'deckgen.toml').read_text())
-        self.assertEqual(settings['course']['decks'][-2:], ['week11', 'week12'])
+        decks = settings['course']['decks']
+        prior_weeks = decks[:decks.index('week12')]
+        self.assertEqual(prior_weeks[-1:], ['week11'])
         self.assertIn('week12/', {entry['href'] for entry in settings['nav']})
         links = {
             run.url for slide in self.slides for element in slide.els
             for paragraph in getattr(element, 'paras', []) for run in paragraph.runs
             if run.url
         }
-        for week in settings['course']['decks'][:-1]:
+        for week in prior_weeks:
             self.assertTrue(any(f'/{week}/#/' in url for url in links), week)
 
 
