@@ -32,7 +32,7 @@ class Week08ExplanationTests(unittest.TestCase):
     def test_paper_title_and_block_grids_are_consistent(self):
         from deck.week08 import S
         headers = [e for s in S for e in s.els if getattr(e, 'name', '') == 'paper-title']
-        self.assertEqual(len(headers), 20)  # nine pairs plus two dense-figure enlargements
+        self.assertEqual(len(headers), 25)  # nine pairs, two figure details, transfer, four recaps
         for e in headers:
             self.assertEqual((e.x, e.y, e.w, e.h), (120, 184, 1680, 140))
             self.assertEqual(e.paras[0].runs[0].size, 72)
@@ -55,3 +55,26 @@ class Week08ExplanationTests(unittest.TestCase):
         self.assertIn('consult', (STUDY_GUIDES['R5']['result'] + STUDY_GUIDES['R5']['limit']).lower())
         self.assertIn('intent', STUDY_GUIDES['R4']['measured'].lower())
         self.assertIn('between', STUDY_GUIDES['R6']['limit'].lower())
+
+    def test_optional_papers_have_examples_and_measurement_boundaries(self):
+        from deck.week08 import S, MAIN_SLIDE_COUNT, EXTENSION_GUIDES
+        for key, guide in EXTENSION_GUIDES.items():
+            slide = next(s for s in S if s.title == guide['title'])
+            self.assertGreaterEqual(S.index(slide), MAIN_SLIDE_COUNT)
+            for field in ('example', 'task', 'measured', 'result', 'limit'):
+                self.assertIn(guide[field], text(slide))
+        self.assertIn('qualitative', EXTENSION_GUIDES['R10']['measured'])
+        self.assertIn('copyright', EXTENSION_GUIDES['R11']['limit'])
+        self.assertIn('no randomized', EXTENSION_GUIDES['R12']['measured'].lower())
+        self.assertIn('did not differ significantly', EXTENSION_GUIDES['R13']['result'])
+
+    def test_opening_map_and_concrete_transfer(self):
+        from deck.week08 import S
+        self.assertIn('Where we are', S[1].title)
+        self.assertEqual(S[2].title, 'Today')
+        slide = next(s for s in S if s.title == 'From a finding to a product test.')
+        visible = text(slide)
+        for phrase in ('1 / FINDING', '2 / FEATURE IDEA', '3 / PROPOSED TEST',
+                       '65%', '59%', 'R7 did not test it', 'Next week'):
+            self.assertIn(phrase, visible)
+        self.assertIn('comparator differs', slide.notes)

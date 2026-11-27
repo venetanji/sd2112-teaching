@@ -1,5 +1,17 @@
 # Week 8 implementation and verification
 
+## Classroom revision (23 October 2026)
+
+This section supersedes earlier slide counts and draft-only release instructions below. The instructor explicitly requested a direct push to main and publication. The final deck has **66 slides: 50 main-route + 16 untimed appendix/reference slides**. The opening now reuses the course semester blocks, highlighting Week 8, and includes an agenda. Both share the original ten-minute opening. The break/search/revision budgets remain unchanged.
+
+- Core task slides emphasize the concrete experiment example. R10-R13 now each have a one-slide appendix recap, with their qualitative/experimental boundaries preserved. All thirteen examples, results, limits and primary/full-text routes also appear in the published `week08-papers.html` reading page.
+- Original slide 35 is now slide 37, **From a finding to a product test.** It separates the R7 initiation finding (65% versus 59%), a proposed team-feedback feature, and a future randomized comparison. The proposed comparator differs from R7 and is labelled as a test plan, not a result.
+- The homepage now includes an active Week 8 card, the Week 8 PDF and the recap page. The course-document navigation also includes Week 8. Weeks 9-13 remain the upcoming block.
+- Local builds with pinned Deckgen produce both 66-slide PowerPoints, the 66-page PDF, previews and HTML. Both PowerPoints retain all 66 native speaker notes exactly. The existing 129 repository tests pass with Python UTF-8 mode on Windows; additional reading-pack checks cover page-versus-PDF validation, PDF metadata discovery, all thirteen recap boundaries and homepage links.
+- Desktop/mobile browser inspection covers all 66 sections, the mobile handout toggle, and the homepage links. The inherited Google Fonts import cannot load under this session's network restrictions; the vendored fonts load locally. Native title-box metrics may flag pre-existing tight display headings; changed paper/transfer body text fits, with no horizontal mobile overflow.
+- The local reading pack is `export/week08-reading/index.html`. After network access was enabled, all thirteen research papers, R1's correction and the Verbeek reading were collected (15 PDFs). R2 is a labelled print copy of the complete open-access PMC article, not the publisher typeset PDF; its original PDF route returned a browser check. R8 uses the author's hosted copy of the published article. Full papers are not published or committed. PDF parsing verifies that the files open, retain the expected paper identities and have readable pages.
+- Publication status must be checked against the push/deployment result. A local successful build does not establish that GitHub Pages has updated or that classroom PowerPoint/ClassPoint collection has been tested.
+
 ## Current plain-language experiment revision (21 October 2026)
 
 Supersedes the compressed summaries and 51-slide count below. **60 slides: 48 main-route + 12 untimed appendix/reference slides.** Every core paper now has a task/result pair; optional R9 uses the same pair in the appendix. This is an instructor review draft, not a classroom-tested lesson.

@@ -2,7 +2,7 @@ name: Build PowerPoints
 
 # On every push to main (or by hand): build the plain and the ClassPoint PowerPoints,
 # the activity manifest, the .docx documents and the preview sheets, and keep them as
-# a workflow artifact (Actions → this run → sd2112-powerpoints). Nothing is published.
+# weekly artifacts plus the full sd2112-powerpoints bundle. Nothing is published.
 on:
   push:
     branches: [main]
@@ -35,4 +35,8 @@ jobs:
             export/*.json
             export/docs/
             export/preview/*.jpg
+          retention-days: 90
+      - uses: ./.github/actions/upload-weekly-artifacts
+        with:
+          prefix: ${{ steps.cfg.outputs.artifact }}
           retention-days: 90

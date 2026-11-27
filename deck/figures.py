@@ -893,7 +893,7 @@ def backprop(name='backprop', w=1680, h=560):
     c.text(1300, 266, 'chair 0.35', size=20, color=INK)
     c.text(1300, 376, 'cup   0.65', size=20, color=INK)
     c.rect(1440, 220, 240, 210, fill=PAPER)
-    _lines(c, 1456, 259, ['THE TRUTH: a chair', ' ', 'chair should be 1.00', 'it said 0.35', 'error: 0.65', ' ', 'then: every weight moves'], size=16, gap=26, color=INK)
+    _lines(c, 1456, 259, ['THE TRUTH: a chair', ' ', 'chair should be 1.00', 'it said 0.35', 'error: 0.65', ' ', 'adjust the weights'], size=16, gap=26, color=INK)
     _arrow(c, 160, 520, 1250, 520, INK, 4)
     c.text(705, 557, 'FORWARD · every unit sums its inputs and passes a number on · the guess comes out at the end', size=16, anchor='middle', color=INK)
     _arrow(c, 1250, 40, 160, 40, ORANGE, 4)

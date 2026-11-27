@@ -4,6 +4,49 @@ Illustrative examples are not paper quotations or measured data.
 Exact consulted versions and measurement limits travel with each study.
 """
 
+EXTENSION_GUIDES = {
+    'R10': {
+        'title': 'What do people need to know before sharing?',
+        'example': 'Imagine using a chatbot. Explain what you think happens to your messages. Then sketch the privacy information and controls you would want before typing.',
+        'example_kind': 'illustrative',
+        'task': '21 US GenAI users were interviewed; 20 also completed design sessions about security and privacy transparency.',
+        'measured': 'Researchers analyzed interview accounts and interface sketches for recurring information needs. This was a qualitative study.',
+        'result': 'Participants wanted credible, actionable explanations of data use and controls, and often found existing information inadequate.',
+        'limit': 'A small US sample describes needs; it does not establish their prevalence or prove a particular interface works.',
+        'source_locations': 'SOUPS proceedings PDF pp.2 and 5 (printed 647 and 650): sample, methods and limitations; existing Week 8 risks audit.',
+    },
+    'R11': {
+        'title': 'Does more input make the story feel yours?',
+        'example': 'Ask AI to write a short story. Try a normal prompt box and controls that slow down short prompts. Rate how much the resulting story feels like yours.',
+        'example_kind': 'source-adaptation',
+        'task': 'Two experiments analyzed 29 and 30 participants writing short stories with AI. They compared ordinary prompting with press-and-hold or pump-slider friction.',
+        'measured': 'Prompt length and reported psychological ownership; the second experiment also tested AI prompt suggestions.',
+        'result': 'Friction encouraged longer prompts and higher felt ownership. Suggestions lengthened prompts further without a further significant ownership gain.',
+        'limit': 'Brief writing tasks; baseline came first. Felt ownership does not establish copyright, writing quality or a universal benefit of friction.',
+        'source_locations': 'GI author preprint v3, pp.1, 4, 7-10: tasks, analyzed samples, results and limitations; existing Week 8 risks audit.',
+    },
+    'R12': {
+        'title': 'Where does AI enter the design process?',
+        'example': 'Work on a design task with your usual AI tools and say what you are thinking. Researchers map when you explore a problem, define it, develop ideas and deliver.',
+        'example_kind': 'illustrative',
+        'task': '88 professional designers provided valid survey responses; 10 took part in think-aloud design sessions in Turkiye, using tools available in 2024.',
+        'measured': 'Researchers coded reported and observed AI uses through the Double Diamond framework. There was no randomized AI-versus-no-AI comparison.',
+        'result': 'The study maps how designers use GenAI across the design process and how use varies with experience and task.',
+        'limit': 'An exploratory map, not proof of better designs. Small, selective sample and no formal inter-rater reliability measure.',
+        'source_locations': 'Final AI EDAM PDF pp.4-7 and 15-16: survey, think-aloud methods and limitations; existing Week 8 risks audit.',
+    },
+    'R13': {
+        'title': 'Does AI change how a group discussion develops?',
+        'example': 'Discuss a teaching problem using six thinking hats. One group can also use GenAI; another cannot. Researchers code the posts and compare connections between types of thinking.',
+        'example_kind': 'illustrative',
+        'task': '108 pre-service teachers were randomly assigned to six-hat discussion with GenAI or six-hat discussion alone, 54 in each group.',
+        'measured': 'Posts were coded for cognitive presence; researchers compared code proportions and networks of connections between codes.',
+        'result': 'The GenAI group posted more and showed different discourse networks. Overall proportions of cognitive-presence codes did not differ significantly.',
+        'limit': 'More posts do not prove deeper learning. A structured teacher-education setting does not automatically transfer to design students.',
+        'source_locations': 'Final Springer PDF pp.6, 11 and 20-21: assignment, Table 2, network analysis and limitations; existing Week 8 risks audit.',
+    },
+}
+
 STUDY_GUIDES = {'R1': {'title': 'Can a reply sound like good therapy?',
         'task': '830 US adults read 18 fictional couple-therapy situations. For each situation, '
                 'they were randomly shown a selected reply written by ChatGPT-4 or by one of 13 '

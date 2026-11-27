@@ -1,0 +1,94 @@
+[
+  {
+    "asset": "doshi-f2-novelty-usefulness.png",
+    "key": "D",
+    "location": "Fig. 2A",
+    "version": "Science Advances final 2024",
+    "sha256": "d8d89b88c03928708020fe2c82e6d38726d3c3bfe25187b8da3ff15ac257b6d9",
+    "primary_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11244532/",
+    "changes": "Fig. 2A crop (0,0,443,382)",
+    "parent_sha256": "69782295b64a4191cf6c72359bc04d4531ee7ab8db12af0ff5c40bea6d8e67ad",
+    "distribution": "public GitHub PR source and Cloudflare HTML review; subsequent public export artifacts",
+    "rights_basis": "CC BY 4.0, notice in consulted article; attribution + source + changes retained",
+    "rights_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+    "asset": "doshi-f4-story-similarity.png",
+    "key": "D",
+    "location": "Fig. 4A top + legend",
+    "version": "Science Advances final 2024",
+    "sha256": "4a4238a87dfcb698b3a5b2e65c97e5e6f8c1889fb2886b07688bd75ee6b67233",
+    "primary_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11244532/",
+    "changes": "Fig. 4A top panel (0,0,388,231) plus original legend (0,532,798,561) displayed at half size below; no data redrawn",
+    "parent_sha256": "7317bae00a5cd34890781f879f46a0bf6f709cc801c7660fdda7f6b73dd7a61f",
+    "distribution": "public GitHub PR source and Cloudflare HTML review; subsequent public export artifacts",
+    "rights_basis": "CC BY 4.0, notice in consulted article; attribution + source + changes retained",
+    "rights_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+    "asset": "joshi-fig1.png",
+    "key": "J",
+    "location": "Fig. 1, PDF1",
+    "version": "arXiv 2507.03670v3",
+    "render_dpi": 120,
+    "crop_pixels": [
+      86,
+      332,
+      948,
+      601
+    ],
+    "sha256": "15b66a4e47aeae2b174b388648cf6648f16cf69d88063855cdc06c0087a95850",
+    "primary_url": "https://arxiv.org/abs/2507.03670v3",
+    "changes": "PDF pixel crop only",
+    "distribution": "public GitHub PR source and Cloudflare HTML review; subsequent public export artifacts",
+    "rights_basis": "CC BY 4.0, notice in consulted article; attribution + source + changes retained",
+    "rights_url": "https://creativecommons.org/licenses/by/4.0/",
+    "usage": "Historical full-three-panel crop, retained but no longer displayed on slide 20 after P2 fix."
+  },
+  {
+    "asset": "joshi-fig1a-motor.png",
+    "key": "J",
+    "location": "Fig. 1(a), PDF1, motor-cost panel only",
+    "version": "arXiv 2507.03670v3",
+    "render_dpi": 240,
+    "crop_pixels": [
+      172,
+      664,
+      706,
+      1202
+    ],
+    "sha256": "f3d9a7c5ae85559275b964b892c501df6e221fe3a6d625b9555c0f0a47a39555",
+    "primary_url": "https://arxiv.org/abs/2507.03670v3",
+    "changes": "Pixel crop from 240-dpi original PDF1 render; retain complete motor-cost panel (a), omit panels (b)/(c) and figure caption; no redraw, reassembly, data or colour changes.",
+    "distribution": "public GitHub PR source and Cloudflare HTML review; subsequent public export artifacts",
+    "rights_basis": "CC BY 4.0, notice in consulted article; attribution + source + changes retained",
+    "rights_url": "https://creativecommons.org/licenses/by/4.0/",
+    "usage": "Slide 20 concrete interface example; comparison and results unchanged.",
+    "source_pdf_sha256": "5ee260bd6e32f3cf5b1b7509c4086693287b605795d9c0f653a66ee6cc1d613d",
+    "render_sha256": "90e8ab22a009cb87ae3c3c5fa286153f7a6a835172014ed55d2a99ddb00691f9",
+    "render_dimensions": [
+      2040,
+      2640
+    ],
+    "crop_coordinate_convention": "left, top, right, bottom; origin top-left; right/bottom exclusive"
+  },
+  {
+    "asset": "copyright-summary-excerpt.png",
+    "key": "U",
+    "location": "PDF8 / printed iii, Executive Summary excerpt (not figure)",
+    "version": "January 2025 official report",
+    "render_dpi": 120,
+    "crop_pixels": [
+      172,
+      332,
+      918,
+      565
+    ],
+    "sha256": "34393df98a659655e69ea05c010dd7ec848df3076fc5620f33e947cbc86139b3",
+    "primary_url": "https://www.copyright.gov/ai/Copyright-and-Artificial-Intelligence-Part-2-Copyrightability-Report.pdf",
+    "changes": "PDF pixel crop only",
+    "distribution": "public GitHub PR source and Cloudflare HTML review; subsequent public export artifacts",
+    "rights_basis": "U.S. federal government text: 17 USC 105, no third-party artwork in excerpt",
+    "rights_url": "https://www.copyright.gov/title17/92chap1.html#105"
+  }
+]
