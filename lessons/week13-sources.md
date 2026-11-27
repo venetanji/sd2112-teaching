@@ -1,4 +1,11 @@
-# SD2112 Week 13 - sources and provenance ledger
+# Week 13 sources
+
+- GTA VI news and official Rockstar launch artwork, reused unchanged from the published [SD5913 Week 12 opener](https://sd5913.github.io/teaching/week12/#/1). [Rockstar announcement](https://www.rockstargames.com/newswire/article/39akk424a9oo53/grand-theft-auto-vi-now-available)
+- Jensen Huang reinstated as president, CEO and board director on 23 November. [NVIDIA Newsroom](https://nvidianews.nvidia.com/news/nvidia-board-reinstates-jensen-huang-as-president-ceo-and-board-director)
+- Anthropic began Nasdaq trading on 19 November at an IPO offer price of $83 per share. [Anthropic IPO close](https://www.anthropic.com/news/ipo-close)
+
+## Earlier showcase draft sources
+
 
 Authoring pass: 21 October 2026. PDF page positions below are one-based file positions, not inferred printed slide numbers. No student work or assessment content was used. Source archives and QA outputs stay outside tracked sources.
 

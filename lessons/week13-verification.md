@@ -1,4 +1,9 @@
-# SD2112 Week 13 - current reconciliation verification
+# SD2112 Week 13 verification
+
+The October records below apply to the earlier 33-slide showcase draft. The 27 November classroom deck has three slides.
+
+## October review records
+
 
 Fresh checks: 22 October 2026, prepared detached worktree at `0fd7d93`. Current review student export: **33 slides**, with **four staff-only source objects excluded** (37 authored objects total). Earlier records below are historical and do not certify this revision.
 
